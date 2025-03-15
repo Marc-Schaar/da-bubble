@@ -1,0 +1,375 @@
+main {
+  background-color: var(--bg-color);
+  display: flex;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 30px;
+  margin: 16px;
+  flex: 1;
+  max-height: calc(100svh - 208px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 45px 25px;
+  position: relative;
+  font-size: 24px;
+
+  ::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 8px;
+    background: linear-gradient(
+      to bottom,
+      rgba(1, 1, 1, 0.04),
+      rgba(1, 1, 1, 0)
+    );
+  }
+}
+.avatar-container {
+  display: flex;
+  position: relative;
+  height: 40px;
+
+  img {
+    position: absolute;
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  img:nth-child(1) {
+    left: -110px;
+    z-index: 1;
+  }
+
+  img:nth-child(2) {
+    left: -75px;
+    z-index: 2;
+  }
+
+  img:nth-child(3) {
+    left: -40px;
+    z-index: 3;
+  }
+}
+
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  // flex: 1;
+  // justify-content: flex-end;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 16px;
+  min-height: 0;
+  height: 100%;
+}
+
+.card-footer {
+  padding: 25px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  outline: 1px solid var(--light-purple);
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.125s ease-in-out;
+
+  &:hover {
+    outline: 1px solid var(--medium-purple);
+  }
+  &:has(textarea:focus-visible) {
+    outline: 1px solid var(--dark-purple);
+  }
+}
+
+.action-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  > div {
+    display: flex;
+  }
+}
+
+textarea {
+  border: none;
+  resize: none;
+  background: transparent;
+  &::-webkit-resizer {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+li {
+  padding: 20px;
+  > .date-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    text-align: center;
+
+    &::before,
+    &::after {
+      content: "";
+      flex-grow: 1;
+      height: 1px;
+      background: var(--light-purple);
+    }
+    > .date {
+      border: 1px solid var(--light-purple);
+      border-radius: 30px;
+      padding: 5px 15px;
+    }
+  }
+}
+
+.message {
+  display: flex;
+  gap: 24px;
+  text-align: justify;
+  transition: all 0.125s ease-in-out;
+  position: relative;
+
+  .reaction-bar {
+    display: none;
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background-color: white;
+    border: 1px solid var(--light-purple);
+    border-radius: 25px 25px 0 25px;
+    padding: 3px 15px;
+    width: max-content;
+
+    > button {
+      padding: 10px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .menu {
+      position: absolute;
+      left: 243px;
+      top: 20px;
+      border-radius: 0 30px 30px 30px;
+      padding: 10px 20px;
+      background-color: white;
+      button {
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 24px;
+      }
+      &:hover button {
+        background-color: var(--bg-color);
+        cursor: pointer;
+        scale: 1.02;
+      }
+    }
+  }
+
+  > img {
+    height: 70px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .content-container {
+    flex-direction: column;
+    gap: 8px;
+    max-width: 80%;
+  }
+
+  .content-container,
+  .message-header,
+  .content-main,
+  .message-footer {
+    display: flex;
+  }
+
+  .message-main {
+    padding: 15px;
+    border-radius: 0 30px 30px 30px;
+    transition: all 0.125s ease-in-out;
+  }
+
+  &:hover {
+    .reaction-bar {
+      animation: slide-in-l-r 0.125s forwards;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+    background-color: var(--bg-color);
+    .message-main {
+      background-color: white;
+    }
+  }
+}
+
+.message-footer {
+  > span:first-child {
+    transition: all 0.125s ease-in-out;
+    &:hover {
+      scale: 1.1;
+      cursor: pointer;
+    }
+  }
+}
+
+.bg-purple {
+  background-color: var(--bg-color);
+}
+
+.medium-purple {
+  background-color: var(--medium-purple) !important;
+}
+
+.message.reverse {
+  .reaction-bar {
+    animation: slide-in-r-l 0.125s forwards;
+    left: 20px;
+  }
+  .message-footer,
+  .content-main,
+  .content-container {
+    justify-content: flex-end;
+    text-align: end;
+  }
+  .message-main {
+    border-radius: 30px 0 30px 30px;
+  }
+}
+
+.edit-input {
+  background-color: white;
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.font-size-18 {
+  font-size: 18px;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+button {
+  border: none;
+  outline: none;
+  background-color: unset;
+  white-space: nowrap;
+  transition: all, 0.125s ease-in-out;
+  cursor: pointer;
+
+  &:disabled {
+    mat-icon {
+      color: var(--light-purple);
+    }
+  }
+}
+
+@keyframes slide-in-r-l {
+  0% {
+    transform: translate(10px, 10px);
+  }
+
+  50% {
+    transform: translate(5px, 5px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes slide-in-l-r {
+  0% {
+    transform: translate(-10px, 10px);
+  }
+
+  50% {
+    transform: translate(-5px, 5px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.hover-to-dark-purple {
+  transition: all 0.125s ease-in-out;
+  padding: 8px;
+  border-radius: 50%;
+
+  img {
+    transition: all 0.125s ease-in-out;
+  }
+  &:hover {
+    background-color: var(--bg-color);
+    mat-icon {
+      color: var(--dark-purple);
+    }
+    img {
+      filter: var(--dark-purple-filter);
+    }
+  }
+}
+
+.hover-dark-purple-to-medium {
+  transition: all 0.125s ease-in-out;
+
+  color: var(--dark-purple);
+  &:hover {
+    color: var(--medium-purple);
+  }
+}
+
+.filter-hover-purple-3 {
+  transition: all 0.125s ease-in-out;
+  &:hover {
+    transition: all 0.125s ease-in-out;
+    img {
+      filter: brightness(0) saturate(100%) invert(31%) sepia(35%)
+        saturate(6836%) hue-rotate(231deg) brightness(101%) contrast(89%);
+    }
+  }
+}

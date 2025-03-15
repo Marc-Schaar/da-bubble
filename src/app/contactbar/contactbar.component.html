@@ -1,1 +1,70 @@
-<p>contactbar works!</p>
+<section>
+    <div class="headline">
+        <div>
+            <img src="/img/workspace-logo.svg" alt="">
+            <h1>Devspace</h1>
+        </div>
+        <button><img src="/img/edit_square.svg" alt=""></button>
+    </div>
+
+    <div class="contactbar">
+        <div class="channels">
+            <div class="channelbar">
+                <div>
+                    <button (click)="toggleActive()">
+                        <img [ngClass]="{'rotate': isActive()}" class="image-down" src="./img/arrow_drop_down-1.svg"
+                            alt="">
+                    </button>
+                    <div>
+                        <img src="./img/workspaces_black.svg" alt="">
+                        <span>Channels</span>
+                    </div>
+                </div>
+                <button class="addButton"><img src="./img/add.svg" alt=""></button>
+            </div>
+            <div [ngClass]="{'show':isActive()}" class="channellist">
+                <div class="channelrow" *ngFor="let channel of channels let index = index">
+                    <div (click)="openWindow('channel'); openChannel(index)">
+                        <img src="/img/tag.svg" alt="">
+                        <span>{{channel.name}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="addChannel">
+                <div>
+                    <button><img src="/img/add_circle.svg" alt=""></button>
+                    <span>Channel hinzufügen</span>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="messages">
+            <div class="messagebar">
+                <div>
+                    <button (click)="toggleMessage()"><img [ngClass]="{'rotate': isOpen()}"
+                            src="/img/arrow_drop_down-1.svg" alt=""></button>
+                    <div>
+                        <img src="/img/account_circle.svg" alt="">
+                        <span>Direktnachrichten</span>
+                    </div>
+                </div>
+
+            </div>
+            <div [ngClass]="{'show': isOpen()}" class="contacts">
+                <div *ngFor="let user of this.users  let index = index" class="contactsrow"
+                    (click)="openWindow('chat'); openPersonalChat(index)">
+                    <div>
+                        <div class="imageContainer">
+                            <img class="profile-image" [src]="user.profilephoto" alt="">
+                            <div class="status-dot" [ngClass]="{'green': user.online}"></div>
+                        </div>
+
+                        <span>{{user.fullname}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

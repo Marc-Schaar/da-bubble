@@ -1,1 +1,110 @@
-<p>chat-content works!</p>
+<main>
+    <div class="card">
+        <section class="card-header">
+            <div class="align-center">
+                # {{ this.currentChannel?.name }}
+                <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
+            </div>
+            <div class="align-center gap-10">
+                <div class="avatar-container">
+                    <ng-container *ngFor="let member of currentChannel?.member; index as i">
+                        <img *ngIf="i < 3" class="avatar" [src]="member.profilephoto" alt="Name" />
+                    </ng-container>
+                </div>
+                <span *ngIf="currentChannel?.member?.length > 3">+{{ currentChannel?.member?.length - 3 }}</span>
+
+                <button mat-mini-fab>
+                    <mat-icon>person_add</mat-icon>
+                </button>
+            </div>
+        </section>
+
+        <ul class="chat-content gap-10" #chatContent>
+            <ng-container *ngFor="let message of this.messages; index as i;">
+                <li *ngIf="message.newDay">
+                    <div class="date-container">
+                        <span class="date">{{ isToday(message.date) ? 'Heute' : message.date }}</span>
+                    </div>
+                </li>
+
+                <li class="message"
+                    [ngClass]="{ 'reverse' : message.name == this.userService.auth.currentUser?.displayName}">
+                    <div *ngIf="!isEditing" class="reaction-bar">
+                        <button>
+                            <img src="/img/reaction-bar-icons/checked.png" alt="">
+                        </button>
+                        <button>
+                            <img src="/img/reaction-bar-icons/thumps_up.png" alt="">
+                        </button>
+                        <button class="hover-to-dark-purple">
+                            <img src="/img/reaction-bar-icons/add_reaction.png" alt="">
+                        </button>
+                        <button class="hover-to-dark-purple">
+                            <img src="/img/reaction-bar-icons/comment.png" alt="">
+                        </button>
+                        <button *ngIf="message.name == this.userService.auth.currentUser?.displayName"
+                            class="hover-to-dark-purple" (click)="toogleMenu()">
+                            <mat-icon>more_vert</mat-icon>
+
+                        </button>
+                        <div *ngIf="menuOpen && message.name == this.userService.auth.currentUser?.displayName"
+                            class="menu">
+                            <button (click)="editMessage(message, i)">Nachricht bearbeiten</button>
+                        </div>
+                    </div>
+                    <img [src]=" message.avatar " alt=" Avatar" />
+
+                    <div *ngIf="!(isEditing && editingMessageId === i)" class="content-container">
+                        <div class="message-header gap-20">
+                            <b class="font-size-18">{{ message.name }}</b>
+                            <span class="font-size-14">{{ message.time }} Uhr</span>
+                        </div>
+                        <div class="message-main"
+                            [ngClass]="{'medium-purple': message.name == this.userService.user?.displayName, 'bg-purple': message.name !== this.userService.user?.displayName}">
+                            {{ message.message }}
+                        </div>
+                        <div class="message-footer gap-20">
+                            <span (click)="toggle()">2 Antworten</span>
+                            <span class="font-size-14">Letzte Antwort 14.26 Uhr</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="isEditing  && editingMessageId === i" class="input-container edit-input full-width">
+                        <textarea [(ngModel)]="inputEdit" rows="4"></textarea>
+
+                        <div class="action-container">
+                            <button class="hover-to-dark-purple">
+                                <mat-icon>sentiment_satisfied</mat-icon>
+                            </button>
+
+                            <button [disabled]="loading" (click)="updateMessage(message)">
+                                <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ng-container>
+        </ul>
+
+        <section class="card-footer">
+            <div class="input-container">
+                <textarea [(ngModel)]="input" rows="4"
+                    placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
+
+                <div class="action-container">
+                    <div class="gap-10">
+                        <button class="hover-to-dark-purple">
+                            <mat-icon>sentiment_satisfied</mat-icon>
+                        </button>
+                        <button class="hover-to-dark-purple">
+                            <mat-icon>alternate_email</mat-icon>
+                        </button>
+                    </div>
+                    <button [disabled]="loading" (click)="newMessage()">
+                        <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>

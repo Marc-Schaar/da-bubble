@@ -1,0 +1,64 @@
+.content-container {
+  display: grid;
+  grid-template-columns: 366px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100svh;
+}
+
+app-header {
+  grid-column: span 3;
+}
+
+app-contactbar {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.chat-content {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.placeholder-tread {
+  width: 485px;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  > .input {
+    border-radius: 42px;
+    outline: none;
+    width: calc(100% - 259px);
+    background-repeat: no-repeat;
+    background-position: 99%;
+    padding: 17.5px 45px 17.5px 45px;
+    border: 1px solid #adb0d9;
+    background-color: #ffff;
+    display: none;
+    @media (max-width: 1204px) {
+      display: flex;
+      justify-content: space-between;
+    }
+    @media (max-width: 566px) {
+      overflow-x: hidden;
+      width: 73%;
+    }
+    > input {
+      border: none;
+      outline: none;
+      @media (max-width: 400px) {
+        width: 100%;
+      }
+      &:hover {
+        outline: none;
+      }
+    }
+    > button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

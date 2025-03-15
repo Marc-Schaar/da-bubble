@@ -13,6 +13,7 @@ import { ThreadComponent } from './thread/thread.component';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataProtectionComponent } from './data-protection/data-protection.component';
+import { MainChatComponent } from './main-chat/main-chat.component';
 
 export const routes: Routes = [
   { path: '', component: IntroComponent },
@@ -25,7 +26,7 @@ export const routes: Routes = [
   { path: 'avatarselection', component: AvatarSelectionComponent },
   { path: 'add-channel', component: AddChannelComponent },
   { path: 'contactbar', component: ContactbarComponent },
-  { path: 'chat', component: MainComponentComponent },
+  { path: 'chat', component: MainChatComponent },
   { path: 'direct', component: DirectMessagesComponent },
   { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },
