@@ -1,1 +1,44 @@
-<p>sign-in works!</p>
+<form class="signinbox" #userauth="ngForm" (ngSubmit)="signin()">
+    <div>
+        <div>
+            <h1>Anmeldung</h1>
+        </div>
+        <div>
+            <div>
+                <p>
+                    Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+                    verwendest.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <div>
+                <input type="email" #email="ngModel" required name="email" [(ngModel)]="user.email"
+                    placeholder="beispielname@email.com" />
+            </div>
+            <div>
+                <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password"
+                    placeholder="Passwort" />
+            </div>
+        </div>
+        <div><a routerLink="/forgotpassword">Passwort vergessen?</a></div>
+    </div>
+    <div>
+        <div class="divider">ODER</div>
+    </div>
+    <div>
+        <div>
+            <button type="button" (click)="signinwithgoogle()">
+                <img src="/img/Google.png" alt="" /> Anmelden mit Google
+            </button>
+        </div>
+        <div>
+            <button [disabled]="userauth.invalid">Anmelden</button><button (click)="shareddata.redirectiontodashboard()"
+                href="/chat">
+                Gäste-Login
+            </button>
+        </div>
+    </div>
+</form>
