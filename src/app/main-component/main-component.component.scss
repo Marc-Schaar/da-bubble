@@ -1,0 +1,13 @@
+div {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+app-sign-in {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eceefe;
+}
