@@ -55,15 +55,15 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   isMobile: boolean = false;
 
   channels: any = [];
+  messages: any[] = [];
   currentChannel: any = {};
+
   currentUser: any;
   editingMessageId: any = '';
-
-  unsubMessages!: () => void;
-
-  messages: any[] = [];
   input: string = '';
   inputEdit: string = '';
+
+  unsubMessages!: () => void;
 
   async ngOnInit() {
     if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
@@ -222,8 +222,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleThread() {
-    console.log('Öffnen von Thread');
-    this.userService.toggleThread();
+    if (this.isMobile) this.router.navigate(['/thread']);
+    else this.userService.toggleThread();
   }
 
   getDocRef(ref: string, id: string) {
