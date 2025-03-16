@@ -2,7 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
-import { BehaviorSubject, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  fromEvent,
+  map,
+  startWith,
+  Subject,
+} from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
@@ -11,33 +18,45 @@ import { User } from './models/user';
   providedIn: 'root',
 })
 export class UserService {
-  dashboard = false;
-  login = false;
-  constructor(private router: Router) {
+  constructor() {
     this.setCurrentUser();
+    this.observeScreenWidth();
   }
+
   auth: Auth = inject(Auth);
   firestore: Firestore = inject(Firestore);
   fireService: FireServiceService = inject(FireServiceService);
-  user: any = new User();
-  public users: any[] = [];
+  router: Router = inject(Router);
+
+  dashboard: boolean = false;
+  login: boolean = false;
+
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
   private currentComponent = new BehaviorSubject<any>(DirectmessagesComponent);
   component$ = this.currentComponent.asObservable();
-  private threadToggleSubject = new Subject<void>();
-  threadToggle$ = this.threadToggleSubject.asObservable();
-  currentReciever: any;
-  currentUser: any;
-  component: string = '';
   private startLoadingChat = new Subject<void>();
   startLoadingChat$ = this.startLoadingChat.asObservable();
   private startLoadingChannel = new Subject<void>();
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
-  channels: any = [];
-  currentChannel: any;
+  private threadToggleSubject = new Subject<void>();
+  threadToggle$ = this.threadToggleSubject.asObservable();
 
+  private screenWidthSubject = new BehaviorSubject<boolean>(
+    this.checkScreenWidth()
+  );
+  screenWidth$ = this.screenWidthSubject.asObservable();
+  currentReciever: any;
+
+  component: string = '';
+
+  public users: any[] = [];
+  channels: any = [];
   messages: any = [];
+
+  user: any = new User();
+  currentUser: any;
+  currentChannel: any;
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
@@ -120,5 +139,19 @@ export class UserService {
 
   toggleThread() {
     this.threadToggleSubject.next();
+  }
+
+  checkScreenWidth(): boolean {
+    return window.innerWidth < 1024;
+  }
+
+  observeScreenWidth() {
+    fromEvent(window, 'resize')
+      .pipe(
+        map(() => this.checkScreenWidth()),
+        distinctUntilChanged(),
+        startWith(this.checkScreenWidth())
+      )
+      .subscribe(this.screenWidthSubject);
   }
 }

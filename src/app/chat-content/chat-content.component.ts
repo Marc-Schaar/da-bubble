@@ -6,6 +6,8 @@ import {
   OnInit,
   ViewChild,
   Injectable,
+  AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,9 +41,10 @@ import { UserService } from '../shared.service';
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
-export class ChatContentComponent implements OnInit {
+export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
   private subscription?: Subscription;
+
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   router: Router = inject(Router);
@@ -49,6 +52,8 @@ export class ChatContentComponent implements OnInit {
   loading: boolean = false;
   menuOpen: boolean = false;
   isEditing: boolean = false;
+  isMobile: boolean = false;
+
   channels: any = [];
   currentChannel: any = {};
   currentUser: any;
@@ -61,10 +66,15 @@ export class ChatContentComponent implements OnInit {
   inputEdit: string = '';
 
   async ngOnInit() {
-    // if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
+    if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
     this.startChannel();
     this.subscription = this.userService.startLoadingChannel$.subscribe(() => {
       this.startChannel();
+    });
+
+    this.subscription = this.userService.screenWidth$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+      console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
     });
   }
 
@@ -80,6 +90,7 @@ export class ChatContentComponent implements OnInit {
       this.userService.user != null &&
       this.userService.currentChannel != null
     ) {
+      this.isMobile = this.userService.checkScreenWidth();
       this.setCurrentChannel();
       this.getMessages();
       console.log(this.currentChannel);
@@ -137,6 +148,7 @@ export class ChatContentComponent implements OnInit {
     this.isEditing = true;
     this.editingMessageId = index;
     this.inputEdit = message.message;
+    this.scrollToBottom();
   }
 
   async updateMessage(message: any) {
@@ -207,7 +219,8 @@ export class ChatContentComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
-  toggle() {
+  toggleThread() {
+    console.log('Öffnen von Thread');
     this.userService.toggleThread();
   }
 
@@ -217,5 +230,12 @@ export class ChatContentComponent implements OnInit {
 
   getCollectionRef(ref: string) {
     return ref ? collection(this.fireService.firestore, ref) : null;
+  }
+
+  ngAfterViewInit() {
+    window.addEventListener(
+      'resize',
+      this.userService.checkScreenWidth.bind(this)
+    );
   }
 }
