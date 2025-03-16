@@ -32,13 +32,13 @@ export class ChatServiceService {
   private threadToggleSubject = new Subject<void>();
   threadToggle$ = this.threadToggleSubject.asObservable();
 
+  channels: any = [];
+
   currentReciever: any;
   currentUser: any;
-
-  unsubChannels!: () => void;
-
-  channels: any = [];
   currentChannel: any;
+  unsubChannels!: () => void;
+  unsubMessages!: () => void;
 
   setUser(user: User) {
     this.user = user;
@@ -66,6 +66,9 @@ export class ChatServiceService {
 
   redirectiontologinpage() {
     this.router.navigate(['/main']);
+  }
+  continue() {
+    this.router.navigate(['/avatarselection']);
   }
 
   getChannels() {
