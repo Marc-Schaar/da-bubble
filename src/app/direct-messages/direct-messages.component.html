@@ -1,1 +1,73 @@
-<p>direct-messages works!</p>
+<section>
+    <div *ngIf="isChat" class="chat-header">
+        <div>
+            <div class="imageContainer">
+                <img [src]="currentReciever?.profilephoto" alt="">
+                <div class="status-dot" [ngClass]="{'green': currentReciever?.online}"></div>
+            </div>
+
+            <span>{{currentReciever?.fullname}}</span>
+        </div>
+
+    </div>
+    <div *ngIf="!isChat" class="textField">
+        <span class="newText">Neue Nachricht</span>
+        <input [(ngModel)]="input" (input)="getCurrentChat()"  type="text" placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse">
+    </div>
+
+    <div id="chat" *ngIf="isChat" class="chat-content">
+        <div *ngFor="let message of currentMessages; let i=index" [ngClass]="{'change': isUser(message)}">
+            <div class="divider" *ngIf="isNewDay(message, currentMessages[i - 1])">
+                <div>
+                    <p>{{isToday(message.time)? 'Heute' : (message.time | date:'EEEE, d MMMM')}}</p>
+                </div>
+            </div>
+            <div [ngClass]="{'reverse': isUser(message)}" class="messagerow">
+                <div class="image">
+                    <img [src]="message.photo" alt="">
+                </div>
+                <div [ngClass]="{'messageReverse': isUser(message)}" class="messageContainer">
+                    <div [ngClass]="{'reverse': isUser(message)}" class="messageData">
+                        <span>{{message.name}}</span>
+                        <p>{{message.time | date:'HH:mm'}} Uhr</p>
+                    </div>
+                    <div [ngClass]="{'bubbleReverse': isUser(message)}" class="messageBubble">
+                        <span>{{message.content}}</span>
+                    </div>
+                    <div></div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="startContainer" *ngIf="isEmpty">
+            <div class="userContainer">
+                <img [src]="currentReciever?.profilephoto" alt="">
+                <span>{{currentReciever?.fullname}}</span>
+            </div>
+            <div class="welcomeText">
+                <p *ngIf="!isYou">Diese Unterhaltung findet nur zwischen <a href="">&commat;{{currentReciever?.fullname}}
+                    </a>und dir statt.</p>
+                <p *ngIf="isYou"><span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos
+                    auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst
+                    besprechen.</p>
+            </div>
+        </div>
+       
+    </div>
+    <div class="lists"></div>
+    <div class="textContainer">
+        <div>
+            <textarea [(ngModel)]="message" name="" id=""
+                placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
+            <div>
+                <div class="left">
+                    <button><img src="./img/sentiment_satisfied.svg" alt=""></button>
+                    <button><img src="./img/alternate_email.svg" alt=""></button>
+                </div>
+                <button (click)="sendMessage()" class="right"><img src="./img/send.svg" alt=""></button>
+            </div>
+        </div>
+    </div>
+
+</section>

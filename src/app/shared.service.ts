@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
+import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
 import { User } from './models/user';
@@ -23,7 +23,7 @@ export class UserService {
   public users: any[] = [];
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
-  private currentComponent = new BehaviorSubject<any>(DirectMessagesComponent);
+  private currentComponent = new BehaviorSubject<any>(DirectmessagesComponent);
   component$ = this.currentComponent.asObservable();
   private threadToggleSubject = new Subject<void>();
   threadToggle$ = this.threadToggleSubject.asObservable();
@@ -111,7 +111,7 @@ export class UserService {
     //this.currentComponent.next(null);
     setTimeout(() => {
       if (component === 'chat') {
-        this.currentComponent.next(DirectMessagesComponent);
+        this.currentComponent.next(DirectmessagesComponent);
       } else if (component === 'channel') {
         this.currentComponent.next(ChatContentComponent);
       }
