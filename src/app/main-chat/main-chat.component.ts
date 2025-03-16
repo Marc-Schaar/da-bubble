@@ -9,6 +9,7 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { ChatServiceService } from '../chat-service.service';
+import { UserService } from '../shared.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -27,7 +28,7 @@ import { ChatServiceService } from '../chat-service.service';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-
+  shareddata = inject(UserService)
   chatmodule = inject(ChatServiceService);
   showFiller = true;
   currentComponent: any;
@@ -35,8 +36,8 @@ export class MainChatComponent implements OnInit {
   private threadSubscription!: Subscription;
 
   ngOnInit(): void {
-    this.chatmodule.dashboard = true;
-    this.chatmodule.login = false;
+    this.shareddata.dashboard = true;
+    this.shareddata.login = false;
     this.componentSubscription = this.chatmodule.component$.subscribe(
       (component) => {
         this.currentComponent = component;
