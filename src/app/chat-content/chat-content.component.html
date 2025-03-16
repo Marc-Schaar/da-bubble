@@ -1,4 +1,9 @@
+<header *ngIf="isMobile">
+    <img src="/img/workspace-logo.svg" alt="Logo">
+    <img [src]=" this.currentUser?.profilephoto " alt="">
+</header>
 <main>
+
     <div class="card">
         <section class="card-header">
             <div class="align-center">
@@ -13,7 +18,7 @@
                 </div>
                 <span *ngIf="currentChannel?.member?.length > 3">+{{ currentChannel?.member?.length - 3 }}</span>
 
-                <button mat-mini-fab>
+                <button>
                     <mat-icon>person_add</mat-icon>
                 </button>
             </div>

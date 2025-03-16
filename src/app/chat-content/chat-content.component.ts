@@ -69,7 +69,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   unsubMessages!: () => void;
 
   async ngOnInit() {
-    if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
+    // if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
     this.startChannel();
     this.subscriptions.add(
       this.userService.startLoadingChannel$.subscribe(() => {
