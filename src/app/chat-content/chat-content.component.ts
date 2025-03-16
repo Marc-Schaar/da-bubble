@@ -82,7 +82,6 @@ export class ChatContentComponent implements OnInit {
     ) {
       this.setCurrentChannel();
       this.getMessages();
-      this.scrollToBottom();
       console.log(this.currentChannel);
       console.log(this.currentUser);
     } else {
@@ -106,6 +105,7 @@ export class ChatContentComponent implements OnInit {
           ...doc.data(),
         }));
         console.log(this.messages);
+        this.scrollToBottom();
       });
     }
     return;
@@ -159,6 +159,12 @@ export class ChatContentComponent implements OnInit {
         console.error('Fehler beim Aktualisieren der Nachricht:', error);
       }
     }
+  }
+
+  cancel() {
+    this.isEditing = false;
+    this.editingMessageId = null;
+    this.menuOpen = false;
   }
 
   isNewDay(): boolean {

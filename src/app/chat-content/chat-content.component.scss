@@ -68,12 +68,9 @@ main {
 .chat-content {
   display: flex;
   flex-direction: column;
-  // flex: 1;
-  // justify-content: flex-end;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 16px;
-  min-height: 0;
+  padding: 16px 0;
   height: 100%;
 }
 
@@ -273,6 +270,35 @@ li {
   width: 100%;
 }
 
+.btn {
+  cursor: pointer;
+  padding: 12px 25px;
+  border-radius: 50px;
+  transition: all 0.125s ease-in-out;
+  font-weight: 700;
+}
+
+.btn-secundary {
+  outline: solid 1px var(--medium-purple) !important;
+  &:hover {
+    outline: 1px solid white;
+    background-color: var(--medium-purple);
+    color: white;
+  }
+}
+
+.btn-primary {
+  transition: all 0.125s ease-in-out;
+  background-color: var(--medium-purple);
+  color: white;
+
+  &:hover {
+    outline: solid 1px var(--medium-purple) !important;
+    color: black;
+    background-color: white;
+  }
+}
+
 .font-size-14 {
   font-size: 14px;
 }
@@ -291,6 +317,10 @@ li {
 
 .gap-20 {
   gap: 20px;
+}
+
+.gap-32 {
+  gap: 32px;
 }
 button {
   border: none;
