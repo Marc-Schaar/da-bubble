@@ -1,8 +1,9 @@
+import { serverTimestamp } from '@angular/fire/firestore';
 export class Message {
   name: string;
   message: string;
   date: string;
-  time: string;
+  timestamp: any;
   newDay: boolean;
   avatar: string;
 
@@ -10,7 +11,7 @@ export class Message {
     this.name = obj ? obj.name : '';
     this.message = obj ? obj.message : '';
     this.date = obj ? obj.date : '';
-    this.time = obj ? obj.time : '';
+    this.timestamp = obj ? obj.timestamp : serverTimestamp();
     this.newDay = obj ? obj.newDay : false;
     this.avatar = obj ? obj.avatar : '';
   }
@@ -20,7 +21,7 @@ export class Message {
       name: this.name,
       message: this.message,
       date: this.date,
-      time: this.time,
+      timestamp: this.timestamp,
       newDay: this.newDay,
       avatar: this.avatar,
     };

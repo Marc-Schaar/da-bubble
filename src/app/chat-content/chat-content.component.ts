@@ -18,11 +18,14 @@ import {
   collection,
   doc,
   addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
 } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, timestamp } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 
@@ -111,17 +114,31 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     let messagesRef = this.getCollectionRef(
       `channels/${this.currentChannel.id}/messages`
     );
+
     if (messagesRef) {
-      this.unsubMessages = onSnapshot(messagesRef, (snapshot) => {
-        this.messages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+      let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+      this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
+        this.messages = snapshot.docs.map((doc) => {
+          let data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            time: data['timestamp']
+              ? new Date(data['timestamp'].toDate()).toLocaleTimeString(
+                  'de-DE',
+                  {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }
+                )
+              : '–',
+          };
+        });
+
         console.log(this.messages);
         this.scrollToBottom();
       });
     }
-    return;
   }
 
   async newMessage() {
@@ -132,10 +149,14 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (messagesCollectionRef) {
       this.loading = true;
       try {
-        await addDoc(
+        let messageDocRef = await addDoc(
           messagesCollectionRef,
           new Message(this.buildMessageObject()).toJSON()
         );
+        await addDoc(collection(messageDocRef, 'threads'), {
+          createdFrom: this.userService.currentUser,
+          messages: [],
+        });
         this.loading = false;
         this.scrollToBottom();
         this.input = '';
@@ -204,7 +225,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       date: new Date().toISOString().split('T')[0],
       name: this.userService.user?.displayName || 'Unbekannt',
       newDay: this.isNewDay(),
-      time: (new Date().getHours() + ':' + new Date().getMinutes()).toString(),
+      timestamp: serverTimestamp(),
     };
   }
 

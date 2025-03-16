@@ -9,6 +9,7 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
+import { ThreadComponent } from '../thread/thread.component';
 
 @Component({
   selector: 'app-main-chat',
@@ -21,6 +22,7 @@ import { UserService } from '../shared.service';
     HeaderComponent,
     MatSidenavModule,
     ContactbarComponent,
+    ThreadComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',

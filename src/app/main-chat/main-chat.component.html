@@ -4,7 +4,7 @@
 
     <mat-drawer-container class="chat-content" autosize>
         <mat-drawer position="end" #drawer class="tread-container" mode="side">
-            <div class="placeholder-tread">Hier Tread einfügen</div>
+            <app-thread></app-thread>
         </mat-drawer>
 
         <ng-container *ngComponentOutlet="currentComponent"></ng-container>
