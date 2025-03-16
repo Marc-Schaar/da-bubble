@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataProtectionComponent } from './data-protection.component';
+import { DataprotectionComponent } from './data-protection.component';
 
-describe('DataProtectionComponent', () => {
-  let component: DataProtectionComponent;
-  let fixture: ComponentFixture<DataProtectionComponent>;
+describe('DataprotectionComponent', () => {
+  let component: DataprotectionComponent;
+  let fixture: ComponentFixture<DataprotectionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataProtectionComponent]
+      imports: [DataprotectionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DataProtectionComponent);
+    fixture = TestBed.createComponent(DataprotectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

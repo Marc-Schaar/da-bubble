@@ -1,1 +1,101 @@
-<p>sign-up works!</p>
+<div class="borders">
+    <app-header></app-header>
+    <div class="singup">
+      <div class="content">
+        <form #useraccount="ngForm" (ngSubmit)="onSubmit(useraccount)">
+          <div>
+            <button routerLink="/main">
+              <img src="/img/arrow_back.png" alt="" />
+            </button>
+            <div>
+              <h1>Konto erstellen</h1>
+              <span
+                >Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+                DABubble-Konto.</span
+              >
+            </div>
+          </div>
+          <div>
+            <div class="box">
+              <div class="fullnameinput">
+                <input
+                  #fullname="ngModel"
+                  [(ngModel)]="user.fullname"
+                  name="firstname"
+                  type="text"
+                  minlength="5"
+                  placeholder="Name und Nachname"
+                  required
+                />
+              </div>
+              @if(fullname.touched && fullname.value.length < 5){
+              <span class="error"
+                >Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span
+              >
+              }
+            </div>
+            <div class="box">
+              <div class="emailinput">
+                <input
+                  #email="ngModel"
+                  name="email"
+                  [(ngModel)]="user.email"
+                  type="email"
+                  placeholder="beispielname@email.com"
+                  pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                  required
+                />
+              </div>
+              @if(!email.valid && email.touched){
+              <span class="error"
+                >*Diese E-Mail-Adresse ist leider ungültig.</span
+              >
+              }
+            </div>
+            <div class="box">
+              <div class="passwordinput">
+                <input
+                  #password="ngModel"
+                  [(ngModel)]="user.password"
+                  name="password"
+                  minlength="5"
+                  type="password"
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  placeholder="Passwort"
+                  required
+                />
+              </div>
+              @if(!password.valid && password.touched){
+              <span class="error"
+                >Bitte geben Sie ein Passwort ein. Es muss mindestens 8 Zeichen
+                lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine
+                Zahl enthalten.</span
+              >
+              }
+            </div>
+          </div>
+          <div>
+            <input
+              (click)="checked = !checked"
+              required
+              [checked]="checked"
+              type="checkbox"
+            /><span
+              >Ich stimme der<a routerLink="/Datenschutzerklärung">
+                Datenschutzerklärung</a
+              >zu.</span
+            >
+          </div>
+          <div>
+            <input
+              [disabled]="!checked || useraccount.invalid"
+              type="submit"
+              value="Weiter"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+  
