@@ -45,9 +45,9 @@ export class AddChannelComponent implements OnInit {
   chooseMember: boolean = false;
   auth = getAuth();
   user: User | null = null;
-  displayName: string | null = null;
-  photoURL: string | null = null;
-  uid: string | null = null;
+  // displayName: string | null = null;
+  // photoURL: string | null = null;
+  // uid: string | null = null;
   users: any[] = [];
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
@@ -148,14 +148,6 @@ export class AddChannelComponent implements OnInit {
 
   closeScreen() {
     console.log('close window');
-    // this.channelName = '';
-    // this.channelDescription = '';
-    // this.selectedUsers = [];
-    // this.showUserBar = false;
-    console.log(this.auth.currentUser);
-
-    // console.log('Users:', this.users);
-    console.log('Channel Members:', this.channelmodule.channels);
   }
 
   onSubmit() {
@@ -174,7 +166,6 @@ export class AddChannelComponent implements OnInit {
     } else {
       this.pushSelectedUser();
     }
-    console.log('user added');
   }
 
   async pushSelectedUser() {
@@ -193,8 +184,12 @@ export class AddChannelComponent implements OnInit {
     }
   }
   
-
-  async pushAllUser() {
+/**
+ *
+ *
+ * @memberof AddChannelComponent
+ */
+async pushAllUser() {
     try {
       const channelId = 'LPRVbdSLkaDmZSzumHJA';
       const mainChannelRef = doc(this.firestore, 'channels', channelId);
@@ -214,8 +209,6 @@ export class AddChannelComponent implements OnInit {
     }
   }
   
-  
-
   async addChannel() {
     const channelDescription = document.getElementById(
       'channel-description'
