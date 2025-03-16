@@ -3,18 +3,27 @@
     <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
   </div>
   <div></div>
-  <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+  <div
+    class="input"
+    *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard"
+  >
     <input type="text" placeholder="Devspace durchsuchen" />
     <button><img src="/img/icons.png" alt="" /></button>
   </div>
 
-  <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
+  <div
+    class="signup"
+    *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard"
+  >
     <p>Neu bei DABubble?</p>
     <a routerLink="/signup">Konto erstellen</a>
   </div>
-  <div class="user-menu" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+  <div
+    class="user-menu"
+    *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard"
+  >
     <div>
-      <span>{{ user?.displayName || "Gast" }}</span>
+      <span>{{ this.chatmoduleenabled.user.displayName || "Gast" }}</span>
       <img src="img/Profile bild.png" alt="" />
       <div>
         <button

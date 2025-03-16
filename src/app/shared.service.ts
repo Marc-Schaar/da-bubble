@@ -50,6 +50,13 @@ export class UserService {
     return this.user;
   }
 
+  async setOnlineStatus() {
+    const currentUser = this.getUser();
+    currentUser.online = true;
+    console.log(currentUser);
+    await this.fireService.updateOnlineStatus(currentUser);
+  }
+
   redirectiontodashboard() {
     this.router.navigate(['/chat']);
   }
@@ -94,13 +101,11 @@ export class UserService {
     this.startLoadingChat.next();
   }
 
-
   getChannel(channel: any, user: any) {
     this.currentChannel = channel;
-    this.currentUser = user;    
+    this.currentUser = user;
     this.startLoadingChannel.next();
   }
-
 
   loadComponent(component: string) {
     //this.currentComponent.next(null);

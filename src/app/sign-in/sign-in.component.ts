@@ -16,6 +16,7 @@ import { FireServiceService } from '../fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
 import { ChatServiceService } from '../chat-service.service';
 import { User } from '../../models/user';
+import { UserService } from '../shared.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,6 +26,7 @@ import { User } from '../../models/user';
 })
 export class SignInComponent {
   disabled = true;
+  shared = inject(UserService)
   googleAuthProvider = new GoogleAuthProvider();
   shareddata = inject(ChatServiceService);
   auth = inject(Auth);
@@ -39,22 +41,20 @@ export class SignInComponent {
         this.user.email,
         this.user.password
       );
-      await this.setOnlineStatus();
-      this.shareddata.redirectiontodashboard();
+      await this.shared.setOnlineStatus();
+      this.shared.redirectiontodashboard();
     } catch (error) {}
   }
 
   async signinwithgoogle() {
     try {
       await signInWithPopup(this.auth, this.googleAuthProvider);
-      await this.setOnlineStatus();
-      this.shareddata.redirectiontodashboard();
+      await this.shared.setOnlineStatus();
+      console.log(this.shared.user.displayName);
+      
+      this.shared.redirectiontodashboard();
     } catch (error) {}
   }
 
-  async setOnlineStatus() {
-    const currentUser = this.shareddata.getUser();
-    currentUser.online = true;
-    await this.fireService.updateOnlineStatus(currentUser);
-  }
+  
 }
