@@ -14,6 +14,7 @@ import { DirectmessagesComponent } from './direct-messages/direct-messages.compo
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
+import { ChatContentComponent } from './chat-content/chat-content.component';
 
 export const routes: Routes = [
   { path: '', component: IntroComponent },
@@ -27,6 +28,8 @@ export const routes: Routes = [
   { path: 'add-channel', component: AddChannelComponent },
   { path: 'contactbar', component: ContactbarComponent },
   { path: 'chat', component: MainChatComponent },
+  { path: 'channel', component: ChatContentComponent },
+
   { path: 'direct', component: DirectmessagesComponent },
   { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },

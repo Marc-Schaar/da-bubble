@@ -9,6 +9,7 @@ import {
   map,
   startWith,
   Subject,
+  Subscription,
 } from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
@@ -21,6 +22,10 @@ export class UserService {
   constructor() {
     this.setCurrentUser();
     this.observeScreenWidth();
+    this.subscription = this.screenWidth$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+      console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
+    });
   }
 
   auth: Auth = inject(Auth);
@@ -30,6 +35,7 @@ export class UserService {
 
   dashboard: boolean = false;
   login: boolean = false;
+  isMobile: boolean = false;
 
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
@@ -46,12 +52,13 @@ export class UserService {
     this.checkScreenWidth()
   );
   screenWidth$ = this.screenWidthSubject.asObservable();
+  subscription: Subscription;
   currentReciever: any;
 
   component: string = '';
 
   public users: any[] = [];
-  channels: any = [];
+  // channels: any = [];
   messages: any = [];
 
   user: any = new User();
@@ -100,19 +107,19 @@ export class UserService {
     });
   }
 
-  getChannels() {
-    this.channels = [];
-    this.unsubChannels = onSnapshot(
-      this.fireService.getCollectionRef('channels')!,
-      (colSnap) => {
-        this.channels = colSnap.docs.map((colSnap) => ({
-          key: colSnap.id,
-          data: colSnap.data(),
-        }));
-        this.currentChannel = this.channels[0];
-      }
-    );
-  }
+  // getChannels() {
+  //   this.channels = [];
+  //   this.unsubChannels = onSnapshot(
+  //     this.fireService.getCollectionRef('channels')!,
+  //     (colSnap) => {
+  //       this.channels = colSnap.docs.map((colSnap) => ({
+  //         key: colSnap.id,
+  //         data: colSnap.data(),
+  //       }));
+  //       this.currentChannel = this.channels[0];
+  //     }
+  //   );
+  // }
 
   getReciepent(reciever: any, user: any) {
     this.currentReciever = reciever;
@@ -132,7 +139,8 @@ export class UserService {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
       } else if (component === 'channel') {
-        this.currentComponent.next(ChatContentComponent);
+        if (this.isMobile) this.router.navigate(['/channel']);
+        else this.currentComponent.next(ChatContentComponent);
       }
     }, 0);
   }

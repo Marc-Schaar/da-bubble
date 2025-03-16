@@ -10,6 +10,7 @@ import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-chat',
@@ -30,20 +31,26 @@ import { ThreadComponent } from '../thread/thread.component';
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   shareddata = inject(UserService);
+  router: Router = inject(Router);
   showFiller = true;
+  isMobile: boolean = false;
+
   currentComponent: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
+  private subscription!: Subscription;
 
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
+
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
         this.currentComponent = component;
         console.log('Aktuelle Komponente:', component);
       }
     );
+
     this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
     });
