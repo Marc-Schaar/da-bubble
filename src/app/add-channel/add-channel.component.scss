@@ -1,0 +1,286 @@
+/* Angular Material Radio Button Custom Styles */
+
+:root {
+  --md-sys-color-primary: #006a6a;
+  --md-radio-icon-size: 16px;
+}
+::ng-deep .custom-radio .mat-radio-outer-circle {
+  border-color: var(
+    --md-sys-color-primary
+  ) !important; /* Ändert den äußeren Kreis */
+}
+
+::ng-deep .custom-radio .mat-radio-inner-circle {
+  background-color: var(
+    --md-sys-color-primary
+  ) !important; /* Ändert den inneren Punkt */
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 872px;
+  height: 514px;
+  top: 100px;
+  left: 100px;
+  .add-channel-cont {
+    width: 710px;
+    height: 279px;
+    padding: 40px;
+    font-family: "Nunito";
+    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out,
+    transform 1s ease-in-out;
+    transform-origin: center center;
+    .add-channel-create {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      .close-cont {
+        cursor: pointer;
+      }
+      form {
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+      }
+      .input-cont {
+        position: relative;
+        cursor: default !important;
+        &::before {
+          content: "#";
+          position: absolute;
+          left: 24px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 26px;
+          z-index: 1;
+          color: rgba(104, 104, 104, 1);
+        }
+        .channel-name {
+          padding-left: 50px;
+          &::placeholder {
+            color: rgba(104, 104, 104, 1);
+          }
+        }
+      }
+      input,
+      textarea {
+        outline: none;
+        box-sizing: border-box;
+        border-radius: 30px;
+        height: 60px;
+        border: 1px solid rgba(173, 176, 217, 1);
+        width: 100%;
+        font-size: 18px;
+        font-weight: 400;
+        cursor: pointer;
+        &:hover {
+          border: 1px solid var(--medium-purple);
+        }
+        &:focus-visible {
+          border: 1px solid var(--dark-purple-text);
+        }
+      }
+      .add-channel-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32.74px;
+      }
+      .description {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+      }
+      .headline {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+      }
+      .headline-optional {
+        display: flex;
+        gap: 4px;
+        .optional {
+          font-size: 18px;
+          font-weight: 400;
+        }
+      }
+      .channel-description {
+        padding: 20px;
+        min-height: 60px;
+        max-height: 170px;
+        overflow-y: hidden;
+        resize: none;
+        transition: height 0.3s;
+      }
+    }
+  }
+
+  .change-size {
+    width: 872px;
+    height: 514px;
+  }
+
+  .select-member-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      .btn-cont {
+        place-self: end;
+      }
+      .decision {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 18px;
+        font-weight: 400;
+        .input-cont {
+          box-sizing: border-box;
+          border-radius: 30px;
+          height: 60px;
+          border: 1px solid rgba(173, 176, 217, 1);
+          width: 100%;
+          font-size: 18px;
+          font-weight: 400;
+          display: flex;
+          align-items: center;
+          padding: 7.5px 20px 7.5px 20px;
+          gap: 5px;
+          overflow-x: auto;
+          font-family: "Nunito";
+          font-size: 18px;
+          font-weight: 400;
+          position: static;
+          cursor: default !important;
+          .choose-user-bar {
+            top: 315px;
+            width: 335px;
+            max-height: 171px;
+            border-radius: 0 30px 30px 30px;
+            background-color: white;
+            position: absolute;
+            border: 1px solid rgba(173, 176, 217, 1);
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+            padding: 20px 21px 20px 21px;
+            overflow-y: auto;
+            .user-select-cont {
+              display: flex;
+              align-items: center;
+              gap: 15px;
+              width: fit-content;
+              border-radius: 30px;
+              padding: 4px 20px 4px 20px;
+              cursor: pointer;
+              &:hover {
+                background-color: var(--bg-color);
+              }
+              .img-status-cont {
+                position: relative;
+                .satus-circle {
+                  position: absolute;
+                  background-color: rgba(104, 104, 104, 1);
+                  border: 2px solid rgba(255, 255, 255, 1);
+                  top: 40px;
+                  left: 36px;
+                  width: 14px;
+                  height: 14px;
+                  border-radius: 100%;
+                }
+                img {
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 100%;
+                }
+              }
+            }
+          }
+          .input-help-cont {
+            display: flex;
+            gap: 10px;
+          }
+          .mini-profile-cont {
+            display: flex;
+            gap: 15px;
+            height: 40px;
+            border-radius: 30px;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 20px 3px 20px;
+            .user-img-mini {
+              width: 34px;
+              height: 34px;
+              border-radius: 100%;
+            }
+            .cross-mini {
+              width: 10px;
+              height: 10px;
+              cursor: pointer;
+            }
+            .username-mini {
+              width: max-content;
+            }
+          }
+          input {
+            outline: none;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 30px;
+            width: 100%;
+            height: 100%;
+            padding-left: 1px;
+          }
+          cursor: pointer;
+          &:hover {
+            border: 1px solid var(--medium-purple);
+          }
+          &:focus-visible {
+            border: 1px solid var(--dark-purple-text);
+          }
+        }
+        div {
+          label {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+    .add-channel-user-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  button {
+    width: 125px;
+    height: 49px;
+    // padding: 12px 25px 12px 25px;
+    background-color: var(--dark-purple);
+    border-radius: 25px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: "Nunito";
+    place-self: end;
+    z-index: 2;
+  }
+}
+
+
+.d-none {
+  display: none;
+}

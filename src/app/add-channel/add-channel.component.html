@@ -1,1 +1,130 @@
-<p>add-channel works!</p>
+<div class="main">
+  <div
+    class="add-channel-cont"
+    id="add-channel-cont"
+    data-aos="flip-up"
+    [ngClass]="{ 'change-size': !selectChannelMember }"
+    [attr.data-aos]="!selectChannelMember ? 'flip-up' : null"
+  >
+    <div *ngIf="!selectChannelMember" class="add-channel-create">
+      <div class="add-channel-header">
+        <div class="add-channel-text">Channel erstellen</div>
+        <div class="close-cont" (click)="closeScreen()">
+          <img src="img/close.png" alt="" />
+        </div>
+      </div>
+      <div class="description">
+        Channels dienen deinem Team zur Kommunikation. Am besten sollten sie
+        themenbezogen sein #marketing zum Beispiel.
+      </div>
+      <form (ngSubmit)="onSubmit()" #channelForm="ngForm">
+        <div class="headline">Channel-Name</div>
+        <div class="input-cont">
+          <input
+            class="channel-name"
+            type="text"
+            placeholder="z.B. Kooperationsprojekte"
+            [(ngModel)]="channelName"
+            name="channelName"
+            required
+          />
+        </div>
+        <div class="headline-optional">
+          <div class="headline">Beschreibung</div>
+          <div class="optional">(optional)</div>
+        </div>
+        <textarea
+          class="channel-description"
+          type="text"
+          name=""
+          id=""
+          (input)="adjustTextareaHeight($event)"
+          (blur)="shrinkTextarea($event)"
+          (focus)="expandTextarea($event)"
+        ></textarea>
+        <button [disabled]="!channelForm.valid" *ngIf="addNewChannel">Erstellen</button> 
+      </form>
+    </div>
+    <div *ngIf="selectChannelMember" class="select-member-cont">
+      <div class="add-channel-user-header">
+        <div class="headline-channel-add-user">Leute hinzufügen</div>
+        <div class="close-cont" (click)="closeScreen()">
+          <img src="img/close.png" alt="" />
+        </div>
+      </div>
+      <form>
+        <div class="decision">
+          <div>
+            <input
+              type="radio"
+              id="allMembers"
+              name="channelMember"
+              value="false"
+              (change)="setChannelMember(false, '279px')"
+              checked
+            />
+            <label for="allMembers"
+              >Alle Mitglieder von OfficeTeam hinzufügen</label
+            >
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="specificMembers"
+              name="channelMember"
+              value="true"
+              (change)="setChannelMember(true, '354px')"
+            />
+            <label for="specificMembers">Bestimmte Leute hinzufügen</label>
+          </div>
+          <div class="input-cont" *ngIf="chooseMember">
+            <div class="input-help-cont">
+              <div
+                class="mini-profile-cont"
+                *ngFor="let selectedUser of selectedUsers; let index = index"
+              >
+                <img
+                  class="user-img-mini"
+                  src="{{ selectedUsers[index]?.profilephoto }}"
+                  alt=""
+                />
+                <div class="username-mini">
+                  {{ selectedUsers[index]?.fullname }}
+                </div>
+                <img
+                  (click)="removeSelectedUser(index)"
+                  src="img/close.png"
+                  alt=""
+                  class="cross-mini"
+                />
+              </div>
+              <div class="choose-user-bar" *ngIf="showUserBar">
+                <div
+                  class="user-select-cont"
+                  (click)="addUserToSelection(index)"
+                  *ngFor="let filteredUser of filteredUsers; let index = index"
+                >
+                  <div class="img-status-cont">
+                    <img src="{{ filteredUser.profilephoto }}" alt="" />
+                    <div class="satus-circle"></div>
+                  </div>
+                  <div>{{ filteredUser.fullname }}</div>
+                </div>
+                <div></div>
+              </div>
+            </div>
+            <input
+              name=""
+              id="user-search-bar"
+              (focus)="openUserBar()"
+              (keyup)="filterUsers()"
+            />
+          </div>
+        </div>
+        <div class="btn-cont">
+          <button>Erstellen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
