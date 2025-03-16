@@ -38,7 +38,6 @@ export class HeaderComponent {
   auth = inject(Auth);
   opened = 0;
   chatmoduleenabled = inject(UserService);
-  shareddata = inject(UserService);
   fireService = inject(FireServiceService);
 
   show() {
@@ -51,7 +50,7 @@ export class HeaderComponent {
   }
 
   async signOut() {
-    const currentUser = this.shareddata.getUser();
+    const currentUser = this.chatmoduleenabled.getUser();
     currentUser.online = false;
     await this.fireService.updateOnlineStatus(currentUser);
     await signOut(this.auth);

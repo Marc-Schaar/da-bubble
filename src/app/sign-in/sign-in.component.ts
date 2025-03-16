@@ -23,7 +23,7 @@ import { User } from '../../models/user';
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent {
   disabled = true;
   googleAuthProvider = new GoogleAuthProvider();
   shareddata = inject(ChatServiceService);
@@ -31,10 +31,6 @@ export class SignInComponent implements OnInit {
   firestore = inject(Firestore);
   fireService = inject(FireServiceService);
   user: User = new User();
-
-  ngOnInit(): void {
-    this.shareddata.login = true;
-  }
 
   async signin() {
     try {

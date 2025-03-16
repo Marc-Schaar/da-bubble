@@ -12,13 +12,13 @@ import { FireServiceService } from './fire-service.service';
 })
 export class UserService {
   dashboard = false;
+  login = false;
   constructor(private router: Router) {
     this.setCurrentUser();
   }
   auth: Auth = inject(Auth);
   firestore: Firestore = inject(Firestore);
   fireService: FireServiceService = inject(FireServiceService);
-  login = false;
   user: any = new User();
   public users: any[] = [];
   private indexSource = new BehaviorSubject<number>(-1);
