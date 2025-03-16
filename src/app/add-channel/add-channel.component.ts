@@ -196,38 +196,15 @@ export class AddChannelComponent implements OnInit {
 
   async pushAllUser() {
     try {
-      // 🔹 Referenz auf den Haupt-Channel mit festen ID
       const channelId = 'LPRVbdSLkaDmZSzumHJA';
       const mainChannelRef = doc(this.firestore, 'channels', channelId);
       const mainChannelDoc = await getDoc(mainChannelRef);
-  
-      // 🔹 Referenz auf den zuletzt erstellten Channel (gespeichert in this.channelRef)
-      if (!this.channelRef) {
-        console.error('Fehler: Kein Ziel-Channel gefunden!');
-        return;
-      }
       const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
       const targetChannelDoc = await getDoc(targetChannelRef);
-  
       if (mainChannelDoc.exists() && targetChannelDoc.exists()) {
         const mainChannelData = mainChannelDoc.data();
         const targetChannelData = targetChannelDoc.data();
-  
-        // 🔹 Stelle sicher, dass `member` existiert und ein Array ist
-        if (!mainChannelData || !Array.isArray(mainChannelData['member'])) {
-          console.error('Fehler: Mitgliederliste im Haupt-Channel fehlt oder ist ungültig.');
-          return;
-        }
-  
-        // 🔹 Mitglieder aus dem Haupt-Channel holen & zum Ziel-Channel hinzufügen
-        const updatedMembers = [
-          ...(targetChannelData ? targetChannelData['member'] : []),
-          ...mainChannelData['member']
-        ];
-  
-        // 🔥 Firestore-Dokument updaten mit neuen Mitgliedern
-        await updateDoc(targetChannelRef, { member: updatedMembers });
-  
+        await updateDoc(targetChannelRef, { member: mainChannelData['member'] });
         console.log('Alle Mitglieder erfolgreich hinzugefügt.');
       } else {
         console.error('Fehler: Ein oder beide Channel existieren nicht.');
