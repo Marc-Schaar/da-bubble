@@ -1,0 +1,142 @@
+.header {
+  padding: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1920px;
+  width: 100%;
+  > div:nth-child(1) {
+    width: 40%;
+    @media (max-width: 500px) {
+      width: unset;
+    }
+  }
+  @media (max-width: 1204px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+  @media (max-width: 492px) {
+    flex-direction: column;
+  }
+  @media (max-width: 1204px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  img {
+    width: fit-content;
+    height: fit-content;
+  }
+}
+
+.signup {
+  width: 24%;
+  height: 70px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  flex-direction: column;
+  @media (max-width: 400px) {
+    width: unset;
+  }
+  @media (max-width: 1204px) {
+    height: unset;
+  }
+  > p:nth-child(1) {
+    font-family: "Nunito";
+    font-weight: 400;
+    font-size: 18px;
+    color: #000000;
+    text-decoration: none;
+  }
+  > a:nth-child(2) {
+    font-family: "Figtree";
+    font-weight: 400;
+    font-size: 18px;
+    color: #797ef3;
+    text-decoration: none;
+    padding: 10px 15px;
+    &:hover {
+      border: 1px solid #adb0d9;
+      padding: 9px 14px;
+      border-radius: 30px;
+    }
+  }
+}
+
+.d-none {
+  display: none !important;
+}
+
+.d-none1 {
+  display: flex;
+  @media (max-width: 1206px) {
+    display: none !important;
+  }
+}
+
+.user-menu {
+  width: 50%;
+  height: 70px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  @media (max-width: 696px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  > div:nth-child(1) {
+    height: 70px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 82%;
+    @media (max-width: 492px) {
+      justify-content: center;
+    }
+    > img:nth-child(2) {
+      margin-left: 5%;
+    }
+    > span:nth-child(1) {
+      font-family: "Nunito";
+      font-weight: 700;
+      font-size: 32px;
+      color: #000000;
+      @media (max-width: 1204px) {
+        display: none;
+      }
+    }
+  }
+}
+
+.input {
+  border-radius: 42px;
+  outline: none;
+  width: calc(100% - 94px);
+  background-repeat: no-repeat;
+  background-position: 99%;
+  padding: 17.5px 45px 17.5px 45px;
+  background-color: #ffff;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 1204px) {
+    display: none;
+  }
+  > input {
+    border: none;
+    outline: none;
+    @media (max-width: 400px) {
+      width: 100%;
+    }
+    &:hover {
+      outline: none;
+    }
+  }
+  > button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}

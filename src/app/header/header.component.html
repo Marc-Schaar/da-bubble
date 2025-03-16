@@ -1,1 +1,59 @@
-<p>header works!</p>
+<div class="header">
+  <div>
+    <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
+  </div>
+  <div></div>
+  <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+    <input type="text" placeholder="Devspace durchsuchen" />
+    <button><img src="/img/icons.png" alt="" /></button>
+  </div>
+
+  <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
+    <p>Neu bei DABubble?</p>
+    <a routerLink="/signup">Konto erstellen</a>
+  </div>
+  <div class="user-menu" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+    <div>
+      <span>{{ user?.displayName || "Gast" }}</span>
+      <img src="img/Profile bild.png" alt="" />
+      <div>
+        <button
+          (click)="showmenu()"
+          mat-icon-button
+          [matMenuTriggerFor]="beforeMenu"
+          aria-label="Example icon-button with a menu"
+        >
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before">
+          <div *ngIf="showmenu">
+            <button
+              *ngIf="!showmodifycontent"
+              (click)="show()"
+              class="menu-box-btn"
+              mat-menu-item
+              (click)="$event.stopPropagation()"
+            >
+              Profil
+            </button>
+            <button
+              *ngIf="!showmodifycontent"
+              class="menu-box-btn"
+              mat-menu-item
+              (click)="signOut()"
+            >
+              Log out
+            </button>
+          </div>
+
+          <app-user-profile
+            (click)="$event.stopPropagation()"
+            [menuTrigger]="menuTriggerRef"
+            [showmodifycontent]="showmodifycontent"
+            *ngIf="showmodifycontent"
+          ></app-user-profile>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+</div>
