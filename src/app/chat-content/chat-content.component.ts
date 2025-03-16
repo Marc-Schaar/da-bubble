@@ -43,7 +43,7 @@ import { UserService } from '../shared.service';
 })
 export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  private subscription?: Subscription;
+  private subscriptions = new Subscription();
 
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
@@ -68,20 +68,22 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   async ngOnInit() {
     if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
     this.startChannel();
-    this.subscription = this.userService.startLoadingChannel$.subscribe(() => {
-      this.startChannel();
-    });
+    this.subscriptions.add(
+      this.userService.startLoadingChannel$.subscribe(() => {
+        this.startChannel();
+      })
+    );
 
-    this.subscription = this.userService.screenWidth$.subscribe((isMobile) => {
-      this.isMobile = isMobile;
-      console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
-    });
+    this.subscriptions.add(
+      this.userService.screenWidth$.subscribe((isMobile) => {
+        this.isMobile = isMobile;
+        console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
+      })
+    );
   }
 
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    if (this.subscriptions) this.subscriptions.unsubscribe();
   }
 
   startChannel() {
