@@ -1,1 +1,68 @@
-<p>avatar-selection works!</p>
+<div class="borders">
+    <app-header></app-header>
+    <div class="singup">
+      <div class="content">
+        <form>
+          <div>
+            <button routerLink="/signup">
+              <img src="/img/arrow_back.png" alt="" />
+            </button>
+            <div>
+              <h1>Wähle deinen Avatar</h1>
+              <span
+                >Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+                DABubble-Konto.</span
+              >
+            </div>
+          </div>
+          <div class="profilebox">
+            <div><img src="{{ profilephoto }}" alt="" /></div>
+            <div>
+              <h2>Frederik Beck</h2>
+              <p>Aus der Liste wählen</p>
+            </div>
+  
+            <div class="profileicons">
+              <img
+                #photo1
+                (click)="selectphoto('/img/avatars/avatar_1.png')"
+                src="/img/avatars/avatar_1.png"
+                alt=""
+              /><img
+                #photo2
+                (click)="selectphoto('/img/avatars/avatar_2.png')"
+                src="/img/avatars/avatar_2.png"
+                alt=""
+              /><img
+                #photo3
+                (click)="selectphoto('/img/avatars/avatar_3.png')"
+                src="/img/avatars/avatar_3.png"
+                alt=""
+              /><img
+                #photo4
+                (click)="selectphoto('/img/avatars/avatar_4.png')"
+                src="/img/avatars/avatar_4.png"
+                alt=""
+              /><img
+                #photo5
+                (click)="selectphoto('/img/avatars/avatar_5.png')"
+                src="/img/avatars/avatar_5.png"
+                alt=""
+              /><img
+                #photo6
+                (click)="selectphoto('/img/avatars/avatar_6.png')"
+                src="/img/avatars/avatar_6.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div>
+            <input type="button" (click)="login()" value="Weiter" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div [class.active]="isOverlayActive" class="overlay"></div>
+    <app-footer></app-footer>
+  </div>
+  
