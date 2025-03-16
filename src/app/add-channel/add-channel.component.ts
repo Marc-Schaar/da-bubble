@@ -27,8 +27,8 @@ import {
 } from '@angular/fire/firestore';
 import { UserService } from '../shared.service';
 import { getAuth } from 'firebase/auth';
-import { User } from '../../models/user.class';
-import { Channel } from '../../models/channels.class';
+import { User } from '../models/user';
+import { Channel } from "../models/channel";
 import { FireServiceService } from '../fire-service.service';
 
 @Component({
@@ -39,8 +39,8 @@ import { FireServiceService } from '../fire-service.service';
 })
 export class AddChannelComponent implements OnInit {
   channelName: string = '';
-  channelDescription: string = '';
   selectChannelMember: boolean = false;
+  channelDescription: HTMLInputElement | null = null;
   chooseMember: boolean = false;
   auth = getAuth();
   user: User | null = null;
@@ -55,9 +55,9 @@ export class AddChannelComponent implements OnInit {
   fireService = inject(FireServiceService);
   channel = new Channel();
   channels: any = [];
-  addNewChannel:boolean = true;
-  addUser:boolean = false;
   allUser:boolean = true;
+  creator:string = '';
+
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -107,7 +107,7 @@ export class AddChannelComponent implements OnInit {
   }
 
   async loadChannel() {
-    this.channels = this.channelmodule.getChannels();
+    // this.channels = this.channelmodule.getChannels();
   }
 
   addUserToSelection(index: number) {
@@ -147,59 +147,60 @@ export class AddChannelComponent implements OnInit {
 
   closeScreen() {
     console.log('close window');
-
-    // Reset form fields
-    this.channelName = ''; // Clear channel name input
-    this.channelDescription = ''; // Clear channel description input
-
-    // Clear selected users
-    this.selectedUsers = [];
-
-    // Reset user bar visibility
-    this.showUserBar = false;
-
-    // Log current state (for debugging)
-    console.log('Users:', this.users);
+    // this.channelName = ''; 
+    // this.channelDescription = '';
+    // this.selectedUsers = [];
+    // this.showUserBar = false;
+    console.log(this.auth.currentUser);
+    
+    // console.log('Users:', this.users);
     console.log(
       'Channel Members:',
-      this.channelmodule.channels[0]?.data?.member
-    );
+      this.channelmodule.channels[0]?.data?.member)
+
   }
 
   onSubmit() {
-    if (!this.selectChannelMember && this.addNewChannel) {
+    if (!this.selectChannelMember) {
       this.addChannel();
-      // this.pushAllUsers();
       console.log('channel erstellt');
-      this.addNewChannel = false;
-      this.addUser = true;
+      console.log(this.channelmodule.getChannel);
+
+      this.selectChannelMember = true;
     }  
-    if (!this.selectChannelMember && this.addUser) {
-      // this.addUserToChannel()
-      this.addNewChannel = true;
-      this.addUser = false;
+  }
+
+  addUserToChannel() {
+    if(!this.chooseMember) {
+      this.pushAllUser();
     }
-    this.selectChannelMember = true;
-    // console.log(this.channelmodule.channels);
+    console.log("user added");
+  }
+
+  pushAllUser() {
+
   }
 
 async addChannel() {
+  const channelDescription = document.getElementById('channel-description') as HTMLInputElement | null;
   try {
     const newChannel: Channel = {
       name: this.channelName,
-      description: this.channelDescription,
+      description: channelDescription ? channelDescription.value : '',
       member: this.selectedUsers,
-      messages: [],
+      creator: this.auth.currentUser?.displayName ?? 'Unknown',
     };
     const channelsCollection = collection(this.firestore, 'channels');
     await addDoc(channelsCollection, {
       name: newChannel.name,
       description: newChannel.description,
       member: newChannel.member,
-      messages: newChannel.messages, 
+      creator: newChannel.creator,
     });
     this.channelName = '';
-    this.channelDescription = '';
+    if (this.channelDescription) {
+      this.channelDescription.value = '';
+    }
     this.selectedUsers = [];
   } catch (error) {
     console.error('Fehler beim Erstellen des Channels:', error);
@@ -207,6 +208,8 @@ async addChannel() {
 }
 
 // async pushAllUsers() {
+
+
 //   try {
 //     const allUser = this.users
 //     const channel = this.channelmodule.channels[0];

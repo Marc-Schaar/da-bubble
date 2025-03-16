@@ -37,12 +37,12 @@
           class="channel-description"
           type="text"
           name=""
-          id=""
+          id="channel-description"
           (input)="adjustTextareaHeight($event)"
           (blur)="shrinkTextarea($event)"
           (focus)="expandTextarea($event)"
         ></textarea>
-        <button [disabled]="!channelForm.valid" *ngIf="addNewChannel">Erstellen</button> 
+        <button [disabled]="!channelForm.valid">Erstellen</button> 
       </form>
     </div>
     <div *ngIf="selectChannelMember" class="select-member-cont">
@@ -122,7 +122,7 @@
           </div>
         </div>
         <div class="btn-cont">
-          <button>Erstellen</button>
+          <button (click)="addUserToChannel()">Erstellen</button>
         </div>
       </form>
     </div>

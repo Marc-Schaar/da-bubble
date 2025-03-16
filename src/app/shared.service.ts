@@ -58,7 +58,7 @@ export class UserService {
   component: string = '';
 
   public users: any[] = [];
-  // channels: any = [];
+  channels: any = [];
   messages: any = [];
 
   user: any = new User();
@@ -107,19 +107,19 @@ export class UserService {
     });
   }
 
-  // getChannels() {
-  //   this.channels = [];
-  //   this.unsubChannels = onSnapshot(
-  //     this.fireService.getCollectionRef('channels')!,
-  //     (colSnap) => {
-  //       this.channels = colSnap.docs.map((colSnap) => ({
-  //         key: colSnap.id,
-  //         data: colSnap.data(),
-  //       }));
-  //       this.currentChannel = this.channels[0];
-  //     }
-  //   );
-  // }
+  getChannels() {
+    this.channels = [];
+    this.unsubChannels = onSnapshot(
+      this.fireService.getCollectionRef('channels')!,
+      (colSnap) => {
+        this.channels = colSnap.docs.map((colSnap) => ({
+          key: colSnap.id,
+          data: colSnap.data(),
+        }));
+        this.currentChannel = this.channels[0];
+      }
+    );
+  }
 
   getReciepent(reciever: any, user: any) {
     this.currentReciever = reciever;
