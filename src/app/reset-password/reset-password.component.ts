@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/user';
+import { User } from '../models/user';
 import { CommonModule } from '@angular/common';
 import {
   getAuth,
@@ -16,7 +16,13 @@ import { UserService } from '../shared.service';
 @Component({
   selector: 'app-resetpassword',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, FormsModule, CommonModule,RouterLink],
+  imports: [
+    HeaderComponent,
+    FooterComponent,
+    FormsModule,
+    CommonModule,
+    RouterLink,
+  ],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
@@ -33,8 +39,7 @@ export class ResetpasswordComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private afApp: FirebaseApp
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.auth = getAuth(this.afApp);

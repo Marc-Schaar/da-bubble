@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
-import { ChatServiceService } from '../chat-service.service';
+import { UserService } from '../shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class ContactbarComponent {
   public users: any = [];
   active: boolean = false;
   message: boolean = false;
-  userService = inject(ChatServiceService);
+  userService = inject(UserService);
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
   currentUser: any = [];

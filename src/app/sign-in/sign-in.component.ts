@@ -14,8 +14,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
-import { ChatServiceService } from '../chat-service.service';
-import { User } from '../../models/user';
+import { User } from '../models/user';
 import { UserService } from '../shared.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class SignInComponent {
   disabled = true;
   shared = inject(UserService);
   googleAuthProvider = new GoogleAuthProvider();
-  shareddata = inject(ChatServiceService);
   auth = inject(Auth);
   firestore = inject(Firestore);
   fireService = inject(FireServiceService);
@@ -45,7 +43,6 @@ export class SignInComponent {
       this.shared.redirectiontodashboard();
     } catch (error) {
       console.log(error);
-      
     }
   }
 
@@ -56,7 +53,6 @@ export class SignInComponent {
       this.shared.redirectiontodashboard();
     } catch (error) {
       console.log(error);
-
     }
   }
 }

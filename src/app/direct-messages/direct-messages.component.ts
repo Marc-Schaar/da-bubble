@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-direct-messages',
   imports: [],
   templateUrl: './direct-messages.component.html',
-  styleUrl: './direct-messages.component.scss'
+  styleUrl: './direct-messages.component.scss',
 })
-export class DirectMessagesComponent {
-
-}
+export class DirectMessagesComponent {}

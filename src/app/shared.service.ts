@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { User } from '../models/user';
 import { Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
@@ -7,6 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
+import { User } from './models/user';
 @Injectable({
   providedIn: 'root',
 })

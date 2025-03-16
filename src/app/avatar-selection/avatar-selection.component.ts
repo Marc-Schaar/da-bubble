@@ -8,7 +8,7 @@ import {
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
-import { User } from '../../models/user';
+import { User } from '../models/user';
 import {
   createUserWithEmailAndPassword,
   getAuth,

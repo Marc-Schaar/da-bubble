@@ -21,8 +21,8 @@ import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ChatServiceService } from '../chat-service.service';
-import { Message } from '../../models/message';
+import { Message } from '../models/message';
+import { UserService } from '../shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +43,7 @@ export class ChatContentComponent implements OnInit {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
   private subscription?: Subscription;
   fireService: FireServiceService = inject(FireServiceService);
-  userService: ChatServiceService = inject(ChatServiceService);
+  userService: UserService = inject(UserService);
   router: Router = inject(Router);
 
   loading: boolean = false;

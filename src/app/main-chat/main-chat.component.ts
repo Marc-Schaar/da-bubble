@@ -8,7 +8,6 @@ import { HeaderComponent } from '../header/header.component';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
-import { ChatServiceService } from '../chat-service.service';
 import { UserService } from '../shared.service';
 
 @Component({
@@ -28,8 +27,7 @@ import { UserService } from '../shared.service';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  shareddata = inject(UserService)
-  chatmodule = inject(ChatServiceService);
+  shareddata = inject(UserService);
   showFiller = true;
   currentComponent: any;
   private componentSubscription: Subscription | null = null;
@@ -38,13 +36,13 @@ export class MainChatComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-    this.componentSubscription = this.chatmodule.component$.subscribe(
+    this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
         this.currentComponent = component;
         console.log('Aktuelle Komponente:', component);
       }
     );
-    this.threadSubscription = this.chatmodule.threadToggle$.subscribe(() => {
+    this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
     });
   }

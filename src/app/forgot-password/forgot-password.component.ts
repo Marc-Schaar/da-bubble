@@ -3,7 +3,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { User } from '../../models/user';
+import { User } from '../models/user';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../shared.service';
