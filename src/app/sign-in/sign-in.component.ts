@@ -26,7 +26,7 @@ import { UserService } from '../shared.service';
 })
 export class SignInComponent {
   disabled = true;
-  shared = inject(UserService)
+  shared = inject(UserService);
   googleAuthProvider = new GoogleAuthProvider();
   shareddata = inject(ChatServiceService);
   auth = inject(Auth);
@@ -43,18 +43,20 @@ export class SignInComponent {
       );
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      
+    }
   }
 
   async signinwithgoogle() {
     try {
       await signInWithPopup(this.auth, this.googleAuthProvider);
       await this.shared.setOnlineStatus();
-      console.log(this.shared.user.displayName);
-      
       this.shared.redirectiontodashboard();
-    } catch (error) {}
-  }
+    } catch (error) {
+      console.log(error);
 
-  
+    }
+  }
 }
