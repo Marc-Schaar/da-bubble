@@ -24,11 +24,12 @@ import {
   addDoc,
   updateDoc,
   doc,
+  getDoc,
 } from '@angular/fire/firestore';
 import { UserService } from '../shared.service';
 import { getAuth } from 'firebase/auth';
 import { User } from '../models/user';
-import { Channel } from "../models/channel";
+import { Channel } from '../models/channel';
 import { FireServiceService } from '../fire-service.service';
 
 @Component({
@@ -55,9 +56,9 @@ export class AddChannelComponent implements OnInit {
   fireService = inject(FireServiceService);
   channel = new Channel();
   channels: any = [];
-  allUser:boolean = true;
-  creator:string = '';
-
+  allUser: boolean = true;
+  creator: string = '';
+  channelRef: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -107,7 +108,7 @@ export class AddChannelComponent implements OnInit {
   }
 
   async loadChannel() {
-    // this.channels = this.channelmodule.getChannels();
+    this.channels = this.channelmodule.getChannels();
   }
 
   addUserToSelection(index: number) {
@@ -147,17 +148,14 @@ export class AddChannelComponent implements OnInit {
 
   closeScreen() {
     console.log('close window');
-    // this.channelName = ''; 
+    // this.channelName = '';
     // this.channelDescription = '';
     // this.selectedUsers = [];
     // this.showUserBar = false;
     console.log(this.auth.currentUser);
-    
-    // console.log('Users:', this.users);
-    console.log(
-      'Channel Members:',
-      this.channelmodule.channels[0]?.data?.member)
 
+    // console.log('Users:', this.users);
+    console.log('Channel Members:', this.channelmodule.channels);
   }
 
   onSubmit() {
@@ -167,68 +165,131 @@ export class AddChannelComponent implements OnInit {
       console.log(this.channelmodule.getChannel);
 
       this.selectChannelMember = true;
-    }  
+    }
   }
 
   addUserToChannel() {
-    if(!this.chooseMember) {
+    if (!this.chooseMember) {
       this.pushAllUser();
+    } else {
+      this.pushSelectedUser();
     }
-    console.log("user added");
+    console.log('user added');
   }
 
-  pushAllUser() {
-
-  }
-
-async addChannel() {
-  const channelDescription = document.getElementById('channel-description') as HTMLInputElement | null;
-  try {
-    const newChannel: Channel = {
-      name: this.channelName,
-      description: channelDescription ? channelDescription.value : '',
-      member: this.selectedUsers,
-      creator: this.auth.currentUser?.displayName ?? 'Unknown',
-    };
-    const channelsCollection = collection(this.firestore, 'channels');
-    await addDoc(channelsCollection, {
-      name: newChannel.name,
-      description: newChannel.description,
-      member: newChannel.member,
-      creator: newChannel.creator,
-    });
-    this.channelName = '';
-    if (this.channelDescription) {
-      this.channelDescription.value = '';
+  async pushSelectedUser() {
+    try {  
+      const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
+      const targetChannelDoc = await getDoc(targetChannelRef);
+      if (targetChannelDoc.exists()) {
+        const targetChannelData = targetChannelDoc.data();
+        await updateDoc(targetChannelRef, { member: this.selectedUsers });
+        this.selectedUsers = [];
+      } else {
+        console.error('Fehler: Der Channel existiert nicht.');
+      }
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen der ausgewählten Benutzer:', error);
     }
-    this.selectedUsers = [];
-  } catch (error) {
-    console.error('Fehler beim Erstellen des Channels:', error);
   }
-}
+  
 
-// async pushAllUsers() {
+  async pushAllUser() {
+    try {
+      // 🔹 Referenz auf den Haupt-Channel mit festen ID
+      const channelId = 'LPRVbdSLkaDmZSzumHJA';
+      const mainChannelRef = doc(this.firestore, 'channels', channelId);
+      const mainChannelDoc = await getDoc(mainChannelRef);
+  
+      // 🔹 Referenz auf den zuletzt erstellten Channel (gespeichert in this.channelRef)
+      if (!this.channelRef) {
+        console.error('Fehler: Kein Ziel-Channel gefunden!');
+        return;
+      }
+      const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
+      const targetChannelDoc = await getDoc(targetChannelRef);
+  
+      if (mainChannelDoc.exists() && targetChannelDoc.exists()) {
+        const mainChannelData = mainChannelDoc.data();
+        const targetChannelData = targetChannelDoc.data();
+  
+        // 🔹 Stelle sicher, dass `member` existiert und ein Array ist
+        if (!mainChannelData || !Array.isArray(mainChannelData['member'])) {
+          console.error('Fehler: Mitgliederliste im Haupt-Channel fehlt oder ist ungültig.');
+          return;
+        }
+  
+        // 🔹 Mitglieder aus dem Haupt-Channel holen & zum Ziel-Channel hinzufügen
+        const updatedMembers = [
+          ...(targetChannelData ? targetChannelData['member'] : []),
+          ...mainChannelData['member']
+        ];
+  
+        // 🔥 Firestore-Dokument updaten mit neuen Mitgliedern
+        await updateDoc(targetChannelRef, { member: updatedMembers });
+  
+        console.log('Alle Mitglieder erfolgreich hinzugefügt.');
+      } else {
+        console.error('Fehler: Ein oder beide Channel existieren nicht.');
+      }
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen der Benutzer:', error);
+    }
+  }
+  
+  
 
+  async addChannel() {
+    const channelDescription = document.getElementById(
+      'channel-description'
+    ) as HTMLInputElement | null;
+    try {
+      const newChannel: Channel = {
+        name: this.channelName,
+        description: channelDescription ? channelDescription.value : '',
+        member: this.selectedUsers,
+        creator: this.auth.currentUser?.displayName ?? 'Unknown',
+      };
+      const channelsCollection = collection(this.firestore, 'channels');
+      const channelRef = await addDoc(channelsCollection, {
+        name: newChannel.name,
+        description: newChannel.description,
+        member: newChannel.member,
+        creator: newChannel.creator,
+      });
+      this.channelRef = channelRef.id;
+      console.log('Channel erstellt mit ID:', channelRef.id);
 
-//   try {
-//     const allUser = this.users
-//     const channel = this.channelmodule.channels[0];
-//     if (channel) {
-//       const channelRef = doc(this.firestore, 'channels', channel.key);
-//       const updatedMembers = [...new Set([...channel.data.member, ...allUser])]; // Doppelte Einträge vermeiden
-//       await updateDoc(channelRef, {
-//         member: updatedMembers,
-//       });
-//       console.log('Alle Benutzer wurden dem Channel "DaBubble" hinzugefügt.');
-//     } else {
-//       console.error('Channel "DaBubble" nicht gefunden.');
-//     }
-//   } catch (error) {
-//     console.error('Fehler beim Hinzufügen der Benutzer zum Channel:', error);
-//   }
-//   console.log(this.channelmodule.channels[0].data.member);
-// }
+      this.channelName = '';
+      if (this.channelDescription) {
+        this.channelDescription.value = '';
+      }
+      this.selectedUsers = [];
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Channels:', error);
+    }
+  }
 
+  // async pushAllUsers() {
+
+  //   try {
+  //     const allUser = this.users
+  //     const channel = this.channelmodule.channels[0];
+  //     if (channel) {
+  //       const channelRef = doc(this.firestore, 'channels', channel.key);
+  //       const updatedMembers = [...new Set([...channel.data.member, ...allUser])]; // Doppelte Einträge vermeiden
+  //       await updateDoc(channelRef, {
+  //         member: updatedMembers,
+  //       });
+  //       console.log('Alle Benutzer wurden dem Channel "DaBubble" hinzugefügt.');
+  //     } else {
+  //       console.error('Channel "DaBubble" nicht gefunden.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Fehler beim Hinzufügen der Benutzer zum Channel:', error);
+  //   }
+  //   console.log(this.channelmodule.channels[0].data.member);
+  // }
 
   setChannelMember(value: boolean, setHeight: string) {
     const heightElement = document.getElementById(
