@@ -1,12 +1,13 @@
 
 import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { UserService } from '../shared.service';
-import { Firestore, updateDoc, doc } from '@angular/fire/firestore';
+import { Firestore, updateDoc, doc, query, arrayUnion } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
+import { collection, onSnapshot, orderBy } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -36,14 +37,9 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   isChat: boolean = false;
   private subscription?: Subscription;
   constructor() {
-    this.startChat() 
+    this.startChat()
   }
-  ngAfterViewInit() {
 
-    if (this.chatContentRef) {
-      this.scrollToBottom();
-    }
-  }
   ngOnInit() {
     //this.startChat();
     this.subscription = this.userService.startLoadingChat$.subscribe(() => {
@@ -89,14 +85,20 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     const message = new DirectMessage(this.currentUser.fullname, this.currentUser.profilephoto, this.message, this.currentUser.id, this.currentReciever.id);
 
     const messageData = this.createMessageData(message);
+    const currentUserRef = doc(this.firestore, `users/${this.currentUser.id}`);
+    const currentReceiverRef = doc(this.firestore, `users/${this.currentReciever.id}`);
     if (this.currentReciever.id !== this.currentUser.id) {
-      this.currentReciever.messages.push(messageData);
+      await updateDoc(currentReceiverRef, {
+        messages: arrayUnion(messageData)
+    });
     }
-    this.currentUser.messages.push(messageData);
+    await updateDoc(currentUserRef, {
+      messages: arrayUnion(messageData) 
+  });
     this.isEmpty = false;
-    await this.updateUsers();
-    this.loadMessages()
-    this.scrollToBottom();
+    //await this.updateUsers();
+    //this.loadMessages()
+
   }
 
   createMessageData(message: DirectMessage) {
@@ -111,15 +113,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
 
-  scrollToBottom() {
-    setTimeout(() => {
-      const chat = this.chatContentRef.nativeElement as HTMLElement;
-      if (chat) {
-        chat.scrollTop = chat.scrollHeight;
-      }
-    }, 0);
-  }
-
+/*
   async updateUsers() {
     try {
       const receiverDocRef = doc(this.firestore, `users/${this.currentReciever.id}`);
@@ -137,25 +131,48 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       console.error("Fehler beim Speichern der Nachricht: ", error);
     }
   }
-
+*/
 
   loadMessages() {
-    this.currentMessages = [];
-    this.currentUser.messages.forEach((message: any) => {
-      if (this.currentUser.id === this.currentReciever.id) {
-        if (message.to === this.currentReciever.id && message.from === this.currentReciever.id) {
-          this.currentMessages.push(message);
-        }
-      } else {
-        if (message.to === this.currentReciever.id || message.from === this.currentReciever.id) {
-          this.currentMessages.push(message);
-        }
-      }
-    });
+    const messagesRef = doc(this.firestore, `users/${this.currentUser.id}`);
+    onSnapshot(messagesRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+            const messageData = docSnapshot.data(); 
+            const messages = messageData['messages'] || []; 
+            this.currentMessages = []; 
+            messages.forEach((message:any) => {
+                if (this.currentUser.id === this.currentReciever.id) {
+                    if (message['to'] === this.currentReciever.id && message['from'] === this.currentReciever.id) {
+                        this.currentMessages.push(message);
+                    }
+                } else {
+                    if (message['to'] === this.currentReciever.id || message['from'] === this.currentReciever.id) {
+                        this.currentMessages.push(message);
+                    }
+                }
+            });
 
-    this.sortMessages();
-    this.checkMessages();
-  }
+            this.sortMessages();
+            this.checkMessages();
+        } else {
+            console.log("Benutzerdokument existiert nicht.");
+        }
+    }); 
+}
+
+
+     /*
+          this.currentUser.messages.forEach((message: any) => {
+            if (this.currentUser.id === this.currentReciever.id) {
+              if (message.to === this.currentReciever.id && message.from === this.currentReciever.id) {
+                this.currentMessages.push(message);
+              }
+            } else {
+              if (message.to === this.currentReciever.id || message.from === this.currentReciever.id) {
+                this.currentMessages.push(message);
+              }
+            }
+        */
 
   sortMessages() {
     this.currentMessages.sort((a: any, b: any) => {
