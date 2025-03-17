@@ -103,6 +103,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       console.log('keine User oder Channel');
     }
+    console.log('User:', this.userService.user);
+    console.log('Channel:', this.userService.currentChannel);
   }
 
   setCurrentChannel() {

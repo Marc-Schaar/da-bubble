@@ -21,6 +21,7 @@ import { User } from './models/user';
 export class UserService {
   constructor() {
     this.setCurrentUser();
+    this.loadCurrentChannelFromStorage();
     this.observeScreenWidth();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
@@ -133,14 +134,25 @@ export class UserService {
     this.startLoadingChannel.next();
   }
 
+  loadCurrentChannelFromStorage() {
+    const storedChannel = localStorage.getItem('currentChannel');
+    if (storedChannel) {
+      this.currentChannel = JSON.parse(storedChannel);
+    }
+  }
+
   loadComponent(component: string) {
     //this.currentComponent.next(null);
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
+        localStorage.setItem('currentComponent', JSON.stringify(component));
       } else if (component === 'channel') {
         if (this.isMobile) this.router.navigate(['/channel']);
-        else this.currentComponent.next(ChatContentComponent);
+        else {
+          this.currentComponent.next(ChatContentComponent);
+          localStorage.setItem('currentComponent', JSON.stringify(component));
+        }
       }
     }, 0);
   }
