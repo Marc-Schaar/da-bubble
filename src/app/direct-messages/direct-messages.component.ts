@@ -98,7 +98,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.isEmpty = false;
     //await this.updateUsers();
     //this.loadMessages()
-
+    this.message = '';
   }
 
   createMessageData(message: DirectMessage) {
@@ -126,7 +126,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       await updateDoc(senderDocRef, {
         messages: this.currentUser.messages
       });
-      this.message = '';
+     
     } catch (error) {
       console.error("Fehler beim Speichern der Nachricht: ", error);
     }
