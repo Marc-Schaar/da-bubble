@@ -440,3 +440,9 @@ header {
     padding: 10px 16px;
   }
 }
+
+@media (max-width: 1023px) {
+  .card {
+    max-height: calc(100svh - 110px);
+  }
+}

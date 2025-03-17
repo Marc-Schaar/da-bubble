@@ -56,6 +56,13 @@ app-footer {
   align-items: center;
 }
 
+app-main-chat {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  height: 100vh;
+}
+
 @font-face {
   font-family: "Nunito";
   src: url("/fonts/Nunito-VariableFont_wght.ttf") format("woff");

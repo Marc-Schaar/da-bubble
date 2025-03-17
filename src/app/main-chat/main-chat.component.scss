@@ -1,22 +1,24 @@
+header {
+  grid-column: span 1;
+  background-color: var(--bg-color);
+}
+
 .content-container {
   display: grid;
   grid-template-columns: 366px 1fr;
-  grid-template-rows: auto 1fr;
-  height: 100svh;
-}
-
-app-header {
-  grid-column: span 3;
+  grid-template-rows: 1fr;
+  height: 100%;
 }
 
 app-contactbar {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1;
 }
 
 .chat-content {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
+  position: relative;
 }
 
 app-thread {
