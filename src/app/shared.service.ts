@@ -21,6 +21,7 @@ import { User } from './models/user';
 export class UserService {
   constructor() {
     this.setCurrentUser();
+    this.getCurrentChannel();
     this.observeScreenWidth();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
@@ -130,7 +131,14 @@ export class UserService {
   getChannel(channel: any, user: any) {
     this.currentChannel = channel;
     this.currentUser = user;
+    localStorage.setItem('currentChannel', JSON.stringify(channel));
     this.startLoadingChannel.next();
+  }
+
+  getCurrentChannel() {
+    let storedChannel = localStorage.getItem('currentChannel');
+    if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
+    else console.log('Channel konnte nicht geladen werden aus Local Storage');
   }
 
   loadComponent(component: string) {
@@ -138,9 +146,13 @@ export class UserService {
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
+        localStorage.setItem('currentComponent', JSON.stringify(component));
       } else if (component === 'channel') {
         if (this.isMobile) this.router.navigate(['/channel']);
-        else this.currentComponent.next(ChatContentComponent);
+        else {
+          this.currentComponent.next(ChatContentComponent);
+          localStorage.setItem('currentComponent', JSON.stringify(component));
+        }
       }
     }, 0);
   }

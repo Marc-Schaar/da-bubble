@@ -1,18 +1,21 @@
-<app-header></app-header>
-<div class="box">
+<header>
+  <app-header></app-header>
+  <div class="box">
     <div class="input">
-        <input type="text" placeholder="Devspace durchsuchen" />
-        <button><img src="/img/icons.png" alt=""></button>
+      <input type="text" placeholder="Devspace durchsuchen" />
+      <button><img src="/img/icons.png" alt="" /></button>
     </div>
-</div>
+  </div>
+</header>
+
 <div class="content-container">
-    <app-contactbar></app-contactbar>
+  <app-contactbar></app-contactbar>
 
-    <mat-drawer-container class="chat-content" autosize>
-        <mat-drawer position="end" #drawer class="tread-container" mode="side">
-            <app-thread></app-thread>
-        </mat-drawer>
+  <mat-drawer-container class="chat-content" autosize>
+    <mat-drawer position="end" #drawer class="tread-container" mode="side">
+      <app-thread></app-thread>
+    </mat-drawer>
 
-        <ng-container *ngComponentOutlet="currentComponent"></ng-container>
-    </mat-drawer-container>
+    <ng-container *ngComponentOutlet="currentComponent"></ng-container>
+  </mat-drawer-container>
 </div>

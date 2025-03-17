@@ -43,6 +43,7 @@ export class MainChatComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
+    this.getCurrentComponent();
 
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
@@ -64,5 +65,14 @@ export class MainChatComponent implements OnInit {
 
   toggleThread() {
     this.drawer.toggle();
+  }
+
+  getCurrentComponent() {
+    console.log('müsste Component laden...');
+
+    let storedComponent = localStorage.getItem('currentComponent');
+    if (storedComponent) {
+      this.currentComponent = JSON.parse(storedComponent);
+    }
   }
 }
