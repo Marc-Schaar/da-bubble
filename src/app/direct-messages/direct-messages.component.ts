@@ -101,7 +101,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentUser.id,
       this.currentReciever.id
     );
-
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUser.id}`);
     const currentReceiverRef = doc(
