@@ -21,7 +21,7 @@ import { User } from './models/user';
 export class UserService {
   constructor() {
     this.setCurrentUser();
-    this.loadCurrentChannelFromStorage();
+    this.setCurrentChannel();
     this.observeScreenWidth();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
@@ -134,11 +134,10 @@ export class UserService {
     this.startLoadingChannel.next();
   }
 
-  loadCurrentChannelFromStorage() {
-    const storedChannel = localStorage.getItem('currentChannel');
-    if (storedChannel) {
-      this.currentChannel = JSON.parse(storedChannel);
-    }
+  setCurrentChannel() {
+    let storedChannel = localStorage.getItem('currentChannel');
+    if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
+    else console.log('Channel konnte nicht geladen werden aus Local Storage');
   }
 
   loadComponent(component: string) {
