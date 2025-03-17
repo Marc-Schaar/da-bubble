@@ -136,8 +136,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
               : '–',
           };
         });
-
-        console.log(this.messages);
         this.scrollToBottom();
       });
     }
@@ -147,7 +145,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     let messagesCollectionRef = this.getCollectionRef(
       `channels/${this.currentChannel.id}/messages`
     );
-
     if (messagesCollectionRef) {
       this.loading = true;
       try {

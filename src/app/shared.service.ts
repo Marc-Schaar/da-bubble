@@ -125,6 +125,7 @@ export class UserService {
   getReciepent(reciever: any, user: any) {
     this.currentReciever = reciever;
     this.currentUser = user;
+    localStorage.setItem('currentReciver', JSON.stringify(reciever));
     this.startLoadingChat.next();
   }
 
