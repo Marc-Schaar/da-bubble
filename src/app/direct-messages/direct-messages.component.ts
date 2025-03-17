@@ -64,8 +64,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.isChat === false
       console.log('Chat muss per click initialisiert werden');
     }
-
-
   }
 
 
@@ -76,14 +74,12 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       console.error('currentReciever oder currentUser sind nicht definiert!');
       return;
     }
-
   }
 
 
   async sendMessage() {
     if (this.message === '' || !this.currentReciever || !this.currentUser) { return };
     const message = new DirectMessage(this.currentUser.fullname, this.currentUser.profilephoto, this.message, this.currentUser.id, this.currentReciever.id);
-
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUser.id}`);
     const currentReceiverRef = doc(this.firestore, `users/${this.currentReciever.id}`);
