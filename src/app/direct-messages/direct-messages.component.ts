@@ -91,10 +91,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   async startChat() {
     console.log('start');
-    if (
-      this.userService.user != null &&
-      this.userService.currentReciever != null
-    ) {
+    if (this.userService.user != null && this.userService.currentReciever != null) {
       this.setCurrentReciever();
       this.loadMessages();
       this.checkReciever();

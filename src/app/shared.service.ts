@@ -147,12 +147,12 @@ export class UserService {
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
-        localStorage.setItem('currentComponent', JSON.stringify(component));
+     
       } else if (component === 'channel') {
         if (this.isMobile) this.router.navigate(['/channel']);
         else {
           this.currentComponent.next(ChatContentComponent);
-          localStorage.setItem('currentComponent', JSON.stringify(component));
+
         }
       }
     }, 0);

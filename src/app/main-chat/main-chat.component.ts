@@ -35,7 +35,7 @@ export class MainChatComponent implements OnInit {
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
-  currentReciever:any;
+  currentReciever: any;
   currentComponent: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
@@ -44,7 +44,7 @@ export class MainChatComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-    this.getCurrentComponent();
+
 
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
@@ -71,26 +71,15 @@ export class MainChatComponent implements OnInit {
     this.drawer.toggle();
   }
 
-  getCurrentComponent() {
-    console.log('müsste Component laden...');
-
-    let storedComponent = localStorage.getItem('currentComponent');
-    if (storedComponent) {
-      this.currentComponent = JSON.parse(storedComponent);
-    }
-  }
-
- 
-
   closeProfile() {
     this.isProfileCard = false;
   }
 
-  openProfile(){
-    this.currentReciever=this.shareddata.currentReciever;
+  openProfile() {
+    this.currentReciever = this.shareddata.currentReciever;
     this.isProfileCard = !this.isProfileCard
     console.log('OPEN');
     console.log(this.isProfileCard);
-    
+
   }
 }
