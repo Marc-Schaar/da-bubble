@@ -42,7 +42,7 @@ export class UserService {
 
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
-  private currentComponent = new BehaviorSubject<any>(DirectmessagesComponent);
+  private currentComponent = new BehaviorSubject<any>(NewMessageComponent);
   component$ = this.currentComponent.asObservable();
   private startLoadingChat = new Subject<void>();
   startLoadingChat$ = this.startLoadingChat.asObservable();
