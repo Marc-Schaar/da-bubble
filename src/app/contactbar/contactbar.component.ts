@@ -4,6 +4,8 @@ import { Firestore } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -15,7 +17,7 @@ import { UserService } from '../shared.service';
   styleUrl: './contactbar.component.scss',
 })
 export class ContactbarComponent {
-  constructor() {}
+  constructor(private router: Router) {}
   public channels: any = [];
   public users: any = [];
   active: boolean = false;
@@ -61,6 +63,11 @@ export class ContactbarComponent {
     }
   }
 
+  setUrl(channelType: string) {
+    this.router.navigate(['/chat'], {
+      queryParams: { channelType: channelType },
+    });
+  }
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
 
@@ -89,8 +96,6 @@ export class ContactbarComponent {
   }
 
   openWindow(window: string) {
-      this.userService.loadComponent(window);
+    this.userService.loadComponent(window);
   }
-
- 
 }

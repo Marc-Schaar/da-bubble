@@ -10,7 +10,7 @@ import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-chat',
@@ -41,10 +41,18 @@ export class MainChatComponent implements OnInit {
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
 
+  //Neue Logik ab hier:
+
+  channelType: any;
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
 
+    this.route.queryParams.subscribe((params) => {
+      console.log('Geladener Channel:', params['channeltype']);
+    });
 
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
@@ -77,9 +85,8 @@ export class MainChatComponent implements OnInit {
 
   openProfile() {
     this.currentReciever = this.shareddata.currentReciever;
-    this.isProfileCard = !this.isProfileCard
+    this.isProfileCard = !this.isProfileCard;
     console.log('OPEN');
     console.log(this.isProfileCard);
-
   }
 }
