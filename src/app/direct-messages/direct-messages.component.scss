@@ -24,11 +24,19 @@ section {
 
     >div {
         width: 100%;
+        box-sizing: border-box;
+        padding: 4px 20px;
         max-width: fit-content;
+        height: 58px;
+        border-radius: 35px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         gap: 15px;
+cursor: pointer;
+        &:hover{
+            background-color: var(--bg-color);
+        }
 
         >span {
             font-size: 24px;
@@ -182,15 +190,36 @@ textarea:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+  
 
     >button {
         >img {
-            width: 24px;
-            height: 24px;
+            width: 40px;
+            height: 40px;
         }
     }
 
+}
+
+.smiley{
+    
+    &:hover{
+     
+        content: url(./../../../public/img/smiley_hover.svg) !important;
+    }
+    &:active{
+        transform: scale(0.95);
+    }
+}
+
+.at{
+    &:hover{
+     
+        content: url(./../../../public/img/at_hover.svg) !important;
+    }
+    &:active{
+        transform: scale(0.95);
+    }
 }
 
 .right {
@@ -441,6 +470,9 @@ button {
     &:hover {
         background-color: var(--bg-color);
         border-radius: 30px;
+        >.tag{
+            content: url(./../../../public/img/tag-purple.svg) !important;
+        }
     }
 }
 
@@ -453,6 +485,9 @@ button {
     border-radius: unset !important;
     max-width: 16px !important;
     max-height: 16px !important;
+    &:hover{
+       
+    }
 }
 
 .show {

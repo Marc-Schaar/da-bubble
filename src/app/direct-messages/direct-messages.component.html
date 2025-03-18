@@ -55,6 +55,7 @@
         </div>
        
     </div>
+    <div class="profile"></div>
     <div [ngClass]="{'show': isClicked }" class="lists">
         <div [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList">
             <div *ngIf="!isChannel" class="imageContainer">
@@ -73,8 +74,8 @@
                 placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
             <div>
                 <div class="left">
-                    <button (click)="toggleList('channels', $event)"><img src="./img/sentiment_satisfied.svg" alt=""></button>
-                    <button (click)="toggleList('users', $event)"><img src="./img/alternate_email.svg" alt=""></button>
+                    <button  (click)="toggleList('channels', $event)"><img class="smiley" src="./img/smiley.svg" alt=""></button>
+                    <button  (click)="toggleList('users', $event)"><img class="at" src="./img/at.svg" alt=""></button>
                 </div>
                 <button (click)="sendMessage()" class="right"><img src="./img/send.svg" alt=""></button>
             </div>
