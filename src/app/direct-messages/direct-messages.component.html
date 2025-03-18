@@ -82,7 +82,7 @@
         <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
     </div>--> 
     <div [ngClass]="{'show': isClicked }" class="lists">
-        <div [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList">
+        <div (click)="getReciever(index)" [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList; let index = index">
             <div *ngIf="!isChannel" class="imageContainer">
                 <img [src]="object?.profilephoto" alt="">
                 <div *ngIf="!isChannel" class="status-dot" [ngClass]="{'green': object?.online}"></div>

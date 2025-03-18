@@ -323,18 +323,31 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.isClicked = false
     }
   }
-/*
-  toggleProfile() {
-    this.isProfileCard = !this.isProfileCard
+  /*
+    toggleProfile() {
+      this.isProfileCard = !this.isProfileCard
+    }
+  
+    closeProfile() {
+      this.isProfileCard = false;
+    }
+  */
+  showProfile() {
+
+    this.userService.showRecieverProfile();
   }
 
-  closeProfile() {
-    this.isProfileCard = false;
-  }
-*/
-  showProfile(){
-    
-    this.userService.showRecieverProfile();
+  getReciever(index: number) {
+    console.log(this.isChannel);
+    this.message = '';
+    if (this.isChannel) {
+      const currentChannel = this.currentList[index];
+      this.message = '#' + currentChannel?.name;
+    } else {
+      const currentReciever = this.currentList[index]
+      this.message = '@' + currentReciever?.fullname;
+    }
+
   }
 
 }
