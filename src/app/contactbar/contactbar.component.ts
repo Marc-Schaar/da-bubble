@@ -31,7 +31,6 @@ export class ContactbarComponent {
   async ngOnInit() {
     await this.loadUsers();
     await this.loadChannels();
-    this.getCurrentWindow();
     this.findCurrentUser();
   }
 
@@ -90,18 +89,8 @@ export class ContactbarComponent {
   }
 
   openWindow(window: string) {
-    if (window) {
       this.userService.loadComponent(window);
-    } else {
-      this.getCurrentWindow();
-    }
   }
 
-  getCurrentWindow() {
-    let storedWindow = localStorage.getItem('currentComponent');
-    if (storedWindow) {
-      let window = JSON.parse(storedWindow);
-      this.openWindow(window);
-    }
-  }
+ 
 }

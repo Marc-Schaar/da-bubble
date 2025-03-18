@@ -15,6 +15,8 @@ import { DirectmessagesComponent } from './direct-messages/direct-messages.compo
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
 import { User } from './models/user';
+import { NewMessageComponent } from './new-message/new-message.component';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -147,13 +149,15 @@ export class UserService {
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
-     
+
       } else if (component === 'channel') {
         if (this.isMobile) this.router.navigate(['/channel']);
         else {
           this.currentComponent.next(ChatContentComponent);
 
         }
+      } else if (component === 'new') {
+        this.currentComponent.next(NewMessageComponent);
       }
     }, 0);
   }
