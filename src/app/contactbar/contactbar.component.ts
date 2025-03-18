@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   styleUrl: './contactbar.component.scss',
 })
 export class ContactbarComponent {
-  constructor(private router: Router) {}
+  constructor() {}
   public channels: any = [];
   public users: any = [];
   active: boolean = false;
@@ -25,6 +25,7 @@ export class ContactbarComponent {
   userService = inject(UserService);
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
+  router: Router = inject(Router);
   currentUser: any = [];
   currentReceiver: any;
   userID: string = '';
@@ -63,11 +64,12 @@ export class ContactbarComponent {
     }
   }
 
-  setUrl(channelType: string) {
+  setUrl(channelType: string, id: string) {
     this.router.navigate(['/chat'], {
-      queryParams: { channelType: channelType },
+      queryParams: { channelType: channelType, id: id },
     });
   }
+
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
 

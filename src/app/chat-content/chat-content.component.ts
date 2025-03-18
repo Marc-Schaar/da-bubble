@@ -96,8 +96,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userService.currentChannel != null
     ) {
       this.isMobile = this.userService.checkScreenWidth();
-      this.setCurrentChannel();
-      this.getMessages();
+      //  this.setCurrentChannel();
+      //this.getMessages();
       console.log(this.currentChannel);
       console.log(this.currentUser);
     } else {

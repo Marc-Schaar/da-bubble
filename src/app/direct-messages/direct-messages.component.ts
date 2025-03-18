@@ -55,9 +55,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
   constructor() {
     this.startChat();
-
   }
-
 
   async ngOnInit() {
     this.subscription = this.userService.startLoadingChat$.subscribe(() => {
@@ -91,9 +89,12 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   async startChat() {
     console.log('start');
-    if (this.userService.user != null && this.userService.currentReciever != null) {
+    if (
+      this.userService.user != null &&
+      this.userService.currentReciever != null
+    ) {
       this.setCurrentReciever();
-      this.loadMessages();
+      //  this.loadMessages();
       this.checkReciever();
       this.isChat = true;
     } else {
@@ -101,8 +102,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       console.log('Chat muss per click initialisiert werden');
     }
   }
-
-
 
   setCurrentReciever() {
     this.currentReciever = this.userService.currentReciever;
@@ -278,16 +277,15 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   toggleList(chat: string, event: Event) {
     if (this.listKey === chat && this.isClicked === true) {
       this.isClicked = false;
-
     } else {
-      this.isClicked = true
+      this.isClicked = true;
     }
 
     console.log(this.isClicked);
     if (chat === 'channels') {
       this.currentList = this.channels;
       console.log(this.currentList);
-      this.isChannel = true
+      this.isChannel = true;
     }
     if (chat === 'users') {
       this.currentList = this.users;
@@ -305,19 +303,21 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   getList() {
-
     if (this.message.includes('#')) {
       this.currentList = this.channels;
-      this.isClicked = true
-      this.isChannel = true
+      this.isClicked = true;
+      this.isChannel = true;
     }
     if (this.message.includes('@')) {
-      this.isClicked = true
+      this.isClicked = true;
       this.currentList = this.users;
       this.isChannel = false;
     }
-    if (this.message === '' || !this.message.includes('#') && !this.message.includes('@')) {
-      this.isClicked = false
+    if (
+      this.message === '' ||
+      (!this.message.includes('#') && !this.message.includes('@'))
+    ) {
+      this.isClicked = false;
     }
   }
   /*
@@ -330,7 +330,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   */
   showProfile() {
-
     this.userService.showRecieverProfile();
   }
 
@@ -341,10 +340,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       const currentChannel = this.currentList[index];
       this.message = '#' + currentChannel?.name;
     } else {
-      const currentReciever = this.currentList[index]
+      const currentReciever = this.currentList[index];
       this.message = '@' + currentReciever?.fullname;
     }
-
   }
-
 }

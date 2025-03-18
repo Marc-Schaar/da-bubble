@@ -32,6 +32,7 @@ export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   shareddata = inject(UserService);
   router: Router = inject(Router);
+
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
@@ -43,16 +44,17 @@ export class MainChatComponent implements OnInit {
 
   //Neue Logik ab hier:
 
-  channelType: any;
+  channelType: string = 'default';
+  channelMessages: any = [];
+  docId: string = '';
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
 
-    this.route.queryParams.subscribe((params) => {
-      console.log('Geladener Channel:', params['channeltype']);
-    });
+    this.getUrlData();
 
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
@@ -67,6 +69,26 @@ export class MainChatComponent implements OnInit {
     this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
     });
+  }
+
+  getUrlData() {
+    this.route.queryParams.subscribe((params) => {
+      if (params['channelType']) {
+        this.channelType = params['channelType'];
+        this.docId = params['id'];
+        console.log('Aktueller Channel Typ', this.channelType);
+      } else console.log('Default');
+    });
+  }
+  getChannelMasseges() {
+    if (this.channelType === 'direct') {
+      //Direktnachrichten laden und pushen
+    }
+    if (this.channelType === 'channel') {
+      //Channelnachrichten laden und pushen
+    } else {
+      //Default Neue Nachricht?
+    }
   }
 
   ngOnDestroy(): void {

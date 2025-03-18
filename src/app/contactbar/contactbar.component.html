@@ -4,7 +4,7 @@
       <img src="/img/workspace-logo.svg" alt="" />
       <h1>Devspace</h1>
     </div>
-    <button (click)="openWindow('chat'); setUrl('default')">
+    <button (click)="openWindow('chat'); setUrl('default', '')">
       <img src="/img/edit_square.svg" alt="" />
     </button>
   </div>
@@ -35,7 +35,9 @@
         >
           <div
             (click)="
-              openWindow('channel'); openChannel(index); setUrl('channel')
+              openWindow('channel');
+              openChannel(index);
+              setUrl('channel', channel.id)
             "
           >
             <img src="/img/tag.svg" alt="" />
@@ -71,7 +73,9 @@
           *ngFor="let user of this.users; let index = index"
           class="contactsrow"
           (click)="
-            openWindow('chat'); openPersonalChat(index); setUrl('direct')
+            openWindow('chat');
+            openPersonalChat(index);
+            setUrl('direct', user.id)
           "
         >
           <div>
