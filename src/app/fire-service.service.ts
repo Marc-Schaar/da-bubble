@@ -78,12 +78,12 @@ export class FireServiceService {
     return ref ? updateDoc(ref, { message: value }) : null;
   }
 
-  addThread(User: User, messageDocRef: any, message: any) {
-    return addDoc(collection(this.firestore, `${messageDocRef.path}/threads`), {
-      createdFrom: User,
-      messages: message,
-    });
-  }
+  // addThread(User: User, messageDocRef: any, message: any) {
+  //   return addDoc(collection(this.firestore, `${messageDocRef.path}/threads`), {
+  //     createdFrom: User,
+  //     messages: message,
+  //   });
+  // }
 
   async sendMessage(
     channelId: string,
