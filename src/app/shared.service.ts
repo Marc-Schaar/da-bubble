@@ -15,7 +15,7 @@ import { DirectmessagesComponent } from './direct-messages/direct-messages.compo
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
 import { User } from './models/user';
-import { NewMessageComponent } from './new-message/new-message.component';
+
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +42,7 @@ export class UserService {
 
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
-  private currentComponent = new BehaviorSubject<any>(NewMessageComponent);
+  private currentComponent = new BehaviorSubject<any>(DirectmessagesComponent);
   component$ = this.currentComponent.asObservable();
   private startLoadingChat = new Subject<void>();
   startLoadingChat$ = this.startLoadingChat.asObservable();
@@ -156,8 +156,6 @@ export class UserService {
           this.currentComponent.next(ChatContentComponent);
 
         }
-      } else if (component === 'new') {
-        this.currentComponent.next(NewMessageComponent);
       }
     }, 0);
   }
