@@ -33,8 +33,9 @@ section {
         justify-content: flex-start;
         align-items: center;
         gap: 15px;
-cursor: pointer;
-        &:hover{
+        cursor: pointer;
+
+        &:hover {
             background-color: var(--bg-color);
         }
 
@@ -44,6 +45,131 @@ cursor: pointer;
         }
     }
 
+}
+
+.profileCard {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    max-height: 705px;
+    position: absolute;
+
+    box-sizing: border-box;
+    padding: 40px;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    background-color: white;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 45px;
+    >img{
+        width:200px;
+        height: 200px;
+        border-radius: 500px;
+    }
+    >button{
+        width: 100%;
+        max-width: 164px;
+        background-color: var(--dark-purple);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: 12px 25px;
+        border-radius: 50px;
+        color: white;
+        gap: 10px;
+        cursor: pointer;
+        &:active{
+            transform: scale(0.95);
+        }
+        >span{
+            font-size: 18px !important;
+       
+        }
+    }
+}
+
+.profileHead{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    >span{
+        font-size: 24px;
+        
+    }
+}
+
+.profileStatus{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    >span{
+        font-size: 32px;
+        
+    }
+>div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    >span{
+        color: rgba(104,104,104,1);
+        font-size: 20px;
+        font-weight: 400;
+    }
+}
+}
+
+
+
+
+.status-dot-profile {
+
+    width: 16px;
+    height: 16px;
+    border: solid;
+    background-color: gray;
+    border-radius: 50%;
+    border-color: #ECEEFE;
+    border-width: 2px;
+
+}
+
+
+.contactInfos{
+    width: 100%;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.emailImage{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    >img{
+        width: 30px;
+        height: 30px;
+    }
+}
+.email-adress{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    padding-left: 46px;
+    >a{
+        color: var(--blue-email-color);
+    }
 }
 
 .textField {
@@ -190,7 +316,7 @@ textarea:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
 
     >button {
         >img {
@@ -201,23 +327,25 @@ textarea:focus {
 
 }
 
-.smiley{
-    
-    &:hover{
-     
+.smiley {
+
+    &:hover {
+
         content: url(./../../../public/img/smiley_hover.svg) !important;
     }
-    &:active{
+
+    &:active {
         transform: scale(0.95);
     }
 }
 
-.at{
-    &:hover{
-     
+.at {
+    &:hover {
+
         content: url(./../../../public/img/at_hover.svg) !important;
     }
-    &:active{
+
+    &:active {
         transform: scale(0.95);
     }
 }
@@ -470,7 +598,8 @@ button {
     &:hover {
         background-color: var(--bg-color);
         border-radius: 30px;
-        >.tag{
+
+        >.tag {
             content: url(./../../../public/img/tag-purple.svg) !important;
         }
     }
@@ -485,9 +614,8 @@ button {
     border-radius: unset !important;
     max-width: 16px !important;
     max-height: 16px !important;
-    &:hover{
-       
-    }
+
+    &:hover {}
 }
 
 .show {

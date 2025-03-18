@@ -51,6 +51,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
+  isProfileCard: boolean = false;
   private subscription?: Subscription;
   constructor() {
     this.startChat();
@@ -310,7 +311,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   getList() {
-    
+
     if (this.message.includes('#')) {
       this.currentList = this.channels;
       this.isClicked = true
@@ -324,5 +325,9 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     if (this.message === '' || !this.message.includes('#') && !this.message.includes('@')) {
       this.isClicked = false
     }
+  }
+
+  toggleProfile() {
+    this.isProfileCard = !this.isProfileCard
   }
 }

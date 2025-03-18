@@ -1,6 +1,6 @@
 <section (click)="hideList()">
     <div *ngIf="isChat" class="chat-header">
-        <div>
+        <div (click)="toggleProfile()">
             <div class="imageContainer">
                 <img [src]="currentReciever?.profilephoto" alt="">
                 <div class="status-dot" [ngClass]="{'green': currentReciever?.online}"></div>
@@ -12,7 +12,8 @@
     </div>
     <div *ngIf="!isChat" class="textField">
         <span class="newText">Neue Nachricht</span>
-        <input [(ngModel)]="input" (input)="getCurrentChat()"  type="text" placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse">
+        <input [(ngModel)]="input" (input)="getCurrentChat()" type="text"
+            placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse">
     </div>
 
     <div id="chat" *ngIf="isChat" class="chat-content">
@@ -46,20 +47,44 @@
                 <span>{{currentReciever?.fullname}}</span>
             </div>
             <div class="welcomeText">
-                <p *ngIf="!isYou">Diese Unterhaltung findet nur zwischen <a href="">&commat;{{currentReciever?.fullname}}
+                <p *ngIf="!isYou">Diese Unterhaltung findet nur zwischen <a
+                        href="">&commat;{{currentReciever?.fullname}}
                     </a>und dir statt.</p>
                 <p *ngIf="isYou"><span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos
                     auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst
                     besprechen.</p>
             </div>
         </div>
-       
+
     </div>
-    <div class="profile"></div>
+    <div [ngClass]="{'show': isProfileCard}" class="profileCard">
+        <div class="profileHead">
+            <span>Profile</span>
+            <button><img src="./img/close.svg" alt=""></button>
+        </div>
+        <img [src]="currentReciever?.profilephoto" alt="">
+        <div class="profileStatus">
+            <span>{{currentReciever?.fullname}}</span>
+            <div>
+                <div class="status-dot-profile" [ngClass]="{'green': currentReciever?.online}"></div>
+                <span>{{ currentReciever?.online ? 'Aktiv' : 'Abwesend' }}</span>
+            </div>
+        </div>
+        <div class="contactInfos">
+            <div class="emailImage">
+                <img src="./img/mail.svg" alt="">
+                <span>E-Mail-Adresse</span>
+            </div>
+            <div class="email-adress">
+                <a href="mailto:{{currentReciever?.email}}">{{currentReciever?.email}}</a>
+            </div>
+        </div>
+        <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
+    </div>
     <div [ngClass]="{'show': isClicked }" class="lists">
         <div [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList">
             <div *ngIf="!isChannel" class="imageContainer">
-                <img  [src]="object?.profilephoto" alt="">
+                <img [src]="object?.profilephoto" alt="">
                 <div *ngIf="!isChannel" class="status-dot" [ngClass]="{'green': object?.online}"></div>
             </div>
             <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="">
@@ -74,8 +99,9 @@
                 placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
             <div>
                 <div class="left">
-                    <button  (click)="toggleList('channels', $event)"><img class="smiley" src="./img/smiley.svg" alt=""></button>
-                    <button  (click)="toggleList('users', $event)"><img class="at" src="./img/at.svg" alt=""></button>
+                    <button (click)="toggleList('channels', $event)"><img class="smiley" src="./img/smiley.svg"
+                            alt=""></button>
+                    <button (click)="toggleList('users', $event)"><img class="at" src="./img/at.svg" alt=""></button>
                 </div>
                 <button (click)="sendMessage()" class="right"><img src="./img/send.svg" alt=""></button>
             </div>
