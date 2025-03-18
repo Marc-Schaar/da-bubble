@@ -1,54 +1,114 @@
 .main {
+  display: flex;
+  flex-direction: column;
+  width: 872px;
+  height: 616px;
+  border-radius: 0 30px 30px 30px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  padding: 40px;
+  font-family: "Nunito";
+  gap: 20px;
+  .channel-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    font-weight: 700;
+    align-items: center;
+    .chanelname-cont {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      .hash {
+        font-size: 35px;
+      }
+    }
+  }
+  .channelname-edit-cont {
     display: flex;
     flex-direction: column;
-    width: 872px;
-    height: 616px;
-    border-radius: 0 30px 30px 30px;
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    padding: 40px;
-    font-family: 'Nunito';
-    .channel-header {
-        display: flex;
-        justify-content: space-between;
-        font-size: 24px;
+    padding: 20px;
+    border: 1px solid rgba(173, 176, 217, 1);
+    border-radius: 20px;
+    gap: 20px;
+    transition: padding 0.1s ease-in-out;
+    .channelname-header {
+      display: flex;
+      justify-content: space-between;
+      .channelname-headline {
         font-weight: 700;
-        align-items: center;
-        .chanelname-cont {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            .hash {
-                font-size: 35px;
-            }
+      }
+      .nameedit-btn {
+        font-weight: 600;
+        color: var(--dark-purple-text);
+        cursor: pointer;
+        font-size: 18px;
+        width: 90px;
+        height: 25px;
+        &:hover {
+          font-weight: 700;
+          color: var(--dark-purple);
         }
+      }
     }
-    .channelname-edit-cont {
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        border: 1px solid rgba(173, 176, 217, 1);
-        border-radius: 20px;
-        .channelname-header {
-            display: flex;
-            justify-content: space-between;
-            .channelname-headline {
-                font-weight: 700;
-            }
-            .nameedit-btn {
-                font-weight: 600;
-                color: var(--dark-purple-text);
-                cursor: pointer;
-                font-size: 18px;
-                &:hover {
-                    font-weight: 700;
-                    color: var(--dark-purple);
+    .hash-channelname {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      .small-hash {
+        font-size: 21px;
+      }
+      .small-channelname {
+        font-size: 18px;
+        font-weight: 400px;
+      }
+    }
+  }
+}
 
-                }
-            }
-        }
-    }
+.change-name-edit-cont {
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+input {
+  outline: none;
+  box-sizing: border-box;
+  border-radius: 30px;
+  height: 60px;
+  border: 1px solid rgba(173, 176, 217, 1);
+  width: 100%;
+  font-size: 18px;
+  font-weight: 400;
+  padding-left: 50px;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--medium-purple);
+  }
+  &:focus-visible {
+    border: 1px solid var(--dark-purple-text);
+  }
+}
+
+.input-name-cont {
+  position: relative;
+  cursor: default !important;
+  &::before {
+    content: "#";
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 19px;
+    z-index: 1;
+    color: rgb(0, 0, 0);
+  }
+}
+
+.description-text {
+    font-size: 18px;
+    font-weight: 400;
 }
