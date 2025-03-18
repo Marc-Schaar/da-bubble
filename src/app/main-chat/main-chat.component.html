@@ -19,3 +19,31 @@
     <ng-container *ngComponentOutlet="currentComponent"></ng-container>
   </mat-drawer-container>
 </div>
+
+
+<div (click)="closeProfile()" [ngClass]="{'show': isProfileCard}" class="profileCard-Overlay">
+  <div  class="profileCard">
+    <div class="profileHead">
+        <span>Profile</span>
+        <button (click)="closeProfile()"><img src="./img/close.svg" alt=""></button>
+    </div>
+    <img [src]="currentReciever?.profilephoto" alt="">
+    <div class="profileStatus">
+        <span>{{currentReciever?.fullname}}</span>
+        <div>
+            <div class="status-dot-profile" [ngClass]="{'green': currentReciever?.online}"></div>
+            <span>{{ currentReciever?.online ? 'Aktiv' : 'Abwesend' }}</span>
+        </div>
+    </div>
+    <div class="contactInfos">
+        <div class="emailImage">
+            <img src="./img/mail.svg" alt="">
+            <span>E-Mail-Adresse</span>
+        </div>
+        <div class="email-adress">
+            <a href="mailto:{{currentReciever?.email}}">{{currentReciever?.email}}</a>
+        </div>
+    </div>
+    <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
+</div>
+</div>

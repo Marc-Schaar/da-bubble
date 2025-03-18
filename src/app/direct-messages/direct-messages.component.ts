@@ -60,9 +60,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit() {
-    //this.startChat();
-
-
     this.subscription = this.userService.startLoadingChat$.subscribe(() => {
       this.startChat();
     });
@@ -326,8 +323,18 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.isClicked = false
     }
   }
-
+/*
   toggleProfile() {
     this.isProfileCard = !this.isProfileCard
   }
+
+  closeProfile() {
+    this.isProfileCard = false;
+  }
+*/
+  showProfile(){
+    
+    this.userService.showRecieverProfile();
+  }
+
 }

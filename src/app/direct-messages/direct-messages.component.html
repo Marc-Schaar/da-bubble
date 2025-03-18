@@ -1,6 +1,6 @@
 <section (click)="hideList()">
     <div *ngIf="isChat" class="chat-header">
-        <div (click)="toggleProfile()">
+        <div (click)="showProfile()">
             <div class="imageContainer">
                 <img [src]="currentReciever?.profilephoto" alt="">
                 <div class="status-dot" [ngClass]="{'green': currentReciever?.online}"></div>
@@ -57,10 +57,10 @@
         </div>
 
     </div>
-    <div [ngClass]="{'show': isProfileCard}" class="profileCard">
+    <!--<div [ngClass]="{'show': isProfileCard}" class="profileCard">
         <div class="profileHead">
             <span>Profile</span>
-            <button><img src="./img/close.svg" alt=""></button>
+            <button (click)="closeProfile()"><img src="./img/close.svg" alt=""></button>
         </div>
         <img [src]="currentReciever?.profilephoto" alt="">
         <div class="profileStatus">
@@ -80,7 +80,7 @@
             </div>
         </div>
         <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
-    </div>
+    </div>--> 
     <div [ngClass]="{'show': isClicked }" class="lists">
         <div [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList">
             <div *ngIf="!isChannel" class="imageContainer">

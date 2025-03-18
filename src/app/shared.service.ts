@@ -48,7 +48,8 @@ export class UserService {
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
   private threadToggleSubject = new Subject<void>();
   threadToggle$ = this.threadToggleSubject.asObservable();
-
+  private openProfile = new Subject<void>();
+  openProfile$ = this.openProfile.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(
     this.checkScreenWidth()
   );
@@ -143,7 +144,6 @@ export class UserService {
   }
 
   loadComponent(component: string) {
-    //this.currentComponent.next(null);
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
@@ -174,5 +174,10 @@ export class UserService {
         startWith(this.checkScreenWidth())
       )
       .subscribe(this.screenWidthSubject);
+  }
+
+
+  showRecieverProfile() {
+    this.openProfile.next();
   }
 }

@@ -34,7 +34,8 @@ export class MainChatComponent implements OnInit {
   router: Router = inject(Router);
   showFiller = true;
   isMobile: boolean = false;
-
+  isProfileCard: boolean = false;
+  currentReciever:any;
   currentComponent: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
@@ -51,6 +52,9 @@ export class MainChatComponent implements OnInit {
         console.log('Aktuelle Komponente:', component);
       }
     );
+    this.subscription = this.shareddata.openProfile$.subscribe(() => {
+      this.openProfile();
+    });
 
     this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
@@ -74,5 +78,19 @@ export class MainChatComponent implements OnInit {
     if (storedComponent) {
       this.currentComponent = JSON.parse(storedComponent);
     }
+  }
+
+ 
+
+  closeProfile() {
+    this.isProfileCard = false;
+  }
+
+  openProfile(){
+    this.currentReciever=this.shareddata.currentReciever;
+    this.isProfileCard = !this.isProfileCard
+    console.log('OPEN');
+    console.log(this.isProfileCard);
+    
   }
 }
