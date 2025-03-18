@@ -34,11 +34,12 @@ import { collection, onSnapshot, orderBy } from 'firebase/firestore';
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
   userService = inject(UserService);
-  fireService = inject(FireServiceService);
-  index: number = -1;
+  firestoreService = inject(FireServiceService);
+  public channels: any[] = [];
   public users: any[] = [];
   public currentReciever: any = null;
   public currentUser: any = null;
+  currentList: any[] = [];
   message: string = '';
   input: string = '';
   userID: string = '';
@@ -47,16 +48,41 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   isEmpty: boolean = false;
   isYou: boolean = false;
   isChat: boolean = false;
+  isClicked: boolean = false;
+  listKey: string = '';
+  isChannel: boolean = false;
   private subscription?: Subscription;
   constructor() {
     this.startChat();
+
   }
 
-  ngOnInit() {
+
+  async ngOnInit() {
     //this.startChat();
+
+
     this.subscription = this.userService.startLoadingChat$.subscribe(() => {
       this.startChat();
     });
+    await this.loadChannels();
+    await this.loadUsers();
+  }
+
+  async loadUsers() {
+    try {
+      this.users = await this.firestoreService.getUsers();
+    } catch (error) {
+      console.error('Error loading users in component:', error);
+    }
+  }
+
+  async loadChannels() {
+    try {
+      this.channels = await this.firestoreService.getChannels();
+    } catch (error) {
+      console.error('Error loading channels in component:', error);
+    }
   }
 
   ngOnDestroy() {
@@ -65,7 +91,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  startChat() {
+  async startChat() {
     console.log('start');
     if (
       this.userService.user != null &&
@@ -80,6 +106,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       console.log('Chat muss per click initialisiert werden');
     }
   }
+
+
 
   setCurrentReciever() {
     this.currentReciever = this.userService.currentReciever;
@@ -249,6 +277,52 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       console.log('Channel laden');
     } else if (this.input.includes('@')) {
       console.log('Chat laden');
+    }
+  }
+
+  toggleList(chat: string, event: Event) {
+    if (this.listKey === chat && this.isClicked === true) {
+      this.isClicked = false;
+
+    } else {
+      this.isClicked = true
+    }
+
+    console.log(this.isClicked);
+    if (chat === 'channels') {
+      this.currentList = this.channels;
+      console.log(this.currentList);
+      this.isChannel = true
+    }
+    if (chat === 'users') {
+      this.currentList = this.users;
+      console.log(this.currentList);
+      this.isChannel = false;
+    }
+    this.listKey = chat;
+    console.log(this.listKey);
+
+    event.stopPropagation();
+  }
+
+  hideList() {
+    this.isClicked = false;
+  }
+
+  getList() {
+    
+    if (this.message.includes('#')) {
+      this.currentList = this.channels;
+      this.isClicked = true
+      this.isChannel = true
+    }
+    if (this.message.includes('@')) {
+      this.isClicked = true
+      this.currentList = this.users;
+      this.isChannel = false;
+    }
+    if (this.message === '' || !this.message.includes('#') && !this.message.includes('@')) {
+      this.isClicked = false
     }
   }
 }

@@ -14,6 +14,10 @@ export class FireServiceService {
   constructor() {}
   firestore: Firestore = inject(Firestore);
 
+
+
+
+
   async updateOnlineStatus(currentUser: any) {
     if (currentUser.uid) {
       const userRef = doc(this.firestore, 'users', currentUser.uid);
@@ -50,6 +54,7 @@ export class FireServiceService {
       throw error;
     }
   }
+
 
   getDocRef(ref: string, id: string) {
     return ref && id ? doc(this.firestore, ref, id) : null;

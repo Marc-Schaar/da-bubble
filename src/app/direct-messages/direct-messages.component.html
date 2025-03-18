@@ -1,4 +1,4 @@
-<section>
+<section (click)="hideList()">
     <div *ngIf="isChat" class="chat-header">
         <div>
             <div class="imageContainer">
@@ -55,15 +55,26 @@
         </div>
        
     </div>
-    <div class="lists"></div>
+    <div [ngClass]="{'show': isClicked }" class="lists">
+        <div [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList">
+            <div *ngIf="!isChannel" class="imageContainer">
+                <img  [src]="object?.profilephoto" alt="">
+                <div *ngIf="!isChannel" class="status-dot" [ngClass]="{'green': object?.online}"></div>
+            </div>
+            <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="">
+            <div>
+                <span>{{ object?.fullname || object?.name }}</span>
+            </div>
+        </div>
+    </div>
     <div class="textContainer">
         <div>
-            <textarea [(ngModel)]="message" name="" id=""
+            <textarea (input)="getList()" [(ngModel)]="message" name="" id=""
                 placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
             <div>
                 <div class="left">
-                    <button><img src="./img/sentiment_satisfied.svg" alt=""></button>
-                    <button><img src="./img/alternate_email.svg" alt=""></button>
+                    <button (click)="toggleList('channels', $event)"><img src="./img/sentiment_satisfied.svg" alt=""></button>
+                    <button (click)="toggleList('users', $event)"><img src="./img/alternate_email.svg" alt=""></button>
                 </div>
                 <button (click)="sendMessage()" class="right"><img src="./img/send.svg" alt=""></button>
             </div>

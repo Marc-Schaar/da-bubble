@@ -1,15 +1,15 @@
 section {
     width: calc(100% - 100px);
     height: 1000px;
-   margin-left: 50px;
-  
+    margin-left: 50px;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: white !important;
     border-radius: 30px;
-border: none;
-
+    border: none;
+    position: relative;
 }
 
 .chat-header {
@@ -268,22 +268,23 @@ button {
     gap: 30px;
 }
 
-.reverse{
+.reverse {
     display: flex;
-    
-    flex-direction:  row-reverse;
- 
+
+    flex-direction: row-reverse;
+
 }
 
-.bubbleReverse{
+.bubbleReverse {
     border-radius: 30px 0px 30px 30px !important;
 
 }
 
-.messageReverse{
+.messageReverse {
     align-items: flex-end !important;
-    
+
 }
+
 .image {
     height: 100%;
     width: 70px;
@@ -403,12 +404,60 @@ button {
     }
 }
 
-.lists{
+.lists {
     position: absolute;
-    bottom: 0;
+    left: 65px;
+    bottom: 160px;
     border: solid;
     width: 100%;
     max-width: 350px;
     height: 467px;
-    display:none ;
+    border-width: 1px;
+    border-color: var(--light-purple);
+    border-radius: 20px 20px 20px 0px;
+    box-sizing: border-box;
+    padding: 20px 21px;
+    display: none;
+    background-color: white;
+    overflow-y: scroll;
+
+}
+
+.listrow {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    box-sizing: border-box;
+    padding: 4px 20px;
+    cursor: pointer;
+
+    >span {
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    &:hover {
+        background-color: var(--bg-color);
+        border-radius: 30px;
+    }
+}
+
+.channelStyle {
+    max-height: 33px !important;
+    min-height: 33px !important;
+}
+
+.tag {
+    border-radius: unset !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+}
+
+.show {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
 }
