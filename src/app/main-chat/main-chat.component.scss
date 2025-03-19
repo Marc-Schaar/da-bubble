@@ -3,6 +3,12 @@ header {
   background-color: var(--bg-color);
 }
 
+.container {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
 .content-container {
   display: grid;
   grid-template-columns: 366px 1fr;

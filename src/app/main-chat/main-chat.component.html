@@ -17,15 +17,17 @@
     </mat-drawer>
 
     <!-- <ng-container *ngComponentOutlet="currentComponent"></ng-container> -->
-    <ng-container *ngIf="currentComponent === 'channel'">
-      <app-chat-content></app-chat-content>
-    </ng-container>
-    <ng-container *ngIf="currentComponent === 'direct'">
-      <app-direct-messages></app-direct-messages>
-    </ng-container>
-    <ng-container *ngIf="currentComponent === 'default'">
-      <!-- Neue Component für neue Nachricht -->
-    </ng-container>
+    <div class="container">
+      <ng-container *ngIf="currentComponent === 'channel'">
+        <app-chat-content></app-chat-content>
+      </ng-container>
+      <ng-container *ngIf="currentComponent === 'direct'">
+        <app-direct-messages></app-direct-messages>
+      </ng-container>
+      <ng-container *ngIf="currentComponent === 'default'">
+        <!-- Neue Component für neue Nachricht -->
+      </ng-container>
+    </div>
   </mat-drawer-container>
 </div>
 
