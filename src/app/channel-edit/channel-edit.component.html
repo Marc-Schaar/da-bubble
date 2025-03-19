@@ -15,7 +15,7 @@
   >
     <div class="channelname-header">
       <div class="channelname-headline">Channel-Name</div>
-      <div class="nameedit-btn" (click)="editChannelName()">
+      <div class="nameedit-btn" (click)="editChannelName('editName')">
         <span *ngIf="!channelnameEdit">Bearbeiten</span>
         <span *ngIf="channelnameEdit">Speichern</span>
       </div>
@@ -29,10 +29,10 @@
     </div>
   </div>
 
-  <div class="channeldescription-cont channelname-edit-cont" [ngClass]="{'change-name-edit-cont': channeldescriptionEdit}">
+  <div class="channeldescription-cont" [ngClass]="{'change-name-edit-cont': channeldescriptionEdit}">
     <div class="channelname-header">
       <div class="channelname-headline">Beschreibung</div>
-      <div class="nameedit-btn" (click)="editChannelName()">
+      <div class="nameedit-btn" (click)="editChannelName('editDescription')">
         <span *ngIf="!channeldescriptionEdit">Bearbeiten</span>
         <span *ngIf="channeldescriptionEdit">Speichern</span>
       </div>
