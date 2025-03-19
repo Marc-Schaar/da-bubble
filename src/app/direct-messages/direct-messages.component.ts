@@ -270,8 +270,10 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     console.log(this.input);
     if (this.input.includes('#')) {
       console.log('Channel laden');
+      this.userService.loadComponent('channel');
     } else if (this.input.includes('@')) {
       console.log('Chat laden');
+      this.userService.loadComponent('chat');
     }
   }
 
