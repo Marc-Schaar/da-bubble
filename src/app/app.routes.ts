@@ -16,6 +16,7 @@ import { DataprotectionComponent } from './data-protection/data-protection.compo
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { ChannelEditComponent } from './channel-edit/channel-edit.component';
+import { ChatComponent } from './chat/chat.component';
 
 export const routes: Routes = [
   { path: '', component: IntroComponent },
@@ -28,11 +29,9 @@ export const routes: Routes = [
   { path: 'avatarselection', component: AvatarselectionComponent },
   { path: 'add-channel', component: AddChannelComponent },
   { path: 'contactbar', component: ContactbarComponent },
-
-  { path: 'chat', component: MainChatComponent },
-
+  { path: 'mainchat', component: MainChatComponent },
+  { path: 'chat', component: ChatComponent },
   { path: 'channel', component: ChatContentComponent },
-
   { path: 'direct', component: DirectmessagesComponent },
   { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },
