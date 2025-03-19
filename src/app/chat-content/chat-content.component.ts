@@ -65,6 +65,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   editingMessageId: any = '';
   input: string = '';
   inputEdit: string = '';
+  currentChannelId: any;
 
   unsubMessages!: () => void;
 
@@ -91,34 +92,27 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   startChannel() {
     console.log('start');
-    if (
-      this.userService.user != null &&
-      this.userService.currentChannel != null
-    ) {
+    if (this.userService.user != null) {
       this.isMobile = this.userService.checkScreenWidth();
-      //  this.setCurrentChannel();
-      //this.getMessages();
-      console.log(this.currentChannel);
-      console.log(this.currentUser);
-    } else {
-      console.log('keine User oder Channel');
-    }
-    console.log('User:', this.userService.user);
-    console.log('Channel:', this.userService.currentChannel);
+
+      this.setChannelData();
+      this.getMessages();
+    } else console.error('keine User oder Channel');
   }
 
-  setCurrentChannel() {
+  setChannelData() {
     this.currentChannel = this.userService.currentChannel;
+    this.currentChannelId = this.userService.docId;
     this.currentUser = this.userService.currentUser;
   }
 
   getMessages() {
     let messagesRef = this.fireService.getCollectionRef(
-      `channels/${this.currentChannel.id}/messages`
+      `channels/${this.currentChannelId}/messages`
     );
-
     if (messagesRef) {
       let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
           let data = doc.data();
@@ -143,7 +137,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   newMessage(): void {
     this.fireService.sendMessage(
-      this.currentChannel.id,
+      this.currentChannelId,
       new Message(this.buildMessageObject())
     );
   }
@@ -158,7 +152,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async updateMessage(message: any) {
     let messageRef = this.fireService.getMessageRef(
-      this.currentChannel.id,
+      this.currentChannelId,
       message.id
     );
     if (messageRef) {

@@ -64,15 +64,24 @@ export class ContactbarComponent {
     }
   }
 
-  setUrl(channelType: string, id: string) {
+  setUrl(channelType: string, id?: string, reciepentId?: string) {
     this.router.navigate(['/chat'], {
-      queryParams: { channelType: channelType, id: id },
+      queryParams: {
+        channelType: channelType,
+        id: id,
+        reciepentId: reciepentId,
+      },
     });
   }
 
+  // setReciepentInUrl(id: string) {
+  //   this.router.navigate(['/chat'], {
+  //     queryParams: { reciepent: id },
+  //   });
+  // }
+
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
-
     this.userService.getChannel(this.currentChannel, this.currentUser);
   }
 

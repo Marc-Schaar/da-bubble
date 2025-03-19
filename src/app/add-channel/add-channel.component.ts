@@ -169,7 +169,7 @@ export class AddChannelComponent implements OnInit {
   }
 
   async pushSelectedUser() {
-    try {  
+    try {
       const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
       const targetChannelDoc = await getDoc(targetChannelRef);
       if (targetChannelDoc.exists()) {
@@ -183,13 +183,13 @@ export class AddChannelComponent implements OnInit {
       console.error('Fehler beim Hinzufügen der ausgewählten Benutzer:', error);
     }
   }
-  
-/**
- *
- *
- * @memberof AddChannelComponent
- */
-async pushAllUser() {
+
+  /**
+   *
+   *
+   * @memberof AddChannelComponent
+   */
+  async pushAllUser() {
     try {
       const channelId = 'LPRVbdSLkaDmZSzumHJA';
       const mainChannelRef = doc(this.firestore, 'channels', channelId);
@@ -199,7 +199,9 @@ async pushAllUser() {
       if (mainChannelDoc.exists() && targetChannelDoc.exists()) {
         const mainChannelData = mainChannelDoc.data();
         const targetChannelData = targetChannelDoc.data();
-        await updateDoc(targetChannelRef, { member: mainChannelData['member'] });
+        await updateDoc(targetChannelRef, {
+          member: mainChannelData['member'],
+        });
         console.log('Alle Mitglieder erfolgreich hinzugefügt.');
       } else {
         console.error('Fehler: Ein oder beide Channel existieren nicht.');
@@ -208,7 +210,7 @@ async pushAllUser() {
       console.error('Fehler beim Hinzufügen der Benutzer:', error);
     }
   }
-  
+
   async addChannel() {
     const channelDescription = document.getElementById(
       'channel-description'
