@@ -11,7 +11,7 @@ export class IntroComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.router.navigate(['/main']);
+     this.router.navigate(['/main']);
     }, 3500);
   }
 }

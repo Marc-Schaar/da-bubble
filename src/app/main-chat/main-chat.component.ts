@@ -10,7 +10,11 @@ import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FireServiceService } from '../fire-service.service';
+import { query } from '@firebase/firestore';
+import { doc, Firestore, onSnapshot, orderBy } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-main-chat',
@@ -32,6 +36,10 @@ export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   shareddata = inject(UserService);
   router: Router = inject(Router);
+  fireService: FireServiceService = inject(FireServiceService);
+  firestore: Firestore = inject(Firestore);
+  auth: Auth = inject(Auth);
+
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
@@ -41,10 +49,18 @@ export class MainChatComponent implements OnInit {
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
 
+  //Neue Logik ab hier:
+
+  channelType: string = 'default';
+  channelMessages: any = [];
+  docId: string = '';
+  unsubMessages!: () => void;
+
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-
 
     this.componentSubscription = this.shareddata.component$.subscribe(
       (component) => {
@@ -58,6 +74,95 @@ export class MainChatComponent implements OnInit {
 
     this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
+    });
+    this.getUrlData();
+  }
+
+  getUrlData() {
+    this.route.queryParams.subscribe((params) => {
+      this.channelType = params['channelType'] || 'default';
+      this.docId = params['id'] || '';
+      console.log('Aktueller Channel Typ', this.channelType);
+
+      if (this.docId) this.getChannelMessages();
+      else console.log('Default');
+    });
+  }
+
+  getChannelMessages() {
+    if (this.channelType === 'direct') {
+      //Direktnachrichten laden und pushen
+      // this.loadDirectMessages();
+    }
+    if (this.channelType == 'channel') {
+      //Channelnachrichten laden und pushen
+      this.loadChannelMessages();
+    } else {
+      //Default Neue Nachricht?
+    }
+  }
+
+  loadChannelMessages() {
+    let messagesRef = this.fireService.getCollectionRef(
+      `channels/${this.docId}/messages`
+    );
+    if (messagesRef) {
+      let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+      this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
+        this.channelMessages = snapshot.docs.map((doc) => {
+          let data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            time: data['timestamp']
+              ? new Date(data['timestamp'].toDate()).toLocaleTimeString(
+                  'de-DE',
+                  {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }
+                )
+              : '–',
+          };
+        });
+      });
+    }
+    console.log('Nachrichten aus dem Array der Url', this.channelMessages);
+  }
+
+  loadDirectMessages() {
+    const messagesRef = doc(
+      this.firestore,
+      `users/${this.shareddata?.currentUser.id}`
+    );
+    onSnapshot(messagesRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const messageData = docSnapshot.data();
+        const messages = messageData['messages'] || [];
+        this.channelMessages = [];
+        messages.forEach((message: any) => {
+          if (this.shareddata.currentUser.id === this.currentReciever.id) {
+            if (
+              message['to'] === this.currentReciever.id &&
+              message['from'] === this.currentReciever.id
+            ) {
+              this.channelMessages.push(message);
+            }
+          } else {
+            if (
+              message['to'] === this.currentReciever.id ||
+              message['from'] === this.currentReciever.id
+            ) {
+              this.channelMessages.push(message);
+            }
+          }
+        });
+
+        // this.sortMessages();
+        // this.checkMessages();
+      } else {
+        console.log('Benutzerdokument existiert nicht.');
+      }
     });
   }
 
@@ -77,9 +182,8 @@ export class MainChatComponent implements OnInit {
 
   openProfile() {
     this.currentReciever = this.shareddata.currentReciever;
-    this.isProfileCard = !this.isProfileCard
+    this.isProfileCard = !this.isProfileCard;
     console.log('OPEN');
     console.log(this.isProfileCard);
-
   }
 }

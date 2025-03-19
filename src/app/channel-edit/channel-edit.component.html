@@ -1,32 +1,50 @@
 <div class="main">
-    <div class="channel-header">
-        <div class="chanelname-cont">
-            <div class="hash">#</div>
-            <div class="channelname">Channelname</div>
-        </div>
-        <div>
-            <img src="img/close.png" alt="">
-        </div>
+  <div class="channel-header">
+    <div class="chanelname-cont">
+      <div class="hash">#</div>
+      <div class="channelname">Channelname</div>
     </div>
-    <div class="channelname-edit-cont">
-        <div class="channelname-header">
-            <div class="channelname-headline">Channel-Name</div>
-            <div class="nameedit-btn">Bearbeiten</div>
-        </div>
-        <div class="hash-channelname">
-            <div class="small-hash"></div>
-            <div class="small-channelname"></div>
-        </div>
-        <div *ngIf="channelnameEdit">
-            <input type="text" name="" id="">
-        </div>
+    <div>
+      <img src="img/close.png" alt="" />
     </div>
-    <div class="channeldescription-cont">
+  </div>
+  <div
+    class="channelname-edit-cont"
+    id="channelname-edit-cont"
+    [ngClass]="{ 'change-name-edit-cont': channelnameEdit }"
+  >
+    <div class="channelname-header">
+      <div class="channelname-headline">Channel-Name</div>
+      <div class="nameedit-btn" (click)="editChannelName('editName')">
+        <span *ngIf="!channelnameEdit">Bearbeiten</span>
+        <span *ngIf="channelnameEdit">Speichern</span>
+      </div>
+    </div>
+    <div class="hash-channelname" *ngIf="!channelnameEdit">
+      <div class="small-hash">#</div>
+      <div class="small-channelname">Channelname</div>
+    </div>
+    <div *ngIf="channelnameEdit" class="input-name-cont">
+      <input type="text" name="" id="" placeholder="Channelname" />
+    </div>
+  </div>
 
+  <div class="channeldescription-cont" [ngClass]="{'change-name-edit-cont': channeldescriptionEdit}">
+    <div class="channelname-header">
+      <div class="channelname-headline">Beschreibung</div>
+      <div class="nameedit-btn" (click)="editChannelName('editDescription')">
+        <span *ngIf="!channeldescriptionEdit">Bearbeiten</span>
+        <span *ngIf="channeldescriptionEdit">Speichern</span>
+      </div>
     </div>
-    <div class="exit-channel-cont">
-        <div class="exit-btn">
-            Channel verlassen
-        </div>
+    <div class="description-text">
+        <span>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</span>
     </div>
+    <div class="line"></div>
+    <div class="creator-headline">Erstellt von</div>
+    <div class="creator-name" id="creatorName"></div>
+  </div>
+  <div class="exit-channel-cont">
+    <div class="exit-btn">Channel verlassen</div>
+  </div>
 </div>

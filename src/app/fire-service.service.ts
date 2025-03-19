@@ -1,11 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import {
+  addDoc,
   collection,
+  CollectionReference,
   doc,
+  DocumentReference,
   Firestore,
   getDocs,
   updateDoc,
 } from '@angular/fire/firestore';
+import { Message } from './models/message';
+import { User } from './models/user';
+import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +19,6 @@ import {
 export class FireServiceService {
   constructor() {}
   firestore: Firestore = inject(Firestore);
-
-
-
-
 
   async updateOnlineStatus(currentUser: any) {
     if (currentUser.uid) {
@@ -55,12 +57,50 @@ export class FireServiceService {
     }
   }
 
-
-  getDocRef(ref: string, id: string) {
+  getDocRef(ref: string, id: string): DocumentReference | null {
     return ref && id ? doc(this.firestore, ref, id) : null;
   }
 
-  getCollectionRef(ref: string) {
+  getCollectionRef(ref: string): CollectionReference | null {
     return ref ? collection(this.firestore, ref) : null;
+  }
+
+  getMessageRef(
+    channelId: string,
+    messageId: string
+  ): DocumentReference | null {
+    return channelId && messageId
+      ? this.getDocRef(`channels/${channelId}/messages`, messageId)
+      : null;
+  }
+
+  updateMessage(ref: DocumentReference, value: string) {
+    return ref ? updateDoc(ref, { message: value }) : null;
+  }
+
+  // addThread(User: User, messageDocRef: any, message: any) {
+  //   return addDoc(collection(this.firestore, `${messageDocRef.path}/threads`), {
+  //     createdFrom: User,
+  //     messages: message,
+  //   });
+  // }
+
+  async sendMessage(
+    channelId: string,
+    messageObject: any
+  ): Promise<DocumentReference | null> {
+    let messagesCollectionRef: CollectionReference | null =
+      this.getCollectionRef(`channels/${channelId}/messages`);
+    if (!messagesCollectionRef) return null;
+    try {
+      let messageDocRef = await addDoc(
+        messagesCollectionRef,
+        new Message(messageObject).toJSON()
+      );
+      return messageDocRef;
+    } catch (err) {
+      console.error('Fehler beim Senden der Nachricht:', err);
+      return null;
+    }
   }
 }

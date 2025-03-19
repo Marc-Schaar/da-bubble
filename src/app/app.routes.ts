@@ -28,7 +28,9 @@ export const routes: Routes = [
   { path: 'avatarselection', component: AvatarselectionComponent },
   { path: 'add-channel', component: AddChannelComponent },
   { path: 'contactbar', component: ContactbarComponent },
+
   { path: 'chat', component: MainChatComponent },
+
   { path: 'channel', component: ChatContentComponent },
 
   { path: 'direct', component: DirectmessagesComponent },
@@ -36,5 +38,4 @@ export const routes: Routes = [
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
   { path: 'channel-edit', component: ChannelEditComponent },
-
 ];

@@ -5,28 +5,29 @@
   align-items: center;
   max-width: 1920px;
   width: 100%;
-  > div:nth-child(1) {
-    width: 40%;
-    @media (max-width: 500px) {
-      width: unset;
-    }
-  }
   @media (max-width: 1204px) {
     width: 100%;
     justify-content: space-between;
   }
   @media (max-width: 492px) {
+    flex-direction: row;
+    padding: 15px 16px;
+  }
+  @media (max-width: 380px) {
     flex-direction: column;
   }
-  @media (max-width: 1204px) {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  @media (max-width: 1000px),(max-height: 960px) {
+    flex-direction: row;
   }
-
   img {
     width: fit-content;
     height: fit-content;
+  }
+  > div:nth-child(1) {
+    width: 40%;
+    @media (max-width: 500px) {
+      width: unset;
+    }
   }
 }
 

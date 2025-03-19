@@ -96,8 +96,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userService.currentChannel != null
     ) {
       this.isMobile = this.userService.checkScreenWidth();
-      this.setCurrentChannel();
-      this.getMessages();
+      //  this.setCurrentChannel();
+      //this.getMessages();
       console.log(this.currentChannel);
       console.log(this.currentUser);
     } else {
@@ -113,7 +113,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getMessages() {
-    let messagesRef = this.getCollectionRef(
+    let messagesRef = this.fireService.getCollectionRef(
       `channels/${this.currentChannel.id}/messages`
     );
 
@@ -141,31 +141,14 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  async newMessage() {
-    let messagesCollectionRef = this.getCollectionRef(
-      `channels/${this.currentChannel.id}/messages`
+  newMessage(): void {
+    this.fireService.sendMessage(
+      this.currentChannel.id,
+      new Message(this.buildMessageObject())
     );
-    if (messagesCollectionRef) {
-      this.loading = true;
-      try {
-        let messageDocRef = await addDoc(
-          messagesCollectionRef,
-          new Message(this.buildMessageObject()).toJSON()
-        );
-        await addDoc(collection(messageDocRef, 'threads'), {
-          createdFrom: this.userService.currentUser,
-          messages: [],
-        });
-        this.loading = false;
-        this.scrollToBottom();
-        this.input = '';
-      } catch (err) {
-        console.error('Fehler beim Senden der Nachricht:', err);
-      }
-    }
   }
 
-  editMessage(message: any, index: number) {
+  editMessage(message: Message, index: number) {
     this.menuOpen = false;
     this.isEditing = true;
     this.editingMessageId = index;
@@ -174,19 +157,15 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async updateMessage(message: any) {
-    let messageRef = this.getDocRef(
-      `channels/${this.currentChannel.id}/messages`,
+    let messageRef = this.fireService.getMessageRef(
+      this.currentChannel.id,
       message.id
     );
-
     if (messageRef) {
       this.isEditing = false;
       this.editingMessageId = null;
-
       try {
-        await updateDoc(messageRef, {
-          message: this.inputEdit,
-        });
+        this.fireService.updateMessage(messageRef, this.inputEdit);
         console.log('Nachricht erfolgreich aktualisiert');
         this.inputEdit = '';
       } catch (error) {
@@ -244,14 +223,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleThread() {
     if (this.isMobile) this.router.navigate(['/thread']);
     else this.userService.toggleThread();
-  }
-
-  getDocRef(ref: string, id: string) {
-    return ref && id ? doc(this.fireService.firestore, ref, id) : null;
-  }
-
-  getCollectionRef(ref: string) {
-    return ref ? collection(this.fireService.firestore, ref) : null;
   }
 
   ngAfterViewInit() {
