@@ -94,7 +94,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.userService.currentReciever != null
     ) {
       this.setCurrentReciever();
-      //  this.loadMessages();
+      this.loadMessages();
       this.checkReciever();
       this.isChat = true;
     } else {
