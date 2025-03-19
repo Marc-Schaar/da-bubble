@@ -184,11 +184,6 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-  /**
-   *
-   *
-   * @memberof AddChannelComponent
-   */
   async pushAllUser() {
     try {
       const channelId = 'LPRVbdSLkaDmZSzumHJA';

@@ -12,6 +12,23 @@
   padding: 40px;
   font-family: "Nunito";
   gap: 20px;
+  .exit-channel-cont {
+    width: 204px;
+    height: 49px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--dark-purple);
+    border-radius: 25px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    place-self: end;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--medium-purple);
+    }
+  }
   .channel-header {
     display: flex;
     justify-content: space-between;
@@ -70,32 +87,39 @@
 }
 
 .channeldescription-cont {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid rgba(173, 176, 217, 1);
+  border-radius: 20px;
+  gap: 20px;
+  transition: padding 0.1s ease-in-out;
+  .creator-name {
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(83, 90, 241, 1);
+  }
+  .line {
+    width: 739px;
     border: 1px solid rgba(173, 176, 217, 1);
-    border-radius: 20px;
-    gap: 20px;
-    transition: padding 0.1s ease-in-out;
-    .channelname-header {
-        display: flex;
-        justify-content: space-between;
-        .channelname-headline {
-          font-weight: 700;
-        }
-        .nameedit-btn {
-          font-weight: 600;
-          color: var(--dark-purple-text);
-          cursor: pointer;
-          font-size: 18px;
-          width: 90px;
-          height: 25px;
-          &:hover {
-            font-weight: 700;
-            color: var(--dark-purple);
-          }
-        }
+    place-self: center;
+  }
+  .channelname-header {
+    display: flex;
+    justify-content: space-between;
+    .nameedit-btn {
+      font-weight: 600;
+      color: var(--dark-purple-text);
+      cursor: pointer;
+      font-size: 18px;
+      width: 90px;
+      height: 25px;
+      &:hover {
+        font-weight: 700;
+        color: var(--dark-purple);
       }
+    }
+  }
 }
 
 .change-name-edit-cont {
@@ -103,7 +127,7 @@
   padding: 0 !important;
 }
 
-input {
+input, textarea {
   outline: none;
   box-sizing: border-box;
   border-radius: 30px;
@@ -122,6 +146,13 @@ input {
   }
 }
 
+.textarea-des {
+    align-content: center;
+    resize: none;
+    max-height: 98px;
+    padding: 20px;
+}
+
 .input-name-cont {
   position: relative;
   cursor: default !important;
@@ -138,6 +169,11 @@ input {
 }
 
 .description-text {
-    font-size: 18px;
-    font-weight: 400;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.channelname-headline {
+  font-size: 18px;
+  font-weight: 700;
 }

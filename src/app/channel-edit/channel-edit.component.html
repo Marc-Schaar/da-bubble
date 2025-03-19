@@ -37,12 +37,14 @@
         <span *ngIf="channeldescriptionEdit">Speichern</span>
       </div>
     </div>
-    <div class="description-text">
+    <div class="description-text" *ngIf="!channeldescriptionEdit">
         <span>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</span>
     </div>
+    <textarea class="textarea-des" (input)="adjustTextareaHeight($event)"
+    name="" id="" *ngIf="channeldescriptionEdit"></textarea>
     <div class="line"></div>
-    <div class="creator-headline">Erstellt von</div>
-    <div class="creator-name" id="creatorName"></div>
+    <div class="channelname-headline">Erstellt von</div>
+    <div class="creator-name" id="creatorName">Noah Braun</div>
   </div>
   <div class="exit-channel-cont">
     <div class="exit-btn">Channel verlassen</div>
