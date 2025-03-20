@@ -100,7 +100,7 @@ export class NewmessageComponent {
 
 
   async sendDirectMessage() {
-    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {return;}
+    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) { return; }
     const message = new DirectMessage(this.userService.user?.displayName || '', this.userService.user?.photoURL || '', this.message, this.currentUserId, this.currentRecieverId);
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
@@ -150,6 +150,7 @@ export class NewmessageComponent {
   resetSearch() {
     this.searchList = [];
     this.isFound = false;
+    this.isChannel = false;
     this.currentReciever = null;
   }
 
@@ -200,6 +201,7 @@ export class NewmessageComponent {
     }
 
     this.isFound = false;
+    this.isChannel = false;
 
   }
 
@@ -217,11 +219,14 @@ export class NewmessageComponent {
   toggleList(event: Event) {
     this.isClicked = !this.isClicked;
     this.currentList = this.users;
+    this.isChannel = false;
     event.stopPropagation();
   }
 
   hideList() {
     this.isClicked = false;
+    this.isFound = false;
+
   }
 
 
