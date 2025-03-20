@@ -3,10 +3,10 @@
     <img [src]=" this.currentUser?.profilephoto " alt="">
 </header>
 <main>
-
+<app-channel-edit *ngIf="channelInfo" [(channelInfo)]="channelInfo" [currentChannel]="currentChannel"></app-channel-edit>
     <div class="card">
         <section class="card-header">
-            <div class="align-center">
+            <div class="align-center" (click)="openChannelInfo()">
                 # {{ this.currentChannel?.name }}
                 <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
             </div>

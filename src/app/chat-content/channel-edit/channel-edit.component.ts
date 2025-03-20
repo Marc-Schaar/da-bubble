@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-channel-edit',
@@ -8,7 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './channel-edit.component.scss',
 })
 export class ChannelEditComponent {
-  channelnameEdit: boolean = false;
+  @Input() channelInfo:boolean = false;
+  @Input() currentChannel:any = {};
+
+  @Output() channelInfoChange = new EventEmitter<boolean>();  channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
 
   editChannelName(content: string) {
@@ -35,6 +38,11 @@ export class ChannelEditComponent {
     if(textarea.value == '') {
       textarea.style.height = `60px`;
     }
-    
+  }
+
+  close() {
+    this.channelInfo = false;
+    this.channelInfoChange.emit(this.channelInfo);
+    console.log(this.channelInfo);
   }
 }

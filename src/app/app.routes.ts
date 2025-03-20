@@ -15,7 +15,7 @@ import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
-import { ChannelEditComponent } from './channel-edit/channel-edit.component';
+import { ChannelEditComponent } from './chat-content/channel-edit/channel-edit.component';
 
 
 export const routes: Routes = [

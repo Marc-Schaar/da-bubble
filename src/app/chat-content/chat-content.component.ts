@@ -28,6 +28,7 @@ import { Router } from '@angular/router';
 import { Subscription, timestamp } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
+import { ChannelEditComponent } from "../chat-content/channel-edit/channel-edit.component";
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +41,8 @@ import { UserService } from '../shared.service';
     CommonModule,
     FormsModule,
     MatSidenavModule,
-  ],
+    ChannelEditComponent
+],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
@@ -66,6 +68,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   input: string = '';
   inputEdit: string = '';
   currentChannelId: any;
+  channelInfo:boolean = false;
 
   unsubMessages!: () => void;
 
@@ -224,5 +227,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       'resize',
       this.userService.checkScreenWidth.bind(this)
     );
+  }
+
+  openChannelInfo() {
+    this.channelInfo = true;
+    console.log(this.channelInfo)
   }
 }
