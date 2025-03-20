@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
-import { collection, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, getDoc, onSnapshot, orderBy } from 'firebase/firestore';
 import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
@@ -95,8 +95,10 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   async startChat() {
+    console.log('start');
     if (this.userService.user != null && this.userService.reciepentId != null) {
-      this.setCurrentReciever();
+      this.setCurrentData();
+      // this.setCurrentUserAndReciever();
       this.loadMessages();
       this.checkReciever();
 
@@ -107,14 +109,18 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  setCurrentReciever() {
-    this.currentReciever = this.userService.currentReciever;
+  setCurrentData() {
     this.currentRecieverId = this.userService.reciepentId;
-    this.currentUser = this.userService.currentUser;
     this.currentUserId = this.userService.docId;
-    if (!this.currentReciever || !this.currentUser) {
-      console.error('currentReciever oder currentUser sind nicht definiert!');
-      return;
+    this.currentReciever = this.getRecieverFromUrl();
+    this.currentUser = this.userService.currentUser;
+  }
+
+  async getRecieverFromUrl() {
+    if (this.currentRecieverId) {
+      const docRef = doc(this.firestore, 'users', this.currentRecieverId);
+      const docSnap = await getDoc(docRef);
+      docSnap.exists() ? (this.currentReciever = docSnap.data()) : null;
     }
   }
 
@@ -213,8 +219,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
   sortMessages() {
     this.currentMessages.sort((a: any, b: any) => {
       const timeA = new Date(a.time);
@@ -275,7 +279,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.isClicked = !this.isClicked;
     this.currentList = this.users;
     event.stopPropagation();
-}
+  }
 
   hideList() {
     this.isClicked = false;
