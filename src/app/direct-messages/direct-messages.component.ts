@@ -213,18 +213,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     });
   }
 
-  /*
-          this.currentUser.messages.forEach((message: any) => {
-            if (this.currentUser.id === this.currentReciever.id) {
-              if (message.to === this.currentReciever.id && message.from === this.currentReciever.id) {
-                this.currentMessages.push(message);
-              }
-            } else {
-              if (message.to === this.currentReciever.id || message.from === this.currentReciever.id) {
-                this.currentMessages.push(message);
-              }
-            }
-        */
+
 
   sortMessages() {
     this.currentMessages.sort((a: any, b: any) => {
@@ -282,29 +271,11 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleList(chat: string, event: Event) {
-    if (this.listKey === chat && this.isClicked === true) {
-      this.isClicked = false;
-    } else {
-      this.isClicked = true;
-    }
-
-    console.log(this.isClicked);
-    if (chat === 'channels') {
-      this.currentList = this.channels;
-      console.log(this.currentList);
-      this.isChannel = true;
-    }
-    if (chat === 'users') {
-      this.currentList = this.users;
-      console.log(this.currentList);
-      this.isChannel = false;
-    }
-    this.listKey = chat;
-    console.log(this.listKey);
-
+  toggleList(event: Event) {
+    this.isClicked = !this.isClicked;
+    this.currentList = this.users;
     event.stopPropagation();
-  }
+}
 
   hideList() {
     this.isClicked = false;
@@ -343,10 +314,10 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   getReciever(index: number) {
     console.log(this.isChannel);
-    this.message = '';
+
     if (this.isChannel) {
       const currentChannel = this.currentList[index];
-      this.message = '#' + currentChannel?.name;
+      this.message = this.message + currentChannel?.name;
     } else {
       const currentReciever = this.currentList[index];
       this.message = '@' + currentReciever?.fullname;

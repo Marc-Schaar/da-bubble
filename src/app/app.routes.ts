@@ -16,6 +16,7 @@ import { DataprotectionComponent } from './data-protection/data-protection.compo
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { ChannelEditComponent } from './channel-edit/channel-edit.component';
+import { NewmessageComponent } from './newmessage/newmessage.component';
 
 
 export const routes: Routes = [
@@ -36,4 +37,5 @@ export const routes: Routes = [
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
   { path: 'channel-edit', component: ChannelEditComponent },
+  { path: 'new', component: NewmessageComponent },
 ];
