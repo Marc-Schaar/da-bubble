@@ -31,7 +31,7 @@ export class NewmessageComponent {
   userID: string = '';
   currentMessages: any[] = [];
   firestore = inject(Firestore);
-
+  searchList: any[] = [];
   currentArray: any[] = []
   isClicked: boolean = false;
   listKey: string = '';
@@ -42,7 +42,7 @@ export class NewmessageComponent {
   docId: string = '';
   currentRecieverId: string = '';
   currentUserId: string = '';
-
+  isFound: boolean = false;
   private subscription?: Subscription;
   constructor() {
     this.startChat();
@@ -100,9 +100,7 @@ export class NewmessageComponent {
 
 
   async sendDirectMessage() {
-    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
-      return;
-    }
+    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {return;}
     const message = new DirectMessage(this.userService.user?.displayName || '', this.userService.user?.photoURL || '', this.message, this.currentUserId, this.currentRecieverId);
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
@@ -127,50 +125,84 @@ export class NewmessageComponent {
   }
 
   getCurrentChat() {
-
     if (this.input.includes('#')) {
       this.currentArray = this.channels;
-
       this.searchForReciever('channel')
 
     } else if (this.input.includes('@')) {
       this.currentArray = this.users;
-
       this.searchForReciever('user')
     }
   }
 
   searchForReciever(chat: string) {
-    console.log(this.channels);
     if (this.input.length > 3) {
+      this.searchList = [];
+      this.isFound = true;
       const INPUT = this.input.slice(1).toLowerCase().trim();
-      console.log(INPUT);
-      console.log(this.currentArray);
       this.whichMessage = chat;
-      this.currentArray.forEach(object => {
-        if (chat === 'user') {
-          if (object.fullname.toLowerCase().includes(INPUT) || object.email.toLowerCase().includes(INPUT)) {
-            this.input = '@' + object.fullname
-            this.currentReciever = object;
-            this.currentRecieverId = object.id
-          }
-
-        }
-        if (chat === 'channel') {
-          if (object.name.toLowerCase().includes(INPUT)) {
-            this.input = '#' + object.name
-            this.currentChannel = object;
-            console.log(this.currentChannel);
-            //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden. 
-          }
-        }
-      });
+      this.startSearch(INPUT, chat)
     } else {
-      this.currentReciever = null;
+      this.resetSearch();
     }
   }
 
-  
+  resetSearch() {
+    this.searchList = [];
+    this.isFound = false;
+    this.currentReciever = null;
+  }
+
+
+  startSearch(input: string, chat: string) {
+    this.currentArray.forEach(object => {
+      //diese if-abfrage zw Users und channels könnte man sich sparen, wenn users und channels den gleichen key für den namen hätten und die daraus resultierenden zwei funktionen searchInUsers udn searchInChannels!
+      if (chat === 'user') {
+        this.searchInUsers(object, input)
+      }
+      if (chat === 'channel') {
+        this.searchInChannels(object, input)
+      }
+    });
+  }
+
+  searchInUsers(object: any, input: string) {
+    if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
+      const duplette = this.searchList.find(search => search.id === object.id)
+      if (!duplette) {
+        this.isChannel = false;
+        this.searchList.push(object);
+      }
+    }
+  }
+
+  searchInChannels(object: any, input: string) {
+    if (object.name.toLowerCase().includes(input)) {
+      const duplette = this.searchList.find(search => search.id === object.id)
+      if (!duplette) {
+        this.isChannel = true;
+        this.searchList.push(object);
+      }
+    }
+  }
+
+  chooseReciever(index: number) {
+    if (this.isChannel === false) {
+      this.currentReciever = this.searchList[index];
+      this.currentRecieverId = this.currentReciever.id
+      this.input = '@' + this.currentReciever.fullname
+      console.log(this.currentRecieverId);
+    }
+    if (this.isChannel === true) {
+      this.currentChannel = this.searchList[index];
+      this.input = '#' + this.currentChannel.name;
+      //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden. 
+    }
+
+    this.isFound = false;
+
+  }
+
   sendMessage() {
     if (this.whichMessage === 'user') {
       this.sendDirectMessage();
@@ -178,6 +210,8 @@ export class NewmessageComponent {
     if (this.whichMessage === 'channel') {
       //hier muss die sendeMessageFunktion für den Channel gesetzt werden!
     }
+    this.currentReciever = null;
+    this.currentChannel = null;
   }
 
   toggleList(event: Event) {

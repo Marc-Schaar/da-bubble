@@ -6,7 +6,18 @@
             placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse">
     </div>
 
-
+    <div [ngClass]="{'show': isFound }" class="lists newMessage">
+        <div (click)="chooseReciever(index)" [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of searchList; let index = index">
+            <div *ngIf="!isChannel" class="imageContainer">
+                <img [src]="object?.profilephoto" alt="">
+                <div *ngIf="!isChannel" class="status-dot" [ngClass]="{'green': object?.online}"></div>
+            </div>
+            <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="">
+            <div>
+                <span>{{ object?.fullname || object?.name }}</span>
+            </div>
+        </div>
+    </div>
  
 
 
@@ -25,7 +36,7 @@
     <div class="textContainer">
         <div>
             <textarea (input)="getList()" [(ngModel)]="message" name="" id=""
-                placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
+                placeholder="Nachricht an {{currentReciever?.fullname || currentChannel?.name}}"></textarea>
             <div>
                 <div class="left">
                     <button><img class="smiley" src="./img/smiley.svg"
