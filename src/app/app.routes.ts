@@ -15,7 +15,12 @@ import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
+<<<<<<< HEAD
 import { ChannelEditComponent } from './chat-content/channel-edit/channel-edit.component';
+=======
+import { ChannelEditComponent } from './channel-edit/channel-edit.component';
+import { NewmessageComponent } from './newmessage/newmessage.component';
+>>>>>>> 8d0cadf9d1f5f0b50760cdcd0667f47268c436f8
 
 
 export const routes: Routes = [
@@ -36,4 +41,5 @@ export const routes: Routes = [
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
   { path: 'channel-edit', component: ChannelEditComponent },
+  { path: 'new', component: NewmessageComponent },
 ];

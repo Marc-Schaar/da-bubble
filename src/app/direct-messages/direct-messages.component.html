@@ -57,30 +57,6 @@
         </div>
 
     </div>
-    <!--<div [ngClass]="{'show': isProfileCard}" class="profileCard">
-        <div class="profileHead">
-            <span>Profile</span>
-            <button (click)="closeProfile()"><img src="./img/close.svg" alt=""></button>
-        </div>
-        <img [src]="currentReciever?.profilephoto" alt="">
-        <div class="profileStatus">
-            <span>{{currentReciever?.fullname}}</span>
-            <div>
-                <div class="status-dot-profile" [ngClass]="{'green': currentReciever?.online}"></div>
-                <span>{{ currentReciever?.online ? 'Aktiv' : 'Abwesend' }}</span>
-            </div>
-        </div>
-        <div class="contactInfos">
-            <div class="emailImage">
-                <img src="./img/mail.svg" alt="">
-                <span>E-Mail-Adresse</span>
-            </div>
-            <div class="email-adress">
-                <a href="mailto:{{currentReciever?.email}}">{{currentReciever?.email}}</a>
-            </div>
-        </div>
-        <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
-    </div>--> 
     <div [ngClass]="{'show': isClicked }" class="lists">
         <div (click)="getReciever(index)" [ngClass]="{'channelStyle': isChannel}" class="listrow" *ngFor="let object of currentList; let index = index">
             <div *ngIf="!isChannel" class="imageContainer">
@@ -99,9 +75,9 @@
                 placeholder="Nachricht an {{currentReciever?.fullname}}"></textarea>
             <div>
                 <div class="left">
-                    <button (click)="toggleList('channels', $event)"><img class="smiley" src="./img/smiley.svg"
+                    <button ><img class="smiley" src="./img/smiley.svg"
                             alt=""></button>
-                    <button (click)="toggleList('users', $event)"><img class="at" src="./img/at.svg" alt=""></button>
+                    <button (click)="toggleList($event)"><img class="at" src="./img/at.svg" alt=""></button>
                 </div>
                 <button (click)="sendMessage()" class="right"><img src="./img/send.svg" alt=""></button>
             </div>

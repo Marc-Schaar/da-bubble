@@ -5,7 +5,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: restoreposition 1500ms ease-in-out 2800ms 1 normal forwards;
   > div:nth-child(1) {
     display: flex;
     justify-content: center;
@@ -13,11 +12,8 @@
     padding: 24px 0 20px 0;
     height: 184px;
     opacity: unset;
-    @media (max-width: 2309px) {
-      margin-left: unset !important;
-      animation: goup 1500ms ease-in-out 1500ms 1 normal forwards,
-        restore 1500ms ease-in-out 3600ms 1 normal forwards;
-    }
+    animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
+    margin-left: unset !important;
     > div:nth-child(1) {
       z-index: 1;
       position: relative;
@@ -28,33 +24,21 @@
         position: absolute;
         background-color: #5f66ee;
         z-index: 1;
-        @media (max-width: 2309px) {
-          margin-left: unset !important;
-          animation: getssmaller 4000ms ease-in-out 500ms 1 normal forwards;
-        }
-        @media (max-width: 412px), (max-height: 915px) {
-          height: 56px;
-          width: 200px;
-        }
+        margin-left: unset !important;
+        animation: getssmaller 4000ms ease-in-out 500ms 1 normal forwards;
         > img:nth-child(1) {
           height: 100%;
         }
       }
+
       > div:nth-child(2) {
         font-size: 38px;
         color: white;
         font-family: "Nunito";
         max-width: 350px;
         z-index: 0;
-        @media (max-width: 2309px) {
-          animation: turnright 2500ms ease-in-out 0s 1 normal forwards,
-            turnleft 1000ms ease-in-out 2200ms 1 normal forwards;
-        }
-        @media (min-width: 412px), (min-height: 915px) {
-          animation: turnrightmobile 2500ms ease-in-out 0s 1 normal forwards,
-            showtext 1500ms ease-in-out 1000ms 1 normal forwards;
-          font-size: 25px;
-        }
+        animation: turnright 2000ms ease-in-out 0ms 1 normal forwards,
+          turnleft 1000ms ease-in-out 2200ms 1 normal forwards;
       }
     }
   }
@@ -101,7 +85,7 @@
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(-56rem, -35.3rem);
+    transform: translate(-52rem, -46.2vh);
   }
 }
 
@@ -120,27 +104,5 @@
   }
   100% {
     transform: translate(-3rem, -23rem);
-  }
-}
-
-@keyframes restoreposition {
-  0% {
-    justify-content: center;
-    align-items: center;
-    transform: translate(0, 0);
-  }
-  100% {
-    justify-content: flex-start;
-    align-items: flex-start;
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes restore {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(0, 0);
   }
 }

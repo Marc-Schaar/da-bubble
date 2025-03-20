@@ -22,6 +22,7 @@ import { doc, Firestore, onSnapshot, orderBy } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { ChatContentComponent } from '../chat-content/chat-content.component';
 import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
+import { NewmessageComponent } from '../newmessage/newmessage.component';
 
 @Component({
   selector: 'app-main-chat',
@@ -37,6 +38,7 @@ import { DirectmessagesComponent } from '../direct-messages/direct-messages.comp
     ThreadComponent,
     ChatContentComponent,
     DirectmessagesComponent,
+    NewmessageComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',

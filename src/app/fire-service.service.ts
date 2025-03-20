@@ -6,6 +6,7 @@ import {
   doc,
   DocumentReference,
   Firestore,
+  getDoc,
   getDocs,
   updateDoc,
 } from '@angular/fire/firestore';
