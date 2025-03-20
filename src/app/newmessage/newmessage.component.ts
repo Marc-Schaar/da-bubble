@@ -208,11 +208,11 @@ export class NewmessageComponent {
   sendMessage() {
     if (this.whichMessage === 'user') {
       this.sendDirectMessage();
-      //hier muss die zu chatcompnent gewechselt werden 
+      //hier muss die zu chatcompnent gewechselt werden -> currentReciever ist gesetzt
     }
     if (this.whichMessage === 'channel') {
       //hier muss die sendeMessageFunktion für den Channel gesetzt werden!
-      //hier muss die zur channelcompnent gewechselt werden 
+      //hier muss die zur channelcompnent gewechselt werden -> currentchannel ist gesetzt
     }
     this.currentReciever = null;
     this.currentChannel = null;
