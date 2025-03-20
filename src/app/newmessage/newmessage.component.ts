@@ -32,7 +32,7 @@ export class NewmessageComponent {
   currentMessages: any[] = [];
   firestore = inject(Firestore);
 
-  currenArray: any[] = []
+  currentArray: any[] = []
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
@@ -129,49 +129,48 @@ export class NewmessageComponent {
   getCurrentChat() {
 
     if (this.input.includes('#')) {
-      this.currenArray = this.channels;
+      this.currentArray = this.channels;
 
       this.searchForReciever('channel')
 
     } else if (this.input.includes('@')) {
-      this.currenArray = this.users;
+      this.currentArray = this.users;
 
       this.searchForReciever('user')
     }
   }
 
   searchForReciever(chat: string) {
+    console.log(this.channels);
     if (this.input.length > 3) {
-      const INPUT = this.input.slice(1).trim().toLocaleLowerCase();
+      const INPUT = this.input.slice(1).toLowerCase().trim();
       console.log(INPUT);
-      console.log(chat);
+      console.log(this.currentArray);
       this.whichMessage = chat;
-      console.log(this.whichMessage);
-      this.currenArray.forEach(object => {
-        if (chat === 'user' && object.fullname.toLowerCase().includes(INPUT)) {
-          console.log(object);
-          this.input = '@' + object.fullname
-          this.currentReciever = object;
-          this.currentRecieverId = object.id
-       
-
-          console.log(this.currentRecieverId);
+      this.currentArray.forEach(object => {
+        if (chat === 'user') {
+          if (object.fullname.toLowerCase().includes(INPUT) || object.email.toLowerCase().includes(INPUT)) {
+            this.input = '@' + object.fullname
+            this.currentReciever = object;
+            this.currentRecieverId = object.id
+          }
 
         }
-        if (chat === 'channel' && object.name.toLowerCase().includes(INPUT)) {
-          console.log(object);
-          this.input = '#' + object.name
-          this.currentChannel = object;
-          console.log(this.currentChannel);
-
-          //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden. 
+        if (chat === 'channel') {
+          if (object.name.toLowerCase().includes(INPUT)) {
+            this.input = '#' + object.name
+            this.currentChannel = object;
+            console.log(this.currentChannel);
+            //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden. 
+          }
         }
-   
-
       });
+    } else {
+      this.currentReciever = null;
     }
   }
 
+  
   sendMessage() {
     if (this.whichMessage === 'user') {
       this.sendDirectMessage();
