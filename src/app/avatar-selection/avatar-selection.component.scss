@@ -37,6 +37,9 @@
     width: 80%;
     height: unset;
   }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    width: 91%;
+  }
   > form:nth-child(1) {
     padding: 54px;
     display: flex;
