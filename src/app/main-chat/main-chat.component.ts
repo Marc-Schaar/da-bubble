@@ -103,7 +103,7 @@ export class MainChatComponent implements OnInit {
   }
 
   openProfile() {
-    this.currentReciever = this.shareddata.currentReciever;
+    this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden
     this.isProfileCard = !this.isProfileCard;
     console.log('OPEN');
     console.log(this.isProfileCard);
