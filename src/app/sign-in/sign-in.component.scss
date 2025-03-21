@@ -9,8 +9,12 @@
   flex-direction: column;
   border-radius: 30px;
   background-color: #ffffff;
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    gap: 10px;
+    padding: 20px 20px;
+  }
   @media (max-width: 743px) {
-    width: 70%;
+    width: 91%;
   }
   > div:nth-child(1) {
     > div:nth-child(1) {
@@ -23,6 +27,9 @@
         @media (max-width: 400px) {
           font-size: 2rem;
         }
+        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+          font-size: 32px;
+        }
       }
     }
     > div:nth-child(2) {
@@ -30,14 +37,13 @@
       justify-content: center;
       > div:nth-child(1) {
         width: 85%;
-        gap: 45px;
         text-align: center;
-        align-items: center;
-        display: flex;
-        justify-content: center;
         font-family: "Nunito";
         font-weight: 400;
         font-size: 20px;
+        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+          font-size: 17px;
+        }
         > div:nth-child(1) {
           width: 70%;
           display: flex;
@@ -52,6 +58,9 @@
     gap: 30px;
     align-items: center;
     width: 82%;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      gap: 15px;
+    }
     > div:nth-child(1) {
       display: flex;
       flex-direction: column;
@@ -59,6 +68,9 @@
       gap: 30px;
       align-items: center;
       width: calc(100% - 3px);
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        gap: 15px;
+      }
       > div:nth-child(1) {
         background-color: #eceefe;
         padding: 18px 60px;
@@ -68,6 +80,9 @@
         background-repeat: no-repeat;
         background-position: 20px;
         overflow: hidden;
+        @media (max-width: 968px) {
+          width: 100%;
+        }
         > input:nth-child(1) {
           border: none;
           outline: none;
@@ -83,6 +98,9 @@
         background-repeat: no-repeat;
         background-position: 20px;
         overflow: hidden;
+        @media (max-width: 968px) {
+          width: 100%;
+        }
         > input:nth-child(1) {
           border: none;
           outline: none;
@@ -119,6 +137,9 @@
     flex-direction: column;
     gap: 35px;
     justify-content: space-evenly;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      gap: 20px;
+    }
     > div:nth-child(1) {
       display: flex;
       align-items: center;
@@ -130,6 +151,10 @@
       &:hover {
         color: #444df2;
         transform: scale(1.1);
+      }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        padding: 6px 32px;
+        width: 100%;
       }
       > button:nth-child(1) {
         display: flex;
@@ -145,7 +170,6 @@
         cursor: pointer;
         @media (max-width: 490px) {
           font-size: 1rem;
-          flex-direction: column;
         }
         &:hover {
           font-weight: 700;
@@ -160,7 +184,9 @@
       @media (max-width: 446px) {
         justify-content: unset;
         gap: 15px;
-        flex-direction: column;
+      }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        justify-content: center;
       }
       > button {
         border-radius: 25px;
@@ -175,6 +201,11 @@
           background-color: #686868;
           color: #ffffff;
           cursor: unset;
+        }
+        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+          max-width: 137px;
+          height: 49px;
+          font-size: 14px;
         }
         &:hover:not(:disabled) {
           background-color: #444df2;
