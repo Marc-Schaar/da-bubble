@@ -25,7 +25,7 @@
         <div class="small-channelname">{{currentChannel.name}}</div>
       </div>
       <div *ngIf="channelnameEdit" class="input-name-cont">
-        <input type="text" name="" id="" placeholder="Channelname" />
+        <input type="text" name="" value="{{currentChannel.name}}" id="changeNameInput" placeholder="Channelname" />
       </div>
     </div>
 
@@ -49,14 +49,15 @@
         class="textarea-des"
         (input)="adjustTextareaHeight($event)"
         name=""
-        id=""
+        id="changeDescriptionInput"
         *ngIf="channeldescriptionEdit"
+        value="{{currentChannel.description}}"
       ></textarea>
       <div class="line"></div>
       <div class="channelname-headline">Erstellt von</div>
       <div class="creator-name" id="creatorName">{{currentChannel.creator}}</div>
     </div>
-    <div class="exit-channel-cont">
+    <div class="exit-channel-cont" (click)="exitChannel()">
       <div class="exit-btn">Channel verlassen</div>
     </div>
   </div>
