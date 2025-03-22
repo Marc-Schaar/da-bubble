@@ -230,8 +230,9 @@ export class NewmessageComponent {
       await this.sendDirectMessage();
       this.setUrl('direct', this.currentRecieverId);
       this.userService.loadComponent('chat');
-      this.userService.getReciepent('chat', this.currentUserId);
-
+      console.log(this.currentUser);
+      console.log(this.currentReciever);
+      this.userService.getReciepent(this.currentReciever, this.currentUser);
       //hier muss die zu chatcompnent gewechselt werden -> currentReciever ist gesetzt
     }
     if (this.whichMessage === 'channel') {

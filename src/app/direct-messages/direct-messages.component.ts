@@ -186,7 +186,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 */
 
-  loadMessages() {
+  loadMessages() {   
     const messagesRef = doc(this.firestore, `users/${this.userService.docId}`);
     onSnapshot(messagesRef, (docSnapshot) => {
       if (docSnapshot.exists()) {

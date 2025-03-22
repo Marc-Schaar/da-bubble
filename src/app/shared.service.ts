@@ -142,9 +142,6 @@ export class UserService {
   }
 
   async getReciepent(reciever: any, user: any) {
-    console.log(user);
-    console.log(reciever);
-    
     this.currentReciever = reciever;
     this.currentUser = user;
   
@@ -158,7 +155,7 @@ export class UserService {
     this.currentChannel = channel;
     this.currentUser = user;
     if (this.unsubMessages) this.unsubMessages();
-    await this.loadMessages();
+   await this.loadMessages();
     this.startLoadingChannel.next();
   }
 
