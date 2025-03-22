@@ -106,9 +106,6 @@ export class NewmessageComponent {
   }
 
   async sendDirectMessage() {
-    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
-      return;
-    }
     const message = new DirectMessage(
       this.userService.user?.displayName || '',
       this.userService.user?.photoURL || '',
@@ -235,23 +232,20 @@ export class NewmessageComponent {
       this.currentReciever = this.searchList[index];
       this.currentRecieverId = this.currentReciever.id;
       this.input = '@' + this.currentReciever.fullname;
-      console.log(this.currentRecieverId);
     }
     if (this.isChannel === true) {
       this.currentChannel = this.searchList[index];
       this.currentChannelId = this.currentChannel.id;
       this.input = '#' + this.currentChannel.name;
-      console.log('Channel id', this.currentChannelId);
-
-      //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden.
     }
-
     this.isFound = false;
     this.isChannel = false;
   }
 
   async sendMessage() {
-    if (this.whichMessage === 'user') {
+    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
+      return;
+    } else if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
       this.userService.setUrl(
         'direct',
@@ -259,8 +253,7 @@ export class NewmessageComponent {
         this.currentRecieverId
       );
       this.userService.loadComponent('chat');
-    }
-    if (this.whichMessage === 'channel') {
+    } else if (this.whichMessage === 'channel') {
       this.sendChannelMessage();
       this.userService.setUrl('channel', this.currentChannelId);
       this.userService.loadComponent('channel');
