@@ -4,11 +4,24 @@
 }
 
 main {
-  box-sizing: border-box;
-  width: 485px;
-  height: 940px;
+  //box-sizing: border-box;
+  //width: 485px;
+  //height: 940px;
+  // border-radius: 30px;
+  //border: 1px solid black;
+  display: flex;
+  background-color: var(--bg-color);
+  height: 100%;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
   border-radius: 30px;
-  border: 1px solid black;
+  margin: 16px;
+  flex: 1;
+  max-height: calc(100svh - 208px);
 }
 
 .thread-channel-close-button-container {

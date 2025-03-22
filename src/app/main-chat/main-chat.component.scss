@@ -27,8 +27,13 @@ app-contactbar {
   position: relative;
 }
 
-app-thread {
+.tread-container {
   width: 485px;
+}
+
+.mat-drawer-side.mat-drawer-end {
+  border-left-style: unset;
+  border-radius: unset;
 }
 
 .box {
