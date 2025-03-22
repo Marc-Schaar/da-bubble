@@ -35,6 +35,13 @@ export class ContactbarComponent {
     await this.loadUsers();
     await this.loadChannels();
     this.findCurrentUser();
+    console.log(this.userService.channelType);
+    if (this.userService.channelType === 'channel') {
+      this.active = true; //open channel list
+    }
+    if (this.userService.channelType === 'direct') {
+      this.message = true; //open direct list
+    }
   }
 
   async loadUsers() {
@@ -63,12 +70,6 @@ export class ContactbarComponent {
       console.log('user wurde nicht richtig geladen');
     }
   }
-
-  // setReciepentInUrl(id: string) {
-  //   this.router.navigate(['/chat'], {
-  //     queryParams: { reciepent: id },
-  //   });
-  // }
 
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
