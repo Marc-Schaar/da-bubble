@@ -35,13 +35,7 @@ export class ContactbarComponent {
     await this.loadUsers();
     await this.loadChannels();
     this.findCurrentUser();
-    console.log(this.userService.channelType);
-    if (this.userService.channelType === 'channel') {
-      this.active = true; //open channel list
-    }
-    if (this.userService.channelType === 'direct') {
-      this.message = true; //open direct list
-    }
+    this.openDropdown();
   }
 
   async loadUsers() {
@@ -99,5 +93,14 @@ export class ContactbarComponent {
 
   openWindow(window: string) {
     this.userService.loadComponent(window);
+  }
+
+  openDropdown() {
+    if (this.userService.channelType === 'channel') {
+      this.active = true;
+    }
+    if (this.userService.channelType === 'direct') {
+      this.message = true;
+    }
   }
 }
