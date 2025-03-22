@@ -142,8 +142,12 @@ export class UserService {
   }
 
   async getReciepent(reciever: any, user: any) {
+    console.log(user);
+    console.log(reciever);
+    
     this.currentReciever = reciever;
     this.currentUser = user;
+  
     //localStorage.setItem('currentReciver', JSON.stringify(reciever));
     if (this.unsubMessages) this.unsubMessages();
     await this.loadMessages();
