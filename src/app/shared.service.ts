@@ -144,7 +144,7 @@ export class UserService {
   async getReciepent(reciever: any, user: any) {
     this.currentReciever = reciever;
     this.currentUser = user;
-  
+
     //localStorage.setItem('currentReciver', JSON.stringify(reciever));
     if (this.unsubMessages) this.unsubMessages();
     await this.loadMessages();
@@ -155,7 +155,7 @@ export class UserService {
     this.currentChannel = channel;
     this.currentUser = user;
     if (this.unsubMessages) this.unsubMessages();
-   await this.loadMessages();
+    await this.loadMessages();
     this.startLoadingChannel.next();
   }
 
@@ -179,6 +179,16 @@ export class UserService {
   //   if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
   //   else console.log('Channel konnte nicht geladen werden aus Local Storage');
   // }
+
+  setUrl(channelType: string, id?: string, reciepentId?: string) {
+    this.router.navigate(['/chat'], {
+      queryParams: {
+        channelType: channelType,
+        id: id,
+        reciepentId: reciepentId,
+      },
+    });
+  }
 
   loadComponent(component: string) {
     setTimeout(() => {

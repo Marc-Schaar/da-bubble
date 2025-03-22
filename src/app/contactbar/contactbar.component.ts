@@ -64,16 +64,6 @@ export class ContactbarComponent {
     }
   }
 
-  setUrl(channelType: string, id?: string, reciepentId?: string) {
-    this.router.navigate(['/chat'], {
-      queryParams: {
-        channelType: channelType,
-        id: id,
-        reciepentId: reciepentId,
-      },
-    });
-  }
-
   // setReciepentInUrl(id: string) {
   //   this.router.navigate(['/chat'], {
   //     queryParams: { reciepent: id },

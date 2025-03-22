@@ -48,6 +48,7 @@ export class NewmessageComponent {
   docId: string = '';
   currentRecieverId: string = '';
   currentUserId: string = '';
+  currentChannelId: string = '';
   isFound: boolean = false;
   private subscription?: Subscription;
   constructor() {
@@ -167,6 +168,7 @@ export class NewmessageComponent {
     this.isFound = false;
     this.isChannel = false;
     this.currentReciever = null;
+    this.currentChannel = null;
   }
 
   startSearch(input: string, chat: string) {
@@ -217,7 +219,10 @@ export class NewmessageComponent {
     }
     if (this.isChannel === true) {
       this.currentChannel = this.searchList[index];
+      this.currentChannelId = this.currentChannel.id;
       this.input = '#' + this.currentChannel.name;
+      console.log('Channel id', this.currentChannelId);
+
       //hier müssen evtl noch variable gesetzt werden um dann eine nachricht in den channel zu senden.
     }
 
@@ -228,32 +233,20 @@ export class NewmessageComponent {
   async sendMessage() {
     if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
-      this.setUrl('direct', this.currentRecieverId);
+      this.userService.setUrl(
+        'direct',
+        this.currentUserId,
+        this.currentRecieverId
+      );
       this.userService.loadComponent('chat');
-      console.log(this.currentUser);
-      console.log(this.currentReciever);
-      this.userService.getReciepent(this.currentReciever, this.currentUser);
-      //hier muss die zu chatcompnent gewechselt werden -> currentReciever ist gesetzt
     }
     if (this.whichMessage === 'channel') {
       //hier muss die sendeMessageFunktion für den Channel gesetzt werden!
-      this.setUrl('channel', this.currentRecieverId);
+      this.userService.setUrl('channel', this.currentChannelId);
       this.userService.loadComponent('channel');
-      this.userService.getChannel('channel', this.currentUserId);
-      //hier muss die zur channelcompnent gewechselt werden -> currentchannel ist gesetzt
     }
     this.currentReciever = null;
     this.currentChannel = null;
-  }
-
-  setUrl(channelType: string, id?: string, reciepentId?: string) {
-    this.router.navigate(['/chat'], {
-      queryParams: {
-        channelType: channelType,
-        id: id,
-        reciepentId: reciepentId,
-      },
-    });
   }
 
   toggleList(event: Event) {

@@ -114,7 +114,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       const docSnap = await getDoc(docRef);
       docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
     }
-    console.log(this.currentChannel);
   }
 
   getMessages() {
