@@ -8,11 +8,13 @@ import {
   doc,
   updateDoc,
   onSnapshot,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Message } from '../models/message';
 @Injectable({
   providedIn: 'root',
 })
@@ -141,6 +143,24 @@ export class NewmessageComponent {
     };
   }
 
+  buildMessageObject() {
+    return {
+      message: this.message || '',
+      avatar: this.userService.user?.photoURL || '',
+      date: new Date().toISOString().split('T')[0],
+      name: this.userService.user?.displayName || 'Unbekannt',
+      newDay: false,
+      timestamp: serverTimestamp(),
+    };
+  }
+
+  sendChannelMessage() {
+    this.firestoreService.sendMessage(
+      this.currentChannelId,
+      new Message(this.buildMessageObject())
+    );
+  }
+
   getCurrentChat() {
     if (this.input.includes('#')) {
       this.currentArray = this.channels;
@@ -241,7 +261,7 @@ export class NewmessageComponent {
       this.userService.loadComponent('chat');
     }
     if (this.whichMessage === 'channel') {
-      //hier muss die sendeMessageFunktion für den Channel gesetzt werden!
+      this.sendChannelMessage();
       this.userService.setUrl('channel', this.currentChannelId);
       this.userService.loadComponent('channel');
     }
