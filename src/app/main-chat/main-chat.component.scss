@@ -26,6 +26,10 @@ app-contactbar {
   grid-row: 1;
   position: relative;
 }
+.mat-drawer-container,
+.mat-drawer {
+  background-color: unset;
+}
 
 .tread-container {
   width: 485px;
