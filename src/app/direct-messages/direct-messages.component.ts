@@ -112,8 +112,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   setCurrentData() {
     this.currentRecieverId = this.userService.reciepentId;
     this.currentUserId = this.userService.docId;
-    this.currentReciever = this.getRecieverFromUrl();
     this.currentUser = this.userService.currentUser;
+    this.getRecieverFromUrl();
   }
 
   async getRecieverFromUrl() {
@@ -186,7 +186,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 */
 
-  loadMessages() {   
+  loadMessages() {
     const messagesRef = doc(this.firestore, `users/${this.userService.docId}`);
     onSnapshot(messagesRef, (docSnapshot) => {
       if (docSnapshot.exists()) {

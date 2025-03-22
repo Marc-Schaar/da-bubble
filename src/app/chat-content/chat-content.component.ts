@@ -13,11 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  updateDoc,
+  Firestore,
   onSnapshot,
-  collection,
-  doc,
-  addDoc,
   serverTimestamp,
   query,
   orderBy,
@@ -25,14 +22,15 @@ import {
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { Subscription, timestamp } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
-import { ChannelEditComponent } from "../chat-content/channel-edit/channel-edit.component";
+import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
+import { doc, getDoc } from '@firebase/firestore';
 
-@Injectable({
-  providedIn: 'root',
-})
+// @Injectable({
+//   providedIn: 'root',
+// })
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -41,8 +39,8 @@ import { ChannelEditComponent } from "../chat-content/channel-edit/channel-edit.
     CommonModule,
     FormsModule,
     MatSidenavModule,
-    ChannelEditComponent
-],
+    ChannelEditComponent,
+  ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
@@ -53,6 +51,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   router: Router = inject(Router);
+  firestore: Firestore = inject(Firestore);
 
   loading: boolean = false;
   menuOpen: boolean = false;
@@ -68,7 +67,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   input: string = '';
   inputEdit: string = '';
   currentChannelId: any;
-  channelInfo:boolean = false;
+  channelInfo: boolean = false;
 
   unsubMessages!: () => void;
 
@@ -104,9 +103,18 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setChannelData() {
-    this.currentChannel = this.userService.currentChannel;
     this.currentChannelId = this.userService.docId;
     this.currentUser = this.userService.currentUser;
+    this.getChannelFromUrl();
+  }
+
+  async getChannelFromUrl() {
+    if (this.currentChannelId) {
+      const docRef = doc(this.firestore, 'channels', this.currentChannelId);
+      const docSnap = await getDoc(docRef);
+      docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
+    }
+    console.log(this.currentChannel);
   }
 
   getMessages() {
@@ -231,6 +239,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openChannelInfo() {
     this.channelInfo = true;
-    console.log(this.channelInfo)
+    console.log(this.channelInfo);
   }
 }
