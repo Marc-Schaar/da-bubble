@@ -68,7 +68,10 @@ export class AvatarselectionComponent implements OnInit {
           photoURL: this.user.profilephoto,
         })
           .then(() => {
-            const userDocRef = doc(this.firestore, `users/${user.uid}`);
+            const userDocRef = doc(
+              this.firestore,
+              `users/${this.user.fullname}`
+            );
             return setDoc(userDocRef, {
               fullname: this.user.fullname,
               email: this.user.email,
