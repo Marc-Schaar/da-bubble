@@ -14,7 +14,13 @@ import {
   getAuth,
   updateProfile,
 } from '@angular/fire/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import {
+  arrayUnion,
+  doc,
+  Firestore,
+  setDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../shared.service';
 
@@ -60,16 +66,32 @@ export class AvatarselectionComponent implements OnInit {
         return updateProfile(user, {
           displayName: this.user.fullname,
           photoURL: this.user.profilephoto,
-        }).then(() => {
-          const userDocRef = doc(this.firestore, `users/${user.uid}`);
-          return setDoc(userDocRef, {
-            fullname: this.user.fullname,
-            email: this.user.email,
-            profilephoto: this.user.profilephoto,
-            messages: [],
-            online: false,
+        })
+          .then(() => {
+            const userDocRef = doc(this.firestore, `users/${user.uid}`);
+            return setDoc(userDocRef, {
+              fullname: this.user.fullname,
+              email: this.user.email,
+              profilephoto: this.user.profilephoto,
+              messages: [],
+              online: false,
+            });
+          })
+          .then(() => {
+            const userDocRef = doc(
+              this.firestore,
+              `channels/LPRVbdSLkaDmZSzumHJA/`
+            );
+            return updateDoc(userDocRef, {
+              member: arrayUnion({
+                fullname: this.user.fullname,
+                email: this.user.email,
+                profilephoto: this.user.profilephoto,
+                messages: [],
+                online: false,
+              }),
+            });
           });
-        });
       })
       .then(() => {
         setTimeout(() => {
