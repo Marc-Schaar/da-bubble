@@ -80,7 +80,7 @@
         background-repeat: no-repeat;
         background-position: 20px;
         overflow: hidden;
-        @media (max-width: 644px) {
+        @media (max-width: 968px) {
           width: 100%;
         }
         > input:nth-child(1) {
@@ -99,7 +99,7 @@
         background-repeat: no-repeat;
         background-position: 20px;
         overflow: hidden;
-        @media (max-width: 644px) {
+        @media (max-width: 968px) {
           width: 100%;
         }
         > input:nth-child(1) {
@@ -160,6 +160,9 @@
       &:hover {
         cursor: pointer;
       }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        padding: 6px 32px;
+      }
     }
     > div:nth-child(1) {
       display: flex;
@@ -209,7 +212,9 @@
       }
       @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
         justify-content: center;
+        flex-direction: row;
       }
+     
       > button {
         border-radius: 25px;
         padding: 12px 25px;
