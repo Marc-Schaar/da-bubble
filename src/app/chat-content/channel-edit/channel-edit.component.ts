@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
-import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
@@ -23,9 +29,8 @@ export class ChannelEditComponent {
   users: any[] = [];
   auth = getAuth();
 
-
   constructor(public firestore: Firestore) {}
-  
+
   ngOnInit() {
     this.fetchUsers();
   }
@@ -33,7 +38,7 @@ export class ChannelEditComponent {
   async fetchUsers() {
     const usersCollection = collection(this.firestore, 'users');
     const usersSnapshot = await getDocs(usersCollection);
-    this.users = usersSnapshot.docs.map(doc => doc.data());
+    this.users = usersSnapshot.docs.map((doc) => doc.data());
   }
 
   editChannelName(content: string) {
@@ -108,8 +113,21 @@ export class ChannelEditComponent {
   }
 
   async exitChannel() {
-    console.log(this.auth.currentUser);
+    // const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+    // try {
+    //   const channelDoc = await getDoc(channelRef);
+    //   const channelData = channelDoc.data();
+    //   if (channelData) {
+    //     const updatedMembers = channelData['member'].filter((member: string) => member !== this.currentUser.uid);
+    //     await updateDoc(channelRef, {
+    //       member: updatedMembers,
+    //     });
+    //   } else {
+    //     console.error('Channel data is undefined');
+    //   }
+    // } catch (error) {
+    //   console.error();
+      
+    // }
   }
-
-  
 }
