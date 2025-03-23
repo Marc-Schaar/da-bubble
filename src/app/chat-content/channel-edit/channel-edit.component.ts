@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { doc, updateDoc } from '@angular/fire/firestore';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
+import { UserService } from '../../shared.service';
+import { getAuth } from 'firebase/auth';
 
 @Component({
   selector: 'app-channel-edit',
@@ -10,14 +12,29 @@ import { Firestore } from '@angular/fire/firestore';
   styleUrl: './channel-edit.component.scss',
 })
 export class ChannelEditComponent {
-  @Input() channelInfo:boolean = false;
-  @Input() currentChannel:any = {};
-
+  @Input() channelInfo: boolean = false;
+  @Input() currentChannel: any = {};
+  @Input() currentChannelId: any;
+  @Input() currentUser: any;
+  userService = inject(UserService);
   @Output() channelInfoChange = new EventEmitter<boolean>();
   channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
+  users: any[] = [];
+  auth = getAuth();
+
 
   constructor(public firestore: Firestore) {}
+  
+  ngOnInit() {
+    this.fetchUsers();
+  }
+
+  async fetchUsers() {
+    const usersCollection = collection(this.firestore, 'users');
+    const usersSnapshot = await getDocs(usersCollection);
+    this.users = usersSnapshot.docs.map(doc => doc.data());
+  }
 
   editChannelName(content: string) {
     console.log(content);
@@ -27,7 +44,7 @@ export class ChannelEditComponent {
       } else {
         this.channelnameEdit = false;
         this.saveNewChannelData(content);
-      } 
+      }
     }
     if (content == 'editDescription') {
       if (!this.channeldescriptionEdit) {
@@ -35,45 +52,52 @@ export class ChannelEditComponent {
       } else {
         this.channeldescriptionEdit = false;
         this.saveNewChannelData(content);
-      } 
+      }
     }
   }
 
-  async saveNewChannelData(content:string) {
-    const newChannelName = document.getElementById('changeNameInput') as HTMLInputElement;
-    const newChannelDescription = document.getElementById('changeDescriptionInput') as HTMLInputElement;
-    const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannel.id);
-    // const newChannelDescriptionRef = doc(this.firestore, 'channels', this.currentChannel.id)
-    console.log(content);
+  async saveNewChannelData(content: string) {
+    const newChannelName = document.getElementById(
+      'changeNameInput'
+    ) as HTMLInputElement;
+    const newChannelDescription = document.getElementById(
+      'changeDescriptionInput'
+    ) as HTMLInputElement;
+    const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
     try {
-      if(content == 'editName') {
-        const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannel.id);
+      if (content == 'editName') {
+        const ChannelNameRef = doc(
+          this.firestore,
+          'channels',
+          this.currentChannelId
+        );
 
-        await updateDoc(ChannelNameRef, {
-          name: newChannelName.value
-        })
+        await updateDoc(channelRef, {
+          name: newChannelName.value,
+        });
         this.currentChannel.name = newChannelName.value;
-
       }
-      if(content == 'editDescription') {
-        const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannel.id);
+      if (content == 'editDescription') {
+        const ChannelNameRef = doc(
+          this.firestore,
+          'channels',
+          this.currentChannelId
+        );
 
-        await updateDoc(ChannelNameRef, {
-          description: newChannelDescription.value
-        })
+        await updateDoc(channelRef, {
+          description: newChannelDescription.value,
+        });
         this.currentChannel.description = newChannelDescription.value;
-
       }
     } catch (error) {
       console.error('Input Elemente nicht gefunden');
-      
     }
   }
 
   adjustTextareaHeight(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = `${textarea.scrollHeight}px`;
-    if(textarea.value == '') {
+    if (textarea.value == '') {
       textarea.style.height = `60px`;
     }
   }
@@ -83,7 +107,9 @@ export class ChannelEditComponent {
     this.channelInfoChange.emit(this.channelInfo);
   }
 
-  exitChannel() {
-    
+  async exitChannel() {
+    console.log(this.auth.currentUser);
   }
+
+  
 }

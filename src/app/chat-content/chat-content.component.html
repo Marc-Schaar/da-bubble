@@ -3,7 +3,7 @@
     <img [src]=" this.currentUser?.profilephoto " alt="">
 </header>
 <main>
-<app-channel-edit *ngIf="channelInfo" [(channelInfo)]="channelInfo" [currentChannel]="currentChannel"></app-channel-edit>
+<app-channel-edit *ngIf="channelInfo" [(channelInfo)]="channelInfo" [currentChannel]="currentChannel" [currentChannelId]="currentChannelId" [currentUser]="currentUser"></app-channel-edit>
     <div class="card">
         <section class="card-header">
             <div class="align-center" (click)="openChannelInfo()">
