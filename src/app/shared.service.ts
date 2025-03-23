@@ -103,7 +103,7 @@ export class UserService {
     this.router.navigate(['/main']);
   }
 
-  continue() {
+  redirectiontoavatarselection() {
     this.router.navigate(['/avatarselection']);
   }
 
