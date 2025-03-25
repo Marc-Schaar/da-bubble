@@ -6,6 +6,7 @@ export class Message {
   timestamp: any;
   newDay: boolean;
   avatar: string;
+  reaction: string[];
 
   constructor(obj?: any) {
     this.name = obj ? obj.name : '';
@@ -14,6 +15,7 @@ export class Message {
     this.timestamp = obj ? obj.timestamp : serverTimestamp();
     this.newDay = obj ? obj.newDay : false;
     this.avatar = obj ? obj.avatar : '';
+    this.reaction = obj ? obj.reaction : [];
   }
 
   toJSON() {
@@ -24,6 +26,7 @@ export class Message {
       timestamp: this.timestamp,
       newDay: this.newDay,
       avatar: this.avatar,
+      reaction: this.reaction,
     };
   }
 }

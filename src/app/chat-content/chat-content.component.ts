@@ -62,6 +62,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   channels: any = [];
   messages: any[] = [];
   currentChannel: any = {};
+  reactions: string[] = [];
 
   currentUser: any;
   editingMessageId: any = '';
@@ -216,6 +217,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentChannelId,
       new Message(this.buildMessageObject())
     );
+    this.input = '';
   }
 
   editMessage(message: Message, index: number) {
@@ -274,7 +276,13 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       name: this.userService.user?.displayName || 'Unbekannt',
       newDay: this.isNewDay(),
       timestamp: serverTimestamp(),
+      reaction: this.reactions || [],
     };
+  }
+
+  addReaction(emoji: string) {
+    this.reactions.push(emoji);
+    this.reactionMenuOpen = false;
   }
 
   scrollToBottom() {
