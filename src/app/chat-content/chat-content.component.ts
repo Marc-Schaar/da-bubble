@@ -18,6 +18,7 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -280,9 +281,23 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  addReaction(emoji: string) {
+  addReaction(message: any, i: number, emoji: string) {
     this.reactions.push(emoji);
+    message.reaction.push(emoji);
     this.reactionMenuOpen = false;
+    let messageRef = this.fireService.getMessageRef(
+      this.currentChannelId,
+      message.id
+    );
+    if (messageRef) {
+      this.isEditing = false;
+      this.editingMessageId = null;
+      try {
+        //  this.fireService.updateMessage(messageRef, this.inputEdit);
+        updateDoc(messageRef, { reaction: this.reactions });
+        this.inputEdit = '';
+      } catch (error) {}
+    }
   }
 
   scrollToBottom() {
