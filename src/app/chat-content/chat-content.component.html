@@ -93,7 +93,11 @@
 
             <div *ngIf="reactionMenuOpen" class="reaction-menu">
               <ng-container *ngFor="let emoji of emojis">
-                <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                <img
+                  class="emoji"
+                  [src]="'img/emojis/' + emoji + '.png'"
+                  alt="{{ emoji }}"
+                />
               </ng-container>
             </div>
           </div>
