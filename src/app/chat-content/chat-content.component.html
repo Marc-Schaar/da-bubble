@@ -94,7 +94,7 @@
             <div *ngIf="reactionMenuOpen" class="reaction-menu">
               <ng-container *ngFor="let emoji of emojis">
                 <img
-                  (click)="addReaction(message, i, emoji)"
+                  (click)="addReaction(message, emoji)"
                   class="emoji"
                   [src]="'img/emojis/' + emoji + '.png'"
                   alt="{{ emoji }}"

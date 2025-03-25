@@ -281,21 +281,19 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  addReaction(message: any, i: number, emoji: string) {
-    this.reactions.push(emoji);
-    message.reaction = this.reactions;
-    this.reactionMenuOpen = false;
+  addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageRef(
       this.currentChannelId,
       message.id
     );
+    this.reactions.push(emoji);
+    message.reaction = this.reactions;
+
     if (messageRef) {
-      this.isEditing = false;
-      this.editingMessageId = null;
       try {
         this.fireService.updateReaction(messageRef, message.reaction);
         console.log('Nachricht erfolgreich aktualisiert');
-        this.inputEdit = '';
+        this.reactionMenuOpen = false;
       } catch (error) {
         console.error('Fehler beim Aktualisieren der Nachricht:', error);
       }
