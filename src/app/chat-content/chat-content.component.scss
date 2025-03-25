@@ -179,6 +179,7 @@ li {
       border-radius: 0 30px 30px 30px;
       padding: 10px 20px;
       background-color: white;
+
       button {
         padding: 10px 20px;
         border-radius: 25px;
@@ -189,6 +190,24 @@ li {
         cursor: pointer;
         scale: 1.02;
       }
+    }
+
+    .reaction-menu {
+      position: absolute;
+      left: 130px;
+      bottom: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      max-width: 300px;
+      width: 200px;
+      flex-wrap: wrap;
+
+      z-index: 10;
+      padding: 10px;
+      border: 1px solid var(--light-purple);
+      background-color: white;
+      border-radius: 25px 25px 25px 0;
     }
   }
 
@@ -217,7 +236,8 @@ li {
     transition: all 0.125s ease-in-out;
   }
 
-  &:hover {
+  &:hover,
+  .reaction-menu:hover {
     .reaction-bar {
       animation: slide-in-l-r 0.125s forwards;
       display: flex;
@@ -231,6 +251,16 @@ li {
     }
   }
 }
+
+// .message:hover .reaction-bar,
+// .message .reaction-bar:hover,
+// .message .reaction-bar .menu:hover {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   gap: 8px;
+//   animation: slide-in-l-r 0.125s forwards;
+// }
 
 .message-footer {
   > span:first-child {

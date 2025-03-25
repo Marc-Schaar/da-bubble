@@ -55,6 +55,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loading: boolean = false;
   menuOpen: boolean = false;
+  reactionMenuOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
 
@@ -66,8 +67,35 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   editingMessageId: any = '';
   input: string = '';
   inputEdit: string = '';
-  currentChannelId: any;
+  currentChannelId: string = '';
   channelInfo: boolean = false;
+
+  emojis: string[] = [
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+  ];
 
   unsubMessages!: () => void;
 
@@ -222,6 +250,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toogleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  toogleReactionMenu() {
+    this.reactionMenuOpen = !this.reactionMenuOpen;
   }
 
   toggleThread() {
