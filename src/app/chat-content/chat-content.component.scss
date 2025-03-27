@@ -205,6 +205,7 @@ li {
       overflow-y: auto;
       flex-wrap: wrap;
       z-index: 10;
+      margin-top: 20px;
       padding: 8px;
       border: 1px solid var(--light-purple);
       background-color: white;
@@ -260,24 +261,24 @@ li {
     }
   }
 }
-
-// .message:hover .reaction-bar,
-// .message .reaction-bar:hover,
-// .message .reaction-bar .menu:hover {
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   gap: 8px;
-//   animation: slide-in-l-r 0.125s forwards;
-// }
-
 .message-footer {
+  display: flex;
+  align-items: center;
   > span:first-child {
     transition: all 0.125s ease-in-out;
     &:hover {
       scale: 1.1;
       cursor: pointer;
     }
+  }
+  .emoji-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border: 1px solid var(--light-purple);
+    border-radius: 20px;
   }
 }
 

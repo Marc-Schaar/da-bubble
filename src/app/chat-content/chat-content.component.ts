@@ -1,25 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  ViewChild,
-  Injectable,
-  AfterViewInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, Injectable, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import {
-  Firestore,
-  onSnapshot,
-  serverTimestamp,
-  query,
-  orderBy,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { Firestore, onSnapshot, serverTimestamp, query, orderBy, updateDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -34,14 +18,7 @@ import { doc, getDoc } from '@firebase/firestore';
 // })
 @Component({
   selector: 'app-chat-content',
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    CommonModule,
-    FormsModule,
-    MatSidenavModule,
-    ChannelEditComponent,
-  ],
+  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, ChannelEditComponent],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
@@ -185,26 +162,22 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getMessages() {
-    let messagesRef = this.fireService.getCollectionRef(
-      `channels/${this.currentChannelId}/messages`
-    );
+    let messagesRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages`);
     if (messagesRef) {
       let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
           let data = doc.data();
+          console.log(data['reaction']);
           return {
             id: doc.id,
             ...data,
             time: data['timestamp']
-              ? new Date(data['timestamp'].toDate()).toLocaleTimeString(
-                  'de-DE',
-                  {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  }
-                )
+              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
               : '–',
           };
         });
@@ -214,10 +187,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   newMessage(): void {
-    this.fireService.sendMessage(
-      this.currentChannelId,
-      new Message(this.buildMessageObject())
-    );
+    this.fireService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
     this.input = '';
   }
 
@@ -230,10 +200,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async updateMessage(message: any) {
-    let messageRef = this.fireService.getMessageRef(
-      this.currentChannelId,
-      message.id
-    );
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     if (messageRef) {
       this.isEditing = false;
       this.editingMessageId = null;
@@ -282,10 +249,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addReaction(message: any, emoji: string) {
-    let messageRef = this.fireService.getMessageRef(
-      this.currentChannelId,
-      message.id
-    );
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     this.reactions.push(emoji);
     message.reaction = this.reactions;
 
@@ -323,10 +287,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    window.addEventListener(
-      'resize',
-      this.userService.checkScreenWidth.bind(this)
-    );
+    window.addEventListener('resize', this.userService.checkScreenWidth.bind(this));
   }
 
   openChannelInfo() {

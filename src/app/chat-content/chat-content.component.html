@@ -18,20 +18,11 @@
       </div>
       <div class="align-center gap-10">
         <div class="avatar-container">
-          <ng-container
-            *ngFor="let member of currentChannel?.member; index as i"
-          >
-            <img
-              *ngIf="i < 3"
-              class="avatar"
-              [src]="member.profilephoto"
-              alt="Name"
-            />
+          <ng-container *ngFor="let member of currentChannel?.member; index as i">
+            <img *ngIf="i < 3" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
         </div>
-        <span *ngIf="currentChannel?.member?.length > 3"
-          >+{{ currentChannel?.member?.length - 3 }}</span
-        >
+        <span *ngIf="currentChannel?.member?.length > 3">+{{ currentChannel?.member?.length - 3 }}</span>
 
         <button>
           <mat-icon>person_add</mat-icon>
@@ -43,9 +34,7 @@
       <ng-container *ngFor="let message of this.messages; index as i">
         <li *ngIf="message.newDay">
           <div class="date-container">
-            <span class="date">{{
-              isToday(message.date) ? "Heute" : message.date
-            }}</span>
+            <span class="date">{{ isToday(message.date) ? "Heute" : message.date }}</span>
           </div>
         </li>
 
@@ -53,8 +42,7 @@
           (mouseleave)="reactionMenuOpen = false; menuOpen = false"
           class="message"
           [ngClass]="{
-            reverse:
-              message.name == this.userService.auth.currentUser?.displayName
+            reverse: message.name == this.userService.auth.currentUser?.displayName
           }"
         >
           <div *ngIf="!isEditing" class="reaction-bar">
@@ -71,44 +59,26 @@
               <img src="/img/reaction-bar-icons/comment.png" alt="" />
             </button>
             <button
-              *ngIf="
-                message.name == this.userService.auth.currentUser?.displayName
-              "
+              *ngIf="message.name == this.userService.auth.currentUser?.displayName"
               class="hover-to-dark-purple"
               (click)="toogleMenu()"
             >
               <mat-icon>more_vert</mat-icon>
             </button>
-            <div
-              *ngIf="
-                menuOpen &&
-                message.name == this.userService.auth.currentUser?.displayName
-              "
-              class="menu"
-            >
-              <button (click)="editMessage(message, i)">
-                Nachricht bearbeiten
-              </button>
+            <div *ngIf="menuOpen && message.name == this.userService.auth.currentUser?.displayName" class="menu">
+              <button (click)="editMessage(message, i)">Nachricht bearbeiten</button>
             </div>
 
             <div *ngIf="reactionMenuOpen" class="reaction-menu">
               <ng-container *ngFor="let emoji of emojis">
-                <img
-                  (click)="addReaction(message, emoji)"
-                  class="emoji"
-                  [src]="'img/emojis/' + emoji + '.png'"
-                  alt="{{ emoji }}"
-                />
+                <img (click)="addReaction(message, emoji)" class="emoji" [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
               </ng-container>
             </div>
           </div>
 
           <img [src]="message.avatar" alt=" Avatar" />
 
-          <div
-            *ngIf="!(isEditing && editingMessageId === i)"
-            class="content-container"
-          >
+          <div *ngIf="!(isEditing && editingMessageId === i)" class="content-container">
             <div class="message-header gap-20">
               <b class="font-size-18">{{ message.name }}</b>
               <span class="font-size-14">{{ message.time }} Uhr</span>
@@ -116,8 +86,7 @@
             <div
               class="message-main"
               [ngClass]="{
-                'medium-purple':
-                  message.name == this.userService.user?.displayName,
+                'medium-purple': message.name == this.userService.user?.displayName,
                 'bg-purple': message.name !== this.userService.user?.displayName
               }"
             >
@@ -126,13 +95,20 @@
             <div class="message-footer gap-20">
               <span (click)="toggleThread()">2 Antworten</span>
               <span class="font-size-14">Letzte Antwort 14.26 Uhr</span>
+              <ng-container *ngFor="let emoji of message.reaction | slice : 0 : (isMobile ? 7 : 20)">
+                <div class="emoji-box">
+                  <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                  <span>1</span>
+                </div>
+              </ng-container>
+
+              <button *ngIf="message.reaction.length > (isMobile ? 7 : 20)">
+                {{ message.reaction.length - (isMobile ? 7 : 20) }} weitere
+              </button>
             </div>
           </div>
 
-          <div
-            *ngIf="isEditing && editingMessageId === i"
-            class="input-container edit-input full-width"
-          >
+          <div *ngIf="isEditing && editingMessageId === i" class="input-container edit-input full-width">
             <textarea [(ngModel)]="inputEdit" rows="4"></textarea>
 
             <div class="action-container">
@@ -141,20 +117,8 @@
               </button>
 
               <div class="d-flex gap-32">
-                <button
-                  class="btn btn-secundary"
-                  [disabled]="loading"
-                  (click)="cancel()"
-                >
-                  Abbrechen
-                </button>
-                <button
-                  class="btn btn-primary"
-                  [disabled]="loading"
-                  (click)="updateMessage(message)"
-                >
-                  Speichern
-                </button>
+                <button class="btn btn-secundary" [disabled]="loading" (click)="cancel()">Abbrechen</button>
+                <button class="btn btn-primary" [disabled]="loading" (click)="updateMessage(message)">Speichern</button>
               </div>
             </div>
           </div>
@@ -164,11 +128,7 @@
 
     <section class="card-footer">
       <div class="input-container">
-        <textarea
-          [(ngModel)]="input"
-          rows="4"
-          placeholder="Nachricht an #{{ currentChannel?.name }}"
-        ></textarea>
+        <textarea [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
 
         <div class="action-container">
           <div class="gap-10">
