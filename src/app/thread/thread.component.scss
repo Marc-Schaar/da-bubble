@@ -19,104 +19,105 @@ main {
   border-bottom: 2px solid grey;
 
   .close-button {
-    cursor: pointer;
+      cursor: pointer;
 
-    img {
-      width: 16px;
-      height: 16px;
-    }
+      img {
+          width: 16px;
+          height: 16px;
+      }
   }
 
   .thread-channel-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    .channel-name-container {
-      margin-left: 8px;
-      font-family: Nunito;
-      font-size: 14px;
-      color: #797ef3;
-    }
+      .channel-name-container {
+          margin-left: 8px;
+          font-family: Nunito;
+          font-size: 14px;
+          color: #797EF3;
+      }
   }
 
   .thread-container {
-    p {
-      font-family: Nunito;
-      font-weight: 700;
-      font-size: 24px;
-    }
+      p {
+          font-family: Nunito;
+          font-weight: 700;
+          font-size: 24px;
+      }
   }
 }
 
 // OTHER USER MESSAGE STYLES
 .background-color-effect {
   padding-bottom: 8px;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   transition: background-color 0.15s ease-in-out;
 
   .message-container {
-    background-color: #eceefe;
-    transition: background-color 0.15s ease-in-out;
+      background-color: #ECEEFE;
+      transition: background-color 0.15s ease-in-out;
   }
 
   &:hover {
-    background-color: #eceefe;
-    transition: background-color 0.15s ease-in-out;
+      background-color: #ECEEFE;
+      transition: background-color 0.15s ease-in-out;
 
-    .message-container {
-      background-color: #ffffff;
-    }
+      .message-container {
+          background-color: #FFFFFF;
+      }
   }
 
   .user-message-container {
-    margin-left: 24px;
-    margin-right: 24px;
-    font-family: Nunito;
-    font-size: 18px;
-    display: flex;
-    margin-top: 24px;
-    padding-top: 8px;
-
-    .name-time-message-container {
-      margin-left: 16px;
+      margin-left: 24px;
+      margin-right: 24px;
+      font-family: Nunito;
+      font-size: 18px;
       display: flex;
-      flex-direction: column;
+      margin-top: 24px;
+      padding-top: 8px;
 
-      .message-container {
-        margin-top: 8px;
-        font-size: 18px;
-        padding: 15px;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        border-bottom-left-radius: 20px;
+      .name-time-message-container {
+          margin-left: 16px;
+          display: flex;
+          flex-direction: column;
+
+          .message-container {
+              margin-top: 8px;
+              font-size: 18px;
+              padding: 15px;
+              border-top-right-radius: 20px;
+              border-bottom-right-radius: 20px;
+              border-bottom-left-radius: 20px;
+          }
+
+          .name-time-container {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+
+              .name-container {
+                  font-weight: 700;
+                  font-size: 18px;
+              }
+
+              .time-container {
+                  font-family: Nunito;
+                  font-size: 14px;
+                  color: #686868;
+              }
+          }
       }
 
-      .name-time-container {
-        display: flex;
-        align-items: center;
-        gap: 16px;
 
-        .name-container {
-          font-weight: 700;
-          font-size: 18px;
-        }
-
-        .time-container {
-          font-family: Nunito;
-          font-size: 14px;
-          color: #686868;
-        }
+      .user-profile-avatar-container {
+          img {
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+          }
       }
-    }
-
-    .user-profile-avatar-container {
-      img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-      }
-    }
   }
 }
 
@@ -126,7 +127,7 @@ main {
   transition: background-color 0.15s ease-in-out;
 
   &:hover {
-    background-color: #eceefe;
+      background-color: #ECEEFE;
   }
 }
 
@@ -141,44 +142,45 @@ main {
   margin-top: 24px;
 
   .you-name-time-message-container {
-    margin-right: 16px;
-    display: flex;
-    flex-direction: column;
-
-    .you-message-container {
-      margin-top: 8px;
-      font-size: 18px;
-      padding: 15px;
-      border-top-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      border-bottom-left-radius: 20px;
-      background-color: #797ef3;
-    }
-
-    .you-name-time-container {
+      margin-right: 16px;
       display: flex;
-      align-items: center;
-      gap: 16px;
+      flex-direction: column;
 
-      .you-name-container {
-        font-weight: 700;
-        font-size: 18px;
+      .you-message-container {
+          margin-top: 8px;
+          font-size: 18px;
+          padding: 15px;
+          border-top-left-radius: 20px;
+          border-bottom-right-radius: 20px;
+          border-bottom-left-radius: 20px;
+          background-color: #797EF3;
       }
 
-      .you-time-container {
-        font-family: Nunito;
-        font-size: 14px;
-        color: #686868;
+      .you-name-time-container {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+
+          .you-name-container {
+              font-weight: 700;
+              font-size: 18px;
+          }
+
+          .you-time-container {
+              font-family: Nunito;
+              font-size: 14px;
+              color: #686868;
+          }
       }
-    }
   }
 
+
   .you-user-profile-avatar-container {
-    img {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-    }
+      img {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+      }
   }
 }
 
@@ -192,13 +194,13 @@ main {
   margin-left: 24px;
   font-family: Nunito;
   font-size: 18px;
-  color: #adb0d9;
+  color: #ADB0D9;
 
   .line-container {
-    height: 1px;
-    width: 70%;
-    margin-right: 24px;
-    background-color: #adb0d9;
+      height: 1px;
+      width: 70%;
+      margin-right: 24px;
+      background-color: #ADB0D9;
   }
 }
 
@@ -207,6 +209,7 @@ main {
   overflow: auto;
 }
 
+
 // TEXTAREA & BUTTONS WITH HOVER/FOCUS EFFECT
 .textarea-container {
   padding-top: 16px;
@@ -214,160 +217,160 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid #adb0d9;
+  border: 1px solid #ADB0D9;
   border-radius: 20px;
   margin-left: 16px;
   margin-right: 16px;
   transition: border 0.15s ease-in-out;
 
   &:focus {
-    border: 1px solid #444df2;
+      border: 1px solid #444DF2;
   }
 
   &:hover {
-    border: 1px solid #444df2;
+      border: 1px solid #444DF2;
   }
 
   textarea {
-    resize: none;
-    border: none;
-    padding: 20px;
-    width: 100%;
-    height: 96px;
-    outline: none;
-    background-color: transparent;
-    font-family: "Nunito";
-    font-size: 18px;
-    font-weight: 400;
-
-    &::placeholder {
-      font-family: "Nunito";
+      resize: none;
+      border: none;
+      padding: 20px;
+      width: 100%;
+      height: 96px;
+      outline: none;
+      background-color: transparent;
+      font-family: 'Nunito';
       font-size: 18px;
       font-weight: 400;
-    }
+
+      &::placeholder {
+          font-family: 'Nunito';
+          font-size: 18px;
+          font-weight: 400;
+      }
   }
 
   .textarea-three-buttons-container {
-    height: 40px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding: 0px 24px 0px 24px;
-
-    .textarea-two-left-buttons-container {
+      height: 40px;
+      width: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      margin-bottom: 16px;
+      padding: 0px 24px 0px 24px;
 
-      .button-smiley {
-        cursor: pointer;
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background-color: transparent;
-        border-radius: 50%;
-        transition: all 0.15s ease-in-out;
+      .textarea-two-left-buttons-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
 
-        button {
+          .button-smiley {
+              cursor: pointer;
+              height: 40px;
+              width: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border: none;
+              background-color: transparent;
+              border-radius: 50%;
+              transition: all 0.15s ease-in-out;
+
+              button {
+                  cursor: pointer;
+                  border: none;
+                  background-color: transparent;
+                  width: 20px;
+                  height: 20px;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  background-image: url('/img/sentiment_satisfied.svg');
+                  transition: all 0.15s ease-in-out;
+              }
+
+              &:hover {
+                  background-color: #ECEEFE;
+
+                  button {
+                      background-image: url('/img/sentiment_satisfied_blue.svg') !important;
+                      scale: 1.1;
+                  }
+              }
+          }
+
+          .button-tag-person {
+              cursor: pointer;
+              height: 40px;
+              width: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border: none;
+              background-color: transparent;
+              border-radius: 50%;
+              transition: all 0.15s ease-in-out;
+
+              button {
+                  cursor: pointer;
+                  border: none;
+                  background-color: transparent;
+                  width: 20px;
+                  height: 20px;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  background-image: url('/img/alternate_email.svg');
+                  transition: all 0.15s ease-in-out;
+              }
+
+              &:hover {
+                  background-color: #ECEEFE;
+
+                  button {
+                      background-image: url('/img/alternate_email_blue.svg') !important;
+                      scale: 1.1;
+                  }
+              }
+          }
+          &:hover {
+              .button-smiley {
+                  button {
+                      background-image: url('/img/sentiment_satisfied_black.svg');
+                  }
+              }
+              .button-tag-person {
+                  button {
+                      background-image: url('/img/alternate_email_black.svg');
+                  }
+              }
+          }
+      }
+
+      .send-button {
           cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 20px;
-          height: 20px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-image: url("/img/sentiment_satisfied.svg");
-          transition: all 0.15s ease-in-out;
-        }
-
-        &:hover {
-          background-color: #eceefe;
+          height: 30px;
+          width: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
           button {
-            background-image: url("/img/sentiment_satisfied_blue.svg") !important;
-            scale: 1.1;
+              cursor: pointer;
+              border: none;
+              background-color: transparent;
+              height: 20px;
+              width: 23px;
+              background-size: cover;
+              background-repeat: no-repeat;
+              background-image: url('/img/send.svg');
+              transition: all 0.15s ease-in-out;
           }
-        }
-      }
 
-      .button-tag-person {
-        cursor: pointer;
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background-color: transparent;
-        border-radius: 50%;
-        transition: all 0.15s ease-in-out;
-
-        button {
-          cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 20px;
-          height: 20px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-image: url("/img/alternate_email.svg");
-          transition: all 0.15s ease-in-out;
-        }
-
-        &:hover {
-          background-color: #eceefe;
-
-          button {
-            background-image: url("/img/alternate_email_blue.svg") !important;
-            scale: 1.1;
+          &:hover {
+              button {
+                  background-image: url('/img/send_lightblue.svg');
+              }
           }
-        }
       }
-      &:hover {
-        .button-smiley {
-          button {
-            background-image: url("/img/sentiment_satisfied_black.svg");
-          }
-        }
-        .button-tag-person {
-          button {
-            background-image: url("/img/alternate_email_black.svg");
-          }
-        }
-      }
-    }
-
-    .send-button {
-      cursor: pointer;
-      height: 30px;
-      width: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      button {
-        cursor: pointer;
-        border: none;
-        background-color: transparent;
-        height: 20px;
-        width: 23px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-image: url("/img/send.svg");
-        transition: all 0.15s ease-in-out;
-      }
-
-      &:hover {
-        button {
-          background-image: url("/img/send_lightblue.svg");
-        }
-      }
-    }
   }
 }
