@@ -16,34 +16,56 @@
       <app-thread></app-thread>
     </mat-drawer>
 
-    <ng-container *ngComponentOutlet="currentComponent"></ng-container>
+    <!-- <ng-container *ngComponentOutlet="currentComponent"></ng-container> -->
+
+    <ng-container *ngIf="currentComponent === 'channel'">
+      <app-chat-content></app-chat-content>
+    </ng-container>
+    <ng-container *ngIf="currentComponent === 'direct'">
+      <app-direct-messages></app-direct-messages>
+    </ng-container>
+    <ng-container *ngIf="currentComponent === 'default'">
+      <app-newmessage></app-newmessage>
+    </ng-container>
   </mat-drawer-container>
 </div>
 
-
-<div (click)="closeProfile()" [ngClass]="{'show': isProfileCard}" class="profileCard-Overlay">
-  <div  class="profileCard">
+<div
+  (click)="closeProfile()"
+  [ngClass]="{ show: isProfileCard }"
+  class="profileCard-Overlay"
+>
+  <div class="profileCard">
     <div class="profileHead">
-        <span>Profile</span>
-        <button (click)="closeProfile()"><img src="./img/close.svg" alt=""></button>
+      <span>Profile</span>
+      <button (click)="closeProfile()">
+        <img src="./img/close.svg" alt="" />
+      </button>
     </div>
-    <img [src]="currentReciever?.profilephoto" alt="">
+    <img [src]="currentReciever?.profilephoto" alt="" />
     <div class="profileStatus">
-        <span>{{currentReciever?.fullname}}</span>
-        <div>
-            <div class="status-dot-profile" [ngClass]="{'green': currentReciever?.online}"></div>
-            <span>{{ currentReciever?.online ? 'Aktiv' : 'Abwesend' }}</span>
-        </div>
+      <span>{{ currentReciever?.fullname }}</span>
+      <div>
+        <div
+          class="status-dot-profile"
+          [ngClass]="{ green: currentReciever?.online }"
+        ></div>
+        <span>{{ currentReciever?.online ? "Aktiv" : "Abwesend" }}</span>
+      </div>
     </div>
     <div class="contactInfos">
-        <div class="emailImage">
-            <img src="./img/mail.svg" alt="">
-            <span>E-Mail-Adresse</span>
-        </div>
-        <div class="email-adress">
-            <a href="mailto:{{currentReciever?.email}}">{{currentReciever?.email}}</a>
-        </div>
+      <div class="emailImage">
+        <img src="./img/mail.svg" alt="" />
+        <span>E-Mail-Adresse</span>
+      </div>
+      <div class="email-adress">
+        <a href="mailto:{{ currentReciever?.email }}">{{
+          currentReciever?.email
+        }}</a>
+      </div>
     </div>
-    <button><img src="./img/speechbubble.svg" alt=""> <span>Nachricht</span></button>
-</div>
+    <button>
+      <img src="./img/speechbubble.svg" alt="" /> <span>Nachricht</span>
+    </button>
+  </div>
 </div>

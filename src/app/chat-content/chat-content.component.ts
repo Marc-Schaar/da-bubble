@@ -13,25 +13,25 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  updateDoc,
+  Firestore,
   onSnapshot,
-  collection,
-  doc,
-  addDoc,
   serverTimestamp,
   query,
   orderBy,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { Subscription, timestamp } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
+import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
+import { doc, getDoc } from '@firebase/firestore';
 
-@Injectable({
-  providedIn: 'root',
-})
+// @Injectable({
+//   providedIn: 'root',
+// })
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -40,6 +40,7 @@ import { UserService } from '../shared.service';
     CommonModule,
     FormsModule,
     MatSidenavModule,
+    ChannelEditComponent,
   ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
@@ -51,20 +52,90 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   router: Router = inject(Router);
+  firestore: Firestore = inject(Firestore);
 
   loading: boolean = false;
   menuOpen: boolean = false;
+  reactionMenuOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
 
   channels: any = [];
   messages: any[] = [];
   currentChannel: any = {};
+  reactions: string[] = [];
 
   currentUser: any;
   editingMessageId: any = '';
   input: string = '';
   inputEdit: string = '';
+  currentChannelId: string = '';
+  channelInfo: boolean = false;
+
+  emojis: string[] = [
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+  ];
 
   unsubMessages!: () => void;
 
@@ -91,34 +162,35 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   startChannel() {
     console.log('start');
-    if (
-      this.userService.user != null &&
-      this.userService.currentChannel != null
-    ) {
+    if (this.userService.user != null) {
       this.isMobile = this.userService.checkScreenWidth();
-      this.setCurrentChannel();
+
+      this.setChannelData();
       this.getMessages();
-      console.log(this.currentChannel);
-      console.log(this.currentUser);
-    } else {
-      console.log('keine User oder Channel');
-    }
-    console.log('User:', this.userService.user);
-    console.log('Channel:', this.userService.currentChannel);
+    } else console.error('keine User oder Channel');
   }
 
-  setCurrentChannel() {
-    this.currentChannel = this.userService.currentChannel;
+  setChannelData() {
+    this.currentChannelId = this.userService.docId;
     this.currentUser = this.userService.currentUser;
+    this.getChannelFromUrl();
+  }
+
+  async getChannelFromUrl() {
+    if (this.currentChannelId) {
+      const docRef = doc(this.firestore, 'channels', this.currentChannelId);
+      const docSnap = await getDoc(docRef);
+      docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
+    }
   }
 
   getMessages() {
-    let messagesRef = this.getCollectionRef(
-      `channels/${this.currentChannel.id}/messages`
+    let messagesRef = this.fireService.getCollectionRef(
+      `channels/${this.currentChannelId}/messages`
     );
-
     if (messagesRef) {
       let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
           let data = doc.data();
@@ -141,31 +213,15 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  async newMessage() {
-    let messagesCollectionRef = this.getCollectionRef(
-      `channels/${this.currentChannel.id}/messages`
+  newMessage(): void {
+    this.fireService.sendMessage(
+      this.currentChannelId,
+      new Message(this.buildMessageObject())
     );
-    if (messagesCollectionRef) {
-      this.loading = true;
-      try {
-        let messageDocRef = await addDoc(
-          messagesCollectionRef,
-          new Message(this.buildMessageObject()).toJSON()
-        );
-        await addDoc(collection(messageDocRef, 'threads'), {
-          createdFrom: this.userService.currentUser,
-          messages: [],
-        });
-        this.loading = false;
-        this.scrollToBottom();
-        this.input = '';
-      } catch (err) {
-        console.error('Fehler beim Senden der Nachricht:', err);
-      }
-    }
+    this.input = '';
   }
 
-  editMessage(message: any, index: number) {
+  editMessage(message: Message, index: number) {
     this.menuOpen = false;
     this.isEditing = true;
     this.editingMessageId = index;
@@ -174,19 +230,15 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async updateMessage(message: any) {
-    let messageRef = this.getDocRef(
-      `channels/${this.currentChannel.id}/messages`,
+    let messageRef = this.fireService.getMessageRef(
+      this.currentChannelId,
       message.id
     );
-
     if (messageRef) {
       this.isEditing = false;
       this.editingMessageId = null;
-
       try {
-        await updateDoc(messageRef, {
-          message: this.inputEdit,
-        });
+        this.fireService.updateMessage(messageRef, this.inputEdit);
         console.log('Nachricht erfolgreich aktualisiert');
         this.inputEdit = '';
       } catch (error) {
@@ -225,7 +277,27 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       name: this.userService.user?.displayName || 'Unbekannt',
       newDay: this.isNewDay(),
       timestamp: serverTimestamp(),
+      reaction: this.reactions || [],
     };
+  }
+
+  addReaction(message: any, emoji: string) {
+    let messageRef = this.fireService.getMessageRef(
+      this.currentChannelId,
+      message.id
+    );
+    this.reactions.push(emoji);
+    message.reaction = this.reactions;
+
+    if (messageRef) {
+      try {
+        this.fireService.updateReaction(messageRef, message.reaction);
+        console.log('Nachricht erfolgreich aktualisiert');
+        this.reactionMenuOpen = false;
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren der Nachricht:', error);
+      }
+    }
   }
 
   scrollToBottom() {
@@ -241,17 +313,13 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.menuOpen = !this.menuOpen;
   }
 
+  toogleReactionMenu() {
+    this.reactionMenuOpen = !this.reactionMenuOpen;
+  }
+
   toggleThread() {
     if (this.isMobile) this.router.navigate(['/thread']);
     else this.userService.toggleThread();
-  }
-
-  getDocRef(ref: string, id: string) {
-    return ref && id ? doc(this.fireService.firestore, ref, id) : null;
-  }
-
-  getCollectionRef(ref: string) {
-    return ref ? collection(this.fireService.firestore, ref) : null;
   }
 
   ngAfterViewInit() {
@@ -259,5 +327,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       'resize',
       this.userService.checkScreenWidth.bind(this)
     );
+  }
+
+  openChannelInfo() {
+    this.channelInfo = true;
+    console.log(this.channelInfo);
   }
 }

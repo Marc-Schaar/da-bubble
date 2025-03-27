@@ -4,6 +4,8 @@ import { Firestore } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,6 +25,7 @@ export class ContactbarComponent {
   userService = inject(UserService);
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
+  router: Router = inject(Router);
   currentUser: any = [];
   currentReceiver: any;
   userID: string = '';
@@ -31,8 +34,8 @@ export class ContactbarComponent {
   async ngOnInit() {
     await this.loadUsers();
     await this.loadChannels();
-    this.getCurrentWindow();
     this.findCurrentUser();
+    this.openDropdown();
   }
 
   async loadUsers() {
@@ -64,7 +67,6 @@ export class ContactbarComponent {
 
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
-
     this.userService.getChannel(this.currentChannel, this.currentUser);
   }
 
@@ -90,18 +92,15 @@ export class ContactbarComponent {
   }
 
   openWindow(window: string) {
-    if (window) {
-      this.userService.loadComponent(window);
-    } else {
-      this.getCurrentWindow();
-    }
+    this.userService.loadComponent(window);
   }
 
-  getCurrentWindow() {
-    let storedWindow = localStorage.getItem('currentComponent');
-    if (storedWindow) {
-      let window = JSON.parse(storedWindow);
-      this.openWindow(window);
+  openDropdown() {
+    if (this.userService.channelType === 'channel') {
+      this.active = true;
+    }
+    if (this.userService.channelType === 'direct') {
+      this.message = true;
     }
   }
 }

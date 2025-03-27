@@ -1,4 +1,10 @@
-import { Component, inject, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,7 +16,13 @@ import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
-import { Router } from '@angular/router';
+import { FireServiceService } from '../fire-service.service';
+import { query } from '@firebase/firestore';
+import { doc, Firestore, onSnapshot, orderBy } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { ChatContentComponent } from '../chat-content/chat-content.component';
+import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
+import { NewmessageComponent } from '../newmessage/newmessage.component';
 
 @Component({
   selector: 'app-main-chat',
@@ -24,6 +36,9 @@ import { Router } from '@angular/router';
     MatSidenavModule,
     ContactbarComponent,
     ThreadComponent,
+    ChatContentComponent,
+    DirectmessagesComponent,
+    NewmessageComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
@@ -31,27 +46,39 @@ import { Router } from '@angular/router';
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   shareddata = inject(UserService);
-  router: Router = inject(Router);
+  fireService: FireServiceService = inject(FireServiceService);
+
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
   currentReciever: any;
-  currentComponent: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
+
+  //Neue Logik ab hier:
+  currentComponent: any;
+  channelType: string = 'default';
+  channelMessages: any = [];
+  docId: string = '';
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
 
+    // this.componentSubscription = this.shareddata.component$.subscribe(() => {
+    //this.currentComponent = component;
+    // console.log('Aktuelle Komponente:', component);
+    // });
 
-    this.componentSubscription = this.shareddata.component$.subscribe(
-      (component) => {
-        this.currentComponent = component;
-        console.log('Aktuelle Komponente:', component);
-      }
-    );
+    this.shareddata.component$.subscribe(() => {
+      this.currentComponent = this.shareddata.channelType;
+      console.log('Aktuelle Komponente:', this.currentComponent);
+      this.cdr.detectChanges();
+    });
+
     this.subscription = this.shareddata.openProfile$.subscribe(() => {
       this.openProfile();
     });
@@ -76,10 +103,9 @@ export class MainChatComponent implements OnInit {
   }
 
   openProfile() {
-    this.currentReciever = this.shareddata.currentReciever;
-    this.isProfileCard = !this.isProfileCard
+    this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden
+    this.isProfileCard = !this.isProfileCard;
     console.log('OPEN');
     console.log(this.isProfileCard);
-
   }
 }

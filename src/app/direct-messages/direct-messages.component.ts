@@ -20,7 +20,8 @@ import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
-import { collection, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, getDoc, onSnapshot, orderBy } from 'firebase/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -52,12 +53,16 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
+
+  channelType: string = '';
+  docId: string = '';
+  currentRecieverId: string = '';
+  currentUserId: string = '';
+
   private subscription?: Subscription;
   constructor() {
     this.startChat();
-
   }
-
 
   async ngOnInit() {
     this.subscription = this.userService.startLoadingChat$.subscribe(() => {
@@ -91,10 +96,12 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   async startChat() {
     console.log('start');
-    if (this.userService.user != null && this.userService.currentReciever != null) {
-      this.setCurrentReciever();
+    if (this.userService.user != null && this.userService.reciepentId != null) {
+      this.setCurrentData();
+      // this.setCurrentUserAndReciever();
       this.loadMessages();
       this.checkReciever();
+
       this.isChat = true;
     } else {
       this.isChat === false;
@@ -102,35 +109,39 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-  setCurrentReciever() {
-    this.currentReciever = this.userService.currentReciever;
+  setCurrentData() {
+    this.currentRecieverId = this.userService.reciepentId;
+    this.currentUserId = this.userService.docId;
     this.currentUser = this.userService.currentUser;
-    if (!this.currentReciever || !this.currentUser) {
-      console.error('currentReciever oder currentUser sind nicht definiert!');
-      return;
+    this.getRecieverFromUrl();
+  }
+
+  async getRecieverFromUrl() {
+    if (this.currentRecieverId) {
+      const docRef = doc(this.firestore, 'users', this.currentRecieverId);
+      const docSnap = await getDoc(docRef);
+      docSnap.exists() ? (this.currentReciever = docSnap.data()) : null;
     }
   }
 
   async sendMessage() {
-    if (this.message === '' || !this.currentReciever || !this.currentUser) {
+    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
       return;
     }
     const message = new DirectMessage(
-      this.currentUser.fullname,
-      this.currentUser.profilephoto,
+      this.userService.user?.displayName || '',
+      this.userService.user?.photoURL || '',
       this.message,
-      this.currentUser.id,
-      this.currentReciever.id
+      this.currentUserId,
+      this.currentRecieverId
     );
     const messageData = this.createMessageData(message);
-    const currentUserRef = doc(this.firestore, `users/${this.currentUser.id}`);
+    const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
     const currentReceiverRef = doc(
       this.firestore,
-      `users/${this.currentReciever.id}`
+      `users/${this.currentRecieverId}`
     );
-    if (this.currentReciever.id !== this.currentUser.id) {
+    if (this.currentRecieverId !== this.currentUserId) {
       await updateDoc(currentReceiverRef, {
         messages: arrayUnion(messageData),
       });
@@ -176,24 +187,24 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 */
 
   loadMessages() {
-    const messagesRef = doc(this.firestore, `users/${this.currentUser.id}`);
+    const messagesRef = doc(this.firestore, `users/${this.userService.docId}`);
     onSnapshot(messagesRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const messageData = docSnapshot.data();
         const messages = messageData['messages'] || [];
         this.currentMessages = [];
         messages.forEach((message: any) => {
-          if (this.currentUser.id === this.currentReciever.id) {
+          if (this.currentUserId === this.currentRecieverId) {
             if (
-              message['to'] === this.currentReciever.id &&
-              message['from'] === this.currentReciever.id
+              message['to'] === this.currentRecieverId &&
+              message['from'] === this.currentRecieverId
             ) {
               this.currentMessages.push(message);
             }
           } else {
             if (
-              message['to'] === this.currentReciever.id ||
-              message['from'] === this.currentReciever.id
+              message['to'] === this.currentRecieverId ||
+              message['from'] === this.currentRecieverId
             ) {
               this.currentMessages.push(message);
             }
@@ -207,19 +218,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  /*
-          this.currentUser.messages.forEach((message: any) => {
-            if (this.currentUser.id === this.currentReciever.id) {
-              if (message.to === this.currentReciever.id && message.from === this.currentReciever.id) {
-                this.currentMessages.push(message);
-              }
-            } else {
-              if (message.to === this.currentReciever.id || message.from === this.currentReciever.id) {
-                this.currentMessages.push(message);
-              }
-            }
-        */
 
   sortMessages() {
     this.currentMessages.sort((a: any, b: any) => {
@@ -241,7 +239,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   isUser(message: any) {
-    return message.from === this.currentUser.id;
+    return message.from === this.currentUserId;
   }
 
   isToday(date: string) {
@@ -259,7 +257,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   checkReciever() {
-    if (this.currentReciever.id === this.currentUser.id) {
+    if (this.currentRecieverId === this.currentUserId) {
       this.isYou = true;
     } else {
       this.isYou = false;
@@ -270,33 +268,16 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     console.log(this.input);
     if (this.input.includes('#')) {
       console.log('Channel laden');
+      this.userService.loadComponent('channel');
     } else if (this.input.includes('@')) {
       console.log('Chat laden');
+      this.userService.loadComponent('chat');
     }
   }
 
-  toggleList(chat: string, event: Event) {
-    if (this.listKey === chat && this.isClicked === true) {
-      this.isClicked = false;
-
-    } else {
-      this.isClicked = true
-    }
-
-    console.log(this.isClicked);
-    if (chat === 'channels') {
-      this.currentList = this.channels;
-      console.log(this.currentList);
-      this.isChannel = true
-    }
-    if (chat === 'users') {
-      this.currentList = this.users;
-      console.log(this.currentList);
-      this.isChannel = false;
-    }
-    this.listKey = chat;
-    console.log(this.listKey);
-
+  toggleList(event: Event) {
+    this.isClicked = !this.isClicked;
+    this.currentList = this.users;
     event.stopPropagation();
   }
 
@@ -305,19 +286,21 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   getList() {
-
     if (this.message.includes('#')) {
       this.currentList = this.channels;
-      this.isClicked = true
-      this.isChannel = true
+      this.isClicked = true;
+      this.isChannel = true;
     }
     if (this.message.includes('@')) {
-      this.isClicked = true
+      this.isClicked = true;
       this.currentList = this.users;
       this.isChannel = false;
     }
-    if (this.message === '' || !this.message.includes('#') && !this.message.includes('@')) {
-      this.isClicked = false
+    if (
+      this.message === '' ||
+      (!this.message.includes('#') && !this.message.includes('@'))
+    ) {
+      this.isClicked = false;
     }
   }
   /*
@@ -330,21 +313,18 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   */
   showProfile() {
-
     this.userService.showRecieverProfile();
   }
 
   getReciever(index: number) {
     console.log(this.isChannel);
-    this.message = '';
+
     if (this.isChannel) {
       const currentChannel = this.currentList[index];
-      this.message = '#' + currentChannel?.name;
+      this.message = this.message + currentChannel?.name;
     } else {
-      const currentReciever = this.currentList[index]
+      const currentReciever = this.currentList[index];
       this.message = '@' + currentReciever?.fullname;
     }
-
   }
-
 }

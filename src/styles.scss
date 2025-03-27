@@ -6,6 +6,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 // Custom Theming for Angular Material
 // // For more information: https://material.angular.io/guide/theming
 // @use "@angular/material" as mat;
@@ -42,9 +43,9 @@ app-intro {
 }
 
 app-header {
-  background-color: #eceefe;
   display: flex;
   justify-content: center;
+  background-color: #eceefe;
 }
 
 app-footer {
@@ -54,6 +55,9 @@ app-footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    display: none !important;
+  }
 }
 
 app-main-chat {
@@ -61,6 +65,7 @@ app-main-chat {
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
   height: 100vh;
+  background: var(--bg-color);
 }
 
 @font-face {
@@ -127,4 +132,17 @@ html {
 
 a {
   text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--medium-purple);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--dark-purple);
 }

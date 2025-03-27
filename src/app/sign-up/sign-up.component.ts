@@ -28,7 +28,7 @@ export class SignupComponent implements OnInit {
     if (useraccount.valid) {
       console.log(this.user);
       this.sharedservice.setUser(this.user);
-      this.sharedservice.continue();
+      this.sharedservice.redirectiontoavatarselection();
       this.checked = false;
       setTimeout(() => {
         useraccount.reset();

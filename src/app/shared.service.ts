@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { inject, Injectable, NgZone } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import {
@@ -15,14 +15,17 @@ import { DirectmessagesComponent } from './direct-messages/direct-messages.compo
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
 import { User } from './models/user';
+import { NewmessageComponent } from './newmessage/newmessage.component';
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor() {
+  constructor(private route: ActivatedRoute) {
     this.setCurrentUser();
-    this.getCurrentChannel();
+    // this.getCurrentChannel();
     this.observeScreenWidth();
+    this.getUrlData();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
       console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
@@ -40,12 +43,14 @@ export class UserService {
 
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
-  private currentComponent = new BehaviorSubject<any>(DirectmessagesComponent);
+  private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
+
   component$ = this.currentComponent.asObservable();
   private startLoadingChat = new Subject<void>();
   startLoadingChat$ = this.startLoadingChat.asObservable();
   private startLoadingChannel = new Subject<void>();
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
+
   private threadToggleSubject = new Subject<void>();
   threadToggle$ = this.threadToggleSubject.asObservable();
   private openProfile = new Subject<void>();
@@ -66,6 +71,11 @@ export class UserService {
   user: any = new User();
   currentUser: any;
   currentChannel: any;
+
+  //Neu ab hier
+  channelType: any;
+  docId: any;
+  reciepentId: any;
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
@@ -93,7 +103,7 @@ export class UserService {
     this.router.navigate(['/main']);
   }
 
-  continue() {
+  redirectiontoavatarselection() {
     this.router.navigate(['/avatarselection']);
   }
 
@@ -123,36 +133,71 @@ export class UserService {
     );
   }
 
-  getReciepent(reciever: any, user: any) {
+  getUrlData() {
+    this.route.queryParams.subscribe((params) => {
+      this.channelType = params['channelType'] || 'default';
+      this.docId = params['id'] || '';
+      this.reciepentId = params['reciepentId'] || '';
+    });
+  }
+
+  async getReciepent(reciever: any, user: any) {
     this.currentReciever = reciever;
     this.currentUser = user;
-    localStorage.setItem('currentReciver', JSON.stringify(reciever));
+
+    //localStorage.setItem('currentReciver', JSON.stringify(reciever));
+    if (this.unsubMessages) this.unsubMessages();
+    await this.loadMessages();
     this.startLoadingChat.next();
   }
 
-  getChannel(channel: any, user: any) {
+  async getChannel(channel: any, user: any) {
     this.currentChannel = channel;
     this.currentUser = user;
-    localStorage.setItem('currentChannel', JSON.stringify(channel));
+    if (this.unsubMessages) this.unsubMessages();
+    await this.loadMessages();
     this.startLoadingChannel.next();
   }
 
-  getCurrentChannel() {
-    let storedChannel = localStorage.getItem('currentChannel');
-    if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
-    else console.log('Channel konnte nicht geladen werden aus Local Storage');
+  //!Wichtig verhindert doppelklick!!
+  async loadMessages() {
+    return new Promise<void>((resolve) => {
+      this.unsubMessages = onSnapshot(
+        this.fireService.getCollectionRef(
+          `${this.channelType}/${this.docId}/messages`
+        )!,
+        (colSnap) => {
+          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+          resolve();
+        }
+      );
+    });
+  }
+
+  // getCurrentChannel() {
+  //   let storedChannel = localStorage.getItem('currentChannel');
+  //   if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
+  //   else console.log('Channel konnte nicht geladen werden aus Local Storage');
+  // }
+
+  setUrl(channelType: string, id?: string, reciepentId?: string) {
+    this.router.navigate(['/chat'], {
+      queryParams: {
+        channelType: channelType,
+        id: id,
+        reciepentId: reciepentId,
+      },
+    });
   }
 
   loadComponent(component: string) {
     setTimeout(() => {
       if (component === 'chat') {
         this.currentComponent.next(DirectmessagesComponent);
-     
       } else if (component === 'channel') {
         if (this.isMobile) this.router.navigate(['/channel']);
         else {
           this.currentComponent.next(ChatContentComponent);
-
         }
       }
     }, 0);
@@ -175,7 +220,6 @@ export class UserService {
       )
       .subscribe(this.screenWidthSubject);
   }
-
 
   showRecieverProfile() {
     this.openProfile.next();

@@ -1,11 +1,13 @@
-section {
-  width: 100%;
-
+main {
+  display: flex;
   height: 100%;
+}
+
+section {
   background-color: #ffffff;
   border-radius: 30px;
   font-family: "Nunito";
-
+  margin: 16px;
   padding: 32px 30px;
   display: flex;
   flex-direction: column;

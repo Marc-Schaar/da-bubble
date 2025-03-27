@@ -11,7 +11,7 @@ import { UserService } from '../shared.service';
   styleUrl: './main-component.component.scss',
 })
 export class MainComponentComponent implements OnInit {
-  shareddata = inject(UserService)
+  shareddata = inject(UserService);
   ngOnInit(): void {
     this.shareddata.dashboard = false;
     this.shareddata.login = true;

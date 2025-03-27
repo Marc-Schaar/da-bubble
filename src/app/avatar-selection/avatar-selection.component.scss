@@ -1,213 +1,232 @@
 .borders {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.d-none {
+  display: none;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-image: url(/img/Kontoerstellung.png);
+  background-repeat: no-repeat;
+  background-position: 96% 90%;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+}
+
+.overlay.active {
+  transform: translateX(0);
+}
+
+.content {
+  max-width: 606px;
+  width: 100%;
+  height: 669px;
+  gap: 45px;
+  @media (max-width: 690px) {
+    width: 80%;
+    height: unset;
+  }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    width: 91%;
+  }
+  > form:nth-child(1) {
+    padding: 54px;
     display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: flex-start;
     flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  .d-none {
-    display: none;
-  }
-  
-  .overlay {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    background-image: url(/img/Kontoerstellung.png);
-    background-repeat: no-repeat;
-    background-position: 96% 90%;
-    transform: translateX(100%);
-    transition: transform 0.35s ease;
-  }
-  
-  .overlay.active {
-    transform: translateX(0);
-  }
-  
-  .content {
-    max-width: 606px;
-    width: 100%;
-    height: 669px;
-    gap: 45px;
-    @media (max-width: 690px) {
-      width: 80%;
-      height: unset;
+    background-color: #ffffff;
+    position: relative;
+    gap: 30px;
+    @media (max-width: 400px) {
+      padding: 30px;
     }
-    > form:nth-child(1) {
-      padding: 54px;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      padding: 26px 21px;
+      gap: 10px;
+    }
+    > div:nth-child(1) {
       display: flex;
-      border-radius: 30px;
-      align-items: center;
-      justify-content: flex-start;
-      flex-direction: column;
-      background-color: #ffffff;
-      position: relative;
-      gap: 30px;
-      @media (max-width: 400px) {
-        padding: 30px;
+      width: 100%;
+      align-items: flex-start;
+      text-align: center;
+      gap: 28px;
+      @media (max-width: 500px) {
+        flex-direction: column;
       }
-      > div:nth-child(1) {
-        display: flex;
-        width: 100%;
-        align-items: flex-start;
-        text-align: center;
-        gap: 28px;
-        @media (max-width: 500px) {
-          flex-direction: column;
-        }
-        > button:nth-child(1) {
-          position: relative;
-          left: 0;
-          top: 25px;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        > div:nth-child(2) {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          > h1:nth-child(1) {
-            font-family: "Nunito";
-            font-weight: 700;
-            font-size: 46px;
-            color: #444df2;
-            @media (max-width: 490px) {
-              font-size: 2rem;
-            }
-          }
-          > span:nth-child(2) {
-            display: flex;
-            max-width: 441px;
-            width: 100%;
-            font-family: "Nunito";
-            font-weight: 400;
-            font-size: 20px;
-            color: #000000;
-            line-height: 24px;
-          }
-        }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        gap: unset;
       }
-      > div:nth-child(3) {
+      > button:nth-child(1) {
+        position: relative;
+        left: 0;
+        top: 25px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+      > div:nth-child(2) {
         display: flex;
-        justify-content: flex-end;
-        width: 100%;
-        @media (max-width: 344px) {
-          justify-content: center;
-        }
-        > input:nth-child(1) {
-          padding: 12px 25px;
-          border-radius: 25px;
-          background-color: #444df2;
+        flex-direction: column;
+        align-items: center;
+        > h1:nth-child(1) {
           font-family: "Nunito";
           font-weight: 700;
-          font-size: 18px;
-          line-height: 24.55px;
-          border: none;
-          color: #ffffff;
-          cursor: pointer;
-          &:disabled {
-            background-color: #686868;
-            color: #ffffff;
-            cursor: unset;
+          font-size: 46px;
+          color: #444df2;
+          @media (max-width: 490px) {
+            font-size: 2rem;
           }
-          &:hover:not(:disabled) {
-            background-color: #797ef3;
+          @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+          font-size: 32px;
           }
+        }
+        > span:nth-child(2) {
+          display: flex;
+          max-width: 441px;
+          width: 100%;
+          font-family: "Nunito";
+          font-weight: 400;
+          font-size: 20px;
+          color: #000000;
+          line-height: 24px;
         }
       }
     }
-  }
-  
-  .profilebox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    flex-direction: column;
-    gap: 20px;
-    > div:nth-child(1) {
-      max-width: 168px;
+    > div:nth-child(3) {
+      display: flex;
+      justify-content: flex-end;
       width: 100%;
-      height: 168px;
-      @media (max-width: 350px) {
-        max-width: 100px;
-        height: 100px;
-      }
-      > img:nth-child(1) {
-        max-width: 168px;
-        width: 100%;
-        height: 168px;
-        border-radius: 50%;
-        @media (max-width: 350px) {
-          height: 100px;
-        }
-      }
-    }
-    > div:nth-child(2) {
-      width: 100%;
-      @media (max-width: 350px) {
-        text-align: center;
-      }
-      > h2:nth-child(1) {
-        display: flex;
-        flex-direction: column;
+      @media (max-width: 344px) {
         justify-content: center;
-        align-items: center;
+      }
+      > input:nth-child(1) {
+        padding: 12px 25px;
+        border-radius: 25px;
+        background-color: #444df2;
         font-family: "Nunito";
         font-weight: 700;
-        font-size: 32px;
-        line-height: 43.65px;
-        color: #000000;
-      }
-      > p:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        font-family: "Nunito";
-        font-weight: 400;
-        font-size: 20px;
-        line-height: 27.28px;
-        color: #000000;
+        font-size: 18px;
+        line-height: 24.55px;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        &:disabled {
+          background-color: #686868;
+          color: #ffffff;
+          cursor: unset;
+        }
+        &:hover:not(:disabled) {
+          background-color: #797ef3;
+        }
       }
     }
   }
-  
-  .profileicons {
+}
+
+.profilebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  gap: 20px;
+  > div:nth-child(1) {
+    max-width: 168px;
     width: 100%;
-    display: flex;
-    gap: 8px;
-    @media (max-width: 633px) {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    > img {
-      max-width: 64px;
+    height: 168px;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      max-width: 88px;
       width: 100%;
-      height: 64px;
-      border-radius: 50%;
+      height: 88px;
+    }
+    @media (max-width: 350px) {
+      max-width: 100px;
+      height: 100px;
+    }
+
+    > img:nth-child(1) {
+      width: 100%;
+      height: 100%;
+      border-radius: 100px;
     }
   }
-  
-  .singup {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #eceefe;
-  }
-  
-  app-footer {
+  > div:nth-child(2) {
     width: 100%;
-    height: 150px;
-    background-color: #eceefe;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @media (max-width: 350px) {
+      text-align: center;
+    }
+    > h2:nth-child(1) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: "Nunito";
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 43.65px;
+      color: #000000;
+    }
+    > p:nth-child(2) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      font-family: "Nunito";
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 27.28px;
+      color: #000000;
+    }
   }
-  
+}
+
+.profileicons {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  @media (max-width: 633px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  > img {
+    max-width: 64px;
+    width: 100%;
+    height: 64px;
+    border-radius: 50%;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      max-width: 48px;
+      width: 100%;
+      height: 48px;
+    }
+  }
+}
+
+.singup {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eceefe;
+}
+
+app-footer {
+  width: 100%;
+  height: 150px;
+  background-color: #eceefe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

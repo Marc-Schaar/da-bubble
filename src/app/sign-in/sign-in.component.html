@@ -15,12 +15,24 @@
   <div>
     <div>
       <div>
-        <input type="email" #email="ngModel" required name="email" [(ngModel)]="user.email"
-          placeholder="beispielname@email.com" />
+        <input
+          type="email"
+          #email="ngModel"
+          required
+          name="email"
+          [(ngModel)]="user.email"
+          placeholder="beispielname@email.com"
+        />
       </div>
       <div>
-        <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password"
-          placeholder="Passwort" />
+        <input
+          #password="ngModel"
+          required
+          name="password"
+          [(ngModel)]="user.password"
+          type="password"
+          placeholder="Passwort"
+        />
       </div>
     </div>
     <div><a routerLink="/forgotpassword">Passwort vergessen?</a></div>
@@ -29,14 +41,12 @@
     <div class="divider">ODER</div>
   </div>
   <div>
+    <button type="button" (click)="signinwithgoogle()">
+      <img src="/img/Google.png" alt="" /> Anmelden mit Google
+    </button>
     <div>
-      <button type="button" (click)="signinwithgoogle()">
-        <img src="/img/Google.png" alt="" /> Anmelden mit Google
-      </button>
-    </div>
-    <div>
-      <button [disabled]="userauth.invalid">Anmelden</button><button (click)="shared.redirectiontodashboard()"
-        href="/chat">
+      <button [disabled]="userauth.invalid">Anmelden</button
+      ><button (click)="shared.redirectiontodashboard()" href="/chat">
         Gäste-Login
       </button>
     </div>
