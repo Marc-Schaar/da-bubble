@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
@@ -62,20 +56,12 @@ export class ChannelEditComponent {
   }
 
   async saveNewChannelData(content: string) {
-    const newChannelName = document.getElementById(
-      'changeNameInput'
-    ) as HTMLInputElement;
-    const newChannelDescription = document.getElementById(
-      'changeDescriptionInput'
-    ) as HTMLInputElement;
+    const newChannelName = document.getElementById('changeNameInput') as HTMLInputElement;
+    const newChannelDescription = document.getElementById('changeDescriptionInput') as HTMLInputElement;
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
     try {
       if (content == 'editName') {
-        const ChannelNameRef = doc(
-          this.firestore,
-          'channels',
-          this.currentChannelId
-        );
+        const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannelId);
 
         await updateDoc(channelRef, {
           name: newChannelName.value,
@@ -83,11 +69,7 @@ export class ChannelEditComponent {
         this.currentChannel.name = newChannelName.value;
       }
       if (content == 'editDescription') {
-        const ChannelNameRef = doc(
-          this.firestore,
-          'channels',
-          this.currentChannelId
-        );
+        const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannelId);
 
         await updateDoc(channelRef, {
           description: newChannelDescription.value,
@@ -113,21 +95,21 @@ export class ChannelEditComponent {
   }
 
   async exitChannel() {
-    // const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-    // try {
-    //   const channelDoc = await getDoc(channelRef);
-    //   const channelData = channelDoc.data();
-    //   if (channelData) {
-    //     const updatedMembers = channelData['member'].filter((member: string) => member !== this.currentUser.uid);
-    //     await updateDoc(channelRef, {
-    //       member: updatedMembers,
-    //     });
-    //   } else {
-    //     console.error('Channel data is undefined');
-    //   }
-    // } catch (error) {
-    //   console.error();
-      
-    // }
+    const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+    const currentUser = this.auth.currentUser;    
+    try {
+      const channelDoc = await getDoc(channelRef);
+      const channelData = channelDoc.data();
+      if (channelData && currentUser) {
+        console.log(currentUser.uid);
+        const updatedMembers = channelData['members'].filter(
+          (member: string) => member !== currentUser.uid
+        );
+        await updateDoc(channelRef, {
+          member: updatedMembers,
+        });
+      } else {
+      }
+    } catch (error) {}
   }
 }
