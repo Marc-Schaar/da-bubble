@@ -33,9 +33,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loading: boolean = false;
   menuOpen: boolean = false;
-  reactionMenuOpen: boolean = false;
+  reactionMenuOpen: boolean = true;
   isEditing: boolean = false;
   isMobile: boolean = false;
+  showAllReactions: boolean = false;
 
   channels: any = [];
   messages: any[] = [];
@@ -43,6 +44,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   reactions: string[] = [];
 
   currentUser: any;
+  userId: string = '';
   editingMessageId: any = '';
   input: string = '';
   inputEdit: string = '';
@@ -115,6 +117,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   unsubMessages!: () => void;
+  console: any;
 
   async ngOnInit() {
     // if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
@@ -138,10 +141,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   startChannel() {
-    console.log('start');
     if (this.userService.user != null) {
       this.isMobile = this.userService.checkScreenWidth();
-
       this.setChannelData();
       this.getMessages();
     } else console.error('keine User oder Channel');
@@ -149,7 +150,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setChannelData() {
     this.currentChannelId = this.userService.docId;
-    this.currentUser = this.userService.currentUser;
+    this.userId = this.userService.reciepentId;
+    // this.currentUser = this.userService.currentUser;
     this.getChannelFromUrl();
   }
 
@@ -169,7 +171,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
           let data = doc.data();
-          console.log(data['reaction']);
           return {
             id: doc.id,
             ...data,
@@ -206,7 +207,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editingMessageId = null;
       try {
         this.fireService.updateMessage(messageRef, this.inputEdit);
-        console.log('Nachricht erfolgreich aktualisiert');
         this.inputEdit = '';
       } catch (error) {
         console.error('Fehler beim Aktualisieren der Nachricht:', error);
@@ -250,16 +250,31 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
-    this.reactions.push(emoji);
-    message.reaction = this.reactions;
+    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    if (!this.hasReacted(newReaction.emoji, message.reaction)) {
+      message.reaction.push(newReaction);
+      if (messageRef) {
+        try {
+          this.fireService.updateReaction(messageRef, message.reaction);
+          this.reactionMenuOpen = false;
+        } catch (error) {
+          console.error('Fehler beim Aktualisieren der Nachricht:', error);
+        }
+      }
+    } else this.removeReaction(message, emoji);
+  }
 
-    if (messageRef) {
-      try {
-        this.fireService.updateReaction(messageRef, message.reaction);
-        console.log('Nachricht erfolgreich aktualisiert');
-        this.reactionMenuOpen = false;
-      } catch (error) {
-        console.error('Fehler beim Aktualisieren der Nachricht:', error);
+  removeReaction(message: any, emoji: string) {
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
+    if (reactionIndex >= 0) {
+      message.reaction.splice(reactionIndex, 1);
+      if (messageRef) {
+        try {
+          this.fireService.updateReaction(messageRef, message.reaction);
+        } catch (error) {
+          console.error('Fehler beim Aktualisieren der Nachricht:', error);
+        }
       }
     }
   }
@@ -271,14 +286,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
         chatContent.scrollTop = chatContent.scrollHeight;
       }
     }, 0);
-  }
-
-  toogleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
-
-  toogleReactionMenu() {
-    this.reactionMenuOpen = !this.reactionMenuOpen;
   }
 
   toggleThread() {
@@ -293,5 +300,17 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   openChannelInfo() {
     this.channelInfo = true;
     console.log(this.channelInfo);
+  }
+
+  uniqueEmojis(reactions: any[]): any[] {
+    return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
+  }
+
+  countEmoji(emoji: any, reactions: any[]): number {
+    return reactions.filter((e) => e.emoji === emoji.emoji).length;
+  }
+
+  hasReacted(emoji: any, reactions: any[]): boolean {
+    return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 }

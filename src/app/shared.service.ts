@@ -2,15 +2,7 @@ import { inject, Injectable, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  fromEvent,
-  map,
-  startWith,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { FireServiceService } from './fire-service.service';
@@ -55,9 +47,7 @@ export class UserService {
   threadToggle$ = this.threadToggleSubject.asObservable();
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
-  private screenWidthSubject = new BehaviorSubject<boolean>(
-    this.checkScreenWidth()
-  );
+  private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
   subscription: Subscription;
   currentReciever: any;
@@ -68,7 +58,8 @@ export class UserService {
   channels: any = [];
   messages: any = [];
 
-  user: any = new User();
+  user: any = new User(null);
+  userId: string = '';
   currentUser: any;
   currentChannel: any;
 
@@ -86,6 +77,10 @@ export class UserService {
 
   getUser(): User {
     return this.user;
+  }
+
+  getUserId(): string {
+    return this.userId;
   }
 
   async setOnlineStatus() {
@@ -111,6 +106,7 @@ export class UserService {
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         this.user = user;
+        this.userId = user.uid;
         console.log('User is still logged in:', user);
       } else {
         this.user = new User(null);
@@ -121,16 +117,13 @@ export class UserService {
 
   getChannels() {
     this.channels = [];
-    this.unsubChannels = onSnapshot(
-      this.fireService.getCollectionRef('channels')!,
-      (colSnap) => {
-        this.channels = colSnap.docs.map((colSnap) => ({
-          key: colSnap.id,
-          data: colSnap.data(),
-        }));
-        this.currentChannel = this.channels[0];
-      }
-    );
+    this.unsubChannels = onSnapshot(this.fireService.getCollectionRef('channels')!, (colSnap) => {
+      this.channels = colSnap.docs.map((colSnap) => ({
+        key: colSnap.id,
+        data: colSnap.data(),
+      }));
+      this.currentChannel = this.channels[0];
+    });
   }
 
   getUrlData() {
@@ -162,15 +155,10 @@ export class UserService {
   //!Wichtig verhindert doppelklick!!
   async loadMessages() {
     return new Promise<void>((resolve) => {
-      this.unsubMessages = onSnapshot(
-        this.fireService.getCollectionRef(
-          `${this.channelType}/${this.docId}/messages`
-        )!,
-        (colSnap) => {
-          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
-          resolve();
-        }
-      );
+      this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`${this.channelType}/${this.docId}/messages`)!, (colSnap) => {
+        this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+        resolve();
+      });
     });
   }
 

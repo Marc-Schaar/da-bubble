@@ -28,11 +28,7 @@ main {
     right: 0;
     bottom: 0;
     height: 8px;
-    background: linear-gradient(
-      to bottom,
-      rgba(1, 1, 1, 0.04),
-      rgba(1, 1, 1, 0)
-    );
+    background: linear-gradient(to bottom, rgba(1, 1, 1, 0.04), rgba(1, 1, 1, 0));
   }
 
   button {
@@ -212,10 +208,10 @@ li {
       border-radius: 25px 25px 25px 0;
       > .emoji {
         padding: 8px;
+        border-radius: 50%;
         transition: all 0.125s ease-in-out;
         &:hover {
           background-color: var(--bg-color);
-          border-radius: 50%;
         }
       }
     }
@@ -248,6 +244,7 @@ li {
 
   &:hover,
   .reaction-menu:hover {
+    background-color: var(--bg-color);
     .reaction-bar {
       animation: slide-in-l-r 0.125s forwards;
       display: flex;
@@ -255,7 +252,7 @@ li {
       align-items: center;
       gap: 8px;
     }
-    background-color: var(--bg-color);
+
     .message-main {
       background-color: white;
     }
@@ -264,6 +261,7 @@ li {
 .message-footer {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   > span:first-child {
     transition: all 0.125s ease-in-out;
     &:hover {
@@ -271,6 +269,14 @@ li {
       cursor: pointer;
     }
   }
+
+  .emoji-container {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    column-gap: 20px;
+  }
+
   .emoji-box {
     display: flex;
     align-items: center;
@@ -279,6 +285,11 @@ li {
     padding: 5px 10px;
     border: 1px solid var(--light-purple);
     border-radius: 20px;
+  }
+
+  .emoji-box:hover {
+    background-color: var(--bg-color);
+    cursor: pointer;
   }
 }
 
@@ -446,8 +457,7 @@ button {
   &:hover {
     transition: all 0.125s ease-in-out;
     img {
-      filter: brightness(0) saturate(100%) invert(31%) sepia(35%)
-        saturate(6836%) hue-rotate(231deg) brightness(101%) contrast(89%);
+      filter: brightness(0) saturate(100%) invert(31%) sepia(35%) saturate(6836%) hue-rotate(231deg) brightness(101%) contrast(89%);
     }
   }
 }

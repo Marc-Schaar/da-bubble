@@ -15,12 +15,7 @@
         <div class="channelbar">
           <div>
             <button (click)="toggleActive()">
-              <img
-                [ngClass]="{ rotate: isActive() }"
-                class="image-down"
-                src="./img/arrow_drop_down-1.svg"
-                alt=""
-              />
+              <img [ngClass]="{ rotate: isActive() }" class="image-down" src="./img/arrow_drop_down-1.svg" alt="" />
             </button>
             <div>
               <img src="./img/workspaces_black.svg" alt="" />
@@ -30,17 +25,8 @@
           <button class="addButton"><img src="./img/add.svg" alt="" /></button>
         </div>
         <div [ngClass]="{ show: isActive() }" class="channellist">
-          <div
-            class="channelrow"
-            *ngFor="let channel of channels; let index = index"
-          >
-            <div
-              (click)="
-                openWindow('channel');
-                openChannel(index);
-                this.userService.setUrl('channel', channel.id)
-              "
-            >
+          <div class="channelrow" *ngFor="let channel of channels; let index = index">
+            <div (click)="openWindow('channel'); openChannel(index); this.userService.setUrl('channel', channel.id, currentUser.id)">
               <img src="/img/tag.svg" alt="" />
               <span>{{ channel.name }}</span>
             </div>
@@ -57,11 +43,7 @@
         <div class="messagebar">
           <div>
             <button (click)="toggleMessage()">
-              <img
-                [ngClass]="{ rotate: isOpen() }"
-                src="/img/arrow_drop_down-1.svg"
-                alt=""
-              />
+              <img [ngClass]="{ rotate: isOpen() }" src="/img/arrow_drop_down-1.svg" alt="" />
             </button>
             <div>
               <img src="/img/account_circle.svg" alt="" />
@@ -73,19 +55,12 @@
           <div
             *ngFor="let user of this.users; let index = index"
             class="contactsrow"
-            (click)="
-              openWindow('chat');
-              openPersonalChat(index);
-              this.userService.setUrl('direct', this.currentUser.id, user.id)
-            "
+            (click)="openWindow('chat'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)"
           >
             <div>
               <div class="imageContainer">
                 <img class="profile-image" [src]="user.profilephoto" alt="" />
-                <div
-                  class="status-dot"
-                  [ngClass]="{ green: user.online }"
-                ></div>
+                <div class="status-dot" [ngClass]="{ green: user.online }"></div>
               </div>
 
               <span>{{ user.fullname }}</span>

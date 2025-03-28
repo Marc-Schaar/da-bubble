@@ -39,7 +39,7 @@
         </li>
 
         <li
-          (mouseleave)="reactionMenuOpen = false; menuOpen = false"
+          (mouseleave)="reactionMenuOpen = true; menuOpen = false"
           class="message"
           [ngClass]="{
             reverse: message.name == this.userService.auth.currentUser?.displayName
@@ -52,7 +52,7 @@
             <button>
               <img src="/img/reaction-bar-icons/thumps_up.png" alt="" />
             </button>
-            <button (click)="toogleReactionMenu()" class="hover-to-dark-purple">
+            <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="hover-to-dark-purple">
               <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
             </button>
             <button (click)="toggleThread()" class="hover-to-dark-purple">
@@ -61,7 +61,7 @@
             <button
               *ngIf="message.name == this.userService.auth.currentUser?.displayName"
               class="hover-to-dark-purple"
-              (click)="toogleMenu()"
+              (click)="this.menuOpen = !this.menuOpen"
             >
               <mat-icon>more_vert</mat-icon>
             </button>
@@ -71,7 +71,9 @@
 
             <div *ngIf="reactionMenuOpen" class="reaction-menu">
               <ng-container *ngFor="let emoji of emojis">
-                <img (click)="addReaction(message, emoji)" class="emoji" [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                <div class="emoji" [ngClass]="{ 'medium-purple': this.hasReacted(emoji, message.reaction) }">
+                  <img (click)="addReaction(message, emoji)" [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                </div>
               </ng-container>
             </div>
           </div>
@@ -95,16 +97,36 @@
             <div class="message-footer gap-20">
               <span (click)="toggleThread()">2 Antworten</span>
               <span class="font-size-14">Letzte Antwort 14.26 Uhr</span>
-              <ng-container *ngFor="let emoji of message.reaction | slice : 0 : (isMobile ? 7 : 20)">
-                <div class="emoji-box">
-                  <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
-                  <span>1</span>
-                </div>
-              </ng-container>
 
-              <button *ngIf="message.reaction.length > (isMobile ? 7 : 20)">
-                {{ message.reaction.length - (isMobile ? 7 : 20) }} weitere
-              </button>
+              <div class="emoji-container">
+                <ng-container
+                  *ngFor="
+                    let emoji of showAllReactions
+                      ? uniqueEmojis(message.reaction)
+                      : (uniqueEmojis(message.reaction) | slice : 0 : (isMobile ? 2 : 20))
+                  "
+                >
+                  <div class="emoji-box">
+                    <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
+                    <span>{{ countEmoji(emoji, message.reaction) }}</span>
+                  </div>
+                </ng-container>
+
+                <button
+                  class="emoji-box"
+                  *ngIf="message.reaction.length > (isMobile ? 2 : 20) && !showAllReactions"
+                  (click)="showAllReactions = true"
+                >
+                  {{ message.reaction.length - (isMobile ? 2 : 20) }} weitere
+                </button>
+                <button
+                  class="emoji-box"
+                  *ngIf="message.reaction.length > (isMobile ? 2 : 20) && showAllReactions"
+                  (click)="showAllReactions = false"
+                >
+                  Weniger anzeigen
+                </button>
+              </div>
             </div>
           </div>
 

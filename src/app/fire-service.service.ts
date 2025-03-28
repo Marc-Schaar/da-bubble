@@ -66,20 +66,15 @@ export class FireServiceService {
     return ref ? collection(this.firestore, ref) : null;
   }
 
-  getMessageRef(
-    channelId: string,
-    messageId: string
-  ): DocumentReference | null {
-    return channelId && messageId
-      ? this.getDocRef(`channels/${channelId}/messages`, messageId)
-      : null;
+  getMessageRef(channelId: string, messageId: string): DocumentReference | null {
+    return channelId && messageId ? this.getDocRef(`channels/${channelId}/messages`, messageId) : null;
   }
 
-  updateMessage(ref: DocumentReference, value: string) {
+  updateMessage(ref: DocumentReference, value: any) {
     return ref ? updateDoc(ref, { message: value }) : null;
   }
 
-  updateReaction(ref: DocumentReference, value: []) {
+  updateReaction(ref: DocumentReference, value: any) {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 
@@ -90,18 +85,11 @@ export class FireServiceService {
   //   });
   // }
 
-  async sendMessage(
-    channelId: string,
-    messageObject: any
-  ): Promise<DocumentReference | null> {
-    let messagesCollectionRef: CollectionReference | null =
-      this.getCollectionRef(`channels/${channelId}/messages`);
+  async sendMessage(channelId: string, messageObject: any): Promise<DocumentReference | null> {
+    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
     if (!messagesCollectionRef) return null;
     try {
-      let messageDocRef = await addDoc(
-        messagesCollectionRef,
-        new Message(messageObject).toJSON()
-      );
+      let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
       return messageDocRef;
     } catch (err) {
       console.error('Fehler beim Senden der Nachricht:', err);
