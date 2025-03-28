@@ -210,6 +210,7 @@ li {
         padding: 8px;
         border-radius: 50%;
         transition: all 0.125s ease-in-out;
+        cursor: pointer;
         &:hover {
           background-color: var(--bg-color);
         }

@@ -39,7 +39,7 @@
         </li>
 
         <li
-          (mouseleave)="reactionMenuOpen = true; menuOpen = false"
+          (mouseleave)="reactionMenuOpen = false; menuOpen = false"
           class="message"
           [ngClass]="{
             reverse: message.name == this.userService.auth.currentUser?.displayName
@@ -71,8 +71,12 @@
 
             <div *ngIf="reactionMenuOpen" class="reaction-menu">
               <ng-container *ngFor="let emoji of emojis">
-                <div class="emoji" [ngClass]="{ 'medium-purple': this.hasReacted(emoji, message.reaction) }">
-                  <img (click)="addReaction(message, emoji)" [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                <div
+                  class="emoji"
+                  [ngClass]="{ 'medium-purple': this.hasReacted(emoji, message.reaction) }"
+                  (click)="addReaction(message, emoji)"
+                >
+                  <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
                 </div>
               </ng-container>
             </div>
