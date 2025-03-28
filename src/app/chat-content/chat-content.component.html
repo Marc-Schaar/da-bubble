@@ -46,11 +46,24 @@
           }"
         >
           <div *ngIf="!isEditing" class="reaction-bar">
-            <button>
-              <img src="/img/reaction-bar-icons/checked.png" alt="" />
+            <button
+              class="medium-purple-hover"
+              [ngClass]="{ 'bg-purple': this.hasReacted('emoji _white heavy check mark_', message.reaction) }"
+              (click)="addReaction(message, 'emoji _white heavy check mark_')"
+            >
+              <img src="img/emojis/emoji _white heavy check mark_.png" alt="emoji _white heavy check mark" />
             </button>
-            <button>
-              <img src="/img/reaction-bar-icons/thumps_up.png" alt="" />
+            <button
+              class="medium-purple-hover"
+              [ngClass]="{
+                'bg-purple': this.hasReacted('emoji _person raising both hands in celebration_', message.reaction)
+              }"
+              (click)="addReaction(message, 'emoji _person raising both hands in celebration_')"
+            >
+              <img
+                src="img/emojis/emoji _person raising both hands in celebration_.png"
+                alt="emoji _person raising both hands in celebration_"
+              />
             </button>
             <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="hover-to-dark-purple">
               <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
