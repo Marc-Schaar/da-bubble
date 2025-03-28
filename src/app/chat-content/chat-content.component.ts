@@ -306,8 +306,12 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
   }
 
-  countEmoji(emoji: any, reactions: any[]): number {
+  countEmoji(emoji: any, reactions: any[]) {
     return reactions.filter((e) => e.emoji === emoji.emoji).length;
+  }
+
+  countUniqueEmojis(iterable: any[]): number {
+    return new Set(iterable.map((e) => e.emoji)).size;
   }
 
   hasReacted(emoji: any, reactions: any[]): boolean {

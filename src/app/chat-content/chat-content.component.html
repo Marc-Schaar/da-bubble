@@ -73,7 +73,7 @@
               <ng-container *ngFor="let emoji of emojis">
                 <div
                   class="emoji"
-                  [ngClass]="{ 'medium-purple': this.hasReacted(emoji, message.reaction) }"
+                  [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }"
                   (click)="addReaction(message, emoji)"
                 >
                   <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
@@ -118,10 +118,10 @@
 
                 <button
                   class="emoji-box"
-                  *ngIf="message.reaction.length > (isMobile ? 2 : 20) && !showAllReactions"
+                  *ngIf="countUniqueEmojis(message.reaction) > (isMobile ? 2 : 20) && !showAllReactions"
                   (click)="showAllReactions = true"
                 >
-                  {{ message.reaction.length - (isMobile ? 2 : 20) }} weitere
+                  {{ countUniqueEmojis(message.reaction) - (isMobile ? 2 : 20) }} weitere
                 </button>
                 <button
                   class="emoji-box"
