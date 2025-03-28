@@ -16,6 +16,7 @@ export class ChannelEditComponent {
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() currentUser: any;
+  @Input() userId: any;
   userService = inject(UserService);
   @Output() channelInfoChange = new EventEmitter<boolean>();
   channelnameEdit: boolean = false;
@@ -94,22 +95,49 @@ export class ChannelEditComponent {
     this.channelInfoChange.emit(this.channelInfo);
   }
 
+  // async exitChannel() {
+  //   const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+  //   const currentUser = this.userService.auth.currentUser;
+  //   try {
+  //     const channelDoc = await getDoc(channelRef);
+  //     const channelData = channelDoc.data();
+  //     if (channelData && currentUser) {      
+  //       // channelData['member'] = channelData['member'].filter((uid: string) => uid !== currentUser.uid);
+  //       let updateMember: any[] = [];
+  //       updateMember.push(channelData['member']);
+  //       const index = updateMember.findIndex(member => member.uid === currentUser.uid);
+
+  //       if (index !== -1) {
+  //         updateMember.splice(index, 1);
+  //     }
+  //       console.log(updateMember);
+        
+  //       await updateDoc(channelRef, {
+  //         member: updateMember,
+  //       });
+  //     }
+  //   } catch (error) {} 
+  // }
+
   async exitChannel() {
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-    const currentUser = this.auth.currentUser;    
+    const currentUser = this.userService.auth.currentUser;
     try {
       const channelDoc = await getDoc(channelRef);
       const channelData = channelDoc.data();
       if (channelData && currentUser) {
-        console.log(currentUser.uid);
-        const updatedMembers = channelData['members'].filter(
-          (member: string) => member !== currentUser.uid
-        );
-        await updateDoc(channelRef, {
-          member: updatedMembers,
+        let updateMember = [...channelData['member']];
+          const index = updateMember.findIndex((member) => member.uid === currentUser.uid);
+          if (index !== -1) {
+          updateMember.splice(index, 1);
+        }
+          await updateDoc(channelRef, {
+          member: updateMember,
         });
-      } else {
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   }
+  
+  
 }

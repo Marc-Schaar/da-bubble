@@ -99,11 +99,12 @@ export class AddChannelComponent implements OnInit {
   async loadUsers() {
     try {
       const usersCollection = collection(this.firestore, 'users');
-      const querySnapshot = await getDocs(usersCollection);
-      this.users = querySnapshot.docs.map((doc) => doc.data());
-    } catch (error) {
+      const querySnapshot = await getDocs(usersCollection);      
+      this.users = querySnapshot.docs.map((doc) => {
+        return { ...doc.data(), uid: doc.id };
+      });    } catch (error) {
       console.error('Error loading users:', error);
-      this.users = []; // Default to empty array if there's an error
+      this.users = [];
     }
   }
 
@@ -148,6 +149,9 @@ export class AddChannelComponent implements OnInit {
 
   closeScreen() {
     console.log('close window');
+    console.log(this.users);
+    
+
   }
 
   onSubmit() {
@@ -237,7 +241,7 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-  // async pushAllUsers() {
+  // async pushAllUser() {
 
   //   try {
   //     const allUser = this.users
