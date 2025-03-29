@@ -34,6 +34,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   loading: boolean = false;
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
+  reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
   showAllReactions: boolean = false;

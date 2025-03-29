@@ -180,41 +180,18 @@ li {
         padding: 10px 20px;
         border-radius: 25px;
         font-size: 24px;
-      }
-      &:hover button {
-        background-color: var(--bg-color);
         cursor: pointer;
-        scale: 1.02;
+
+        &:hover {
+          background-color: var(--bg-color);
+          scale: 1.02;
+        }
       }
     }
 
     .reaction-menu {
-      position: absolute;
       right: 88px;
       bottom: 40px;
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      width: 200px;
-      max-width: 300px;
-      max-height: 300px;
-      overflow-y: auto;
-      flex-wrap: wrap;
-      z-index: 10;
-      margin-top: 20px;
-      padding: 8px;
-      border: 1px solid var(--light-purple);
-      background-color: white;
-      border-radius: 25px 25px 0 25px;
-      > .emoji {
-        padding: 8px;
-        border-radius: 50%;
-        transition: all 0.125s ease-in-out;
-        cursor: pointer;
-        &:hover {
-          background-color: var(--medium-purple) !important;
-        }
-      }
     }
   }
 
@@ -259,10 +236,12 @@ li {
     }
   }
 }
+
 .message-footer {
   display: flex;
   align-items: center;
   white-space: nowrap;
+
   > span:first-child {
     transition: all 0.125s ease-in-out;
     &:hover {
@@ -270,12 +249,16 @@ li {
       cursor: pointer;
     }
   }
+  .reaction-menu {
+    right: 20px;
+  }
 
   .emoji-container {
     display: flex;
     flex-wrap: wrap;
     row-gap: 10px;
     column-gap: 20px;
+    position: relative;
   }
 
   .emoji-box {
@@ -286,6 +269,38 @@ li {
     padding: 5px 10px;
     border: 1px solid var(--light-purple);
     border-radius: 20px;
+  }
+}
+
+.reaction-menu {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: 200px;
+  max-width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  flex-wrap: wrap;
+  z-index: 10;
+  margin-top: 20px;
+  padding: 8px;
+  border: 1px solid var(--light-purple);
+  background-color: white;
+  border-radius: 25px 25px 0 25px;
+  > .emoji {
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.125s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--medium-purple) !important;
+    }
+  }
+
+  &:hover {
+    background-color: white !important;
   }
 }
 
@@ -309,7 +324,7 @@ li {
     left: 20px;
     .reaction-menu {
       left: 140px;
-      border-radius: 30px 30px 30px 0;
+      border-radius: 25px 25px 25px 0;
     }
   }
   .message-footer,
