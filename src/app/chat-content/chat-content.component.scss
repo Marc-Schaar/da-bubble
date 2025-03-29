@@ -101,11 +101,13 @@ main {
 .action-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   position: relative;
 
   > div {
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
   ul {
     position: absolute;
@@ -404,6 +406,10 @@ li {
 
 .font-size-18 {
   font-size: 18px;
+}
+
+.justify-sb {
+  justify-content: space-between;
 }
 
 .align-center {

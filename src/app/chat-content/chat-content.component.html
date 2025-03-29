@@ -11,12 +11,21 @@
     [currentUser]="currentUser"
   ></app-channel-edit>
   <app-add-member
+<<<<<<< HEAD
   *ngIf="addMemberInfoWindow"
   [(addMemberInfoWindow)]="addMemberInfoWindow"
   [currentChannel]="currentChannel"
   [currentChannelId]="currentChannelId"
   [currentUser]="currentUser"
   [(addMemberWindow)]="addMemberWindow"
+=======
+    *ngIf="addMemberInfoWindow"
+    [(addMemberInfoWindow)]="addMemberInfoWindow"
+    [currentChannel]="currentChannel"
+    [currentChannelId]="currentChannelId"
+    [currentUser]="currentUser"
+    [(addMemberWindow)]="addMemberWindow"
+>>>>>>> 2be7bec82497d6494d00bc11d6022be57f2a9cc2
   ></app-add-member>
   <div class="card">
     <section class="card-header">
@@ -179,10 +188,6 @@
             <textarea [(ngModel)]="inputEdit" rows="4"></textarea>
 
             <div class="action-container">
-              <button class="hover-to-dark-purple">
-                <mat-icon>sentiment_satisfied</mat-icon>
-              </button>
-
               <div class="d-flex gap-32">
                 <button class="btn btn-secundary" [disabled]="loading" (click)="cancel()">Abbrechen</button>
                 <button class="btn btn-primary" [disabled]="loading" (click)="updateMessage(message)">Speichern</button>
@@ -194,20 +199,24 @@
     </ul>
 
     <section class="card-footer">
-      <div class="input-container">
+      <div (click)="listOpen = false; reactionMenuOpenInTextarea = false" class="input-container">
         <textarea (input)="getList()" [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
 
-        <div class="action-container">
+        <div class="action-container justify-sb">
           <div class="gap-10">
-            <button (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea" class="hover-to-dark-purple">
+            <button
+              (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()"
+              class="hover-to-dark-purple"
+            >
               <mat-icon>sentiment_satisfied</mat-icon>
             </button>
-            <button (click)="getList('@')" class="hover-to-dark-purple">
+            <button (click)="getList('@'); $event.stopPropagation()" class="hover-to-dark-purple">
               <mat-icon>alternate_email</mat-icon>
             </button>
-            <button (click)="getList('#')" class="hover-to-dark-purple">
+            <button (click)="getList('#'); $event.stopPropagation()" class="hover-to-dark-purple">
               <mat-icon>tag</mat-icon>
             </button>
+            <img [src]="'img/emojis/' + reactions[0]?.emoji + '.png'" alt="{{ reactions[0]?.emoji }}" />
           </div>
           <button [disabled]="loading" (click)="newMessage()">
             <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
@@ -221,7 +230,7 @@
 
           <div class="reaction-menu" *ngIf="reactionMenuOpenInTextarea">
             <ng-container *ngFor="let emoji of emojis">
-              <div (click)="addEmoji(emoji)" class="emoji">
+              <div (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
                 <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
               </div>
             </ng-container>
