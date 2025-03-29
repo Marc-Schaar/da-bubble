@@ -187,7 +187,7 @@
 
     <section class="card-footer">
       <div class="input-container">
-        <textarea [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
+        <textarea (input)="getList()" [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
 
         <div class="action-container">
           <div class="gap-10">
