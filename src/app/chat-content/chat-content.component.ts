@@ -35,15 +35,17 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
+  listOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
+  isChannel: boolean = false;
   showAllReactions: boolean = false;
 
   channels: any = [];
   messages: any[] = [];
   currentChannel: any = {};
   reactions: string[] = [];
-  currentList: any[] = [];
+  currentList: any = [];
 
   currentUser: any;
   userId: string = '';
@@ -261,23 +263,40 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
-  getList() {
-    if (this.input.includes('#')) {
-      this.currentList = this.channels;
-      console.log('Channels', this.userService.channels);
+  getList(type?: string): void {
+    if (type) this.input = type;
+    if (this.input.includes('#') || this.input.includes('@')) {
+      this.listOpen = true;
+      if (this.input.includes('#')) {
+        this.currentList = this.userService.channels;
+        this.isChannel = true;
+      }
 
-      //  this.isClicked = true;
-      //    this.isChannel = true;
+      if (this.input.includes('@')) {
+        this.currentList = this.userService.users;
+      }
+    } else if (this.input === '') {
+      this.currentList = [];
+      this.listOpen = false;
     }
-    if (this.input.includes('@')) {
-      console.log('Users', this.userService.users);
+    console.log('Current List:', this.currentList);
+  }
 
-      //  this.isClicked = true;
-      // this.currentList = this.users;
-      //   this.isChannel = false;
+  openReciver(i: number, key: string) {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.userService.getChannel(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('channel');
+    } else {
+      this.userService.setUrl('direct', this.userId, key);
+      this.userService.getReciepent(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('chat');
     }
-    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
-      //  this.isClicked = false;
-    }
+    this.resetList();
+  }
+  resetList() {
+    this.currentList = [];
+    this.listOpen = false;
+    this.input = '';
   }
 }

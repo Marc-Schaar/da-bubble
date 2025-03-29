@@ -194,13 +194,19 @@
             <button class="hover-to-dark-purple">
               <mat-icon>sentiment_satisfied</mat-icon>
             </button>
-            <button class="hover-to-dark-purple">
+            <button (click)="getList('@')" class="hover-to-dark-purple">
               <mat-icon>alternate_email</mat-icon>
             </button>
           </div>
           <button [disabled]="loading" (click)="newMessage()">
             <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
           </button>
+
+          <ul *ngIf="this.listOpen">
+            <ng-container *ngFor="let elemnent of currentList; index as i">
+              <li (click)="openReciver(i, elemnent.key)">{{ elemnent.fullname || elemnent.data.name }}</li>
+            </ng-container>
+          </ul>
         </div>
       </div>
     </section>

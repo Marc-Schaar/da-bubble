@@ -102,9 +102,28 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 
   > div {
     display: flex;
+  }
+  ul {
+    position: absolute;
+    bottom: 44px;
+    left: 53px;
+    border: 1px solid var(--light-purple);
+    border-radius: 25px;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: white;
+  }
+
+  li {
+    list-style: none;
+    border-radius: 20px;
+    &:hover {
+      background-color: var(--medium-purple);
+    }
   }
 }
 
@@ -402,6 +421,7 @@ li {
 .gap-32 {
   gap: 32px;
 }
+
 button {
   border: none;
   outline: none;

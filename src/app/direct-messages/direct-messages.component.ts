@@ -1,20 +1,6 @@
-import {
-  Component,
-  inject,
-  Injectable,
-  OnInit,
-  ElementRef,
-  ViewChild,
-  OnDestroy,
-} from '@angular/core';
+import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { UserService } from '../shared.service';
-import {
-  Firestore,
-  updateDoc,
-  doc,
-  query,
-  arrayUnion,
-} from '@angular/fire/firestore';
+import { Firestore, updateDoc, doc, query, arrayUnion } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
@@ -137,10 +123,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     );
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
-    const currentReceiverRef = doc(
-      this.firestore,
-      `users/${this.currentRecieverId}`
-    );
+    const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
     if (this.currentRecieverId !== this.currentUserId) {
       await updateDoc(currentReceiverRef, {
         messages: arrayUnion(messageData),
@@ -195,17 +178,11 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
         this.currentMessages = [];
         messages.forEach((message: any) => {
           if (this.currentUserId === this.currentRecieverId) {
-            if (
-              message['to'] === this.currentRecieverId &&
-              message['from'] === this.currentRecieverId
-            ) {
+            if (message['to'] === this.currentRecieverId && message['from'] === this.currentRecieverId) {
               this.currentMessages.push(message);
             }
           } else {
-            if (
-              message['to'] === this.currentRecieverId ||
-              message['from'] === this.currentRecieverId
-            ) {
+            if (message['to'] === this.currentRecieverId || message['from'] === this.currentRecieverId) {
               this.currentMessages.push(message);
             }
           }
@@ -296,10 +273,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentList = this.users;
       this.isChannel = false;
     }
-    if (
-      this.message === '' ||
-      (!this.message.includes('#') && !this.message.includes('@'))
-    ) {
+    if (this.message === '' || (!this.message.includes('#') && !this.message.includes('@'))) {
       this.isClicked = false;
     }
   }

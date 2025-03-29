@@ -129,16 +129,11 @@ export class UserService {
   }
 
   getUsers() {
-    console.log('lädt users');
     onSnapshot(this.fireService.getCollectionRef('users')!, (colSnap) => {
-      if (colSnap.empty) {
-        console.log('Keine User gefunden');
-      }
       this.users = colSnap.docs.map((colSnap) => ({
-        id: colSnap.id,
+        key: colSnap.id,
         ...colSnap.data(),
       }));
-      console.log('geladen', this.users);
     });
   }
 
