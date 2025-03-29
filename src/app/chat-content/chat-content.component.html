@@ -11,11 +11,20 @@
     [currentUser]="currentUser"
   ></app-channel-edit>
   <app-add-member
+<<<<<<< HEAD
+  *ngIf="addMemberInfoWindow"
+  [(addMemberInfoWindow)]="addMemberInfoWindow"
+  [currentChannel]="currentChannel"
+  [currentChannelId]="currentChannelId"
+  [currentUser]="currentUser"
+  [(addMemberWindow)]="addMemberWindow"
+=======
     *ngIf="addMemberWindow"
     [(addMemberWindow)]="addMemberWindow"
     [currentChannel]="currentChannel"
     [currentChannelId]="currentChannelId"
     [currentUser]="currentUser"
+>>>>>>> 0b7d668bd638e6051b26f1c2ac338e7bd53c93d0
   ></app-add-member>
   <div class="card">
     <section class="card-header">

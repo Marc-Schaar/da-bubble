@@ -9,32 +9,41 @@
   padding: 40px;
   z-index: 2;
   background-color: white;
-  font-family: 'Nunito';
+  font-family: "Nunito";
   gap: 20px;
   display: flex;
   flex-direction: column;
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .member-headline {
-      font-size: 24px;
-      font-weight: 700;
+    font-size: 24px;
+    font-weight: 700;
+
+    .cross {
+      cursor: pointer;
     }
   }
   .user-cont {
     display: flex;
     flex-direction: column;
-    width: 335px;
-    height: 271px;
-    gap: 15px;
-    overflow: scroll;
+    width: 306px;
+    height: 200px;
+    gap: 8px;
+    overflow: auto;
     .user {
-      display: flex;
       align-items: center;
       gap: 15px;
       display: flex;
-      padding-left: 20px;
+      padding: 4px 20px 4px 20px;
+      border-radius: 100px;
+      width: fit-content;
+      height: 58px;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--bg-color);
+      }
       img {
         width: 50px;
         height: 50px;
@@ -42,4 +51,43 @@
       }
     }
   }
+  .add-member-btn-cont {
+    gap: 15px;
+    width: fit-content;
+    height: 60px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--bg-color);
+    }
+    .img-cont {
+      width: 32px;
+      height: 32px;
+      border-radius: 100%;
+      background-color: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .header-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    .channelname-cont {
+      display: flex;
+      gap: 15px;
+      font-size: 18px;
+      color: var(--medium-purple);
+    }
+  }
+}
+
+.change-size {
+  width: 514px;
+  height: 294px;
 }

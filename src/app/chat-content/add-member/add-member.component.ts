@@ -9,17 +9,23 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class AddMemberComponent {
 
-  @Input() addMemberWindow:boolean = false
+  @Input() addMemberInfoWindow:boolean = false
+  @Output() addMemberInfoWindowChange = new EventEmitter<boolean>();
+
   @Input() currentChannel:any = {}
   @Input() currentChannelId: any;
-  @Input() currentUser: any;
+  @Input() addMemberWindow:boolean = false;
   @Output() addMemberWindowChange = new EventEmitter<boolean>();
-
+  @Input() currentUser: any;
   members: any[] = [];
+  
 
   ngOnInit() {
-    console.log(this.currentChannel);
     this.loadMember();
+  }
+
+  changeWindow() {
+    this.addMemberWindow = true;
   }
 
   loadMember() {
@@ -27,8 +33,8 @@ export class AddMemberComponent {
   }
 
   closeWindow() {
-    this.addMemberWindow = false;
-    this.addMemberWindowChange.emit(this.addMemberWindow);    
+    this.addMemberInfoWindow = false;
+    this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);    
   }
 
 
