@@ -15,7 +15,7 @@
 
   <div class="add-member-btn-cont" (click)="changeWindow()" *ngIf="!addMemberWindow">
     <div class="img-cont">
-        <img src="img/person_add.png" alt="">
+        <img src="img/person_add.svg" alt="">
     </div>
     <span>Mitglieder hinzufügen</span>
   </div>
@@ -23,7 +23,7 @@
   <div class="header-cont" *ngIf="addMemberWindow">
     <div class="header">
         <div>Leute hinzufügen</div>
-        <img (click)="closeWindow()" src="img/close.png" alt="">
+        <img (click)="closeWindow()" src="img/close.svg" alt="">
     </div>
     <div class="channelname-cont">
         <span>#</span><span>{{currentChannel.name}}</span>
