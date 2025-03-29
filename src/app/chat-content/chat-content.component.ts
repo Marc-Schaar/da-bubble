@@ -53,6 +53,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   inputEdit: string = '';
   currentChannelId: string = '';
   channelInfo: boolean = false;
+  addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
 
   emojis: string[] = [
@@ -247,7 +248,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openMemberWindow() {
-    this.addMemberWindow = true;    
+    this.addMemberInfoWindow = true;    
   }
 
   uniqueEmojis(reactions: any[]): any[] {
