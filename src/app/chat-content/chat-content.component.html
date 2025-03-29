@@ -10,6 +10,13 @@
     [currentChannelId]="currentChannelId"
     [currentUser]="currentUser"
   ></app-channel-edit>
+  <app-add-member
+  *ngIf="addMemberWindow"
+  [(addMemberWindow)]="addMemberWindow"
+  [currentChannel]="currentChannel"
+  [currentChannelId]="currentChannelId"
+  [currentUser]="currentUser"
+  ></app-add-member>
   <div class="card">
     <section class="card-header">
       <div class="align-center" (click)="openChannelInfo()">
@@ -19,7 +26,7 @@
       <div class="align-center gap-10">
         <div class="avatar-container">
           <ng-container *ngFor="let member of currentChannel?.member; index as i">
-            <img *ngIf="i < 3" class="avatar" [src]="member.profilephoto" alt="Name" />
+            <img *ngIf="i < 3" (click)="openMemberWindow()" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
         </div>
         <span *ngIf="currentChannel?.member?.length > 3">+{{ currentChannel?.member?.length - 3 }}</span>

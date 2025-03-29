@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
+import { AddMemberComponent } from './add-member/add-member.component';
 import { doc, getDoc } from '@firebase/firestore';
 
 // @Injectable({
@@ -18,7 +19,7 @@ import { doc, getDoc } from '@firebase/firestore';
 // })
 @Component({
   selector: 'app-chat-content',
-  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, ChannelEditComponent],
+  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, ChannelEditComponent, AddMemberComponent],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
@@ -51,6 +52,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   inputEdit: string = '';
   currentChannelId: string = '';
   channelInfo: boolean = false;
+  addMemberWindow: boolean = false;
 
   emojis: string[] = [
     'emoji _nerd face_',
@@ -241,7 +243,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openChannelInfo() {
     this.channelInfo = true;
-    console.log(this.channelInfo);
+  }
+
+  openMemberWindow() {
+    this.addMemberWindow = true;    
   }
 
   uniqueEmojis(reactions: any[]): any[] {

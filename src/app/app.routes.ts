@@ -17,7 +17,7 @@ import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { ChannelEditComponent } from './chat-content/channel-edit/channel-edit.component';
 import { NewmessageComponent } from './newmessage/newmessage.component';
-import { AddMemberComponent } from './add-member/add-member.component';
+import { AddMemberComponent } from './chat-content/add-member/add-member.component';
 
 
 export const routes: Routes = [
