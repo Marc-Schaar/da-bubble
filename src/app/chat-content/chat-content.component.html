@@ -189,7 +189,7 @@
       </ng-container>
     </ul>
 
-    <section class="card-footer">
+    <section (mouseleave)="reactionMenuOpenInTextarea = false; listOpen = false" class="card-footer">
       <div (click)="listOpen = false; reactionMenuOpenInTextarea = false" class="input-container">
         <textarea (input)="getList()" [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
 
