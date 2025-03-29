@@ -16,7 +16,6 @@ export class ChannelEditComponent {
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() currentUser: any;
-  @Input() userId: any;
   userService = inject(UserService);
   @Output() channelInfoChange = new EventEmitter<boolean>();
   channelnameEdit: boolean = false;

@@ -1,0 +1,19 @@
+<div class="main">
+  <div class="header">
+    <div class="member-headline">Member</div>
+    <div class="cross" (click)="closeWindow()">
+      <img src="img/close.svg" alt="" />
+    </div>
+  </div>
+
+  <div class="user-cont">
+    <div class="user" *ngFor="let member of members; let i = index">
+      <img src="{{ member.profilephoto }}" alt="" />
+      <div> {{member.fullname}}</div>
+    </div>
+  </div>
+
+  <div class="add-member-btn-cont">
+    
+  </div>
+</div>
