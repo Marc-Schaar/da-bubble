@@ -44,6 +44,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   messages: any[] = [];
   currentChannel: any = {};
   reactions: string[] = [];
+  currentList: any[] = [];
 
   currentUser: any;
   userId: string = '';
@@ -263,5 +264,25 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   hasReacted(emoji: any, reactions: any[]): boolean {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
+  }
+
+  getList() {
+    if (this.input.includes('#')) {
+      this.currentList = this.channels;
+      console.log('Channels', this.userService.channels);
+
+      //  this.isClicked = true;
+      //    this.isChannel = true;
+    }
+    if (this.input.includes('@')) {
+      console.log('Users', this.userService.users);
+
+      //  this.isClicked = true;
+      // this.currentList = this.users;
+      //   this.isChannel = false;
+    }
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
+      //  this.isClicked = false;
+    }
   }
 }

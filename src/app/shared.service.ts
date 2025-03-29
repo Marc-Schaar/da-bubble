@@ -18,6 +18,8 @@ export class UserService {
     // this.getCurrentChannel();
     this.observeScreenWidth();
     this.getUrlData();
+    this.getChannels();
+    this.getUsers();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
       console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
@@ -123,6 +125,20 @@ export class UserService {
         data: colSnap.data(),
       }));
       this.currentChannel = this.channels[0];
+    });
+  }
+
+  getUsers() {
+    console.log('lädt users');
+    onSnapshot(this.fireService.getCollectionRef('users')!, (colSnap) => {
+      if (colSnap.empty) {
+        console.log('Keine User gefunden');
+      }
+      this.users = colSnap.docs.map((colSnap) => ({
+        id: colSnap.id,
+        ...colSnap.data(),
+      }));
+      console.log('geladen', this.users);
     });
   }
 
