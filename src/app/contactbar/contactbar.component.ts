@@ -5,6 +5,7 @@ import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 
 import { Router } from '@angular/router';
+import { AddChannelComponent } from "./add-channel/add-channel.component";
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AddChannelComponent],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
@@ -30,6 +31,7 @@ export class ContactbarComponent {
   currentReceiver: any;
   userID: string = '';
   currentChannel: any;
+  addChannelWindow:boolean = false;
 
   async ngOnInit() {
     await this.loadUsers();
@@ -102,5 +104,9 @@ export class ContactbarComponent {
     if (this.userService.channelType === 'direct') {
       this.message = true;
     }
+  }
+
+  openAddChannel() {
+    this.addChannelWindow = true;
   }
 }

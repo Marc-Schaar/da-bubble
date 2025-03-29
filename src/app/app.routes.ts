@@ -8,7 +8,7 @@ import { ForgotpasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetpasswordComponent } from './reset-password/reset-password.component';
 import { AvatarselectionComponent } from './avatar-selection/avatar-selection.component';
 import { ContactbarComponent } from './contactbar/contactbar.component';
-import { AddChannelComponent } from './add-channel/add-channel.component';
+import { AddChannelComponent } from './contactbar/add-channel/add-channel.component';
 import { ThreadComponent } from './thread/thread.component';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ImprintComponent } from './imprint/imprint.component';

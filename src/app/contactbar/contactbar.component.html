@@ -1,4 +1,5 @@
 <main>
+  <app-add-channel *ngIf=(addChannelWindow) [(addChannelWindow)]="addChannelWindow"></app-add-channel>
   <section>
     <div class="headline">
       <div>
@@ -22,7 +23,7 @@
               <span>Channels</span>
             </div>
           </div>
-          <button class="addButton"><img src="./img/add.svg" alt="" /></button>
+          <button class="addButton" (click)="openAddChannel()"><img src="./img/add.svg" alt="" /></button>
         </div>
         <div [ngClass]="{ show: isActive() }" class="channellist">
           <div class="channelrow" *ngFor="let channel of channels; let index = index">
@@ -33,7 +34,7 @@
           </div>
         </div>
         <div class="addChannel">
-          <div>
+          <div (click)="openAddChannel()">
             <button><img src="/img/add_circle.svg" alt="" /></button>
             <span>Channel hinzufügen</span>
           </div>

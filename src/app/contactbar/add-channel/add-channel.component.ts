@@ -5,6 +5,9 @@ import {
   PLATFORM_ID,
   NgModule,
   inject,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {
   CommonModule,
@@ -26,11 +29,11 @@ import {
   doc,
   getDoc,
 } from '@angular/fire/firestore';
-import { UserService } from '../shared.service';
+import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
-import { User } from '../models/user';
-import { Channel } from '../models/channel';
-import { FireServiceService } from '../fire-service.service';
+import { User } from '../../models/user';
+import { Channel } from '../../models/channel';
+import { FireServiceService } from '../../fire-service.service';
 
 @Component({
   selector: 'app-add-channel',
@@ -39,15 +42,14 @@ import { FireServiceService } from '../fire-service.service';
   styleUrls: ['./add-channel.component.scss'],
 })
 export class AddChannelComponent implements OnInit {
+  @Input() addChannelWindow:boolean = false;
+  @Output() addChannelWindowChange = new EventEmitter<boolean>();
   channelName: string = '';
   selectChannelMember: boolean = false;
   channelDescription: HTMLInputElement | null = null;
   chooseMember: boolean = false;
   auth = getAuth();
   user: User | null = null;
-  // displayName: string | null = null;
-  // photoURL: string | null = null;
-  // uid: string | null = null;
   users: any[] = [];
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
@@ -148,9 +150,8 @@ export class AddChannelComponent implements OnInit {
   }
 
   closeScreen() {
-    console.log('close window');
-    console.log(this.users);
-    
+    this.addChannelWindow = false;
+    this.addChannelWindowChange.emit(this.addChannelWindow);
 
   }
 
