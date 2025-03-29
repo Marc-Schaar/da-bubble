@@ -36,6 +36,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
+  reactionMenuOpenInTextarea: boolean = false;
   listOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
@@ -45,7 +46,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   channels: any = [];
   messages: any[] = [];
   currentChannel: any = {};
-  reactions: string[] = [];
+  reactions: any = [];
   currentList: any = [];
 
   currentUser: any;
@@ -224,6 +225,12 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }
+  }
+
+  addEmoji(emoji: string) {
+    this.reactions = [];
+    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    this.reactions.push(newReaction);
   }
 
   scrollToBottom() {
