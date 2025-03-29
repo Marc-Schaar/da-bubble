@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
-import { AddMemberComponent } from './add-member/add-member.component';
 import { doc, getDoc } from '@firebase/firestore';
+import { AddMemberComponent } from './add-member/add-member.component';
 
 // @Injectable({
 //   providedIn: 'root',
@@ -249,7 +249,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openMemberWindow() {
-    this.addMemberWindow = true;    
+    this.addMemberWindow = true;
   }
 
   uniqueEmojis(reactions: any[]): any[] {
@@ -299,6 +299,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.resetList();
   }
+
   resetList() {
     this.currentList = [];
     this.listOpen = false;
