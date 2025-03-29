@@ -145,7 +145,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isEditing = true;
     this.editingMessageId = index;
     this.inputEdit = message.message;
-    this.scrollToBottom();
   }
 
   async updateMessage(message: any) {
@@ -231,6 +230,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reactions = [];
     let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
     this.reactions.push(newReaction);
+    console.log(this.reactions);
   }
 
   scrollToBottom() {
@@ -278,20 +278,21 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   getList(type?: string): void {
     if (type) this.input = type;
     if (this.input.includes('#') || this.input.includes('@')) {
-      this.listOpen = true;
       if (this.input.includes('#')) {
         this.currentList = this.userService.channels;
         this.isChannel = true;
+        this.listOpen = true;
       }
 
       if (this.input.includes('@')) {
         this.currentList = this.userService.users;
+        this.listOpen = true;
       }
     } else if (this.input === '') {
       this.currentList = [];
       this.listOpen = false;
     }
-    console.log('Current List:', this.currentList);
+    this.input = '';
   }
 
   openReciver(i: number, key: string) {
