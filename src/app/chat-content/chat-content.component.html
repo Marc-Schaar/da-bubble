@@ -11,12 +11,20 @@
     [currentUser]="currentUser"
   ></app-channel-edit>
   <app-add-member
+<<<<<<< HEAD
   *ngIf="addMemberInfoWindow"
   [(addMemberInfoWindow)]="addMemberInfoWindow"
   [currentChannel]="currentChannel"
   [currentChannelId]="currentChannelId"
   [currentUser]="currentUser"
   [(addMemberWindow)]="addMemberWindow"
+=======
+    *ngIf="addMemberWindow"
+    [(addMemberWindow)]="addMemberWindow"
+    [currentChannel]="currentChannel"
+    [currentChannelId]="currentChannelId"
+    [currentUser]="currentUser"
+>>>>>>> 0b7d668bd638e6051b26f1c2ac338e7bd53c93d0
   ></app-add-member>
   <div class="card">
     <section class="card-header">
@@ -199,16 +207,33 @@
 
         <div class="action-container">
           <div class="gap-10">
-            <button class="hover-to-dark-purple">
+            <button (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea" class="hover-to-dark-purple">
               <mat-icon>sentiment_satisfied</mat-icon>
             </button>
-            <button class="hover-to-dark-purple">
+            <button (click)="getList('@')" class="hover-to-dark-purple">
               <mat-icon>alternate_email</mat-icon>
+            </button>
+            <button (click)="getList('#')" class="hover-to-dark-purple">
+              <mat-icon>tag</mat-icon>
             </button>
           </div>
           <button [disabled]="loading" (click)="newMessage()">
             <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
           </button>
+
+          <ul *ngIf="this.listOpen">
+            <ng-container *ngFor="let elemnent of currentList; index as i">
+              <li (click)="openReciver(i, elemnent.key)">{{ elemnent.fullname || elemnent.data.name }}</li>
+            </ng-container>
+          </ul>
+
+          <div class="reaction-menu" *ngIf="reactionMenuOpenInTextarea">
+            <ng-container *ngFor="let emoji of emojis">
+              <div (click)="addEmoji(emoji)" class="emoji">
+                <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </section>

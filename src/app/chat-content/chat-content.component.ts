@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
-import { AddMemberComponent } from './add-member/add-member.component';
 import { doc, getDoc } from '@firebase/firestore';
+import { AddMemberComponent } from './add-member/add-member.component';
 
 // @Injectable({
 //   providedIn: 'root',
@@ -36,15 +36,18 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
+  reactionMenuOpenInTextarea: boolean = false;
+  listOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
+  isChannel: boolean = false;
   showAllReactions: boolean = false;
 
   channels: any = [];
   messages: any[] = [];
   currentChannel: any = {};
-  reactions: string[] = [];
-  currentList: any[] = [];
+  reactions: any = [];
+  currentList: any = [];
 
   currentUser: any;
   userId: string = '';
@@ -225,6 +228,12 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  addEmoji(emoji: string) {
+    this.reactions = [];
+    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    this.reactions.push(newReaction);
+  }
+
   scrollToBottom() {
     setTimeout(() => {
       const chatContent = this.chatContentRef.nativeElement as HTMLElement;
@@ -248,7 +257,11 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openMemberWindow() {
+<<<<<<< HEAD
     this.addMemberInfoWindow = true;    
+=======
+    this.addMemberWindow = true;
+>>>>>>> 0b7d668bd638e6051b26f1c2ac338e7bd53c93d0
   }
 
   uniqueEmojis(reactions: any[]): any[] {
@@ -267,23 +280,41 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
-  getList() {
-    if (this.input.includes('#')) {
-      this.currentList = this.channels;
-      console.log('Channels', this.userService.channels);
+  getList(type?: string): void {
+    if (type) this.input = type;
+    if (this.input.includes('#') || this.input.includes('@')) {
+      this.listOpen = true;
+      if (this.input.includes('#')) {
+        this.currentList = this.userService.channels;
+        this.isChannel = true;
+      }
 
-      //  this.isClicked = true;
-      //    this.isChannel = true;
+      if (this.input.includes('@')) {
+        this.currentList = this.userService.users;
+      }
+    } else if (this.input === '') {
+      this.currentList = [];
+      this.listOpen = false;
     }
-    if (this.input.includes('@')) {
-      console.log('Users', this.userService.users);
+    console.log('Current List:', this.currentList);
+  }
 
-      //  this.isClicked = true;
-      // this.currentList = this.users;
-      //   this.isChannel = false;
+  openReciver(i: number, key: string) {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.userService.getChannel(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('channel');
+    } else {
+      this.userService.setUrl('direct', this.userId, key);
+      this.userService.getReciepent(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('chat');
     }
-    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
-      //  this.isClicked = false;
-    }
+    this.resetList();
+  }
+
+  resetList() {
+    this.currentList = [];
+    this.listOpen = false;
+    this.input = '';
   }
 }
