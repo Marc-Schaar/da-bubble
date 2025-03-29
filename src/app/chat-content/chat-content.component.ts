@@ -257,11 +257,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openMemberWindow() {
-<<<<<<< HEAD
     this.addMemberInfoWindow = true;    
-=======
-    this.addMemberWindow = true;
->>>>>>> 0b7d668bd638e6051b26f1c2ac338e7bd53c93d0
   }
 
   uniqueEmojis(reactions: any[]): any[] {
