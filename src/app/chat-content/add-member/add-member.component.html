@@ -1,4 +1,4 @@
-<div class="main" [ngClass]="{'change-size': addMemberWindow}">
+<div class="main" [ngClass]="{ 'change-size': addMemberWindow }">
   <div class="header" *ngIf="!addMemberWindow">
     <div class="member-headline">Mitglieder</div>
     <div class="cross" (click)="closeWindow()">
@@ -9,30 +9,52 @@
   <div class="user-cont" *ngIf="!addMemberWindow">
     <div class="user" *ngFor="let member of members; let i = index">
       <img src="{{ member.profilephoto }}" alt="" />
-      <div> {{member.fullname}}</div>
+      <div>{{ member.fullname }}</div>
     </div>
   </div>
 
   <div class="add-member-btn-cont" (click)="changeWindow()" *ngIf="!addMemberWindow">
     <div class="img-cont">
-        <img src="img/person_add.svg" alt="">
+      <img src="img/person_add.svg" alt="" />
     </div>
     <span>Mitglieder hinzufügen</span>
   </div>
 
   <div class="header-cont" *ngIf="addMemberWindow">
     <div class="header">
-        <div>Leute hinzufügen</div>
-        <img (click)="closeWindow()" src="img/close.svg" alt="">
+      <div>Leute hinzufügen</div>
+      <img (click)="closeWindow()" src="img/close.svg" alt="" />
     </div>
     <div class="channelname-cont">
-        <span>#</span><span>{{currentChannel.name}}</span>
+      <span>#</span><span>{{ currentChannel.name }}</span>
     </div>
   </div>
+
+  <div class="input-cont" *ngIf="addMemberWindow">
+    <div class="input-help-cont">
+      <div class="mini-profile-cont" *ngFor="let selectedUser of selectedUsers; let index = index">
+        <img class="user-img-mini" src="{{ selectedUsers[index]?.profilephoto }}" alt="" />
+        <div class="username-mini">
+          {{ selectedUsers[index]?.fullname }}
+        </div>
+        <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
+      </div>
+      <div class="choose-user-bar" *ngIf="showUserBar">
+        <div class="user-select-cont" (click)="addUserToSelection(index)" *ngFor="let filteredUser of filteredUsers; let index = index">
+          <div class="img-status-cont">
+            <img src="{{ filteredUser.profilephoto }}" alt="" />
+            <div class="satus-circle" [ngClass]="{'green-circle': filteredUser.online}"></div>
+          </div>
+          <div>{{ filteredUser.fullname }}</div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <input name="" id="user-search-bar" (focus)="openUserBar()" (keyup)="filterUsers()" />
+  </div>
+
   <div *ngIf="addMemberWindow">
 
   </div>
-  <div *ngIf="addMemberWindow">
 
-  </div>
 </div>
