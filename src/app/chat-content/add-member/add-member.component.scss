@@ -63,10 +63,13 @@
     &:hover {
       background-color: var(--bg-color);
       .img-cont {
-        img {
+        svg {
+          path {
+            fill: var(--dark-purple-text)
+
+          }
           width: 23px;
           height: 17px;
-          filter: invert(35%) sepia(80%) saturate(500%) hue-rotate(225deg);
         }
       }
     }
@@ -196,6 +199,21 @@
   }
   .username-mini {
     width: max-content;
+  }
+}
+
+.btn-cont {
+  place-self: end;
+  button {
+    color: white;
+    width: 147px;
+    height: 49px;
+    background-color: var(--dark-purple);
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
   }
 }
 
