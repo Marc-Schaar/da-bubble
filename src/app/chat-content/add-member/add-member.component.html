@@ -42,7 +42,7 @@
         </div>
         <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
       </div>
-      <div class="choose-user-bar" *ngIf="showUserBar">
+      <div class="choose-user-bar" *ngIf="showUserBar" #chooseUserBar>
         <div class="user-select-cont" (click)="addUserToSelection(index)" *ngFor="let filteredUser of filteredUsers; let index = index">
           <div class="img-status-cont">
             <img src="{{ filteredUser.profilephoto }}" alt="" />
@@ -53,11 +53,11 @@
         <div></div>
       </div>
     </div>
-    <input name="" id="user-search-bar" (focus)="openUserBar()" (keyup)="filterUsers()" />
+    <input name="" id="user-search-bar" #userSearchInput (focus)="openUserBar()" (keyup)="filterUsers()" />
   </div>
 
   <div class="btn-cont" *ngIf="addMemberWindow">
-    <button>Hinzufügen</button>
+    <button [ngClass]="{'disabled-btn': disabled}" disabled (click)="addUserToChannel()">Hinzufügen</button>
 
   </div>
 

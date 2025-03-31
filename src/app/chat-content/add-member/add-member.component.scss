@@ -66,7 +66,6 @@
         svg {
           path {
             fill: var(--dark-purple-text)
-
           }
           width: 23px;
           height: 17px;
@@ -193,8 +192,8 @@
     border-radius: 100%;
   }
   .cross-mini {
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
   }
   .username-mini {
@@ -219,4 +218,8 @@
 
 .green-circle {
   background-color: rgba(146, 200, 62, 1) !important;
+}
+
+.disabled-btn {
+  background-color: rgba(104, 104, 104, 1) !important;
 }

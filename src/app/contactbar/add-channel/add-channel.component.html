@@ -98,7 +98,7 @@
                   class="cross-mini"
                 />
               </div>
-              <div class="choose-user-bar" *ngIf="showUserBar">
+              <div class="choose-user-bar" #chooseUserBar *ngIf="showUserBar">
                 <div
                   class="user-select-cont"
                   (click)="addUserToSelection(index)"
@@ -118,6 +118,7 @@
               id="user-search-bar"
               (focus)="openUserBar()"
               (keyup)="filterUsers()"
+              #userSearchInput
             />
           </div>
         </div>

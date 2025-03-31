@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { FireServiceService } from '../../fire-service.service';
+import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-add-member',
@@ -22,7 +23,7 @@ export class AddMemberComponent {
   users: any[] = [];
   showUserBar: boolean = false;
   chooseMember: boolean = false;
-
+  disabled: boolean = true;
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
 
@@ -66,16 +67,40 @@ export class AddMemberComponent {
     this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);    
   }
 
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
+  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   openUserBar(){
-    this.showUserBar = !this.showUserBar;
+    this.showUserBar = true;
     this.filterUsers();
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeUserBar(event: Event) {
+    if (
+      this.userSearchInput &&
+      this.chooseUserBar &&
+      !this.userSearchInput.nativeElement.contains(event.target) &&
+      !this.chooseUserBar.nativeElement.contains(event.target)
+    ) {
+      this.showUserBar = false;
+    }
   }
 
   addUserToSelection(index: number) {
     this.selectedUsers.push(this.filteredUsers[index]);
     this.removeUserFromBar(index);
     this.refreshBar();
+    this.checkButton();
+  }
+
+  checkButton() {
+    if(this.selectedUsers.length > 0) {
+      this.disabled = false;
+    } else {
+      this.disabled = true;
+
+    }
   }
 
   removeUserFromBar(index: number) {
@@ -98,6 +123,9 @@ export class AddMemberComponent {
   removeSelectedUser(index: number) {
     this.addUserToBar(index);
     this.selectedUsers.splice(index, 1);
+    console.log(this.selectedUsers.length);
+    
+    this.checkButton();
   }
 
   addUserToBar(index: number) {
@@ -105,5 +133,22 @@ export class AddMemberComponent {
     this.filterUsers();
     console.log(this.users);
     console.log(this.filteredUsers);
+  }
+
+  async addUserToChannel() {
+    
+  
+    const channelRef = doc(this.fireService.firestore, "channels", this.currentChannelId);
+  
+    try {
+      await updateDoc(channelRef, {
+        member: arrayUnion(...this.selectedUsers)
+      });
+  
+      console.log("Benutzer erfolgreich hinzugefügt:", this.selectedUsers);
+      this.selectedUsers = [];
+    } catch (error) {
+      console.error("Fehler beim Hinzufügen:", error);
+    }
   }
 }

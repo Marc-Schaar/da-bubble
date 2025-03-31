@@ -8,6 +8,9 @@ import {
   Input,
   Output,
   EventEmitter,
+  ViewChild,
+  ElementRef,
+  HostListener,
 } from '@angular/core';
 import {
   CommonModule,
@@ -296,8 +299,23 @@ export class AddChannelComponent implements OnInit {
     textarea.style.height = '60px';
   }
 
-  openUserBar() {
-    this.showUserBar = !this.showUserBar;
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
+  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
+
+  openUserBar(){
+    this.showUserBar = true;
     this.filterUsers();
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeUserBar(event: Event) {
+    if (
+      this.userSearchInput &&
+      this.chooseUserBar &&
+      !this.userSearchInput.nativeElement.contains(event.target) &&
+      !this.chooseUserBar.nativeElement.contains(event.target)
+    ) {
+      this.showUserBar = false;
+    }
   }
 }
