@@ -53,6 +53,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   userId: string = '';
   editingMessageId: any = '';
   input: string = '';
+
   inputEdit: string = '';
   currentChannelId: string = '';
   channelInfo: boolean = false;
@@ -137,6 +138,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   newMessage(): void {
+    if (!this.input.trim()) return;
     this.fireService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
     this.input = '';
   }
@@ -257,7 +259,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openMemberWindow() {
-    this.addMemberInfoWindow = true;    
+    this.addMemberInfoWindow = true;
   }
 
   uniqueEmojis(reactions: any[]): any[] {
@@ -293,7 +295,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentList = [];
       this.listOpen = false;
     }
-    this.input = '';
   }
 
   openReciver(i: number, key: string) {

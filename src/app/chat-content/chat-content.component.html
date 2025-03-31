@@ -11,12 +11,12 @@
     [currentUser]="currentUser"
   ></app-channel-edit>
   <app-add-member
-  *ngIf="addMemberInfoWindow"
-  [(addMemberInfoWindow)]="addMemberInfoWindow"
-  [currentChannel]="currentChannel"
-  [currentChannelId]="currentChannelId"
-  [currentUser]="currentUser"
-  [(addMemberWindow)]="addMemberWindow"
+    *ngIf="addMemberInfoWindow"
+    [(addMemberInfoWindow)]="addMemberInfoWindow"
+    [currentChannel]="currentChannel"
+    [currentChannelId]="currentChannelId"
+    [currentUser]="currentUser"
+    [(addMemberWindow)]="addMemberWindow"
   ></app-add-member>
   <div class="card">
     <section class="card-header">
@@ -191,7 +191,14 @@
 
     <section (mouseleave)="reactionMenuOpenInTextarea = false; listOpen = false" class="card-footer">
       <div (click)="listOpen = false; reactionMenuOpenInTextarea = false" class="input-container">
-        <textarea (input)="getList()" [(ngModel)]="input" rows="4" placeholder="Nachricht an #{{ currentChannel?.name }}"></textarea>
+        <textarea
+          (keyup.enter)="newMessage()"
+          (input)="getList()"
+          [(ngModel)]="input"
+          rows="4"
+          [name]="input"
+          placeholder="Nachricht an #{{ currentChannel?.name }}"
+        ></textarea>
 
         <div class="action-container justify-sb">
           <div class="gap-10">
@@ -209,7 +216,7 @@
             </button>
             <img [src]="'img/emojis/' + reactions[0]?.emoji + '.png'" alt="{{ reactions[0]?.emoji }}" />
           </div>
-          <button [disabled]="loading" (click)="newMessage()">
+          <button [disabled]="loading || input.trim() == ''" (click)="newMessage()">
             <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
           </button>
 
