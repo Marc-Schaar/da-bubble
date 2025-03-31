@@ -27,13 +27,13 @@
       <div class="align-center gap-10">
         <div class="avatar-container">
           <ng-container *ngFor="let member of currentChannel?.member; index as i">
-            <img *ngIf="i < 3" (click)="openMemberWindow()" class="avatar" [src]="member.profilephoto" alt="Name" />
+            <img *ngIf="i < 3" (click)="openMemberWindow(false)" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
         </div>
         <span *ngIf="currentChannel?.member?.length > 3">+{{ currentChannel?.member?.length - 3 }}</span>
 
         <button>
-          <mat-icon>person_add</mat-icon>
+          <mat-icon (click)="openMemberWindow(true)">person_add</mat-icon>
         </button>
       </div>
     </section>
