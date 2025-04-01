@@ -19,23 +19,23 @@ export class ThreadComponent implements OnInit {
   fireService: FireServiceService = inject(FireServiceService);
 
   currentChannelId: string = '';
-  messages: any[] = [];
+  parentMessageData: any;
 
   ngOnInit(): void {
     this.currentChannelId = this.userService.docId;
-    this.getThreadMessages();
+    this.getThreadParentMessage();
   }
 
-  getThreadMessages() {
-    console.log('Channel ID:', this.currentChannelId);
-    let messagesRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages/`);
-    if (messagesRef) {
-      let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+  getThreadParentMessage() {
+    let threadRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages/96qllxMUoVOKdGlZs4AP/thread`);
 
-      this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
-        this.messages = snapshot.docs.map((doc) => {
+    if (threadRef) {
+      onSnapshot(threadRef, (snapshot) => {
+        if (!snapshot.empty) {
+          let doc = snapshot.docs[0];
           let data = doc.data();
-          return {
+
+          this.parentMessageData = {
             id: doc.id,
             ...data,
             time: data['timestamp']
@@ -45,10 +45,8 @@ export class ThreadComponent implements OnInit {
                 })
               : '–',
           };
-        });
-        console.log('Nachrichten', this.messages);
-
-        this.scrollToBottom();
+        }
+        console.log('threadParentMessage:', this.parentMessageData);
       });
     }
   }

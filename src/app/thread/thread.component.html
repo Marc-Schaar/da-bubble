@@ -17,16 +17,14 @@
       <div class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
-            <img src="/img/avatars/avatar_4.png" alt="" />
+            <img src="{{ parentMessageData?.parentMessage.avatar }}" alt="{{ parentMessageData?.parentMessage.name }}" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
-              <div class="name-container">Noah Braun</div>
-              <div class="time-container">14:25Uhr</div>
+              <span class="name-container">{{ parentMessageData?.parentMessage.name }}</span>
+              <span class="time-container">{{ parentMessageData?.parentMessage.time }} Uhr</span>
             </div>
-            <div class="message-container">
-              Welche Version ist aktuell von Angular?
-            </div>
+            <span class="message-container">{{ parentMessageData?.parentMessage.message }}</span>
           </div>
         </div>
       </div>
@@ -49,8 +47,7 @@
               <div class="time-container">14:30Uhr</div>
             </div>
             <div class="message-container">
-              Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint,
-              dass die aktuelle Version Angular 13 ist. Vielleicht weiß
+              Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiß
               Frederik, ob es wahr ist.
             </div>
           </div>

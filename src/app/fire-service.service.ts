@@ -81,7 +81,7 @@ export class FireServiceService {
 
   async addThread(messageDocRef: DocumentReference, channelId: string, messageObject: any) {
     let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/thread`);
-    let threadObject = { parentMessage: new Message(messageObject).toJSON(), threadMessages: [] };
+    let threadObject = { parentMessage: new Message(messageObject).toJSON() };
     if (threadsCollectionRef) await addDoc(threadsCollectionRef, threadObject);
   }
 
