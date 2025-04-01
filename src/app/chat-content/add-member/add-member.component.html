@@ -57,7 +57,7 @@
   </div>
 
   <div class="btn-cont" *ngIf="addMemberWindow">
-    <button [ngClass]="{'disabled-btn': disabled}" disabled (click)="addUserToChannel()">Hinzufügen</button>
+    <button [ngClass]="{'disabled-btn': disabled}" [disabled]="disabled" (click)="addUserToChannel()">Hinzufügen</button>
 
   </div>
 

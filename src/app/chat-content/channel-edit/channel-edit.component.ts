@@ -100,7 +100,7 @@ export class ChannelEditComponent {
   //   try {
   //     const channelDoc = await getDoc(channelRef);
   //     const channelData = channelDoc.data();
-  //     if (channelData && currentUser) {      
+  //     if (channelData && currentUser) {
   //       // channelData['member'] = channelData['member'].filter((uid: string) => uid !== currentUser.uid);
   //       let updateMember: any[] = [];
   //       updateMember.push(channelData['member']);
@@ -110,15 +110,17 @@ export class ChannelEditComponent {
   //         updateMember.splice(index, 1);
   //     }
   //       console.log(updateMember);
-        
+
   //       await updateDoc(channelRef, {
   //         member: updateMember,
   //       });
   //     }
-  //   } catch (error) {} 
+  //   } catch (error) {}
   // }
 
   async exitChannel() {
+    console.log(this.userService.auth.currentUser);
+
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
     const currentUser = this.userService.auth.currentUser;
     try {
@@ -126,17 +128,14 @@ export class ChannelEditComponent {
       const channelData = channelDoc.data();
       if (channelData && currentUser) {
         let updateMember = [...channelData['member']];
-          const index = updateMember.findIndex((member) => member.uid === currentUser.uid);
-          if (index !== -1) {
+        const index = updateMember.findIndex((member) => member.id === currentUser.uid);
+        if (index !== -1) {
           updateMember.splice(index, 1);
         }
-          await updateDoc(channelRef, {
+        await updateDoc(channelRef, {
           member: updateMember,
         });
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
-  
-  
 }
