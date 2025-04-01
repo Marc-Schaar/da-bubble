@@ -79,24 +79,15 @@ export class FireServiceService {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 
-  // addThread(messageDocRef: any, message: any) {
-  //   return addDoc(collection(this.firestore, `${messageDocRef}/threads`), {
-  //     messages: message,
-  //   });
-  // }
+  async addThread(messageDocRef: any, channelId: string) {
+    let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/threads`);
+    if (threadsCollectionRef) await addDoc(threadsCollectionRef, {});
+  }
 
-  async sendMessage(channelId: string, messageObject: any): Promise<DocumentReference | null> {
+  async sendMessage(channelId: string, messageObject: any) {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
-    if (!messagesCollectionRef) return null;
-
-    try {
-      let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
-      let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/threads`);
-      if (threadsCollectionRef) await addDoc(threadsCollectionRef, {});
-      return messageDocRef;
-    } catch (err) {
-      console.error('Fehler beim Senden der Nachricht:', err);
-      return null;
-    }
+    if (!messagesCollectionRef) return;
+    let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+    this.addThread(messageDocRef, channelId);
   }
 }
