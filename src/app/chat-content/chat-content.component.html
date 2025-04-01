@@ -132,7 +132,11 @@
                       : (uniqueEmojis(message.reaction) | slice : 0 : (isMobile ? 2 : 20))
                   "
                 >
-                  <div class="emoji-box">
+                  <div
+                    (click)="addReaction(message, emoji.emoji)"
+                    [ngClass]="{ 'bg-purple': this.hasReacted(emoji.emoji, message.reaction) }"
+                    class="emoji-box"
+                  >
                     <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
                     <span>{{ countEmoji(emoji, message.reaction) }}</span>
                   </div>
