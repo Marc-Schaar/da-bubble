@@ -79,15 +79,16 @@ export class FireServiceService {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 
-  async addThread(messageDocRef: any, channelId: string) {
+  async addThread(messageDocRef: DocumentReference, channelId: string) {
     let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/threads`);
     if (threadsCollectionRef) await addDoc(threadsCollectionRef, {});
   }
 
   async sendMessage(channelId: string, messageObject: any) {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
-    if (!messagesCollectionRef) return;
-    let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
-    this.addThread(messageDocRef, channelId);
+    if (messagesCollectionRef) {
+      let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+      this.addThread(messageDocRef, channelId);
+    }
   }
 }
