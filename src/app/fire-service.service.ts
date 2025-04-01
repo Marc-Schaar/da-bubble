@@ -8,6 +8,7 @@ import {
   Firestore,
   getDoc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Message } from './models/message';
@@ -78,9 +79,8 @@ export class FireServiceService {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 
-  // addThread(User: User, messageDocRef: any, message: any) {
-  //   return addDoc(collection(this.firestore, `${messageDocRef.path}/threads`), {
-  //     createdFrom: User,
+  // addThread(messageDocRef: any, message: any) {
+  //   return addDoc(collection(this.firestore, `${messageDocRef}/threads`), {
   //     messages: message,
   //   });
   // }
@@ -88,8 +88,11 @@ export class FireServiceService {
   async sendMessage(channelId: string, messageObject: any): Promise<DocumentReference | null> {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
     if (!messagesCollectionRef) return null;
+
     try {
       let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+      let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/threads`);
+      if (threadsCollectionRef) await addDoc(threadsCollectionRef, {});
       return messageDocRef;
     } catch (err) {
       console.error('Fehler beim Senden der Nachricht:', err);
