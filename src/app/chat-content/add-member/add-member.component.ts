@@ -136,11 +136,7 @@ export class AddMemberComponent {
   }
 
   async addUserToChannel() {
-    
-    console.log("HALLO");
-    
     const channelRef = doc(this.fireService.firestore, "channels", this.currentChannelId);
-  
     try {
       await updateDoc(channelRef, {
         member: arrayUnion(...this.selectedUsers)
