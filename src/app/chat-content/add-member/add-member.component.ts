@@ -2,21 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { FireServiceService } from '../../fire-service.service';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { UserService } from '../../shared.service';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-member',
   imports: [CommonModule],
   templateUrl: './add-member.component.html',
-  styleUrl: './add-member.component.scss'
+  styleUrl: './add-member.component.scss',
 })
 export class AddMemberComponent {
   fireService: FireServiceService = inject(FireServiceService);
-  @Input() addMemberInfoWindow:boolean = false;
+  userService = inject(UserService);
+
+  @Input() addMemberInfoWindow: boolean = false;
   @Output() addMemberInfoWindowChange = new EventEmitter<boolean>();
 
-  @Input() currentChannel:any = {};
+  @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
-  @Input() addMemberWindow:boolean = false;
+  @Input() addMemberWindow: boolean = false;
   @Output() addMemberWindowChange = new EventEmitter<boolean>();
   @Input() currentUser: any;
   members: any[] = [];
@@ -26,6 +30,7 @@ export class AddMemberComponent {
   disabled: boolean = true;
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
+  // reciepentId: string | null = null;
 
   ngOnInit() {
     this.loadMember();
@@ -33,14 +38,10 @@ export class AddMemberComponent {
   }
 
   filterUsers() {
-    let filter = document.getElementById(
-      'user-search-bar'
-    ) as HTMLInputElement | null;
+    let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
-      this.filteredUsers = this.users.filter((user) =>
-        user.fullname.toLowerCase().includes(filterValue)
-      );
+      this.filteredUsers = this.users.filter((user) => user.fullname.toLowerCase().includes(filterValue));
     } else {
       this.filteredUsers = this.users;
     }
@@ -52,6 +53,7 @@ export class AddMemberComponent {
     } catch (error) {
       console.error('Error loading users in component:', error);
     }
+    console.log(this.userService.currentReciever);
   }
 
   changeWindow() {
@@ -59,18 +61,18 @@ export class AddMemberComponent {
   }
 
   loadMember() {
-    this.members = this.currentChannel['member']
+    this.members = this.currentChannel['member'];
   }
 
   closeWindow() {
     this.addMemberInfoWindow = false;
-    this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);    
+    this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
-  openUserBar(){
+  openUserBar() {
     this.showUserBar = true;
     this.filterUsers();
   }
@@ -95,11 +97,10 @@ export class AddMemberComponent {
   }
 
   checkButton() {
-    if(this.selectedUsers.length > 0) {
+    if (this.selectedUsers.length > 0) {
       this.disabled = false;
     } else {
       this.disabled = true;
-
     }
   }
 
@@ -111,9 +112,7 @@ export class AddMemberComponent {
   }
 
   refreshBar() {
-    const refresh = document.getElementById(
-      'user-search-bar'
-    ) as HTMLInputElement | null;
+    const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
       console.log('refresh');
       refresh.value = '';
@@ -124,7 +123,7 @@ export class AddMemberComponent {
     this.addUserToBar(index);
     this.selectedUsers.splice(index, 1);
     console.log(this.selectedUsers.length);
-    
+
     this.checkButton();
   }
 
@@ -136,16 +135,21 @@ export class AddMemberComponent {
   }
 
   async addUserToChannel() {
-    const channelRef = doc(this.fireService.firestore, "channels", this.currentChannelId);
+    const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
     try {
       await updateDoc(channelRef, {
-        member: arrayUnion(...this.selectedUsers)
+        member: arrayUnion(...this.selectedUsers),
       });
-  
-      console.log("Benutzer erfolgreich hinzugefügt:", this.selectedUsers);
+
+      console.log('Benutzer erfolgreich hinzugefügt:', this.selectedUsers);
       this.selectedUsers = [];
     } catch (error) {
-      console.error("Fehler beim Hinzufügen:", error);
+      console.error('Fehler beim Hinzufügen:', error);
     }
+  }
+
+  showProfile(member: any) {
+    this.userService.currentReciever = member;
+    this.userService.showRecieverProfile(); 
   }
 }
