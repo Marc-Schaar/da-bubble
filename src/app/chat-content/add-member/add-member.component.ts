@@ -67,6 +67,7 @@ export class AddMemberComponent {
   closeWindow() {
     this.addMemberInfoWindow = false;
     this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
+    this.userService.setProfileCardState(false);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;

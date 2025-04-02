@@ -51,6 +51,8 @@ export class UserService {
   openProfile$ = this.openProfile.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
+  private isProfileCardSubject = new BehaviorSubject<boolean>(false);
+  isProfileCard$ = this.isProfileCardSubject.asObservable(); 
   subscription: Subscription;
   currentReciever: any;
 
@@ -222,5 +224,9 @@ export class UserService {
 
   showRecieverProfile() {
     this.openProfile.next();
+  }
+
+  setProfileCardState(state: boolean) {
+    this.isProfileCardSubject.next(state);
   }
 }

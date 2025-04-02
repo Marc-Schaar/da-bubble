@@ -52,6 +52,7 @@ export class MainChatComponent implements OnInit {
   isMobile: boolean = false;
   isProfileCard: boolean = false;
   currentReciever: any;
+  darkBackground:boolean = false;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
@@ -86,6 +87,11 @@ export class MainChatComponent implements OnInit {
     this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
       this.toggleThread();
     });
+
+    this.shareddata.isProfileCard$.subscribe((state: boolean) => {
+      this.darkBackground = state;
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -101,6 +107,8 @@ export class MainChatComponent implements OnInit {
   closeProfile() {
     this.isProfileCard = false;
   }
+
+
 
   openProfile() {
     this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden
