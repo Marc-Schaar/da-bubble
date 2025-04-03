@@ -113,13 +113,7 @@
               <b class="font-size-18">{{ message.name }}</b>
               <span class="font-size-14">{{ message.time }} Uhr</span>
             </div>
-            <div
-              class="message-main"
-              [ngClass]="{
-                'medium-purple': message.name == this.userService.user?.displayName,
-                'bg-purple': message.name !== this.userService.user?.displayName
-              }"
-            >
+            <div class="message-main">
               {{ message.message }}
             </div>
 
