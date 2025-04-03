@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
-import { Firestore, doc, getDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, onSnapshot, serverTimestamp } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +28,6 @@ export class ThreadComponent implements OnInit {
   parentMessageData: any = null;
 
   isMobile: boolean = false;
-  loading: boolean = false;
 
   messages: any = [];
   reactions: [] = [];
@@ -41,6 +40,7 @@ export class ThreadComponent implements OnInit {
       this.parentMessageId = params['messageId'] || '';
       this.currentChannel = await this.getCurrentChannel();
       this.getThreadParentMessage();
+      this.getMessages();
     });
   }
 
@@ -87,9 +87,18 @@ export class ThreadComponent implements OnInit {
     };
   }
 
+  getMessages() {
+    let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
+    onSnapshot(threadRef, (snapshot) => {
+      this.messages = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(this.messages);
+    });
+  }
+
   sendMessage() {
-    this.loading = true;
-    console.log('Nachricht senden');
     this.fireService.sendThreadMessage(
       this.currentChannelId,
       new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions)),
