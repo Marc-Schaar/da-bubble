@@ -1,39 +1,62 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
-import { query } from '@firebase/firestore';
-import { onSnapshot, orderBy } from '@angular/fire/firestore';
+import { onSnapshot, QuerySnapshot } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-thread',
-  imports: [],
   templateUrl: './thread.component.html',
-  styleUrl: './thread.component.scss',
+  styleUrls: ['./thread.component.scss'],
 })
-export class ThreadComponent implements OnInit {
-  constructor() {}
-
+export class ThreadComponent implements OnInit, OnDestroy {
   unsubMessages!: () => void;
+  urlDataSubscription!: Subscription;
 
   userService: UserService = inject(UserService);
   fireService: FireServiceService = inject(FireServiceService);
+  route: ActivatedRoute = inject(ActivatedRoute);
 
   currentChannelId: string = '';
-  parentMessageData: any;
+  parentMessageId: string = '';
+  parentMessageData: any = null;
 
   ngOnInit(): void {
-    this.currentChannelId = this.userService.docId;
-    this.getThreadParentMessage();
+    this.setUrlData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.urlDataSubscription) {
+      this.urlDataSubscription.unsubscribe();
+    }
+    if (this.unsubMessages) {
+      this.unsubMessages();
+    }
+  }
+
+  setUrlData() {
+    this.urlDataSubscription = this.route.queryParams.subscribe((params) => {
+      this.currentChannelId = params['id'] || '';
+      this.parentMessageId = params['messageId'] || '';
+
+      if (this.unsubMessages) {
+        this.unsubMessages();
+      }
+
+      this.getThreadParentMessage();
+    });
   }
 
   getThreadParentMessage() {
-    let threadRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages/96qllxMUoVOKdGlZs4AP/thread`);
+    let threadRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
 
     if (threadRef) {
-      onSnapshot(threadRef, (snapshot) => {
+      this.unsubMessages = onSnapshot(threadRef, (snapshot) => {
         if (!snapshot.empty) {
           let doc = snapshot.docs[0];
           let data = doc.data();
+          console.log(data);
 
           this.parentMessageData = {
             id: doc.id,
@@ -45,18 +68,12 @@ export class ThreadComponent implements OnInit {
                 })
               : '–',
           };
+        } else {
+          this.parentMessageData = null;
         }
-        console.log('threadParentMessage:', this.parentMessageData);
+
+        console.log('Thread Parent Message:', this.parentMessageData);
       });
     }
-  }
-
-  scrollToBottom() {
-    setTimeout(() => {
-      // const chatContent = this.chatContentRef.nativeElement as HTMLElement;
-      // if (chatContent) {
-      //   chatContent.scrollTop = chatContent.scrollHeight;
-      // }
-    }, 0);
   }
 }

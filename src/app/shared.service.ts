@@ -52,7 +52,7 @@ export class UserService {
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
   private isProfileCardSubject = new BehaviorSubject<boolean>(false);
-  isProfileCard$ = this.isProfileCardSubject.asObservable(); 
+  isProfileCard$ = this.isProfileCardSubject.asObservable();
   subscription: Subscription;
   currentReciever: any;
 
@@ -68,9 +68,12 @@ export class UserService {
   currentChannel: any;
 
   //Neu ab hier
+
+  private queryParamsSubscription!: Subscription;
   channelType: any;
   docId: any;
   reciepentId: any;
+  messageId: string = '';
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
@@ -140,10 +143,11 @@ export class UserService {
   }
 
   getUrlData() {
-    this.route.queryParams.subscribe((params) => {
+    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
       this.channelType = params['channelType'] || 'default';
       this.docId = params['id'] || '';
       this.reciepentId = params['reciepentId'] || '';
+      this.messageId = params['messageId'] || '';
     });
   }
 
@@ -181,12 +185,13 @@ export class UserService {
   //   else console.log('Channel konnte nicht geladen werden aus Local Storage');
   // }
 
-  setUrl(channelType: string, id?: string, reciepentId?: string) {
+  setUrl(channelType: string, id?: string, reciepentId?: string, messageId?: string) {
     this.router.navigate(['/chat'], {
       queryParams: {
         channelType: channelType,
         id: id,
         reciepentId: reciepentId,
+        messageId: messageId,
       },
     });
   }
@@ -228,5 +233,11 @@ export class UserService {
 
   setProfileCardState(state: boolean) {
     this.isProfileCardSubject.next(state);
+  }
+
+  ngOnDestroy() {
+    if (this.queryParamsSubscription) {
+      this.queryParamsSubscription.unsubscribe();
+    }
   }
 }
