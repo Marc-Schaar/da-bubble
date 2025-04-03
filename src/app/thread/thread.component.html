@@ -17,14 +17,14 @@
       <div class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
-            <img src="{{ parentMessageData?.parentMessage.avatar }}" alt="{{ parentMessageData?.parentMessage.name }}" />
+            <img src="{{ parentMessageData?.avatar }}" alt="{{ parentMessageData?.name }}" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
-              <span class="name-container">{{ parentMessageData?.parentMessage.name }}</span>
+              <span class="name-container">{{ parentMessageData?.name }}</span>
               <span class="time-container">{{ parentMessageData?.time }} Uhr</span>
             </div>
-            <span class="message-container">{{ parentMessageData?.parentMessage.message }}</span>
+            <span class="message-container">{{ parentMessageData?.message }}</span>
           </div>
         </div>
       </div>
