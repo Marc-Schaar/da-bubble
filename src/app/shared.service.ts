@@ -200,7 +200,7 @@ export class UserService {
       if (component === 'chat') {
         if (this.isMobile)
           this.router.navigate(['/direct'], {
-            queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId }, //Muss noch überprüft werden
+            queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId },
           });
         else this.currentComponent.next(DirectmessagesComponent);
       } else if (component === 'channel') {
