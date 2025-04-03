@@ -1,7 +1,7 @@
 import { inject, Injectable, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
-import { Firestore, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, onSnapshot, serverTimestamp } from '@angular/fire/firestore';
 import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
@@ -237,5 +237,32 @@ export class UserService {
 
   setProfileCardState(state: boolean) {
     this.isProfileCardSubject.next(state);
+  }
+
+  isNewDay(messages: any): boolean {
+    if (messages.length === 0) return true;
+    let lastMessage = messages[messages.length - 1];
+    let lastMessageDate = lastMessage.date;
+    let todayDate = new Date().toISOString().split('T')[0];
+    return lastMessageDate !== todayDate;
+  }
+
+  isToday(date: any): boolean {
+    if (!date) return false;
+    let today = new Date().toISOString().split('T')[0];
+    let messageDate = new Date(date).toISOString().split('T')[0];
+    return today === messageDate;
+  }
+
+  buildMessageObject(input: string, messages: any, reactions: any): {} {
+    return {
+      message: input || '',
+      avatar: this.user?.photoURL || '',
+      date: new Date().toISOString().split('T')[0],
+      name: this.user?.displayName || 'Unbekannt',
+      newDay: this.isNewDay(messages),
+      timestamp: serverTimestamp(),
+      reaction: reactions || [],
+    };
   }
 }

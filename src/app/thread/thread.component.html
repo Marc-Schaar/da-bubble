@@ -85,7 +85,7 @@
             </div>
           </div>
 
-          <button [disabled]="input.trim() == ''">
+          <button [disabled]="loading || input.trim() == ''" (click)="sendMessage()">
             <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
           </button>
         </div>

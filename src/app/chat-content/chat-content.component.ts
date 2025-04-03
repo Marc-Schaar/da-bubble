@@ -139,7 +139,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   newMessage(): void {
-    if (!this.input.trim()) return;
     this.fireService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
     this.input = '';
   }
@@ -176,7 +175,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     let lastMessage = this.messages[this.messages.length - 1];
     let lastMessageDate = lastMessage.date;
     let todayDate = new Date().toISOString().split('T')[0];
-
     return lastMessageDate !== todayDate;
   }
 

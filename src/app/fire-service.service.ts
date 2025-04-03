@@ -66,17 +66,24 @@ export class FireServiceService {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 
-  async addThread(messageDocRef: DocumentReference, channelId: string, messageObject: any) {
-    let threadsCollectionRef = this.getCollectionRef(`channels/${channelId}/messages/${messageDocRef.id}/thread`);
-    let threadObject = { parentMessage: new Message(messageObject).toJSON() };
-    if (threadsCollectionRef) await addDoc(threadsCollectionRef, threadObject);
+  async addThreadMessageData(messageDocRef: DocumentReference, messageObject: any) {
+    await updateDoc(messageDocRef, new Message(messageObject).toJSON());
   }
 
   async sendMessage(channelId: string, messageObject: any) {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
     if (messagesCollectionRef) {
       let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
-      this.addThread(messageDocRef, channelId, messageObject);
+      this.addThreadMessageData(messageDocRef, messageObject);
+    }
+  }
+
+  async sendThreadMessage(channelId: string, messageObject: any, parentMessageId: string) {
+    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(
+      `channels/${channelId}/messages/${parentMessageId}/thread`
+    );
+    if (messagesCollectionRef) {
+      await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
     }
   }
 }

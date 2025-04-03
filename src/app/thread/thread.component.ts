@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, serverTimestamp } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { Message } from '../models/message';
 
 @Component({
   selector: 'app-thread',
@@ -23,9 +24,14 @@ export class ThreadComponent implements OnInit {
   currentChannel: any;
   currentChannelId: string = '';
   parentMessageId: string = '';
-  parentMessageData: any = null;
-  isMobile: boolean = false;
   input: string = '';
+  parentMessageData: any = null;
+
+  isMobile: boolean = false;
+  loading: boolean = false;
+
+  messages: any = [];
+  reactions: [] = [];
 
   unsubMessages!: () => void;
 
@@ -79,6 +85,17 @@ export class ThreadComponent implements OnInit {
       ...parentMessage,
       time: formattedTime,
     };
+  }
+
+  sendMessage() {
+    this.loading = true;
+    console.log('Nachricht senden');
+    this.fireService.sendThreadMessage(
+      this.currentChannelId,
+      new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions)),
+      this.parentMessageId
+    );
+    this.input = '';
   }
 
   closeThread() {
