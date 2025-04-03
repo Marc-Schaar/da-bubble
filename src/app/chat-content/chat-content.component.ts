@@ -246,7 +246,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  toggleThread(messageId: string, $event: Event) {
+  openThread(messageId: string, $event: Event) {
     if (this.isMobile)
       this.router.navigate(['/thread'], {
         queryParams: {
@@ -256,7 +256,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
           messageId: messageId,
         },
       });
-    else this.userService.toggleThread();
+    else this.userService.toggleThread('open');
     $event.stopPropagation();
   }
 

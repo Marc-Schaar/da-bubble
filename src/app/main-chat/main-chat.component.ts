@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  ViewChild,
-  OnInit,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, inject, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -17,9 +11,6 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
 import { FireServiceService } from '../fire-service.service';
-import { query } from '@firebase/firestore';
-import { doc, Firestore, onSnapshot, orderBy } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
 import { ChatContentComponent } from '../chat-content/chat-content.component';
 import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
 import { NewmessageComponent } from '../newmessage/newmessage.component';
@@ -52,7 +43,7 @@ export class MainChatComponent implements OnInit {
   isMobile: boolean = false;
   isProfileCard: boolean = false;
   currentReciever: any;
-  darkBackground:boolean = false;
+  darkBackground: boolean = false;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
@@ -84,14 +75,17 @@ export class MainChatComponent implements OnInit {
       this.openProfile();
     });
 
-    this.threadSubscription = this.shareddata.threadToggle$.subscribe(() => {
-      this.toggleThread();
+    this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: any) => {
+      if (value === 'open') {
+        this.drawer.open();
+      } else {
+        this.drawer.close();
+      }
     });
 
     this.shareddata.isProfileCard$.subscribe((state: boolean) => {
       this.darkBackground = state;
     });
-
   }
 
   ngOnDestroy(): void {
@@ -107,8 +101,6 @@ export class MainChatComponent implements OnInit {
   closeProfile() {
     this.isProfileCard = false;
   }
-
-
 
   openProfile() {
     this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden

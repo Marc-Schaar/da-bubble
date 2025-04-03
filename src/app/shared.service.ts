@@ -45,7 +45,7 @@ export class UserService {
   private startLoadingChannel = new Subject<void>();
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
 
-  private threadToggleSubject = new Subject<void>();
+  private threadToggleSubject = new Subject<string>();
   threadToggle$ = this.threadToggleSubject.asObservable();
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
@@ -213,8 +213,8 @@ export class UserService {
     }, 0);
   }
 
-  toggleThread() {
-    this.threadToggleSubject.next();
+  toggleThread(value: string) {
+    this.threadToggleSubject.next(value);
   }
 
   checkScreenWidth(): boolean {
