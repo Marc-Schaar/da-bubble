@@ -232,24 +232,27 @@ section {
 }
 
 // TEXTAREA & BUTTONS WITH HOVER/FOCUS EFFECT
+
+.card-footer {
+  padding: 25px;
+}
+
 .textarea-container {
-  padding-top: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  border: 1px solid #adb0d9;
-  border-radius: 20px;
-  margin-left: 16px;
-  margin-right: 16px;
-  transition: border 0.15s ease-in-out;
 
-  &:focus {
-    border: 1px solid #444df2;
+  flex-direction: column;
+  outline: 1px solid var(--light-purple);
+  border-radius: 20px;
+  transition: outline 0.125s ease-in-out;
+
+  &:has(textarea:focus-visible) {
+    outline: 1px solid var(--dark-purple);
   }
 
   &:hover {
-    border: 1px solid #444df2;
+    outline: 1px solid var(--medium-purple);
   }
 
   textarea {
@@ -278,7 +281,7 @@ section {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    padding: 0px 24px 0px 24px;
+    padding: 0px 24px;
 
     .textarea-two-left-buttons-container {
       display: flex;
@@ -367,31 +370,9 @@ section {
       }
     }
 
-    .send-button {
-      cursor: pointer;
-      height: 30px;
+    button {
       width: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      button {
-        cursor: pointer;
-        border: none;
-        background-color: transparent;
-        height: 20px;
-        width: 23px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-image: url("/img/send.svg");
-        transition: all 0.15s ease-in-out;
-      }
-
-      &:hover {
-        button {
-          background-image: url("/img/send_lightblue.svg");
-        }
-      }
+      height: 30px;
     }
   }
 }
@@ -402,6 +383,8 @@ button {
   background-color: unset;
   white-space: nowrap;
   cursor: pointer;
+  transition: all 0.125s ease-in-out;
+  color: var(--dark-purple);
 
   &:disabled {
     mat-icon {

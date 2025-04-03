@@ -147,6 +147,15 @@ a {
   background-color: var(--dark-purple);
 }
 
+.hover-dark-purple-to-medium {
+  transition: all 0.125s ease-in-out;
+
+  color: var(--dark-purple);
+  &:hover {
+    color: var(--medium-purple);
+  }
+}
+
 .filter-hover-purple-3 {
   transition: all 0.125s ease-in-out;
   &:hover {

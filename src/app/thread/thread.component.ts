@@ -1,11 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-thread',
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './thread.component.html',
   styleUrls: ['./thread.component.scss'],
 })
@@ -21,6 +25,7 @@ export class ThreadComponent implements OnInit {
   parentMessageId: string = '';
   parentMessageData: any = null;
   isMobile: boolean = false;
+  input: string = '';
 
   unsubMessages!: () => void;
 

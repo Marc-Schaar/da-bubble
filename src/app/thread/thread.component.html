@@ -72,19 +72,22 @@
     </div>
 
     <!-- TEXT MESSAGE FIELD  -->
-    <div class="textarea-container">
-      <textarea placeholder="Antworten..." name="YourMessage" id=""></textarea>
-      <div class="textarea-three-buttons-container">
-        <div class="textarea-two-left-buttons-container">
-          <div class="button-smiley">
-            <button></button>
+    <div class="card-footer">
+      <div class="textarea-container">
+        <textarea placeholder="Antworten..." name="YourMessage" [(ngModel)]="input"></textarea>
+        <div class="textarea-three-buttons-container">
+          <div class="textarea-two-left-buttons-container">
+            <div class="button-smiley">
+              <button></button>
+            </div>
+            <div class="button-tag-person">
+              <button></button>
+            </div>
           </div>
-          <div class="button-tag-person">
-            <button></button>
-          </div>
-        </div>
-        <div class="send-button">
-          <button></button>
+
+          <button [disabled]="input.trim() == ''">
+            <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
+          </button>
         </div>
       </div>
     </div>

@@ -506,15 +506,6 @@ button {
   }
 }
 
-.hover-dark-purple-to-medium {
-  transition: all 0.125s ease-in-out;
-
-  color: var(--dark-purple);
-  &:hover {
-    color: var(--medium-purple);
-  }
-}
-
 header {
   display: flex;
   justify-content: space-between;
