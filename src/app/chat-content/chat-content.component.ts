@@ -246,7 +246,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  toggleThread(messageId: string, $event: any) {
+  toggleThread(messageId: string, $event: Event) {
     $event.stopPropagation();
     if (this.isMobile)
       this.router.navigate(['/thread'], {
