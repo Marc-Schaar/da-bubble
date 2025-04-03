@@ -16,6 +16,7 @@ export class ThreadComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
 
+  currentChannel: any;
   currentChannelId: string = '';
   parentMessageId: string = '';
   parentMessageData: any = null;
@@ -23,12 +24,27 @@ export class ThreadComponent implements OnInit {
 
   unsubMessages!: () => void;
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+  async ngOnInit() {
+    this.route.queryParams.subscribe(async (params) => {
       this.currentChannelId = params['id'] || '';
       this.parentMessageId = params['messageId'] || '';
+      this.currentChannel = await this.getCurrentChannel();
       this.getThreadParentMessage();
     });
+  }
+
+  async getCurrentChannel() {
+    if (this.currentChannelId) {
+      try {
+        let channelRef = doc(this.firestore, `channels/${this.currentChannelId}`);
+        let channelRefDocSnap = await getDoc(channelRef);
+        if (channelRefDocSnap.exists()) return channelRefDocSnap.data();
+        else return null;
+      } catch (error) {
+        console.error(' Fehler beim Abrufen des Channels:', error);
+        throw error;
+      }
+    } else return null;
   }
 
   async getThreadParentMessage() {
@@ -53,7 +69,6 @@ export class ThreadComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
-
     this.parentMessageData = {
       id: this.parentMessageId,
       ...parentMessage,
