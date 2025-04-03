@@ -22,8 +22,18 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 25px;
-  border-bottom: 2px solid grey;
+  padding: 45px 25px;
+  position: relative;
+
+  ::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(1, 1, 1, 0.04), rgba(1, 1, 1, 0));
+  }
 
   .close-button {
     width: 40px;
