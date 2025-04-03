@@ -72,6 +72,7 @@ export class UserService {
   channelType: any;
   docId: any;
   reciepentId: any;
+  messageId: string = '';
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
@@ -145,6 +146,7 @@ export class UserService {
       this.channelType = params['channelType'] || 'default';
       this.docId = params['id'] || '';
       this.reciepentId = params['reciepentId'] || '';
+      this.messageId = params['messageId'] || '';
     });
   }
 
@@ -196,12 +198,17 @@ export class UserService {
   loadComponent(component: string) {
     setTimeout(() => {
       if (component === 'chat') {
-        this.currentComponent.next(DirectmessagesComponent);
+        if (this.isMobile)
+          this.router.navigate(['/direct'], {
+            queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId }, //Muss noch überprüft werden
+          });
+        else this.currentComponent.next(DirectmessagesComponent);
       } else if (component === 'channel') {
-        if (this.isMobile) this.router.navigate(['/channel']);
-        else {
-          this.currentComponent.next(ChatContentComponent);
-        }
+        if (this.isMobile)
+          this.router.navigate(['/channel'], {
+            queryParams: { channelType: 'channel', id: this.docId, reciepentId: this.reciepentId },
+          });
+        else this.currentComponent.next(ChatContentComponent);
       }
     }, 0);
   }

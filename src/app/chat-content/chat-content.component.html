@@ -47,7 +47,7 @@
         </li>
 
         <li
-          (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id)"
+          (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); toggleThread(message.id)"
           (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"
           class="message"
           [ngClass]="{
@@ -77,7 +77,7 @@
             <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="hover-to-dark-purple">
               <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
             </button>
-            <button (click)="toggleThread()" class="hover-to-dark-purple">
+            <button (click)="toggleThread(message.id)" class="hover-to-dark-purple">
               <img src="/img/reaction-bar-icons/comment.png" alt="" />
             </button>
             <button
@@ -122,7 +122,7 @@
             </div>
 
             <div class="message-footer gap-20">
-              <span (click)="toggleThread()">2 Antworten</span>
+              <span (click)="toggleThread(message.id)">2 Antworten</span>
               <span class="font-size-14">Letzte Antwort 14.26 Uhr</span>
 
               <div class="emoji-container">

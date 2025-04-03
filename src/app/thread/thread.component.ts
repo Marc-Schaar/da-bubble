@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
 import { onSnapshot, QuerySnapshot } from '@angular/fire/firestore';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,13 +17,19 @@ export class ThreadComponent implements OnInit, OnDestroy {
   userService: UserService = inject(UserService);
   fireService: FireServiceService = inject(FireServiceService);
   route: ActivatedRoute = inject(ActivatedRoute);
+  router: Router = inject(Router);
 
   currentChannelId: string = '';
   parentMessageId: string = '';
   parentMessageData: any = null;
+  isMobile: boolean = false;
 
   ngOnInit(): void {
     this.setUrlData();
+    this.userService.screenWidth$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+      console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
+    });
   }
 
   ngOnDestroy(): void {
@@ -62,6 +68,16 @@ export class ThreadComponent implements OnInit, OnDestroy {
           };
         }
       });
+    }
+  }
+
+  closeThread() {
+    {
+      if (this.isMobile)
+        this.router.navigate(['/chat'], {
+          queryParams: { channelType: 'channel', id: this.currentChannelId, reciepentId: this.userService.docId },
+        });
+      this.userService.toggleThread();
     }
   }
 }

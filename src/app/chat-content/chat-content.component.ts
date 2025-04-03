@@ -246,8 +246,16 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  toggleThread() {
-    if (this.isMobile) this.router.navigate(['/thread']);
+  toggleThread(messageId: string) {
+    if (this.isMobile)
+      this.router.navigate(['/thread'], {
+        queryParams: {
+          channelType: 'channel',
+          id: this.currentChannelId,
+          reciepentId: this.userService.docId,
+          messageId: messageId,
+        },
+      });
     else this.userService.toggleThread();
   }
 
