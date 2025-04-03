@@ -1,19 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  addDoc,
-  collection,
-  CollectionReference,
-  doc,
-  DocumentReference,
-  Firestore,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Message } from './models/message';
-import { User } from './models/user';
-import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
