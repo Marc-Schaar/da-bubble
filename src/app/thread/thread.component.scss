@@ -15,116 +15,122 @@ section {
   border-radius: 30px;
   margin: 16px;
   flex: 1;
-  max-height: calc(100svh - 208px);
+  max-height: calc(100svh - 140px);
 }
 
 .thread-channel-close-button-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 24px 24px 24px;
+  padding: 40px 25px;
   border-bottom: 2px solid grey;
 
   .close-button {
-      cursor: pointer;
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 20px;
 
-      img {
-          width: 16px;
-          height: 16px;
-      }
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background-color: var(--bg-color);
+    }
   }
 
   .thread-channel-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
 
-      .channel-name-container {
-          margin-left: 8px;
-          font-family: Nunito;
-          font-size: 14px;
-          color: #797EF3;
-      }
+    .channel-name-container {
+      margin-left: 8px;
+      font-family: Nunito;
+      font-size: 14px;
+      color: var(--medium-purple);
+    }
   }
 
   .thread-container {
-      p {
-          font-family: Nunito;
-          font-weight: 700;
-          font-size: 24px;
-      }
+    p {
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 24px;
+    }
   }
 }
 
 // OTHER USER MESSAGE STYLES
 .background-color-effect {
   padding-bottom: 8px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   transition: background-color 0.15s ease-in-out;
 
   .message-container {
-      background-color: #ECEEFE;
-      transition: background-color 0.15s ease-in-out;
+    background-color: #eceefe;
+    transition: background-color 0.15s ease-in-out;
   }
 
   &:hover {
-      background-color: #ECEEFE;
-      transition: background-color 0.15s ease-in-out;
+    background-color: #eceefe;
+    transition: background-color 0.15s ease-in-out;
 
-      .message-container {
-          background-color: #FFFFFF;
-      }
+    .message-container {
+      background-color: #ffffff;
+    }
   }
 
   .user-message-container {
-      margin-left: 24px;
-      margin-right: 24px;
-      font-family: Nunito;
-      font-size: 18px;
+    margin-left: 24px;
+    margin-right: 24px;
+    font-family: Nunito;
+    font-size: 18px;
+    display: flex;
+    margin-top: 24px;
+    padding-top: 8px;
+
+    .name-time-message-container {
+      margin-left: 16px;
       display: flex;
-      margin-top: 24px;
-      padding-top: 8px;
+      flex-direction: column;
 
-      .name-time-message-container {
-          margin-left: 16px;
-          display: flex;
-          flex-direction: column;
-
-          .message-container {
-              margin-top: 8px;
-              font-size: 18px;
-              padding: 15px;
-              border-top-right-radius: 20px;
-              border-bottom-right-radius: 20px;
-              border-bottom-left-radius: 20px;
-          }
-
-          .name-time-container {
-              display: flex;
-              align-items: center;
-              gap: 16px;
-
-              .name-container {
-                  font-weight: 700;
-                  font-size: 18px;
-              }
-
-              .time-container {
-                  font-family: Nunito;
-                  font-size: 14px;
-                  color: #686868;
-              }
-          }
+      .message-container {
+        margin-top: 8px;
+        font-size: 18px;
+        padding: 15px;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
       }
 
+      .name-time-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
 
-      .user-profile-avatar-container {
-          img {
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-          }
+        .name-container {
+          font-weight: 700;
+          font-size: 18px;
+        }
+
+        .time-container {
+          font-family: Nunito;
+          font-size: 14px;
+          color: #686868;
+        }
       }
+    }
+
+    .user-profile-avatar-container {
+      img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+      }
+    }
   }
 }
 
@@ -134,7 +140,7 @@ section {
   transition: background-color 0.15s ease-in-out;
 
   &:hover {
-      background-color: #ECEEFE;
+    background-color: #eceefe;
   }
 }
 
@@ -149,45 +155,44 @@ section {
   margin-top: 24px;
 
   .you-name-time-message-container {
-      margin-right: 16px;
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+
+    .you-message-container {
+      margin-top: 8px;
+      font-size: 18px;
+      padding: 15px;
+      border-top-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      border-bottom-left-radius: 20px;
+      background-color: #797ef3;
+    }
+
+    .you-name-time-container {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 16px;
 
-      .you-message-container {
-          margin-top: 8px;
-          font-size: 18px;
-          padding: 15px;
-          border-top-left-radius: 20px;
-          border-bottom-right-radius: 20px;
-          border-bottom-left-radius: 20px;
-          background-color: #797EF3;
+      .you-name-container {
+        font-weight: 700;
+        font-size: 18px;
       }
 
-      .you-name-time-container {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-
-          .you-name-container {
-              font-weight: 700;
-              font-size: 18px;
-          }
-
-          .you-time-container {
-              font-family: Nunito;
-              font-size: 14px;
-              color: #686868;
-          }
+      .you-time-container {
+        font-family: Nunito;
+        font-size: 14px;
+        color: #686868;
       }
+    }
   }
 
-
   .you-user-profile-avatar-container {
-      img {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-      }
+    img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+    }
   }
 }
 
@@ -201,21 +206,20 @@ section {
   margin-left: 24px;
   font-family: Nunito;
   font-size: 18px;
-  color: #ADB0D9;
+  color: #adb0d9;
 
   .line-container {
-      height: 1px;
-      width: 70%;
-      margin-right: 24px;
-      background-color: #ADB0D9;
+    height: 1px;
+    width: 70%;
+    margin-right: 24px;
+    background-color: #adb0d9;
   }
 }
 
 .chatbox-container {
-  height: 70%;
-  overflow: auto;
+  height: 100%;
+  overflow-y: auto;
 }
-
 
 // TEXTAREA & BUTTONS WITH HOVER/FOCUS EFFECT
 .textarea-container {
@@ -224,160 +228,174 @@ section {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid #ADB0D9;
+  border: 1px solid #adb0d9;
   border-radius: 20px;
   margin-left: 16px;
   margin-right: 16px;
   transition: border 0.15s ease-in-out;
 
   &:focus {
-      border: 1px solid #444DF2;
+    border: 1px solid #444df2;
   }
 
   &:hover {
-      border: 1px solid #444DF2;
+    border: 1px solid #444df2;
   }
 
   textarea {
-      resize: none;
-      border: none;
-      padding: 20px;
-      width: 100%;
-      height: 96px;
-      outline: none;
-      background-color: transparent;
-      font-family: 'Nunito';
+    resize: none;
+    border: none;
+    padding: 20px;
+    width: 100%;
+    height: 96px;
+    outline: none;
+    background-color: transparent;
+    font-family: "Nunito";
+    font-size: 18px;
+    font-weight: 400;
+
+    &::placeholder {
+      font-family: "Nunito";
       font-size: 18px;
       font-weight: 400;
-
-      &::placeholder {
-          font-family: 'Nunito';
-          font-size: 18px;
-          font-weight: 400;
-      }
+    }
   }
 
   .textarea-three-buttons-container {
-      height: 40px;
-      width: 100%;
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0px 24px 0px 24px;
+
+    .textarea-two-left-buttons-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 16px;
-      padding: 0px 24px 0px 24px;
+      gap: 8px;
 
-      .textarea-two-left-buttons-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 8px;
+      .button-smiley {
+        cursor: pointer;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        border-radius: 50%;
+        transition: all 0.15s ease-in-out;
 
-          .button-smiley {
-              cursor: pointer;
-              height: 40px;
-              width: 40px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border: none;
-              background-color: transparent;
-              border-radius: 50%;
-              transition: all 0.15s ease-in-out;
-
-              button {
-                  cursor: pointer;
-                  border: none;
-                  background-color: transparent;
-                  width: 20px;
-                  height: 20px;
-                  background-size: cover;
-                  background-repeat: no-repeat;
-                  background-image: url('/img/sentiment_satisfied.svg');
-                  transition: all 0.15s ease-in-out;
-              }
-
-              &:hover {
-                  background-color: #ECEEFE;
-
-                  button {
-                      background-image: url('/img/sentiment_satisfied_blue.svg') !important;
-                      scale: 1.1;
-                  }
-              }
-          }
-
-          .button-tag-person {
-              cursor: pointer;
-              height: 40px;
-              width: 40px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border: none;
-              background-color: transparent;
-              border-radius: 50%;
-              transition: all 0.15s ease-in-out;
-
-              button {
-                  cursor: pointer;
-                  border: none;
-                  background-color: transparent;
-                  width: 20px;
-                  height: 20px;
-                  background-size: cover;
-                  background-repeat: no-repeat;
-                  background-image: url('/img/alternate_email.svg');
-                  transition: all 0.15s ease-in-out;
-              }
-
-              &:hover {
-                  background-color: #ECEEFE;
-
-                  button {
-                      background-image: url('/img/alternate_email_blue.svg') !important;
-                      scale: 1.1;
-                  }
-              }
-          }
-          &:hover {
-              .button-smiley {
-                  button {
-                      background-image: url('/img/sentiment_satisfied_black.svg');
-                  }
-              }
-              .button-tag-person {
-                  button {
-                      background-image: url('/img/alternate_email_black.svg');
-                  }
-              }
-          }
-      }
-
-      .send-button {
+        button {
           cursor: pointer;
-          height: 30px;
-          width: 30px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          border: none;
+          background-color: transparent;
+          width: 20px;
+          height: 20px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-image: url("/img/sentiment_satisfied.svg");
+          transition: all 0.15s ease-in-out;
+        }
+
+        &:hover {
+          background-color: #eceefe;
 
           button {
-              cursor: pointer;
-              border: none;
-              background-color: transparent;
-              height: 20px;
-              width: 23px;
-              background-size: cover;
-              background-repeat: no-repeat;
-              background-image: url('/img/send.svg');
-              transition: all 0.15s ease-in-out;
+            background-image: url("/img/sentiment_satisfied_blue.svg") !important;
+            scale: 1.1;
           }
-
-          &:hover {
-              button {
-                  background-image: url('/img/send_lightblue.svg');
-              }
-          }
+        }
       }
+
+      .button-tag-person {
+        cursor: pointer;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        border-radius: 50%;
+        transition: all 0.15s ease-in-out;
+
+        button {
+          cursor: pointer;
+          border: none;
+          background-color: transparent;
+          width: 20px;
+          height: 20px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-image: url("/img/alternate_email.svg");
+          transition: all 0.15s ease-in-out;
+        }
+
+        &:hover {
+          background-color: #eceefe;
+
+          button {
+            background-image: url("/img/alternate_email_blue.svg") !important;
+            scale: 1.1;
+          }
+        }
+      }
+      &:hover {
+        .button-smiley {
+          button {
+            background-image: url("/img/sentiment_satisfied_black.svg");
+          }
+        }
+        .button-tag-person {
+          button {
+            background-image: url("/img/alternate_email_black.svg");
+          }
+        }
+      }
+    }
+
+    .send-button {
+      cursor: pointer;
+      height: 30px;
+      width: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        height: 20px;
+        width: 23px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url("/img/send.svg");
+        transition: all 0.15s ease-in-out;
+      }
+
+      &:hover {
+        button {
+          background-image: url("/img/send_lightblue.svg");
+        }
+      }
+    }
+  }
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: unset;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:disabled {
+    mat-icon {
+      color: var(--light-purple);
+    }
   }
 }
