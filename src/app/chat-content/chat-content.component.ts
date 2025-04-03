@@ -121,6 +121,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
           let data = doc.data();
+
           return {
             id: doc.id,
             ...data,

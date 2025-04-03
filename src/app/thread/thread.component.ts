@@ -52,23 +52,15 @@ export class ThreadComponent implements OnInit, OnDestroy {
         if (!snapshot.empty) {
           let doc = snapshot.docs[0];
           let data = doc.data();
-          console.log(data);
-
           this.parentMessageData = {
             id: doc.id,
             ...data,
-            time: data['timestamp']
-              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              : '–',
+            time: new Date(data['parentMessage']?.timestamp.toDate()).toLocaleTimeString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
           };
-        } else {
-          this.parentMessageData = null;
         }
-
-        console.log('Thread Parent Message:', this.parentMessageData);
       });
     }
   }
