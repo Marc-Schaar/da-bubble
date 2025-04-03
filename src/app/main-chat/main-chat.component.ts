@@ -75,12 +75,8 @@ export class MainChatComponent implements OnInit {
       this.openProfile();
     });
 
-    this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: any) => {
-      if (value === 'open') {
-        this.drawer.open();
-      } else {
-        this.drawer.close();
-      }
+    this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
+      value === 'open' ? this.drawer.open() : this.drawer.close();
     });
 
     this.shareddata.isProfileCard$.subscribe((state: boolean) => {
@@ -92,10 +88,6 @@ export class MainChatComponent implements OnInit {
     if (this.componentSubscription) {
       this.componentSubscription.unsubscribe();
     }
-  }
-
-  toggleThread() {
-    this.drawer.toggle();
   }
 
   closeProfile() {

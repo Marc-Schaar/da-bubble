@@ -5,7 +5,7 @@ import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 
 import { Router } from '@angular/router';
-import { AddChannelComponent } from "./add-channel/add-channel.component";
+import { AddChannelComponent } from './add-channel/add-channel.component';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class ContactbarComponent {
   currentReceiver: any;
   userID: string = '';
   currentChannel: any;
-  addChannelWindow:boolean = false;
+  addChannelWindow: boolean = false;
 
   async ngOnInit() {
     await this.loadUsers();
@@ -59,9 +59,7 @@ export class ContactbarComponent {
   findCurrentUser() {
     if (this.userService.user?.uid) {
       this.userID = this.userService.user.uid;
-      this.currentUser = this.users.find(
-        (user: any) => this.userID === user.id
-      );
+      this.currentUser = this.users.find((user: any) => this.userID === user.id);
     } else {
       console.log('user wurde nicht richtig geladen');
     }
@@ -95,6 +93,7 @@ export class ContactbarComponent {
 
   openWindow(window: string) {
     this.userService.loadComponent(window);
+    this.userService.toggleThread('close');
   }
 
   openDropdown() {
