@@ -40,10 +40,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
       this.currentChannelId = params['id'] || '';
       this.parentMessageId = params['messageId'] || '';
 
-      if (this.unsubMessages) {
-        this.unsubMessages();
-      }
-
       this.getThreadParentMessage();
     });
   }

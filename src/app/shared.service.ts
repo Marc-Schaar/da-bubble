@@ -69,11 +69,9 @@ export class UserService {
 
   //Neu ab hier
 
-  private queryParamsSubscription!: Subscription;
   channelType: any;
   docId: any;
   reciepentId: any;
-  messageId: string = '';
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
@@ -143,11 +141,10 @@ export class UserService {
   }
 
   getUrlData() {
-    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe((params) => {
       this.channelType = params['channelType'] || 'default';
       this.docId = params['id'] || '';
       this.reciepentId = params['reciepentId'] || '';
-      this.messageId = params['messageId'] || '';
     });
   }
 
@@ -233,11 +230,5 @@ export class UserService {
 
   setProfileCardState(state: boolean) {
     this.isProfileCardSubject.next(state);
-  }
-
-  ngOnDestroy() {
-    if (this.queryParamsSubscription) {
-      this.queryParamsSubscription.unsubscribe();
-    }
   }
 }
