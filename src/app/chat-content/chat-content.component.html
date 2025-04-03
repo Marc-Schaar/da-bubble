@@ -47,7 +47,6 @@
         </li>
 
         <li
-          (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); toggleThread(message.id, $event)"
           (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"
           class="message"
           [ngClass]="{
