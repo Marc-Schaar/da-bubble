@@ -243,6 +243,13 @@ li {
     display: flex;
   }
 
+  .message-header {
+    align-items: center;
+    span {
+      color: var(--text-grey);
+    }
+  }
+
   .message-main {
     padding: 15px;
     border-radius: 0 30px 30px 30px;

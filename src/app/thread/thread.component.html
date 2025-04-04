@@ -14,20 +14,24 @@
     </div>
     <div class="chatbox-container">
       <!-- MESSAGE FROM OTHERS // EXAMPLE -->
-      <div class="background-color-effect">
+
+      <li
+        [ngClass]="{ reverse: parentMessageData?.name === this.userService.auth.currentUser?.displayName }"
+        class="background-color-effect"
+      >
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
             <img src="{{ parentMessageData?.avatar }}" alt="{{ parentMessageData?.name }}" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
-              <span class="name-container">{{ parentMessageData?.name }}</span>
-              <span class="time-container">{{ parentMessageData?.time }} Uhr</span>
+              <div class="name-container">{{ parentMessageData?.name }}</div>
+              <div class="time-container">{{ parentMessageData?.time }}</div>
             </div>
-            <span class="message-container">{{ parentMessageData?.message }}</span>
+            <div class="message-container">{{ parentMessageData?.message }}</div>
           </div>
         </div>
-      </div>
+      </li>
 
       <!-- NEW MESSAGES -->
       <div class="answers-line-container">
@@ -36,10 +40,10 @@
       </div>
 
       <ul *ngFor="let message of messages">
-        <li class="background-color-effect">
+        <li [ngClass]="{ reverse: message?.name === this.userService.auth.currentUser?.displayName }" class="background-color-effect">
           <div class="user-message-container">
             <div class="user-profile-avatar-container">
-              <img src="{{ message?.avatar }}" alt="" />
+              <img src="{{ message?.avatar }}" alt="{{ parentMessageData?.name }}" />
             </div>
             <div class="name-time-message-container">
               <div class="name-time-container">
@@ -53,41 +57,6 @@
           </div>
         </li>
       </ul>
-
-      <!-- MESSAGE FROM OTHERS // EXAMPLE -->
-      <!-- <div class="background-color-effect">
-        <div class="user-message-container">
-          <div class="user-profile-avatar-container">
-            <img src="/img/avatars/avatar_5.png" alt="" />
-          </div>
-          <div class="name-time-message-container">
-            <div class="name-time-container">
-              <div class="name-container">Sofia Müller</div>
-              <div class="time-container">14:30Uhr</div>
-            </div>
-            <div class="message-container">
-              Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiß
-              Frederik, ob es wahr ist.
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- YOUR MESSAGE -->
-      <!-- <div class="you-background-color-effect">
-        <div class="you-user-message-container">
-          <div class="you-name-time-message-container">
-            <div class="you-name-time-container">
-              <div class="you-time-container">15:06 Uhr</div>
-              <div class="you-name-container">Frederik Beck</div>
-            </div>
-            <div class="you-message-container">Ja das ist es.</div>
-          </div>
-          <div class="you-user-profile-avatar-container">
-            <img src="/img/avatars/avatar_3.png" alt="" />
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <!-- TEXT MESSAGE FIELD  -->

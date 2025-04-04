@@ -75,18 +75,17 @@ section {
 
 // OTHER USER MESSAGE STYLES
 .background-color-effect {
-  padding-bottom: 8px;
   background-color: #ffffff;
-  transition: background-color 0.15s ease-in-out;
+  transition: background-color 0.125s ease-in-out;
 
   .message-container {
-    background-color: #eceefe;
-    transition: background-color 0.15s ease-in-out;
+    background-color: var(--bg-color);
+    transition: background-color 0.125s ease-in-out;
   }
 
   &:hover {
-    background-color: #eceefe;
-    transition: background-color 0.15s ease-in-out;
+    background-color: var(--bg-color);
+    transition: background-color 0.125s ease-in-out;
 
     .message-container {
       background-color: #ffffff;
@@ -94,26 +93,21 @@ section {
   }
 
   .user-message-container {
-    margin-left: 24px;
-    margin-right: 24px;
     font-family: Nunito;
     font-size: 18px;
     display: flex;
-    margin-top: 24px;
-    padding-top: 8px;
+    gap: 20px;
+    padding: 10px 40px;
 
     .name-time-message-container {
-      margin-left: 16px;
       display: flex;
       flex-direction: column;
+      gap: 8px;
 
       .message-container {
-        margin-top: 8px;
         font-size: 18px;
         padding: 15px;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        border-bottom-left-radius: 20px;
+        border-radius: 0 20px 20px 20px;
       }
 
       .name-time-container {
@@ -129,80 +123,39 @@ section {
         .time-container {
           font-family: Nunito;
           font-size: 14px;
-          color: #686868;
+          color: var(--text-grey);
         }
       }
     }
 
     .user-profile-avatar-container {
       img {
-        width: 48px;
-        height: 48px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
       }
     }
   }
 }
 
-// YOUR LOGGED IN MESSAGE STYLES
-.you-background-color-effect {
-  padding-bottom: 8px;
-  transition: background-color 0.15s ease-in-out;
+.background-color-effect.reverse {
+  .message-container {
+    background-color: var(--medium-purple);
+  }
 
   &:hover {
-    background-color: #eceefe;
-  }
-}
+    background-color: var(--bg-color);
 
-.you-user-message-container {
-  padding-top: 8px;
-  margin-left: 24px;
-  margin-right: 24px;
-  font-family: Nunito;
-  font-size: 18px;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 24px;
-
-  .you-name-time-message-container {
-    margin-right: 16px;
-    display: flex;
-    flex-direction: column;
-
-    .you-message-container {
-      margin-top: 8px;
-      font-size: 18px;
-      padding: 15px;
-      border-top-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      border-bottom-left-radius: 20px;
-      background-color: #797ef3;
-    }
-
-    .you-name-time-container {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-
-      .you-name-container {
-        font-weight: 700;
-        font-size: 18px;
-      }
-
-      .you-time-container {
-        font-family: Nunito;
-        font-size: 14px;
-        color: #686868;
-      }
+    .message-container {
+      background-color: #ffffff;
     }
   }
+  .user-message-container {
+    flex-direction: row-reverse;
+  }
 
-  .you-user-profile-avatar-container {
-    img {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-    }
+  .message-container {
+    border-radius: 20px 0 20px 20px !important;
   }
 }
 
@@ -212,7 +165,6 @@ section {
   text-align: center;
   align-items: center;
   justify-content: space-between;
-  margin-top: 16px;
   margin-left: 24px;
   font-family: Nunito;
   font-size: 18px;
@@ -220,15 +172,18 @@ section {
 
   .line-container {
     height: 1px;
-    width: 70%;
-    margin-right: 24px;
-    background-color: #adb0d9;
+    flex: 1;
+    margin: 0 24px 0 20px;
+    background-color: var(--bg-color);
   }
 }
 
 .chatbox-container {
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 // TEXTAREA & BUTTONS WITH HOVER/FOCUS EFFECT

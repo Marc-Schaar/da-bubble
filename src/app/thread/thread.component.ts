@@ -41,6 +41,7 @@ export class ThreadComponent implements OnInit {
       this.currentChannel = await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
+      console.log(this.userService.user.displayName);
     });
   }
 
