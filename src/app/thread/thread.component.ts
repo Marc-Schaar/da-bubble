@@ -21,6 +21,8 @@ export class ThreadComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
 
+  currentUser: any;
+  userId: string = '';
   currentChannel: any;
   currentChannelId: string = '';
   parentMessageId: string = '';
@@ -28,9 +30,12 @@ export class ThreadComponent implements OnInit {
   parentMessageData: any = null;
 
   isMobile: boolean = false;
+  listOpen: boolean = false;
+  isChannel: boolean = false;
 
   messages: any = [];
   reactions: [] = [];
+  currentList: any = [];
 
   unsubMessages!: () => void;
 
@@ -41,6 +46,8 @@ export class ThreadComponent implements OnInit {
       await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
+      this.currentUser = this.userService.currentUser;
+      this.userId = this.userService.reciepentId;
     });
   }
 
@@ -105,6 +112,46 @@ export class ThreadComponent implements OnInit {
       });
     }
     this.userService.toggleThread('close');
+  }
+
+  getList(type?: string): void {
+    if (type) this.input = type;
+    if (this.input.includes('#') || this.input.includes('@')) {
+      if (this.input.includes('#')) {
+        this.currentList = this.userService.channels;
+        this.isChannel = true;
+        this.listOpen = true;
+      }
+
+      if (this.input.includes('@')) {
+        this.currentList = this.userService.users;
+        this.isChannel = false;
+        this.listOpen = true;
+      }
+    } else if (this.input === '') {
+      this.currentList = [];
+      this.listOpen = false;
+    }
+  }
+
+  openReciver(i: number, key: string) {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.userService.getChannel(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('channel');
+    } else {
+      this.userService.setUrl('direct', this.userId, key);
+      this.userService.getReciepent(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('chat');
+    }
+    this.resetList();
+    this.userService.toggleThread('close');
+  }
+
+  resetList() {
+    this.currentList = [];
+    this.listOpen = false;
+    this.input = '';
   }
 
   ngOnDestroy(): void {

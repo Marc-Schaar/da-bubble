@@ -1,8 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
 main {
   display: flex;
   height: 100%;
@@ -230,7 +225,6 @@ section {
   }
 
   .textarea-three-buttons-container {
-    height: 40px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -242,92 +236,57 @@ section {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+    }
+  }
 
-      .button-smiley {
-        cursor: pointer;
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background-color: transparent;
-        border-radius: 50%;
-        transition: all 0.15s ease-in-out;
+  ul {
+    position: absolute;
+    bottom: 92px;
+    left: 104px;
+    border: 1px solid var(--light-purple);
+    border-radius: 25px 25px 25px 0;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: white;
+    padding: 8px;
+  }
 
-        button {
-          cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 20px;
-          height: 20px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-image: url("/img/sentiment_satisfied.svg");
-          transition: all 0.15s ease-in-out;
-        }
-
-        &:hover {
-          background-color: #eceefe;
-
-          button {
-            background-image: url("/img/sentiment_satisfied_blue.svg") !important;
-            scale: 1.1;
-          }
-        }
-      }
-
-      .button-tag-person {
-        cursor: pointer;
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background-color: transparent;
-        border-radius: 50%;
-        transition: all 0.15s ease-in-out;
-
-        button {
-          cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 20px;
-          height: 20px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-image: url("/img/alternate_email.svg");
-          transition: all 0.15s ease-in-out;
-        }
-
-        &:hover {
-          background-color: #eceefe;
-
-          button {
-            background-image: url("/img/alternate_email_blue.svg") !important;
-            scale: 1.1;
-          }
-        }
-      }
-      &:hover {
-        .button-smiley {
-          button {
-            background-image: url("/img/sentiment_satisfied_black.svg");
-          }
-        }
-        .button-tag-person {
-          button {
-            background-image: url("/img/alternate_email_black.svg");
-          }
-        }
-      }
+  li {
+    list-style: none;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    &:hover {
+      background-color: var(--bg-color);
     }
 
-    button {
-      width: 30px;
-      height: 30px;
+    .userCircle {
+      position: relative;
+
+      .profilephoto {
+        width: 40px;
+        border-radius: 50%;
+      }
+
+      .status-dot {
+        position: absolute;
+        bottom: 0;
+        right: -2px;
+        width: 12px;
+        height: 12px;
+        border: solid;
+        background-color: gray;
+        border-radius: 50%;
+        border-color: #eceefe;
+        border-width: 2px;
+      }
+
+      .green {
+        background-color: #92c83e;
+      }
     }
   }
 }
@@ -339,7 +298,6 @@ button {
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.125s ease-in-out;
-  color: var(--dark-purple);
 
   &:disabled {
     mat-icon {

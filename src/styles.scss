@@ -157,6 +157,25 @@ a {
   }
 }
 
+.hover-to-dark-purple {
+  transition: all 0.125s ease-in-out;
+  padding: 8px;
+  border-radius: 50%;
+
+  img {
+    transition: all 0.125s ease-in-out;
+  }
+  &:hover {
+    background-color: var(--bg-color);
+    mat-icon {
+      color: var(--dark-purple);
+    }
+    img {
+      filter: var(--dark-purple-filter);
+    }
+  }
+}
+
 .filter-hover-purple-3 {
   transition: all 0.125s ease-in-out;
   &:hover {

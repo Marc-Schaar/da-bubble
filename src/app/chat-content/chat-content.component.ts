@@ -100,7 +100,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   setChannelData() {
     this.currentChannelId = this.userService.docId;
     this.userId = this.userService.reciepentId;
-    // this.currentUser = this.userService.currentUser;
+    this.currentUser = this.userService.currentUser;
     this.getChannelFromUrl();
   }
 
