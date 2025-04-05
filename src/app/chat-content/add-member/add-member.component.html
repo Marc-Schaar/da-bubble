@@ -7,6 +7,10 @@
   </div>
 
   <div class="user-cont" *ngIf="!addMemberWindow">
+    <div class="user">
+      <img src="{{ userService.auth.currentUser?.photoURL }}" alt="" />
+      <div>{{ userService.auth.currentUser?.displayName }} (Du)</div>
+    </div>
     <div (click)="showProfile(member)" class="user" *ngFor="let member of members; let i = index">
       <img src="{{ member.profilephoto }}" alt="" />
       <div>{{ member.fullname }}</div>

@@ -320,7 +320,7 @@ export class AddChannelComponent implements OnInit {
       this.showUserBar = false;
     }
     const targetElement = event.target as HTMLElement;
-    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+    if (!this.mainDialog.nativeElement.contains(targetElement)) {
       this.closeScreen();
     }
   }

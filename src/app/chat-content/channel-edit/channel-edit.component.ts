@@ -144,7 +144,7 @@ export class ChannelEditComponent {
   @HostListener('document:click', ['$event'])
   closeOnClick(event: Event) {
     const targetElement = event.target as HTMLElement;
-    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+    if (!this.mainDialog.nativeElement.contains(targetElement)) {
       this.close();
     }
   }

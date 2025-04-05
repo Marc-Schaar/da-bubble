@@ -35,6 +35,8 @@ export class AddMemberComponent {
   ngOnInit() {
     this.loadMember();
     this.loadUsers();
+    console.log(this.userService.currentUser);
+    
   }
 
   filterUsers() {
@@ -89,7 +91,7 @@ export class AddMemberComponent {
       this.showUserBar = false;
     }
     const targetElement = event.target as HTMLElement;
-    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+    if (!this.mainDialog.nativeElement.contains(targetElement)) {
       this.closeWindow();
     }
   }
@@ -156,5 +158,8 @@ export class AddMemberComponent {
   showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
+    console.log(this.userService.auth.currentUser);
+
   }
+
 }
