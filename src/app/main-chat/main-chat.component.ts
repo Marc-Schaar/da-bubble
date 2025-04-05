@@ -79,10 +79,6 @@ export class MainChatComponent implements OnInit {
     this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
       value === 'open' ? this.drawer.open() : this.drawer.close();
     });
-
-    this.shareddata.isProfileCard$.subscribe((state: boolean) => {
-      this.darkBackground = state;
-    });
   }
 
   ngOnDestroy(): void {

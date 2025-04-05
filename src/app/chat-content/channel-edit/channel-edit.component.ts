@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
@@ -28,6 +28,8 @@ export class ChannelEditComponent {
   ngOnInit() {
     this.fetchUsers();
   }
+
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
 
   async fetchUsers() {
     const usersCollection = collection(this.firestore, 'users');
@@ -137,5 +139,13 @@ export class ChannelEditComponent {
         });
       }
     } catch (error) {}
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeOnClick(event: Event) {
+    const targetElement = event.target as HTMLElement;
+    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+      this.close();
+    }
   }
 }

@@ -80,6 +80,8 @@ export class AddChannelComponent implements OnInit {
     console.log(this.channel);
   }
 
+@ViewChild('mainDialog') mainDialog!: ElementRef;
+
   handleOutsideClick(event: Event) {
     const inputField = document.getElementById('user-search-bar');
     if (inputField && !inputField.contains(event.target as Node)) {
@@ -316,6 +318,10 @@ export class AddChannelComponent implements OnInit {
       !this.chooseUserBar.nativeElement.contains(event.target)
     ) {
       this.showUserBar = false;
+    }
+    const targetElement = event.target as HTMLElement;
+    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+      this.closeScreen();
     }
   }
 }

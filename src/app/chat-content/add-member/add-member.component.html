@@ -1,4 +1,4 @@
-<div class="main" [ngClass]="{ 'change-size': addMemberWindow }">
+<div #mainDialog class="main" [ngClass]="{ 'change-size': addMemberWindow }">
   <div class="header" *ngIf="!addMemberWindow">
     <div class="member-headline">Mitglieder</div>
     <div class="cross" (click)="closeWindow()">

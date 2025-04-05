@@ -67,11 +67,11 @@ export class AddMemberComponent {
   closeWindow() {
     this.addMemberInfoWindow = false;
     this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
-    this.userService.setProfileCardState(false);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
 
   openUserBar() {
     this.showUserBar = true;
@@ -87,6 +87,10 @@ export class AddMemberComponent {
       !this.chooseUserBar.nativeElement.contains(event.target)
     ) {
       this.showUserBar = false;
+    }
+    const targetElement = event.target as HTMLElement;
+    if (this.mainDialog && !this.mainDialog.nativeElement.contains(targetElement)) {
+      this.closeWindow();
     }
   }
 
@@ -151,6 +155,6 @@ export class AddMemberComponent {
 
   showProfile(member: any) {
     this.userService.currentReciever = member;
-    this.userService.showRecieverProfile(); 
+    this.userService.showRecieverProfile();
   }
 }

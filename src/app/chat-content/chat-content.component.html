@@ -4,6 +4,7 @@
 </header>
 <main>
   <app-channel-edit
+    class="dark-background"
     *ngIf="channelInfo"
     [(channelInfo)]="channelInfo"
     [currentChannel]="currentChannel"
@@ -11,6 +12,7 @@
     [currentUser]="currentUser"
   ></app-channel-edit>
   <app-add-member
+    class="dark-background"
     *ngIf="addMemberInfoWindow"
     [(addMemberInfoWindow)]="addMemberInfoWindow"
     [currentChannel]="currentChannel"
