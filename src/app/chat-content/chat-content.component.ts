@@ -121,8 +121,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.messages = this.userService.processData(snapshot);
         this.messages.forEach((message) => {
           this.getThread(message.id);
+          this.scrollToBottom();
         });
-        this.scrollToBottom();
       });
     }
   }

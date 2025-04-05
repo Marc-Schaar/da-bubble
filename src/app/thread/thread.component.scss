@@ -289,6 +289,11 @@ section {
       }
     }
   }
+  .reaction-menu {
+    left: 80px;
+    bottom: 96px;
+    border-radius: 25px 25px 25px 0;
+  }
 }
 
 button {
@@ -303,5 +308,37 @@ button {
     mat-icon {
       color: var(--light-purple);
     }
+  }
+}
+
+.reaction-menu {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: 200px;
+  max-width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  flex-wrap: wrap;
+  z-index: 10;
+  margin-top: 20px;
+  padding: 8px;
+  border: 1px solid var(--light-purple);
+  background-color: white;
+  border-radius: 25px 25px 0 25px;
+  > .emoji {
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.125s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--bg-color) !important;
+    }
+  }
+
+  &:hover {
+    background-color: white !important;
   }
 }

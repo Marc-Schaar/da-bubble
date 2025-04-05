@@ -62,13 +62,25 @@
     <!-- TEXT MESSAGE FIELD  -->
     <div class="card-footer" (mouseleave)="listOpen = false">
       <div class="textarea-container">
-        <textarea placeholder="Antworten..." name="YourMessage" [(ngModel)]="input" (keyup.enter)="sendMessage()"></textarea>
+        <textarea
+          placeholder="Antworten..."
+          name="YourMessage"
+          [(ngModel)]="input"
+          (keyup.enter)="sendMessage()"
+          (click)="reactionMenuOpenInTextarea = false; listOpen = false"
+        ></textarea>
         <div class="textarea-three-buttons-container">
           <div class="textarea-two-left-buttons-container">
-            <button (click)="getList('@'); $event.stopPropagation()" class="hover-to-dark-purple">
+            <button
+              (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()"
+              class="hover-to-dark-purple"
+            >
+              <mat-icon>sentiment_satisfied</mat-icon>
+            </button>
+            <button (click)="getList('@'); reactionMenuOpenInTextarea = false; $event.stopPropagation()" class="hover-to-dark-purple">
               <mat-icon>alternate_email</mat-icon>
             </button>
-            <button (click)="getList('#'); $event.stopPropagation()" class="hover-to-dark-purple">
+            <button (click)="getList('#'); reactionMenuOpenInTextarea = false; $event.stopPropagation()" class="hover-to-dark-purple">
               <mat-icon>tag</mat-icon>
             </button>
           </div>
@@ -90,6 +102,14 @@
             </li>
           </ng-container>
         </ul>
+
+        <div class="reaction-menu" *ngIf="reactionMenuOpenInTextarea">
+          <ng-container *ngFor="let emoji of emojis">
+            <div (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
+              <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+            </div>
+          </ng-container>
+        </div>
       </div>
     </div>
   </section>

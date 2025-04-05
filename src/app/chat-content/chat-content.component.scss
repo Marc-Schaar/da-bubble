@@ -110,6 +110,11 @@ main {
   justify-content: flex-end;
   position: relative;
 
+  .reaction-menu {
+    border-radius: 25px 25px 25px 0;
+    left: 20px;
+  }
+
   > div {
     display: flex;
     align-items: center;
@@ -361,7 +366,7 @@ li {
     transition: all 0.125s ease-in-out;
     cursor: pointer;
     &:hover {
-      background-color: var(--medium-purple) !important;
+      background-color: var(--bg-color) !important;
     }
   }
 

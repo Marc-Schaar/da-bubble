@@ -32,10 +32,19 @@ export class ThreadComponent implements OnInit {
   isMobile: boolean = false;
   listOpen: boolean = false;
   isChannel: boolean = false;
+  reactionMenuOpenInTextarea: boolean = false;
+  reactionMenuOpen: boolean = false;
 
   messages: any = [];
-  reactions: [] = [];
+  reactions: any = [];
   currentList: any = [];
+
+  emojis: string[] = [
+    'emoji _nerd face_',
+    'emoji _person raising both hands in celebration_',
+    'emoji _rocket_',
+    'emoji _white heavy check mark_',
+  ];
 
   unsubMessages!: () => void;
 
@@ -152,6 +161,59 @@ export class ThreadComponent implements OnInit {
     this.currentList = [];
     this.listOpen = false;
     this.input = '';
+  }
+
+  addReaction(message: any, emoji: string) {
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    if (!this.hasReacted(newReaction.emoji, message.reaction)) {
+      message.reaction.push(newReaction);
+      if (messageRef) {
+        try {
+          this.fireService.updateReaction(messageRef, message.reaction);
+          this.reactionMenuOpen = false;
+        } catch (error) {
+          console.error('Fehler beim Aktualisieren der Nachricht:', error);
+        }
+      }
+    } else this.removeReaction(message, emoji);
+  }
+
+  removeReaction(message: any, emoji: string) {
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
+    if (reactionIndex >= 0) {
+      message.reaction.splice(reactionIndex, 1);
+      if (messageRef) {
+        try {
+          this.fireService.updateReaction(messageRef, message.reaction);
+        } catch (error) {
+          console.error('Fehler beim Aktualisieren der Nachricht:', error);
+        }
+      }
+    }
+  }
+
+  addEmoji(emoji: string) {
+    this.reactions = [];
+    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    this.reactions.push(newReaction);
+  }
+
+  uniqueEmojis(reactions: any[]): any[] {
+    return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
+  }
+
+  countEmoji(emoji: any, reactions: any[]) {
+    return reactions.filter((e) => e.emoji === emoji.emoji).length;
+  }
+
+  countUniqueEmojis(iterable: any[]): number {
+    return new Set(iterable.map((e) => e.emoji)).size;
+  }
+
+  hasReacted(emoji: any, reactions: any[]): boolean {
+    return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
   ngOnDestroy(): void {
