@@ -60,7 +60,7 @@
     </div>
 
     <!-- TEXT MESSAGE FIELD  -->
-    <div class="card-footer">
+    <div class="card-footer" (mouseleave)="listOpen = false">
       <div class="textarea-container">
         <textarea placeholder="Antworten..." name="YourMessage" [(ngModel)]="input" (keyup.enter)="sendMessage()"></textarea>
         <div class="textarea-three-buttons-container">
