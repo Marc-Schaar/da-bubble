@@ -34,6 +34,19 @@ body {
   src: url("/fonts/Figtree-VariableFont_wght.ttf") format("woff");
 }
 
+app-add-channel {
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999999;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 app-intro {
   background-color: #5f66ee !important;
   display: flex;
