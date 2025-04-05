@@ -31,6 +31,7 @@
     height: 200px;
     gap: 8px;
     overflow: auto;
+    position: relative;
     .user {
       align-items: center;
       gap: 15px;
@@ -43,11 +44,15 @@
       &:hover {
         background-color: var(--bg-color);
       }
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 100%;
+      .img-status {
+        position: relative;
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 100%;
+        }
       }
+
     }
   }
   .add-member-btn-cont {
@@ -225,4 +230,15 @@
 
 .disabled-btn {
   background-color: rgba(104, 104, 104, 1) !important;
+}
+
+.dot {
+  position: absolute;
+  background-color: rgba(104, 104, 104, 1);
+  border: 2px solid rgba(255, 255, 255, 1);
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;  
+  bottom: 5px;
+  right: 0px;
 }
