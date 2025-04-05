@@ -62,7 +62,7 @@
     <!-- TEXT MESSAGE FIELD  -->
     <div class="card-footer">
       <div class="textarea-container">
-        <textarea placeholder="Antworten..." name="YourMessage" [(ngModel)]="input"></textarea>
+        <textarea placeholder="Antworten..." name="YourMessage" [(ngModel)]="input" (keyup.enter)="sendMessage()"></textarea>
         <div class="textarea-three-buttons-container">
           <div class="textarea-two-left-buttons-container">
             <div class="button-smiley">

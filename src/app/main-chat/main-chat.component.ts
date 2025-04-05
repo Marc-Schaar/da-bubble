@@ -68,6 +68,7 @@ export class MainChatComponent implements OnInit {
     this.shareddata.component$.subscribe(() => {
       this.currentComponent = this.shareddata.channelType;
       console.log('Aktuelle Komponente:', this.currentComponent);
+      if (this.currentComponent === 'direct') this.shareddata.toggleThread('close');
       this.cdr.detectChanges();
     });
 
