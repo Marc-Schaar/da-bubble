@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild, Injectable, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Firestore, onSnapshot, serverTimestamp, query, orderBy, updateDoc } from '@angular/fire/firestore';
+import { Firestore, onSnapshot, serverTimestamp, query, orderBy, collection, doc, getDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
-import { doc, getDoc } from '@firebase/firestore';
 import { AddMemberComponent } from './add-member/add-member.component';
 
 // @Injectable({
@@ -120,6 +119,30 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
         this.messages = snapshot.docs.map((doc) => {
+          this.getThread(doc.id);
+          let data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            time: data['timestamp']
+              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : '–',
+          };
+        });
+        this.scrollToBottom();
+      });
+    }
+  }
+
+  getThread(messageId: string) {
+    if (messageId) {
+      let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${messageId}/thread`);
+      let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
+      let thread = onSnapshot(threadQuery, (threadSnap) => {
+        let updatedThreads = threadSnap.docs.map((doc) => {
           let data = doc.data();
 
           return {
@@ -133,7 +156,11 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
               : '–',
           };
         });
-        this.scrollToBottom();
+
+        const msgIndex = this.messages.findIndex((m) => m.id === messageId);
+        if (msgIndex >= 0) {
+          this.messages[msgIndex].thread = updatedThreads;
+        }
       });
     }
   }

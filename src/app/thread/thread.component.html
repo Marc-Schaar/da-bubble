@@ -35,7 +35,7 @@
 
       <!-- NEW MESSAGES -->
       <div class="answers-line-container">
-        2 Antworten
+        {{ messages.length }} Antworten
         <div class="line-container"></div>
       </div>
 
@@ -48,7 +48,7 @@
             <div class="name-time-message-container">
               <div class="name-time-container">
                 <div class="name-container">{{ message?.name }}</div>
-                <div class="time-container">14:30Uhr</div>
+                <div class="time-container">{{ message?.time }}Uhr</div>
               </div>
               <div class="message-container">
                 {{ message?.message }}

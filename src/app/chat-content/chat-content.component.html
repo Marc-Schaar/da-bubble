@@ -117,11 +117,11 @@
               {{ message.message }}
             </div>
 
-            <div class="message-footer gap-20">
+            <div *ngIf="message.thread?.length > 0" class="message-footer gap-20">
               <span (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
-                >2 Antworten</span
+                >{{ message?.thread?.length }} Antworten</span
               >
-              <span class="font-size-14">Letzte Antwort 14.26 Uhr</span>
+              <span class="font-size-14">Letzte Antwort {{ message.thread[message.thread.length - 1]?.time }} Uhr</span>
 
               <div class="emoji-container">
                 <ng-container

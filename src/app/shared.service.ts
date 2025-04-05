@@ -170,12 +170,22 @@ export class UserService {
 
   //!Wichtig verhindert doppelklick!!
   async loadMessages() {
-    return new Promise<void>((resolve) => {
-      this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`${this.channelType}/${this.docId}/messages`)!, (colSnap) => {
-        this.messages = colSnap.docs.map((colSnap) => colSnap.data());
-        resolve();
+    if (this.docId && this.channelType === 'channel') {
+      return new Promise<void>((resolve) => {
+        this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`channel/${this.docId}/messages`)!, (colSnap) => {
+          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+          resolve();
+        });
       });
-    });
+    }
+    if (this.docId && this.channelType === 'direct') {
+      return new Promise<void>((resolve) => {
+        this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`direct/${this.docId}/messages`)!, (colSnap) => {
+          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+          resolve();
+        });
+      });
+    }
   }
 
   // getCurrentChannel() {

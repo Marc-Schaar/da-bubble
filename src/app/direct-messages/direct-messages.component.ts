@@ -1,13 +1,11 @@
 import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { UserService } from '../shared.service';
-import { Firestore, updateDoc, doc, query, arrayUnion } from '@angular/fire/firestore';
+import { Firestore, updateDoc, doc, arrayUnion, getDoc, onSnapshot } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
-import { collection, getDoc, onSnapshot, orderBy } from 'firebase/firestore';
-import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
