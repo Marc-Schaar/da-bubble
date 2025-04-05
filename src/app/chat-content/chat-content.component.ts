@@ -144,11 +144,13 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   newMessage(): void {
-    this.fireService.sendMessage(
-      this.currentChannelId,
-      new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions))
-    );
-    this.input = '';
+    if (this.input.trim() !== '') {
+      this.fireService.sendMessage(
+        this.currentChannelId,
+        new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions))
+      );
+      this.input = '';
+    }
   }
 
   editMessage(message: Message, index: number) {
@@ -279,12 +281,14 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (this.input.includes('@')) {
         this.currentList = this.userService.users;
+        this.isChannel = false;
         this.listOpen = true;
       }
     } else if (this.input === '') {
       this.currentList = [];
       this.listOpen = false;
     }
+    console.log('currentList:', this.currentList);
   }
 
   openReciver(i: number, key: string) {

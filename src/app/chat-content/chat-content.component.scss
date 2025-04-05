@@ -120,8 +120,7 @@ main {
     bottom: 44px;
     left: 53px;
     border: 1px solid var(--light-purple);
-    clip-path: inset(0 0 0 0 round 23px);
-    border-radius: 25px;
+    border-radius: 25px 25px 25px 0;
     max-height: 250px;
     overflow-y: auto;
     background-color: white;
@@ -131,8 +130,37 @@ main {
   li {
     list-style: none;
     border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
     &:hover {
       background-color: var(--medium-purple);
+    }
+  }
+
+  .userCircle {
+    position: relative;
+
+    .profilephoto {
+      width: 40px;
+      border-radius: 50%;
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 0;
+      right: -2px;
+      width: 12px;
+      height: 12px;
+      border: solid;
+      background-color: gray;
+      border-radius: 50%;
+      border-color: #eceefe;
+      border-width: 2px;
+    }
+
+    .green {
+      background-color: #92c83e;
     }
   }
 }

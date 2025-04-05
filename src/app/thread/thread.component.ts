@@ -88,12 +88,14 @@ export class ThreadComponent implements OnInit {
   }
 
   sendMessage() {
-    this.fireService.sendThreadMessage(
-      this.currentChannelId,
-      new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions)),
-      this.parentMessageId
-    );
-    this.input = '';
+    if (this.input.trim() !== '') {
+      this.fireService.sendThreadMessage(
+        this.currentChannelId,
+        new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions)),
+        this.parentMessageId
+      );
+      this.input = '';
+    }
   }
 
   closeThread() {
