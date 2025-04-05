@@ -82,19 +82,7 @@ export class ThreadComponent implements OnInit {
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
 
       onSnapshot(threadQuery, (snapshot) => {
-        this.messages = snapshot.docs.map((doc) => {
-          let data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            time: data['timestamp']
-              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              : '–',
-          };
-        });
+        this.messages = this.userService.processData(snapshot);
       });
     }
   }

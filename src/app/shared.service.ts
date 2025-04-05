@@ -275,4 +275,21 @@ export class UserService {
       reaction: reactions || [],
     };
   }
+
+  processData(snap: any) {
+    return snap.docs.map((doc: any) => {
+      let data = doc.data();
+
+      return {
+        id: doc.id,
+        ...data,
+        time: data['timestamp']
+          ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : '–',
+      };
+    });
+  }
 }

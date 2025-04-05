@@ -118,19 +118,9 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
       this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
-        this.messages = snapshot.docs.map((doc) => {
-          this.getThread(doc.id);
-          let data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            time: data['timestamp']
-              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              : '–',
-          };
+        this.messages = this.userService.processData(snapshot);
+        this.messages.forEach((message) => {
+          this.getThread(message.id);
         });
         this.scrollToBottom();
       });
@@ -141,21 +131,9 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (messageId) {
       let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${messageId}/thread`);
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
-      let thread = onSnapshot(threadQuery, (threadSnap) => {
-        let updatedThreads = threadSnap.docs.map((doc) => {
-          let data = doc.data();
 
-          return {
-            id: doc.id,
-            ...data,
-            time: data['timestamp']
-              ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              : '–',
-          };
-        });
+      onSnapshot(threadQuery, (snapshot) => {
+        const updatedThreads = this.userService.processData(snapshot);
 
         const msgIndex = this.messages.findIndex((m) => m.id === messageId);
         if (msgIndex >= 0) {
@@ -166,7 +144,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   newMessage(): void {
-    this.fireService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
+    this.fireService.sendMessage(
+      this.currentChannelId,
+      new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions))
+    );
     this.input = '';
   }
 
@@ -195,33 +176,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isEditing = false;
     this.editingMessageId = null;
     this.menuOpen = false;
-  }
-
-  isNewDay(): boolean {
-    if (this.messages.length === 0) return true;
-    let lastMessage = this.messages[this.messages.length - 1];
-    let lastMessageDate = lastMessage.date;
-    let todayDate = new Date().toISOString().split('T')[0];
-    return lastMessageDate !== todayDate;
-  }
-
-  isToday(date: any): boolean {
-    if (!date) return false;
-    let today = new Date().toISOString().split('T')[0];
-    let messageDate = new Date(date).toISOString().split('T')[0];
-    return today === messageDate;
-  }
-
-  buildMessageObject(): {} {
-    return {
-      message: this.input || '',
-      avatar: this.userService.user?.photoURL || '',
-      date: new Date().toISOString().split('T')[0],
-      name: this.userService.user?.displayName || 'Unbekannt',
-      newDay: this.isNewDay(),
-      timestamp: serverTimestamp(),
-      reaction: this.reactions || [],
-    };
   }
 
   addReaction(message: any, emoji: string) {
@@ -259,7 +213,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reactions = [];
     let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
     this.reactions.push(newReaction);
-    console.log(this.reactions);
   }
 
   scrollToBottom() {
