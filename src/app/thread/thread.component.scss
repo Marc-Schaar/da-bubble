@@ -93,6 +93,11 @@ section {
     display: flex;
     gap: 20px;
     padding: 10px 40px;
+    position: relative;
+
+    &:hover .reaction-bar {
+      display: flex;
+    }
 
     .name-time-message-container {
       display: flex;
@@ -136,6 +141,10 @@ section {
 .background-color-effect.reverse {
   .message-container {
     background-color: var(--medium-purple);
+  }
+
+  .reaction-bar {
+    left: 20px;
   }
 
   &:hover {
@@ -296,6 +305,51 @@ section {
   }
 }
 
+.reaction-bar {
+  display: none;
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid var(--light-purple);
+  border-radius: 25px 25px 0 25px;
+  padding: 3px 15px;
+  width: max-content;
+
+  > button {
+    padding: 10px;
+    border-radius: 50%;
+    position: relative;
+  }
+  .menu {
+    position: absolute;
+    left: 243px;
+    top: 20px;
+    border-radius: 0 30px 30px 30px;
+    padding: 10px 20px;
+    background-color: white;
+
+    button {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 24px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--bg-color);
+        scale: 1.02;
+      }
+    }
+  }
+
+  .reaction-menu {
+    right: 88px;
+    bottom: 40px;
+    left: 20px;
+    border-radius: 25px 25px 25px 0;
+  }
+}
+
 button {
   border: none;
   outline: none;
@@ -353,4 +407,12 @@ button {
   border: 1px solid var(--light-purple);
   border-radius: 20px;
   cursor: pointer;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.position-relative {
+  position: relative;
 }

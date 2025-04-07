@@ -222,3 +222,35 @@ a {
 .d-flex {
   display: flex;
 }
+
+.mat-drawer.mat-drawer-side {
+  z-index: 0;
+}
+
+@keyframes slide-in-r-l {
+  0% {
+    transform: translate(10px, 10px);
+  }
+
+  50% {
+    transform: translate(5px, 5px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes slide-in-l-r {
+  0% {
+    transform: translate(-10px, 10px);
+  }
+
+  50% {
+    transform: translate(-5px, 5px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}

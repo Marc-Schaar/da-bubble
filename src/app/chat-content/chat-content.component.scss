@@ -71,8 +71,8 @@ main {
       color: var(--dark-purple-text);
     }
   }
+
   img {
-    // position: absolute;
     width: 40px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -80,21 +80,16 @@ main {
   }
 
   img:nth-child(1) {
-    // left: -110px;
     transform: translateX(10px);
     z-index: 1;
   }
 
   img:nth-child(2) {
-    // left: -75px;
-
     z-index: 2;
   }
 
   img:nth-child(3) {
     transform: translateX(-10px);
-
-    // left: -40px;
     z-index: 3;
   }
 }
@@ -512,34 +507,6 @@ button {
     mat-icon {
       color: var(--light-purple);
     }
-  }
-}
-
-@keyframes slide-in-r-l {
-  0% {
-    transform: translate(10px, 10px);
-  }
-
-  50% {
-    transform: translate(5px, 5px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes slide-in-l-r {
-  0% {
-    transform: translate(-10px, 10px);
-  }
-
-  50% {
-    transform: translate(-5px, 5px);
-  }
-
-  100% {
-    transform: translate(0, 0);
   }
 }
 
