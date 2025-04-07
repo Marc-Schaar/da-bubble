@@ -29,11 +29,15 @@ export class ThreadComponent implements OnInit {
   input: string = '';
   parentMessageData: any = null;
 
+  editingMessageId: number = 0;
+
   isMobile: boolean = false;
   listOpen: boolean = false;
   isChannel: boolean = false;
   reactionMenuOpenInTextarea: boolean = false;
+  reactionMenuOpenInFooter: boolean = false;
   reactionMenuOpen: boolean = false;
+  showAllReactions: boolean = false;
 
   messages: any = [];
   reactions: any = [];
@@ -164,7 +168,10 @@ export class ThreadComponent implements OnInit {
   }
 
   addReaction(message: any, emoji: string) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    // let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+    console.log('messageRef', messageRef);
+
     let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
     if (!this.hasReacted(newReaction.emoji, message.reaction)) {
       message.reaction.push(newReaction);
@@ -180,7 +187,10 @@ export class ThreadComponent implements OnInit {
   }
 
   removeReaction(message: any, emoji: string) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    //  let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+    console.log('messageRef', messageRef);
+
     let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
     if (reactionIndex >= 0) {
       message.reaction.splice(reactionIndex, 1);

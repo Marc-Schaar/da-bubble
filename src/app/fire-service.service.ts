@@ -58,6 +58,12 @@ export class FireServiceService {
     return channelId && messageId ? this.getDocRef(`channels/${channelId}/messages`, messageId) : null;
   }
 
+  getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
+    return channelId && messageId && threadMessageID
+      ? this.getDocRef(`channels/${channelId}/messages/${messageId}/thread`, threadMessageID)
+      : null;
+  }
+
   updateMessage(ref: DocumentReference, value: any) {
     return ref ? updateDoc(ref, { message: value }) : null;
   }

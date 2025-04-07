@@ -342,3 +342,15 @@ button {
     background-color: white !important;
   }
 }
+
+.emoji-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  gap: 10px;
+  padding: 5px 10px;
+  border: 1px solid var(--light-purple);
+  border-radius: 20px;
+  cursor: pointer;
+}
