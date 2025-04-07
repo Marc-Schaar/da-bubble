@@ -36,9 +36,21 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: var(--bg-color);
+    &:hover {
+      svg {
+        height: 21px;
+        width: 25px;
+        transition: height 0.1s ease-in-out, width 0.1s ease-in-out;
+        path {
+          fill: var(--dark-purple-text);
+        }
+      }
+
+    }
   }
 
   span {
@@ -49,10 +61,19 @@ main {
 .avatar-container {
   display: flex;
   position: relative;
-  height: 40px;
-
+  height: 50px;
+  align-items: center;
+  width: 142px;
+  border-radius: 30px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--bg-color);
+    span {
+      color: var(--blue-email-color);
+    }
+  }
   img {
-    position: absolute;
+    // position: absolute;
     width: 40px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -60,17 +81,21 @@ main {
   }
 
   img:nth-child(1) {
-    left: -110px;
+    // left: -110px;
+    transform: translateX(10px);
     z-index: 1;
   }
 
   img:nth-child(2) {
-    left: -75px;
+    // left: -75px;
+
     z-index: 2;
   }
 
   img:nth-child(3) {
-    left: -40px;
+    transform: translateX(-10px);
+
+    // left: -40px;
     z-index: 3;
   }
 }
