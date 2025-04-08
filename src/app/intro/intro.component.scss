@@ -1,132 +1,186 @@
-.intro {
-  max-width: 1920px;
+// .intro {
+//   max-width: 1920px;
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   > div:nth-child(1) {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     padding: 24px 0 20px 0;
+//     height: 184px;
+//     opacity: unset;
+//     margin-left: unset !important;
+//     @media (min-width: 969px) {
+//       animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
+//     }
+//     @media (max-width: 968px) {
+//       animation: goupresponsive 1500ms ease-in-out 1500ms 1 normal forwards;
+//     }
+//     > div:nth-child(1) {
+//       z-index: 1;
+//       position: relative;
+//       background-color: #5f66ee;
+//       display: flex;
+//       align-items: center;
+//       > div:nth-child(1) {
+//         position: absolute;
+//         background-color: #5f66ee;
+//         z-index: 1;
+//         margin-left: unset !important;
+//         @media (min-width: 969px) {
+//           animation: getssmaller 4000ms ease-in-out 500ms 1 normal forwards;
+//         }
+//         @media (max-width: 968px) {
+//           height: 70px;
+//         }
+//         > img:nth-child(1) {
+//           height: 100%;
+//         }
+//       }
+
+//       > div:nth-child(2) {
+//         font-size: 38px;
+//         color: white;
+//         font-family: "Nunito";
+//         max-width: 350px;
+//         z-index: 0;
+//         @media (min-width: 969px) {
+//           animation: turnright 2000ms ease-in-out 0ms 1 normal forwards, turnleft 1000ms ease-in-out 2200ms 1 normal forwards;
+//         }
+//         @media (max-width: 968px) {
+//           font-size: 25px;
+//           animation: turnrightmobile 2000ms ease-in-out 0ms 1 normal forwards;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// @keyframes turnright {
+//   0% {
+//     transform: translateX(0, 0);
+//   }
+//   100% {
+//     transform: translateX(200px);
+//   }
+// }
+
+// @keyframes turnrightmobile {
+//   0% {
+//     transform: translateX(0, 0);
+//   }
+//   100% {
+//     transform: translateX(80px);
+//   }
+// }
+
+// @keyframes turnleft {
+//   0% {
+//     transform: translateX(200px);
+//   }
+//   100% {
+//     transform: translateX(90px);
+//   }
+// }
+
+// @keyframes showtext {
+//   0% {
+//     z-index: 0;
+//   }
+//   100% {
+//     z-index: 2;
+//   }
+// }
+
+// @keyframes goup {
+//   0% {
+//     transform: translate(0, 0);
+//   }
+//   100% {
+//     transform: translate(-52rem, -46.2vh);
+//   }
+// }
+
+// @keyframes getssmaller {
+//   0% {
+//     height: unset;
+//   }
+//   100% {
+//     height: 70px;
+//   }
+// }
+
+// @keyframes getssmallermobile {
+//   0% {
+//     height: unset;
+//   }
+//   100% {
+//     height: 60px;
+//   }
+// }
+
+// @keyframes goupresponsive {
+//   0% {
+//     transform: translate(0, 0);
+//   }
+//   100% {
+//     transform: translate(-3rem, -42vh);
+//   }
+// }
+
+.main {
+  height: 100vh;
   width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  > div:nth-child(1) {
+  background: linear-gradient(1.46deg, #313ae6 1.22%, #797ef3 98.76%) !important;
+  .intro {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 24px 0 20px 0;
-    height: 184px;
-    opacity: unset;
-    margin-left: unset !important;
-    @media (min-width: 969px) {
-      animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
-    }
-    @media (max-width: 968px) {
-      animation: goupresponsive 1500ms ease-in-out 1500ms 1 normal forwards;
-    }
-    > div:nth-child(1) {
-      z-index: 1;
+    gap: 24px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: moveLogo 1500ms ease-in-out 3000ms 1 normal forwards;
+    .project-name {
       position: relative;
-      background-color: #5f66ee;
-      display: flex;
-      align-items: center;
-      > div:nth-child(1) {
-        position: absolute;
-        background-color: #5f66ee;
-        z-index: 1;
-        margin-left: unset !important;
-        @media (min-width: 969px) {
-          animation: getssmaller 4000ms ease-in-out 500ms 1 normal forwards;
-        }
-        @media (max-width: 968px) {
-          height: 70px;
-        }
-        > img:nth-child(1) {
-          height: 100%;
-        }
-      }
-
-      > div:nth-child(2) {
-        font-size: 38px;
+      overflow: hidden;
+      display: none;
+      span {
+        position: inherit;
         color: white;
-        font-family: "Nunito";
-        max-width: 350px;
-        z-index: 0;
-        @media (min-width: 969px) {
-          animation: turnright 2000ms ease-in-out 0ms 1 normal forwards, turnleft 1000ms ease-in-out 2200ms 1 normal forwards;
-        }
-        @media (max-width: 968px) {
-          font-size: 25px;
-          animation: turnrightmobile 2000ms ease-in-out 0ms 1 normal forwards;
-        }
+        font-size: 44px;
+        right: 200px;
+        animation: showName 1500ms ease-in-out 100ms 1 normal forwards;
       }
     }
   }
 }
 
-@keyframes turnright {
+.visible {
+  display: flex !important;
+}
+
+@keyframes showName {
   0% {
-    transform: translateX(0, 0);
+    right: 200px;
   }
   100% {
-    transform: translateX(200px);
+    right: 0px;
   }
 }
 
-@keyframes turnrightmobile {
+@keyframes moveLogo {
   0% {
-    transform: translateX(0, 0);
+    top: 50%;
+    left: 50%;
+    opacity: 1;
   }
   100% {
-    transform: translateX(80px);
-  }
-}
-
-@keyframes turnleft {
-  0% {
-    transform: translateX(200px);
-  }
-  100% {
-    transform: translateX(90px);
-  }
-}
-
-@keyframes showtext {
-  0% {
-    z-index: 0;
-  }
-  100% {
-    z-index: 2;
-  }
-}
-
-@keyframes goup {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(-52rem, -46.2vh);
-  }
-}
-
-@keyframes getssmaller {
-  0% {
-    height: unset;
-  }
-  100% {
-    height: 70px;
-  }
-}
-
-@keyframes getssmallermobile {
-  0% {
-    height: unset;
-  }
-  100% {
-    height: 60px;
-  }
-}
-
-@keyframes goupresponsive {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(-3rem, -42vh);
+    top: 200px;
+    left: 300px;
+    opacity: 0;
   }
 }

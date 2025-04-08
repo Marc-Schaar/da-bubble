@@ -12,6 +12,13 @@ export class IntroComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.router.navigate(['/main']);
-    }, 3500);
+    }, 4000);
+
+    setTimeout(() => {
+      const projectName = document.getElementById('project-name');
+      if (projectName) {
+        projectName.classList.add('visible');
+      }
+    }, 1000); 
   }
 }
