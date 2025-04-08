@@ -13,10 +13,11 @@
     height: 184px;
     opacity: unset;
     margin-left: unset !important;
-    @media (min-width: 969px) {
-      animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
+    animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
+    @media (max-width: 400px) {
+      animation: goupresponsive 1500ms ease-in-out 1500ms 1 normal forwards;
     }
-    @media (max-width: 968px) {
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
       animation: goupresponsive 1500ms ease-in-out 1500ms 1 normal forwards;
     }
     > div:nth-child(1) {
@@ -100,7 +101,7 @@
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(-52rem, -46.2vh);
+    transform: translate(-35vw, -46.2vh);
   }
 }
 
