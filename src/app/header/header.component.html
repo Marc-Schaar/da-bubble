@@ -3,56 +3,47 @@
     <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
   </div>
   <div></div>
-  <div
-    class="input"
-    *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard"
-  >
-    <input type="text" placeholder="Devspace durchsuchen" />
-    <button><img src="/img/icons.png" alt="" /></button>
+  <div class="searchbar">
+    <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+      <input [(ngModel)="input" type="text" placeholder="Devspace durchsuchen" />
+      <button><img src="/img/icons.png" alt="" /></button>
+    </div>
+    <div [ngClass]="{ show: isClickeD }" class="lists">
+      <div
+        (click)="getReciever(index)"
+        [ngClass]="{ channelStyle: isChannel }"
+        class="listrow"
+        *ngFor="let object of currentList; let index = index"
+      >
+        <div *ngIf="!isChannel" class="imageContainer">
+          <img [src]="object?.profilephoto" alt="" />
+          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
+        </div>
+        <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
+        <div>
+          <span>{{ object?.fullname || object?.name }}</span>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div
-    class="signup"
-    *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard"
-  >
+  <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
     <p>Neu bei DABubble?</p>
     <a routerLink="/signup">Konto erstellen</a>
   </div>
-  <div
-    class="user-menu"
-    *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard"
-  >
+  <div class="user-menu" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
     <div>
       <span>{{ this.chatmoduleenabled.user.displayName || "Gast" }}</span>
       <img src="img/Profile bild.png" alt="" />
       <div>
-        <button
-          (click)="showmenu()"
-          mat-icon-button
-          [matMenuTriggerFor]="beforeMenu"
-          aria-label="Example icon-button with a menu"
-        >
+        <button (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu" aria-label="Example icon-button with a menu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before">
           <div *ngIf="showmenu">
-            <button
-              *ngIf="!showmodifycontent"
-              (click)="show()"
-              class="menu-box-btn"
-              mat-menu-item
-              (click)="$event.stopPropagation()"
-            >
+            <button *ngIf="!showmodifycontent" (click)="show()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
               Profil
             </button>
-            <button
-              *ngIf="!showmodifycontent"
-              class="menu-box-btn"
-              mat-menu-item
-              (click)="signOut()"
-            >
-              Log out
-            </button>
+            <button *ngIf="!showmodifycontent" class="menu-box-btn" mat-menu-item (click)="signOut()">Log out</button>
           </div>
 
           <app-user-profile

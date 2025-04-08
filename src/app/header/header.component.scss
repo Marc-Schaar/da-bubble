@@ -68,6 +68,11 @@
   }
 }
 
+.searchbar{
+  width: 100%;
+  position: relative;
+}
+
 .d-none {
   display: none !important;
 }
@@ -142,4 +147,83 @@
     border: none;
     cursor: pointer;
   }
+}
+
+.lists {
+  position: absolute;
+  left: 61px;
+  top: 64px;
+  border: solid;
+  width: 100%;
+  max-width: 350px;
+  height: 467px;
+  border-width: 1px;
+  border-color: var(--light-purple);
+  border-radius: 20px 20px 20px 0px;
+  box-sizing: border-box;
+  padding: 20px 21px;
+  display: none;
+  background-color: white;
+  overflow-y: scroll;
+  z-index: 99;
+}
+
+.listrow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  box-sizing: border-box;
+  padding: 4px 20px;
+  cursor: pointer;
+
+  > span {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  &:hover {
+    background-color: var(--bg-color);
+    border-radius: 30px;
+
+    > .tag {
+      content: url(./../../../public/img/tag-purple.svg) !important;
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 30px;
+  }
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 0;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border: solid;
+  background-color: gray;
+  border-radius: 50%;
+  border-color: #eceefe;
+  border-width: 2px;
+}
+
+.tag {
+  border-radius: unset !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
 }
