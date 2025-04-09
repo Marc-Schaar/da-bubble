@@ -27,9 +27,10 @@ export class ThreadComponent implements OnInit {
   currentChannelId: string = '';
   parentMessageId: string = '';
   input: string = '';
+  inputEdit: string = '';
   parentMessageData: any = null;
 
-  editingMessageId: number = 0;
+  editingMessageId: number | null = null;
 
   isMobile: boolean = false;
   listOpen: boolean = false;
@@ -174,9 +175,28 @@ export class ThreadComponent implements OnInit {
     this.menuOpen = false;
     this.isEditing = true;
     this.editingMessageId = index;
-    // this.inputEdit = message.message;
+    this.inputEdit = message.message;
   }
 
+  async updateMessage(message: any) {
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+    if (messageRef) {
+      this.isEditing = false;
+      this.editingMessageId = null;
+      try {
+        this.fireService.updateMessage(messageRef, this.inputEdit);
+        this.inputEdit = '';
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren der Nachricht:', error);
+      }
+    }
+  }
+
+  cancel() {
+    this.isEditing = false;
+    this.editingMessageId = null;
+    this.menuOpen = false;
+  }
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
     let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };

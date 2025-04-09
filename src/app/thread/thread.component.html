@@ -44,7 +44,7 @@
             <div class="user-profile-avatar-container">
               <img src="{{ message?.avatar }}" alt="{{ parentMessageData?.name }}" />
             </div>
-            <div class="name-time-message-container">
+            <div *ngIf="!(isEditing && editingMessageId === i)" class="name-time-message-container">
               <div class="name-time-container">
                 <span class="name-container">{{ message?.name }}</span>
                 <span class="time-container">{{ message?.time }}Uhr</span>
@@ -109,6 +109,17 @@
               </div>
             </div>
 
+            <div *ngIf="isEditing && editingMessageId === i" class="textarea-container">
+              <textarea [(ngModel)]="inputEdit" rows="2"></textarea>
+
+              <div class="action-container">
+                <div class="d-flex gap-10">
+                  <button class="btn btn-secundary" (click)="cancel()">Abbrechen</button>
+                  <button class="btn btn-primary" (click)="updateMessage(message)">Speichern</button>
+                </div>
+              </div>
+            </div>
+
             <div *ngIf="!isEditing" class="reaction-bar">
               <div class="position-relative">
                 <button
@@ -153,6 +164,7 @@
         <textarea
           placeholder="Antworten..."
           name="YourMessage"
+          rows="4"
           [(ngModel)]="input"
           (keyup.enter)="sendMessage()"
           (click)="reactionMenuOpenInTextarea = false; listOpen = false"

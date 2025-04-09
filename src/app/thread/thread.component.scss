@@ -85,6 +85,10 @@ section {
     .message-container {
       background-color: #ffffff;
     }
+
+    .textarea-container {
+      background-color: white;
+    }
   }
 
   .user-message-container {
@@ -200,6 +204,7 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 
   flex-direction: column;
   outline: 1px solid var(--light-purple);
@@ -217,9 +222,7 @@ section {
   textarea {
     resize: none;
     border: none;
-    padding: 20px;
     width: 100%;
-    height: 96px;
     outline: none;
     background-color: transparent;
     font-family: "Nunito";
@@ -238,8 +241,6 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    padding: 0px 24px;
 
     .textarea-two-left-buttons-container {
       display: flex;
@@ -323,7 +324,7 @@ section {
   }
   .menu {
     position: absolute;
-    left: 243px;
+    left: 80px;
     top: 20px;
     border-radius: 0 30px 30px 30px;
     padding: 10px 20px;
@@ -415,4 +416,24 @@ button {
 
 .position-relative {
   position: relative;
+}
+
+.action-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  width: 100%;
+}
+
+.btn-primary {
+  transition: all 0.125s ease-in-out;
+  background-color: var(--medium-purple);
+  color: white;
+
+  &:hover {
+    outline: solid 1px var(--medium-purple) !important;
+    color: black;
+    background-color: white;
+  }
 }

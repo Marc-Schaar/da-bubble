@@ -194,6 +194,8 @@ textarea {
   border: none;
   resize: none;
   background: transparent;
+  font-family: "Nunito";
+  font-size: 18px;
   &::-webkit-resizer {
     display: none;
   }
@@ -439,27 +441,6 @@ li {
   flex-direction: row-reverse;
 }
 
-.full-width {
-  width: 100%;
-}
-
-.btn {
-  cursor: pointer;
-  padding: 12px 25px;
-  border-radius: 50px;
-  transition: all 0.125s ease-in-out;
-  font-weight: 700;
-}
-
-.btn-secundary {
-  outline: solid 1px var(--medium-purple) !important;
-  &:hover {
-    outline: 1px solid white;
-    background-color: var(--medium-purple);
-    color: white;
-  }
-}
-
 .btn-primary {
   transition: all 0.125s ease-in-out;
   background-color: var(--medium-purple);
@@ -487,13 +468,6 @@ li {
 .align-center {
   display: flex;
   align-items: center;
-}
-.gap-10 {
-  gap: 10px;
-}
-
-.gap-32 {
-  gap: 32px;
 }
 
 button {
