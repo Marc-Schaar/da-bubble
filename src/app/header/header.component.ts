@@ -114,7 +114,6 @@ export class HeaderComponent {
   async startChat() {
     if (this.userService.user != null && this.userService.reciepentId != null) {
     } else {
-      console.log('Chat muss per click initialisiert werden');
     }
   }
   setCurrentUser() {
@@ -123,7 +122,6 @@ export class HeaderComponent {
     console.log(this.currentUserId);
 
     if (!this.currentUser) {
-      console.error('currentUser ist nicht definiert!');
       return;
     }
   }

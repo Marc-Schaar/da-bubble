@@ -22,7 +22,6 @@ export class UserService {
     this.getUsers();
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
-      console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
     });
   }
 
@@ -90,7 +89,6 @@ export class UserService {
   async setOnlineStatus() {
     const currentUser = this.getUser();
     currentUser.online = true;
-    console.log(currentUser);
     await this.fireService.updateOnlineStatus(currentUser);
   }
 
@@ -111,10 +109,8 @@ export class UserService {
       if (user) {
         this.user = user;
         this.userId = user.uid;
-        console.log('User is still logged in:', user);
       } else {
         this.user = new User(null);
-        console.log('User is logged out');
       }
     });
   }
