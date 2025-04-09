@@ -95,7 +95,7 @@ export class UserService {
   }
 
   redirectiontodashboard() {
-    this.router.navigate(['/chat']);
+    this.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
   }
 
   redirectiontologinpage() {
