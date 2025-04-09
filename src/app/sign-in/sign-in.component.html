@@ -5,34 +5,36 @@
     </div>
     <div>
       <div>
-        <p>
-          Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
-          verwendest.
-        </p>
+        <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
       </div>
     </div>
   </div>
   <div>
     <div>
       <div>
-        <input
-          type="email"
-          #email="ngModel"
-          required
-          name="email"
-          [(ngModel)]="user.email"
-          placeholder="beispielname@email.com"
-        />
+        <div>
+          <input
+            type="email"
+            #email="ngModel"
+            required
+            name="email"
+            [(ngModel)]="user.email"
+            placeholder="beispielname@email.com"
+            pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+          />
+        </div>
+        @if (!email.valid && email.touched || error) {
+        <span class="error d-none" id="wrongemail">*Diese E-Mail-Adresse ist leider ungültig.</span>
+        }
       </div>
+
       <div>
-        <input
-          #password="ngModel"
-          required
-          name="password"
-          [(ngModel)]="user.password"
-          type="password"
-          placeholder="Passwort"
-        />
+        <div>
+          <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
+        </div>
+        @if(error){
+        <span class="error d-none" id="wrongpassword">Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
+        }
       </div>
     </div>
     <div><a routerLink="/forgotpassword">Passwort vergessen?</a></div>
@@ -41,14 +43,10 @@
     <div class="divider">ODER</div>
   </div>
   <div>
-    <button type="button" (click)="signinwithgoogle()">
-      <img src="/img/Google.png" alt="" /> Anmelden mit Google
-    </button>
+    <button type="button" (click)="signinwithgoogle()"><img src="/img/Google.png" alt="" /> Anmelden mit Google</button>
     <div>
       <button [disabled]="userauth.invalid">Anmelden</button
-      ><button (click)="shared.redirectiontodashboard()" href="/chat">
-        Gäste-Login
-      </button>
+      ><button (click)="shared.redirectiontodashboard()" href="/chat">Gäste-Login</button>
     </div>
   </div>
 </form>

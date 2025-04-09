@@ -58,7 +58,7 @@ export class ResetpasswordComponent implements OnInit {
       this.isOverlayActive = true;
       confirmPasswordReset(this.auth, this.resetCode, this.users.password)
         .then(() => {
-          this.router.navigate(['/main']);
+          this.router.navigate(['/']);
         })
         .catch((error) => {});
       emailform.reset();

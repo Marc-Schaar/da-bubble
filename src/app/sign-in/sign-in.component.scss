@@ -52,6 +52,15 @@
       }
     }
   }
+
+  .error {
+    font-family: "Nunito";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19.1px;
+    color: #ed1e79;
+  }
+
   > div:nth-child(2) {
     display: flex;
     flex-direction: column;
@@ -72,41 +81,52 @@
         gap: 15px;
       }
       > div:nth-child(1) {
-        background-color: #eceefe;
-        padding: 18px 60px;
-        border-radius: 100px;
         width: calc(100% - 120px);
-        background-image: url(/img/mail.png);
-        background-repeat: no-repeat;
-        background-position: 20px;
-        overflow: hidden;
-        @media (max-width: 968px) {
-          width: 100%;
-        }
-        > input:nth-child(1) {
-          border: none;
-          outline: none;
-          background: none;
-          width: 100%;
+        height: 76px;
+        > div:nth-child(1) {
+          background-color: #eceefe;
+          padding: 18px 60px;
+          border-radius: 100px;
+          background-image: url(/img/mail.png);
+          background-repeat: no-repeat;
+          background-position: 20px;
+          overflow: hidden;
+          @media (max-width: 968px) {
+            width: 100%;
+          }
+          > input:nth-child(1) {
+            border: none;
+            outline: none;
+            background: none;
+            width: 100%;
+          }
         }
       }
       > div:nth-child(2) {
-        background-color: #eceefe;
-        padding: 18px 60px;
-        border-radius: 100px;
         width: calc(100% - 120px);
-        background-image: url(/img/lock.png);
-        background-repeat: no-repeat;
-        background-position: 20px;
-        overflow: hidden;
-        @media (max-width: 968px) {
+        height: 90px;
+        div > :nth-child(1) {
+          background-color: #eceefe;
+          padding: 18px 60px;
           width: 100%;
-        }
-        > input:nth-child(1) {
+          border-radius: 100px;
+          background-image: url(/img/lock.png);
+          background-repeat: no-repeat;
+          background-position: 20px;
+          overflow: hidden;
           border: none;
-          outline: none;
-          background: none;
-          width: 100%;
+          @media (max-width: 968px) {
+            width: 100%;
+          }
+          > input:nth-child(1) {
+            border: none;
+            outline: none !important;
+            background: none;
+            width: 100%;
+          }
+          &:focus-visible{
+            outline:none
+          }
         }
       }
     }
@@ -214,7 +234,7 @@
         justify-content: center;
         flex-direction: row;
       }
-     
+
       > button {
         border-radius: 25px;
         padding: 12px 25px;
