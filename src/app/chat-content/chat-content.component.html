@@ -138,6 +138,7 @@
             <div *ngIf="message.thread?.length > 0" class="message-footer gap-20">
               <div class="d-flex gap-20">
                 <span
+                  class="curser-pointer"
                   (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
                   >{{ message?.thread?.length }} Antworten</span
                 >

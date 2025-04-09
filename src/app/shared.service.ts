@@ -120,23 +120,29 @@ export class UserService {
   }
 
   getChannels() {
+    let channelRef = this.fireService.getCollectionRef('channels');
     this.channels = [];
-    this.unsubChannels = onSnapshot(this.fireService.getCollectionRef('channels')!, (colSnap) => {
-      this.channels = colSnap.docs.map((colSnap) => ({
-        key: colSnap.id,
-        data: colSnap.data(),
-      }));
-      this.currentChannel = this.channels[0];
-    });
+    if (channelRef) {
+      this.unsubChannels = onSnapshot(channelRef, (colSnap) => {
+        this.channels = colSnap.docs.map((colSnap) => ({
+          key: colSnap.id,
+          data: colSnap.data(),
+        }));
+        this.currentChannel = this.channels[0];
+      });
+    }
   }
 
   getUsers() {
-    onSnapshot(this.fireService.getCollectionRef('users')!, (colSnap) => {
-      this.users = colSnap.docs.map((colSnap) => ({
-        key: colSnap.id,
-        ...colSnap.data(),
-      }));
-    });
+    let userRef = this.fireService.getCollectionRef('users');
+    if (userRef) {
+      onSnapshot(userRef, (colSnap: any) => {
+        this.users = colSnap.docs.map((colSnap: any) => ({
+          key: colSnap.id,
+          ...colSnap.data(),
+        }));
+      });
+    }
   }
 
   getUrlData() {
