@@ -119,8 +119,6 @@ export class HeaderComponent {
   setCurrentUser() {
     this.currentUser = this.userService.user;
     this.currentUserId = this.userService.user.uid;
-    console.log(this.currentUserId);
-
     if (!this.currentUser) {
       return;
     }
