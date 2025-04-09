@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { GoogleAuthProvider, Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { signInWithEmailAndPassword, signInWithPopup, signOut } from '@firebase/auth';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
 import { User } from '../models/user';
@@ -25,13 +25,14 @@ export class SignInComponent {
   fireService = inject(FireServiceService);
   user: User = new User();
 
-  async signin() {
+  async signin(form: NgForm) {
     try {
       await signInWithEmailAndPassword(this.auth, this.user.email, this.user.password);
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
       this.error = true;
+      form.reset();
     }
   }
 
