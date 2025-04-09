@@ -8,6 +8,27 @@
       <input [(ngModel)]="input" (input)="getCurrentChat()" type="text" placeholder="Devspace durchsuchen" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
+    <div [ngClass]="{ show: isFound }" class="lists newMessage">
+      <div
+        (click)="chooseReciever(index)"
+        [ngClass]="{ channelStyle: isChannel }"
+        class="listrow"
+        *ngFor="let object of searchList; let index = index"
+      >
+        <div *ngIf="!isChannel" class="imageContainer">
+          <img [src]="object?.profilephoto" alt="" />
+          <div
+            *ngIf="!isChannel"
+            class="status-dot"
+            [ngClass]="{ green: object?.online }"
+          ></div>
+        </div>
+        <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
+        <div>
+          <span>{{ object?.fullname || object?.name }}</span>
+        </div>
+      </div>
+    </div>
     <div [ngClass]="{ show: isClicked }" class="lists">
       <div
         (click)="getReciever(index)"
@@ -29,6 +50,8 @@
         </div>
       </div>
     </div>
+
+
   </div>
   <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
     <p>Neu bei DABubble?</p>

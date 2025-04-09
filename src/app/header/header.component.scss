@@ -227,3 +227,10 @@
   max-width: 16px !important;
   max-height: 16px !important;
 }
+
+.show {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
