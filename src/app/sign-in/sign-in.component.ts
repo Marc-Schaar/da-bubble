@@ -42,7 +42,6 @@ export class SignInComponent {
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -52,7 +51,6 @@ export class SignInComponent {
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
-      console.log(error);
     }
   }
 }
