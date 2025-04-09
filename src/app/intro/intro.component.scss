@@ -147,6 +147,9 @@
     height: 184px;
     transform: translate(-50%, -50%);
     animation: moveLogo 500ms ease-in-out 3000ms 1 normal forwards;
+    @media (max-width: 392px) {
+      animation: moveLogoMobile 500ms ease-in-out 3000ms 1 normal forwards;
+    }
     .logo-img {
       animation: moveSide 500ms ease-in-out 1000ms 1 normal forwards;
       img {
@@ -191,13 +194,22 @@
   0% {
     top: 50%;
     left: 50%;
-    // opacity: 1;
+
   }
   100% {
     top: 70px;
-    left: 150px;
-    // opacity: 0;
+    left: 150px;  
   }
+}
+
+@keyframes moveLogoMobile {
+  0% {
+    top: 50%;
+    left: 50%;
+  }
+  100% {
+    top: 70px; 
+   }
 }
 
 @keyframes moveSide {
