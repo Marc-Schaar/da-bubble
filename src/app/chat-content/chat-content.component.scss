@@ -480,13 +480,6 @@ header {
   }
 }
 
-@media (max-width: 430px) {
-  .card {
-    margin: 0;
-    max-height: calc(100svh - 80px);
-  }
-}
-
 @media (max-width: 1023px) {
   .card {
     max-height: calc(100svh - 110px);
@@ -514,7 +507,12 @@ header {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
+  .card {
+    margin: 0;
+    max-height: calc(100svh - 80px);
+  }
+
   .message-footer {
     white-space: normal;
 
