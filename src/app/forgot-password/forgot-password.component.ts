@@ -46,6 +46,7 @@ export class ForgotpasswordComponent implements OnInit {
     setTimeout(() => {
       this.isOverlayActive = false;
       this.submitted = false;
+      this.shareddata.redirectiontologinpage()
     }, 1500);
   }
 }

@@ -5,7 +5,7 @@
   <div></div>
   <div class="searchbar">
     <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
-      <input [(ngModel)]="input" (input)="getCurrentChat()" type="text" placeholder="Devspace durchsuchen" />
+      <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
     <div [ngClass]="{ show: isFound }" class="lists newMessage">

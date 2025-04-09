@@ -99,7 +99,7 @@ export class UserService {
   }
 
   redirectiontologinpage() {
-    this.router.navigate(['/main']);
+    this.router.navigate(['/']);
   }
 
   redirectiontoavatarselection() {
