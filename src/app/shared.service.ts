@@ -120,14 +120,17 @@ export class UserService {
   }
 
   getChannels() {
+    let channelRef = this.fireService.getCollectionRef('channels');
     this.channels = [];
-    this.unsubChannels = onSnapshot(this.fireService.getCollectionRef('channels')!, (colSnap) => {
-      this.channels = colSnap.docs.map((colSnap) => ({
-        key: colSnap.id,
-        data: colSnap.data(),
-      }));
-      this.currentChannel = this.channels[0];
-    });
+    if (channelRef) {
+      this.unsubChannels = onSnapshot(channelRef, (colSnap) => {
+        this.channels = colSnap.docs.map((colSnap) => ({
+          key: colSnap.id,
+          data: colSnap.data(),
+        }));
+        this.currentChannel = this.channels[0];
+      });
+    }
   }
 
   getUsers() {

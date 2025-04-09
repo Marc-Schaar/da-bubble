@@ -3,7 +3,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild, AfterViewInit, OnDest
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Firestore, onSnapshot, serverTimestamp, query, orderBy, collection, doc, getDoc } from '@angular/fire/firestore';
+import { Firestore, onSnapshot, query, orderBy, collection, doc, getDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router, RouterLink } from '@angular/router';
@@ -94,6 +94,10 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  ngAfterViewInit() {
+    window.addEventListener('resize', this.userService.checkScreenWidth.bind(this));
+  }
+
   ngOnDestroy() {
     if (this.subscriptions) this.subscriptions.unsubscribe();
   }
@@ -143,11 +147,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
       onSnapshot(threadQuery, (snapshot) => {
         const updatedThreads = this.userService.processData(snapshot);
-
         const msgIndex = this.messages.findIndex((m) => m.id === messageId);
-        if (msgIndex >= 0) {
-          this.messages[msgIndex].thread = updatedThreads;
-        }
+        if (msgIndex >= 0) this.messages[msgIndex].thread = updatedThreads;
       });
     }
   }
@@ -249,10 +250,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  ngAfterViewInit() {
-    window.addEventListener('resize', this.userService.checkScreenWidth.bind(this));
-  }
-
   openChannelInfo() {
     this.channelInfo = true;
   }
@@ -296,7 +293,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentList = [];
       this.listOpen = false;
     }
-    console.log('currentList:', this.currentList);
   }
 
   openReciver(i: number, key: string) {

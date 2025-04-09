@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message } from '../models/message';
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, RouterLink],
   templateUrl: './thread.component.html',
   styleUrls: ['./thread.component.scss'],
 })
@@ -65,6 +65,7 @@ export class ThreadComponent implements OnInit {
       this.getMessages();
       this.currentUser = this.userService.currentUser;
       this.userId = this.userService.reciepentId;
+      this.isMobile = this.userService.isMobile;
     });
   }
 
