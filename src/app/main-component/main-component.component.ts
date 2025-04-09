@@ -16,5 +16,12 @@ export class MainComponentComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = false;
     this.shareddata.login = true;
+
+    setTimeout(() => {
+      const projectName = document.getElementById('intro');
+      if (projectName) {
+        projectName.classList.add('d-none');
+      }
+    }, 4000); 
   }
 }
