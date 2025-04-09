@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,10 +9,15 @@ import { getAuth, onAuthStateChanged, signOut, User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
+import { Subscription } from 'rxjs';
+import { DirectMessage } from '../directmessage.class';
+import { serverTimestamp } from '@angular/fire/firestore';
+import { Message } from '../models/message';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MatMenuModule, MatIconModule, MatButtonModule, CommonModule, UserProfileComponent],
+  imports: [RouterLink, MatMenuModule, MatIconModule, MatButtonModule, CommonModule, UserProfileComponent,FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -26,7 +31,6 @@ export class HeaderComponent {
   chatmoduleenabled = inject(UserService);
   fireService = inject(FireServiceService);
   input: string = '';
-
 
   show() {
     this.opened++;
@@ -48,18 +52,19 @@ export class HeaderComponent {
 
   userService = inject(UserService);
   firestoreService = inject(FireServiceService);
+  router: Router = inject(Router);
   public channels: any[] = [];
   public users: any[] = [];
   public currentReciever: any = null;
   public currentUser: any = null;
   public currentChannel: any = null;
-  currentList: any[] = [];
+  currentlist: any[] = [];
   message: string = '';
   userID: string = '';
   currentMessages: any[] = [];
   searchList: any[] = [];
   currentArray: any[] = [];
-  isClickeD: boolean = false;
+  isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
@@ -70,11 +75,15 @@ export class HeaderComponent {
   currentUserId: string = '';
   currentChannelId: string = '';
   isFound: boolean = false;
+  private subscription?: Subscription;
   constructor() {
     this.startChat();
   }
 
   async ngOnInit() {
+    this.subscription = this.userService.startLoadingChat$.subscribe(() => {
+      this.startChat();
+    });
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
@@ -96,6 +105,12 @@ export class HeaderComponent {
     }
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   async startChat() {
     if (this.userService.user != null && this.userService.reciepentId != null) {
     } else {
@@ -111,6 +126,32 @@ export class HeaderComponent {
       console.error('currentUser ist nicht definiert!');
       return;
     }
+  }
+
+  createMessageData(message: DirectMessage) {
+    return {
+      name: message.name,
+      photo: message.photo,
+      content: message.content,
+      time: message.time.toISOString(),
+      from: message.from,
+      to: message.to,
+    };
+  }
+
+  buildMessageObject() {
+    return {
+      message: this.message || '',
+      avatar: this.userService.user?.photoURL || '',
+      date: new Date().toISOString().split('T')[0],
+      name: this.userService.user?.displayName || 'Unbekannt',
+      newDay: false,
+      timestamp: serverTimestamp(),
+    };
+  }
+
+  sendChannelMessage() {
+    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
   }
 
   getCurrentChat() {
@@ -191,43 +232,43 @@ export class HeaderComponent {
   }
 
   toggleList(event: Event) {
-    this.isClickeD = !this.isClickeD;
-    this.currentList = this.users;
+    this.isClicked = !this.isClicked;
+    this.currentlist = this.users;
     this.isChannel = false;
     event.stopPropagation();
   }
 
   hideList() {
-    this.isClickeD = false;
+    this.isClicked = false;
     this.isFound = false;
   }
 
   getList() {
     if (this.message.includes('#')) {
-      this.currentList = this.channels;
-      this.isClickeD = true;
+      this.currentlist = this.channels;
+      this.isClicked = true;
       this.isChannel = true;
     }
     if (this.message.includes('@')) {
-      this.isClickeD = true;
-      this.currentList = this.users;
+      this.isClicked = true;
+      this.currentlist = this.users;
       this.isChannel = false;
     }
     if (this.message === '' || (!this.message.includes('#') && !this.message.includes('@'))) {
-      this.isClickeD = false;
+      this.isClicked = false;
     }
   }
 
   getReciever(index: number) {
     if (this.isChannel) {
-      const currentChannel = this.currentList[index];
+      const currentChannel = this.currentlist[index];
       if (this.message === '') {
         this.message = '#' + currentChannel?.name;
       } else {
         this.message = this.message + currentChannel?.name;
       }
     } else {
-      const currentReciever = this.currentList[index];
+      const currentReciever = this.currentlist[index];
       if (this.message === '') {
         this.message = '@' + currentReciever?.fullname;
       } else {

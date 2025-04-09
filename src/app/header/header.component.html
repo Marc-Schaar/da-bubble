@@ -5,19 +5,23 @@
   <div></div>
   <div class="searchbar">
     <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
-      <input [(ngModel)="input" type="text" placeholder="Devspace durchsuchen" />
+      <input [(ngModel)]="input" (input)="getCurrentChat()" type="text" placeholder="Devspace durchsuchen" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
-    <div [ngClass]="{ show: isClickeD }" class="lists">
+    <div [ngClass]="{ show: isClicked }" class="lists">
       <div
         (click)="getReciever(index)"
         [ngClass]="{ channelStyle: isChannel }"
         class="listrow"
-        *ngFor="let object of currentList; let index = index"
+        *ngFor="let object of currentlist; let index = index"
       >
         <div *ngIf="!isChannel" class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />
-          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
+          <div
+            *ngIf="!isChannel"
+            class="status-dot"
+            [ngClass]="{ green: object?.online }"
+          ></div>
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <div>
