@@ -14,11 +14,11 @@ export class IntroComponent implements OnInit {
       this.router.navigate(['/main']);
     }, 4000);
 
-    setTimeout(() => {
-      const projectName = document.getElementById('project-name');
-      if (projectName) {
-        projectName.classList.add('visible');
-      }
-    }, 1000); 
+    // setTimeout(() => {
+    //   const projectName = document.getElementById('project-name');
+    //   if (projectName) {
+    //     projectName.classList.add('visible');
+    //   }
+    // }, 2000); 
   }
 }

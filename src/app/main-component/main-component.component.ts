@@ -3,10 +3,11 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { UserService } from '../shared.service';
+import { IntroComponent } from '../intro/intro.component';
 
 @Component({
   selector: 'app-main-component',
-  imports: [HeaderComponent, FooterComponent, SignInComponent],
+  imports: [HeaderComponent, FooterComponent, SignInComponent, IntroComponent],
   templateUrl: './main-component.component.html',
   styleUrl: './main-component.component.scss',
 })

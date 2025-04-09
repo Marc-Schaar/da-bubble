@@ -135,25 +135,40 @@
   height: 100vh;
   width: 100%;
   background: linear-gradient(1.46deg, #313ae6 1.22%, #797ef3 98.76%) !important;
+  opacity: 1;
+  animation: changeOpacity 1000ms ease-in-out 3000ms 1 normal forwards;
   .intro {
     display: flex;
     align-items: center;
-    gap: 24px;
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 188px;
+    height: 184px;
     transform: translate(-50%, -50%);
-    animation: moveLogo 1500ms ease-in-out 3000ms 1 normal forwards;
-    .project-name {
-      position: relative;
-      overflow: hidden;
-      display: none;
-      span {
-        position: inherit;
-        color: white;
-        font-size: 44px;
-        right: 200px;
-        animation: showName 1500ms ease-in-out 100ms 1 normal forwards;
+    animation: moveLogo 500ms ease-in-out 3000ms 1 normal forwards;
+    .logo-img {
+      animation: moveSide 500ms ease-in-out 1000ms 1 normal forwards;
+      img {
+      animation: changeSize 500ms ease-in-out 3000ms 1 normal forwards;
+      }
+    }
+    .help-cont {
+      position: absolute;
+      .project-name {
+        position: absolute;
+        overflow: hidden;
+        transform: translateY(-50%);
+        left: 130px;
+        height: 70px;
+        animation: encrease 500ms ease-in-out 1800ms 1 normal forwards;
+        span {
+          position: inherit;
+          color: white;
+          font-size: 44px;
+          right: 200px;
+          animation: showName 1000ms ease-in-out 100ms 1 normal forwards;
+        }
       }
     }
   }
@@ -176,11 +191,49 @@
   0% {
     top: 50%;
     left: 50%;
+    // opacity: 1;
+  }
+  100% {
+    top: 70px;
+    left: 150px;
+    // opacity: 0;
+  }
+}
+
+@keyframes moveSide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes encrease {
+  0% {
+    width: 0px;
+  }
+  100% {
+    width: 190px;
+  }
+}
+
+@keyframes changeSize {
+  0% {
+    width: 188px;
+    height: 184px;
+  }
+  100% {
+    width: 77px;
+    height: 77px;
+  }
+}
+
+@keyframes changeOpacity {
+  0% {
     opacity: 1;
   }
   100% {
-    top: 200px;
-    left: 300px;
     opacity: 0;
   }
 }

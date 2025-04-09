@@ -21,8 +21,8 @@ import { AddMemberComponent } from './chat-content/add-member/add-member.compone
 
 
 export const routes: Routes = [
-  { path: '', component: IntroComponent },
-  { path: 'main', component: MainComponentComponent },
+  // { path: '', component: IntroComponent },
+  { path: '', component: MainComponentComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'forgotpassword', component: ForgotpasswordComponent },
