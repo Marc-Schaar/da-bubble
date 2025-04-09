@@ -235,6 +235,16 @@ a {
   width: 100%;
 }
 
+.justify-sb {
+  display: flex;
+  justify-content: space-between;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
 .btn {
   cursor: pointer;
   padding: 12px 25px;

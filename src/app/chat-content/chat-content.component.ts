@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, serverTimestamp, query, orderBy, collection, doc, getDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
@@ -18,7 +18,16 @@ import { AddMemberComponent } from './add-member/add-member.component';
 // })
 @Component({
   selector: 'app-chat-content',
-  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, ChannelEditComponent, AddMemberComponent],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    MatSidenavModule,
+    ChannelEditComponent,
+    AddMemberComponent,
+    RouterLink,
+  ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
