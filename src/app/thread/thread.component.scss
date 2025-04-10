@@ -439,8 +439,11 @@ button {
 }
 
 .reaction-from-dialog {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   position: absolute;
+  flex-wrap: wrap;
   bottom: 40px;
   left: 32px;
   align-items: center;
@@ -449,7 +452,6 @@ button {
   padding: 10px 15px;
   color: white;
   z-index: 10;
-  white-space: nowrap;
   font-size: 16px;
   img {
     width: 30px;
@@ -460,6 +462,7 @@ button {
 h3 {
   font-weight: 700;
   font-size: 18px;
+  white-space: nowrap;
 }
 .flex-wrap {
   flex-wrap: wrap;

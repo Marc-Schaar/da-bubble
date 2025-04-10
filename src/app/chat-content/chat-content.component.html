@@ -159,12 +159,28 @@
                   >
                     <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
                     <span>{{ countEmoji(emoji, message.reaction) }}</span>
-
                     <div class="reaction-from-dialog">
                       <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
 
-                      <h3 class="font-weight-700">{{ getReactionTextForEmoji(emoji.emoji, message.reaction).name }}</h3>
-                      <span>{{ getReactionTextForEmoji(emoji.emoji, message.reaction).reactionText }}</span>
+                      <ng-container *ngFor="let name of getReactionNamesForEmoji(emoji.emoji, message.reaction)">
+                        <h3 class="font-weight-700">{{ name }}</h3>
+                      </ng-container>
+                      <span *ngIf="getReactionNamesForEmoji(emoji.emoji, message.reaction).length > 1">haben</span>
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] === 'Du'
+                        "
+                        >hast</span
+                      >
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] !== 'Du'
+                        "
+                        >hat</span
+                      >
+                      <span> reagiert</span>
                     </div>
                   </div>
                 </ng-container>
