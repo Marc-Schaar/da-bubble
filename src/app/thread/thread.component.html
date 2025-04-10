@@ -89,8 +89,9 @@
 
                     <div class="reaction-from-dialog">
                       <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
-                      <span>{{ getEmojiFromNames(emoji.from) }}</span>
-                      <span> hat reagiert</span>
+
+                      <h3 class="font-weight-700">{{ getReactionTextForEmoji(emoji.emoji, message.reaction).name }}</h3>
+                      <span>{{ getReactionTextForEmoji(emoji.emoji, message.reaction).reactionText }}</span>
                     </div>
                   </div>
                 </ng-container>

@@ -251,8 +251,29 @@ export class ThreadComponent implements OnInit {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
-  getEmojiFromNames(fromId: string) {
-    console.log('getEmojiFromNames', fromId);
+  getReactionTextForEmoji(targetEmoji: string, reactions: any[]) {
+    let allUsers = this.userService.users;
+    let currentUserId = this.userId;
+    let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
+    let userIds = reactionsWithEmoji.map((reaction: any) => reaction.from);
+    let hasCurrentUserReacted = userIds.includes(currentUserId);
+    let otherUsers = allUsers
+      .filter((user: any) => userIds.includes(user.key) && user.key !== currentUserId)
+      .map((user: any) => user.fullname);
+
+    if (hasCurrentUserReacted && otherUsers.length === 0) {
+      return { name: 'Du', reactionText: 'hast reagiert' };
+    }
+
+    let names = otherUsers;
+    if (hasCurrentUserReacted) {
+      names.push('und du');
+    }
+
+    let verb = names.length > 1 ? 'haben' : 'hat';
+    let nameString = names.join(', ');
+
+    return { name: nameString, reactionText: `${verb} reagiert` };
   }
 
   ngOnDestroy(): void {
