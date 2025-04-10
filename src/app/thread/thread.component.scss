@@ -114,6 +114,10 @@ section {
         border-radius: 0 20px 20px 20px;
       }
 
+      .reaction-menu {
+        left: 40px;
+      }
+
       .name-time-container {
         display: flex;
         align-items: center;
@@ -164,6 +168,22 @@ section {
 
   .message-container {
     border-radius: 20px 0 20px 20px !important;
+  }
+
+  .reaction-bar {
+    .reaction-menu {
+      left: 20px;
+      border-radius: 25px 25px 25px 0;
+    }
+  }
+
+  .user-message-container {
+    .name-time-message-container {
+      .reaction-menu {
+        left: unset;
+        right: 148px;
+      }
+    }
   }
 }
 
@@ -322,6 +342,12 @@ section {
     border-radius: 50%;
     position: relative;
   }
+
+  .reaction-menu {
+    right: 20px;
+    border-radius: 25px 25px 0 25px;
+  }
+
   .menu {
     position: absolute;
     left: 80px;
@@ -342,13 +368,6 @@ section {
       }
     }
   }
-
-  .reaction-menu {
-    right: 88px;
-    bottom: 40px;
-    left: 20px;
-    border-radius: 25px 25px 25px 0;
-  }
 }
 
 button {
@@ -368,6 +387,7 @@ button {
 
 .reaction-menu {
   position: absolute;
+  right: 144px;
   bottom: 40px;
   display: flex;
   justify-content: center;
@@ -378,7 +398,6 @@ button {
   overflow-y: auto;
   flex-wrap: wrap;
   z-index: 10;
-  margin-top: 20px;
   padding: 8px;
   border: 1px solid var(--light-purple);
   background-color: white;
