@@ -242,7 +242,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
         queryParams: {
           channelType: 'channel',
           id: this.currentChannelId,
-          reciepentId: this.userService.docId,
+          reciepentId: this.userService.userId,
           messageId: messageId,
         },
       });
