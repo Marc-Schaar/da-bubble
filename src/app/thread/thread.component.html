@@ -86,6 +86,12 @@
                   >
                     <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
                     <span>{{ countEmoji(emoji, message.reaction) }}</span>
+
+                    <div class="reaction-from-dialog">
+                      <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
+                      <span>{{ getEmojiFromNames(emoji.from) }}</span>
+                      <span> hat reagiert</span>
+                    </div>
                   </div>
                 </ng-container>
 

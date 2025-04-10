@@ -251,6 +251,10 @@ export class ThreadComponent implements OnInit {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
+  getEmojiFromNames(fromId: string) {
+    console.log('getEmojiFromNames', fromId);
+  }
+
   ngOnDestroy(): void {
     if (this.unsubMessages) {
       this.unsubMessages();
