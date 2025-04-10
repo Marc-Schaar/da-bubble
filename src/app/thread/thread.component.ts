@@ -261,14 +261,10 @@ export class ThreadComponent implements OnInit {
       .filter((user: any) => userIds.includes(user.key) && user.key !== currentUserId)
       .map((user: any) => user.fullname);
 
-    if (hasCurrentUserReacted && otherUsers.length === 0) {
-      return { name: 'Du', reactionText: 'hast reagiert' };
-    }
+    if (hasCurrentUserReacted && otherUsers.length === 0) return { name: 'Du', reactionText: 'hast reagiert' };
 
     let names = otherUsers;
-    if (hasCurrentUserReacted) {
-      names.push('und du');
-    }
+    if (hasCurrentUserReacted) names.push('und du');
 
     let verb = names.length > 1 ? 'haben' : 'hat';
     let nameString = names.join(', ');
