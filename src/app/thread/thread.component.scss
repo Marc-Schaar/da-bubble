@@ -458,37 +458,7 @@ header {
     margin: 0;
   }
 
-  // .card-header {
-  //   padding: 10px 16px;
-
-  //   .avatar-container {
-  //     display: none;
-  //   }
-  // }
+  .thread-channel-close-button-container {
+    padding: 10px 16px;
+  }
 }
-
-// @media (max-width: 850px) {
-//   .content-container {
-//     width: 100%;
-//   }
-
-//   .message-footer {
-//     flex-direction: column;
-//     align-items: flex-end;
-//   }
-// }
-
-// @media (max-width: 430px) {
-//   .card {
-//     margin: 0;
-//     max-height: calc(100svh - 80px);
-//   }
-
-//   .message-footer {
-//     white-space: normal;
-
-//     span:first-child {
-//       white-space: nowrap;
-//     }
-//   }
-// }
