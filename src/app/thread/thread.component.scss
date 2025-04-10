@@ -439,9 +439,7 @@ button {
 }
 
 .reaction-from-dialog {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: none;
   position: absolute;
   flex-wrap: wrap;
   bottom: 40px;
