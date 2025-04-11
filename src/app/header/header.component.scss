@@ -23,7 +23,6 @@
     height: fit-content;
   }
   > div:nth-child(1) {
-    width: 40%;
     @media (max-width: 500px) {
       width: unset;
     }
@@ -68,8 +67,12 @@
   }
 }
 
-.searchbar{
-  width: 100%;
+.logo-container {
+  width: var(--contactbar-width);
+}
+
+.searchbar {
+  flex: 1;
   position: relative;
 }
 
@@ -85,8 +88,6 @@
 }
 
 .user-menu {
-  width: 50%;
-  height: 70px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -112,7 +113,7 @@
       font-weight: 700;
       font-size: 32px;
       color: #000000;
-      @media (max-width: 1204px) {
+      @media (max-width: 1023px) {
         display: none;
       }
     }
@@ -121,20 +122,19 @@
 
 .input {
   border-radius: 42px;
-  outline: none;
-  width: calc(100% - 94px);
-  background-repeat: no-repeat;
-  background-position: 99%;
   padding: 17.5px 45px 17.5px 45px;
   background-color: #ffff;
   display: flex;
   justify-content: space-between;
-  @media (max-width: 1204px) {
+
+  @media (max-width: 1023px) {
     display: none;
   }
   > input {
     border: none;
     outline: none;
+    font-size: 24px;
+    font-family: "Nunito";
     @media (max-width: 400px) {
       width: 100%;
     }

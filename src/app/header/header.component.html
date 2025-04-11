@@ -1,11 +1,10 @@
 <div class="header">
-  <div>
+  <div class="logo-container">
     <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
   </div>
-  <div></div>
   <div class="searchbar">
     <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
-      <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" />
+      <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
     <div [ngClass]="{ show: isFound }" class="lists newMessage">
@@ -17,11 +16,7 @@
       >
         <div *ngIf="!isChannel" class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />
-          <div
-            *ngIf="!isChannel"
-            class="status-dot"
-            [ngClass]="{ green: object?.online }"
-          ></div>
+          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <div>
@@ -38,11 +33,7 @@
       >
         <div *ngIf="!isChannel" class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />
-          <div
-            *ngIf="!isChannel"
-            class="status-dot"
-            [ngClass]="{ green: object?.online }"
-          ></div>
+          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <div>
@@ -50,8 +41,6 @@
         </div>
       </div>
     </div>
-
-
   </div>
   <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
     <p>Neu bei DABubble?</p>
