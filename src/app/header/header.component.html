@@ -36,9 +36,7 @@
           <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
-        <div>
-          <span>{{ object?.fullname || object?.name }}</span>
-        </div>
+        <span>{{ object?.fullname || object?.name }}</span>
       </div>
     </div>
   </div>
