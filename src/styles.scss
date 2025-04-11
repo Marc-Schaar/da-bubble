@@ -216,6 +216,15 @@ a {
   background-color: var(--bg-color);
 }
 
+.hover-bg {
+  padding: 8px 10px;
+  border-radius: 30px;
+  transition: all 0.125s ease-in-out;
+  &:hover {
+    background-color: var(--bg-color);
+  }
+}
+
 .gap-10 {
   gap: 10px;
 }

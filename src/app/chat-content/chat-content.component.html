@@ -30,12 +30,12 @@
   ></app-add-member>
   <div class="card">
     <section class="card-header">
-      <div class="align-center" (click)="openChannelInfo()">
+      <div class="align-center hover-bg" (click)="openChannelInfo()">
         # {{ this.currentChannel?.name }}
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </div>
       <div class="align-center gap-10">
-        <div class="avatar-container">
+        <div class="avatar-container hover-bg">
           <ng-container *ngFor="let member of currentChannel?.member; index as i">
             <img *ngIf="i < 3" (click)="openMemberWindow(false)" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
@@ -223,7 +223,7 @@
           </div>
 
           <div *ngIf="isEditing && editingMessageId === i" class="input-container edit-input full-width">
-            <textarea [(ngModel)]="inputEdit" rows="4"></textarea>
+            <textarea [(ngModel)]="inputEdit" rows="3"></textarea>
 
             <div class="action-container">
               <div class="d-flex gap-32">
@@ -242,7 +242,7 @@
           (keyup.enter)="newMessage()"
           (input)="getList()"
           [(ngModel)]="input"
-          rows="4"
+          rows="3"
           [name]="input"
           placeholder="Nachricht an #{{ currentChannel?.name }}"
         ></textarea>

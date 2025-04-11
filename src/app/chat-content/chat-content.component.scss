@@ -48,17 +48,14 @@ main {
     font-weight: 600;
   }
 }
+
 .avatar-container {
   display: flex;
   position: relative;
   height: 50px;
   align-items: center;
-  width: 142px;
-  border-radius: 30px;
-  background: none;
   cursor: pointer;
   &:hover {
-    background-color: var(--bg-color);
     span {
       color: var(--dark-purple-text);
     }
@@ -96,12 +93,13 @@ main {
 }
 
 .card-footer {
-  padding: 25px;
+  padding: 0 25px 25px;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
+  height: 145px;
   outline: 1px solid var(--light-purple);
   border-radius: 20px;
   padding: 20px;
