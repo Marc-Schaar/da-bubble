@@ -60,7 +60,7 @@
       <ng-container *ngFor="let message of this.messages; index as i">
         <li *ngIf="message.newDay">
           <div class="date-container">
-            <span class="date">{{ this.userService.isToday(message.date) ? "Heute" : message.date }}</span>
+            <span class="date">{{ this.userService.isToday(message.date) ? "Heute" : this.userService.formateDate(message.date) }}</span>
           </div>
         </li>
 
