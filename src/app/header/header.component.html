@@ -21,7 +21,7 @@
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <span>{{ object?.fullname || object?.name }}</span>
-        <span *ngIf="object?.name === currentUser.name && index === index">(Du)</span>
+        <span *ngIf="object?.name === currentUser.name">(Du)</span>
       </li>
     </ul>
   </div>
