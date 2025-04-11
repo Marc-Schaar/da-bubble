@@ -31,11 +31,10 @@ main {
     height: 40px;
     border-radius: 50%;
     background-color: var(--bg-color);
+    transition: all 0.125s ease-in-out;
     &:hover {
       svg {
-        height: 21px;
-        width: 25px;
-        transition: height 0.1s ease-in-out, width 0.1s ease-in-out;
+        scale: 1.1;
         path {
           fill: var(--dark-purple-text);
         }
