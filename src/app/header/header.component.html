@@ -7,8 +7,8 @@
       <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
-    <div [ngClass]="{ show: isFound }" class="lists newMessage">
-      <div
+    <ul [ngClass]="{ show: isFound }" class="lists newMessage">
+      <li
         (click)="chooseReciever(index)"
         [ngClass]="{ channelStyle: isChannel }"
         class="listrow"
@@ -22,10 +22,10 @@
         <div>
           <span>{{ object?.fullname || object?.name }}</span>
         </div>
-      </div>
-    </div>
-    <div [ngClass]="{ show: isClicked }" class="lists">
-      <div
+      </li>
+    </ul>
+    <ul [ngClass]="{ show: isClicked }" class="lists">
+      <li
         (click)="getReciever(index)"
         [ngClass]="{ channelStyle: isChannel }"
         class="listrow"
@@ -37,8 +37,8 @@
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <span>{{ object?.fullname || object?.name }}</span>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
   <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
     <p>Neu bei DABubble?</p>
