@@ -7,23 +7,7 @@
       <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
-    <ul [ngClass]="{ show: isFound }" class="lists newMessage">
-      <li
-        (click)="chooseReciever(index)"
-        [ngClass]="{ channelStyle: isChannel }"
-        class="listrow"
-        *ngFor="let object of searchList; let index = index"
-      >
-        <div *ngIf="!isChannel" class="imageContainer">
-          <img [src]="object?.profilephoto" alt="" />
-          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
-        </div>
-        <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
-        <div>
-          <span>{{ object?.fullname || object?.name }}</span>
-        </div>
-      </li>
-    </ul>
+
     <ul [ngClass]="{ show: isClicked }" class="lists">
       <li
         (click)="getReciever(index)"
@@ -37,6 +21,7 @@
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <span>{{ object?.fullname || object?.name }}</span>
+        <span *ngIf="object?.name === currentUser.name && index === index">(Du)</span>
       </li>
     </ul>
   </div>
