@@ -51,16 +51,16 @@
       <span>{{ this.chatmoduleenabled.user.displayName || "Gast" }}</span>
       <img src="img/Profile bild.png" alt="" />
       <div>
-        <button (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu" aria-label="Example icon-button with a menu">
+        <button (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before">
-          <div *ngIf="showmenu">
+          <ng-container *ngIf="showmenu">
             <button *ngIf="!showmodifycontent" (click)="show()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
               Profil
             </button>
             <button *ngIf="!showmodifycontent" class="menu-box-btn" mat-menu-item (click)="signOut()">Log out</button>
-          </div>
+          </ng-container>
 
           <app-user-profile
             (click)="$event.stopPropagation()"

@@ -113,6 +113,7 @@ app-main-chat {
     contrast(102%);
 
   --contactbar-width: 366px;
+  --mat-sys-label-large-size: 24px;
 }
 
 .mat-mdc-menu-panel {
@@ -133,7 +134,6 @@ html {
 }
 
 .menu-box {
-  padding: 10px 0 10px 0 !important;
   border-radius: 30px !important;
   padding: 30px !important;
   background-color: #ffffff !important;
@@ -153,6 +153,7 @@ html {
 .menu-box-btn {
   width: 140px !important;
   text-align: center !important;
+  padding: 10px 45px;
   &:hover {
     background-color: #eceefe !important;
     border-radius: 30px !important;
