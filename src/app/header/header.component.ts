@@ -5,19 +5,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
-import { getAuth, onAuthStateChanged, signOut, User } from '@firebase/auth';
+import { signOut, User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
-import { DirectMessage } from '../directmessage.class';
-import { serverTimestamp } from '@angular/fire/firestore';
-import { Message } from '../models/message';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MatMenuModule, MatIconModule, MatButtonModule, CommonModule, UserProfileComponent,FormsModule],
+  imports: [RouterLink, MatMenuModule, MatIconModule, MatButtonModule, CommonModule, UserProfileComponent, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -76,17 +73,17 @@ export class HeaderComponent {
   currentChannelId: string = '';
   isFound: boolean = false;
   private subscription?: Subscription;
-  constructor() {
-    this.startChat();
-  }
 
   async ngOnInit() {
-    this.subscription = this.userService.startLoadingChat$.subscribe(() => {
-      this.startChat();
-    });
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   async loadUsers() {
@@ -105,49 +102,9 @@ export class HeaderComponent {
     }
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  async startChat() {
-    if (this.userService.user != null && this.userService.reciepentId != null) {
-    } else {
-    }
-  }
   setCurrentUser() {
     this.currentUser = this.userService.user;
     this.currentUserId = this.userService.user.uid;
-    if (!this.currentUser) {
-      return;
-    }
-  }
-
-  createMessageData(message: DirectMessage) {
-    return {
-      name: message.name,
-      photo: message.photo,
-      content: message.content,
-      time: message.time.toISOString(),
-      from: message.from,
-      to: message.to,
-    };
-  }
-
-  buildMessageObject() {
-    return {
-      message: this.message || '',
-      avatar: this.userService.user?.photoURL || '',
-      date: new Date().toISOString().split('T')[0],
-      name: this.userService.user?.displayName || 'Unbekannt',
-      newDay: false,
-      timestamp: serverTimestamp(),
-    };
-  }
-
-  sendChannelMessage() {
-    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
   }
 
   getCurrentChat() {
