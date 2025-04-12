@@ -1,6 +1,6 @@
 import { inject, Injectable, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, confirmPasswordReset, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot, serverTimestamp } from '@angular/fire/firestore';
 import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
@@ -257,7 +257,16 @@ export class UserService {
     if (!date) return false;
     let today = new Date().toISOString().split('T')[0];
     let messageDate = new Date(date).toISOString().split('T')[0];
+
     return today === messageDate;
+  }
+
+  formateDate(data: any) {
+    return new Date(data).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
   }
 
   buildMessageObject(input: string, messages: any, reactions: any): {} {

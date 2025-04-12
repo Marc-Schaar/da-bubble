@@ -17,7 +17,7 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 45px 25px;
+  padding: 25px 45px;
   position: relative;
   font-size: 24px;
   font-weight: 700;
@@ -31,11 +31,10 @@ main {
     height: 40px;
     border-radius: 50%;
     background-color: var(--bg-color);
+    transition: all 0.125s ease-in-out;
     &:hover {
       svg {
-        height: 21px;
-        width: 25px;
-        transition: height 0.1s ease-in-out, width 0.1s ease-in-out;
+        scale: 1.1;
         path {
           fill: var(--dark-purple-text);
         }
@@ -48,17 +47,14 @@ main {
     font-weight: 600;
   }
 }
+
 .avatar-container {
   display: flex;
   position: relative;
   height: 50px;
   align-items: center;
-  width: 142px;
-  border-radius: 30px;
-  background: none;
   cursor: pointer;
   &:hover {
-    background-color: var(--bg-color);
     span {
       color: var(--dark-purple-text);
     }
@@ -96,12 +92,13 @@ main {
 }
 
 .card-footer {
-  padding: 25px;
+  padding: 0 25px 25px;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
+  height: 145px;
   outline: 1px solid var(--light-purple);
   border-radius: 20px;
   padding: 20px;
@@ -345,6 +342,7 @@ li {
   }
 
   .emoji-box {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,6 +351,33 @@ li {
     border: 1px solid var(--light-purple);
     border-radius: 20px;
     cursor: pointer;
+
+    &:hover {
+      .reaction-from-dialog {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+}
+
+.reaction-from-dialog {
+  display: none;
+  position: absolute;
+  bottom: 40px;
+  left: 32px;
+  align-items: center;
+  background-color: var(--dark-purple);
+  border-radius: 30px 30px 30px 0;
+  padding: 10px 15px;
+  color: white;
+  z-index: 10;
+  white-space: nowrap;
+  font-size: 16px;
+  img {
+    width: 30px;
+    aspect-ratio: 1;
   }
 }
 

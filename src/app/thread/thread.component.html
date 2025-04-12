@@ -89,8 +89,26 @@
 
                     <div class="reaction-from-dialog">
                       <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
-                      <span>{{ getEmojiFromNames(emoji.from) }}</span>
-                      <span> hat reagiert</span>
+
+                      <ng-container *ngFor="let name of getReactionNamesForEmoji(emoji.emoji, message.reaction)">
+                        <h3 class="font-weight-700">{{ name }}</h3>
+                      </ng-container>
+                      <span *ngIf="getReactionNamesForEmoji(emoji.emoji, message.reaction).length > 1">haben</span>
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] === 'Du'
+                        "
+                        >hast</span
+                      >
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] !== 'Du'
+                        "
+                        >hat</span
+                      >
+                      <span> reagiert</span>
                     </div>
                   </div>
                 </ng-container>
@@ -187,7 +205,7 @@
         <textarea
           placeholder="Antworten..."
           name="YourMessage"
-          rows="4"
+          rows="3"
           [(ngModel)]="input"
           (keyup.enter)="sendMessage()"
           (click)="reactionMenuOpenInTextarea = false; listOpen = false"

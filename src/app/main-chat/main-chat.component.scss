@@ -10,7 +10,7 @@ header {
 
 .content-container {
   display: grid;
-  grid-template-columns: 366px 1fr;
+  grid-template-columns: var(--contactbar-width) 1fr;
   grid-template-rows: 1fr;
   height: 100%;
 }
@@ -31,7 +31,8 @@ app-contactbar {
 }
 
 .tread-container {
-  width: 485px;
+  z-index: 0 !important;
+  width: 50%;
 }
 
 .mat-drawer-side.mat-drawer-end {
@@ -55,7 +56,7 @@ app-contactbar {
     border: 1px solid #adb0d9;
     background-color: #ffff;
     display: none;
-    @media (max-width: 1204px) {
+    @media (max-width: 1023px) {
       display: flex;
       justify-content: space-between;
       width: 89%;

@@ -111,6 +111,9 @@ app-main-chat {
 
   --dark-purple-filter: brightness(0) saturate(100%) invert(37%) sepia(80%) saturate(5262%) hue-rotate(231deg) brightness(94%)
     contrast(102%);
+
+  --contactbar-width: 366px;
+  --mat-sys-label-large-size: 24px;
 }
 
 .mat-mdc-menu-panel {
@@ -131,7 +134,6 @@ html {
 }
 
 .menu-box {
-  padding: 10px 0 10px 0 !important;
   border-radius: 30px !important;
   padding: 30px !important;
   background-color: #ffffff !important;
@@ -151,6 +153,7 @@ html {
 .menu-box-btn {
   width: 140px !important;
   text-align: center !important;
+  padding: 10px 45px;
   &:hover {
     background-color: #eceefe !important;
     border-radius: 30px !important;
@@ -216,6 +219,15 @@ a {
   background-color: var(--bg-color);
 }
 
+.hover-bg {
+  padding: 8px 10px;
+  border-radius: 30px;
+  transition: all 0.125s ease-in-out;
+  &:hover {
+    background-color: var(--bg-color);
+  }
+}
+
 .gap-10 {
   gap: 10px;
 }
@@ -252,6 +264,10 @@ a {
 
 .curser-pointer {
   cursor: pointer;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .btn {

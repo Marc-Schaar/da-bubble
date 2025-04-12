@@ -30,12 +30,12 @@
   ></app-add-member>
   <div class="card">
     <section class="card-header">
-      <div class="align-center" (click)="openChannelInfo()">
+      <div class="align-center hover-bg" (click)="openChannelInfo()">
         # {{ this.currentChannel?.name }}
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </div>
       <div class="align-center gap-10">
-        <div class="avatar-container">
+        <div class="avatar-container hover-bg">
           <ng-container *ngFor="let member of currentChannel?.member; index as i">
             <img *ngIf="i < 3" (click)="openMemberWindow(false)" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
@@ -60,7 +60,7 @@
       <ng-container *ngFor="let message of this.messages; index as i">
         <li *ngIf="message.newDay">
           <div class="date-container">
-            <span class="date">{{ this.userService.isToday(message.date) ? "Heute" : message.date }}</span>
+            <span class="date">{{ this.userService.isToday(message.date) ? "Heute" : this.userService.formateDate(message.date) }}</span>
           </div>
         </li>
 
@@ -136,7 +136,7 @@
             </div>
 
             <div *ngIf="message.thread?.length > 0" class="message-footer gap-20">
-              <div class="d-flex gap-20">
+              <div class="d-flex gap-20 flex-wrap">
                 <span
                   class="curser-pointer"
                   (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
@@ -159,6 +159,29 @@
                   >
                     <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
                     <span>{{ countEmoji(emoji, message.reaction) }}</span>
+                    <div class="reaction-from-dialog">
+                      <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
+
+                      <ng-container *ngFor="let name of getReactionNamesForEmoji(emoji.emoji, message.reaction)">
+                        <h3 class="font-weight-700">{{ name }}</h3>
+                      </ng-container>
+                      <span *ngIf="getReactionNamesForEmoji(emoji.emoji, message.reaction).length > 1">haben</span>
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] === 'Du'
+                        "
+                        >hast</span
+                      >
+                      <span
+                        *ngIf="
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction).length === 1 &&
+                          getReactionNamesForEmoji(emoji.emoji, message.reaction)[0] !== 'Du'
+                        "
+                        >hat</span
+                      >
+                      <span> reagiert</span>
+                    </div>
                   </div>
                 </ng-container>
 
@@ -200,7 +223,7 @@
           </div>
 
           <div *ngIf="isEditing && editingMessageId === i" class="input-container edit-input full-width">
-            <textarea [(ngModel)]="inputEdit" rows="4"></textarea>
+            <textarea [(ngModel)]="inputEdit" rows="3"></textarea>
 
             <div class="action-container">
               <div class="d-flex gap-32">
@@ -219,7 +242,7 @@
           (keyup.enter)="newMessage()"
           (input)="getList()"
           [(ngModel)]="input"
-          rows="4"
+          rows="3"
           [name]="input"
           placeholder="Nachricht an #{{ currentChannel?.name }}"
         ></textarea>
