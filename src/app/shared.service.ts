@@ -205,12 +205,6 @@ export class UserService {
     });
   }
 
-  openLink(type: string, id: string, listObject: string, component: string) {
-    this.setUrl(type, id, this.userId);
-    this.getChannel(listObject, this.currentUser);
-    this.loadComponent(component);
-  }
-
   loadComponent(component: string) {
     setTimeout(() => {
       if (component === 'chat') {
