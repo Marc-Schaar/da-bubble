@@ -274,3 +274,13 @@
   align-items: flex-start;
   gap: 15px;
 }
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #72727258;
+  z-index: 3;
+}

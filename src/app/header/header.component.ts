@@ -28,6 +28,7 @@ export class HeaderComponent {
   userService = inject(UserService);
   router: Router = inject(Router);
 
+  showBackground = false;
   showmodifycontent = false;
   isClicked: boolean = false;
   listKey: string = '';
@@ -57,8 +58,13 @@ export class HeaderComponent {
     this.showmodifycontent = true;
   }
 
+  onMenuClosed() {
+    this.showBackground = false;
+  }
+
   showmenu() {
     this.showmodifycontent = false;
+    this.showBackground = true;
   }
 
   async signOut() {
