@@ -3,7 +3,7 @@
     <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
   </div>
   <div class="searchbar">
-    <div class="input" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+    <div class="input" *ngIf="!userService.login && userService.dashboard">
       <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
@@ -25,13 +25,13 @@
       </li>
     </ul>
   </div>
-  <div class="signup" *ngIf="chatmoduleenabled.login && !chatmoduleenabled.dashboard">
+  <div class="signup" *ngIf="userService.login && !userService.dashboard">
     <p>Neu bei DABubble?</p>
     <a routerLink="/signup">Konto erstellen</a>
   </div>
-  <div class="user-menu" *ngIf="!chatmoduleenabled.login && chatmoduleenabled.dashboard">
+  <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
     <div>
-      <span>{{ this.chatmoduleenabled.user.displayName || "Gast" }}</span>
+      <span>{{ this.userService.user.displayName || "Gast" }}</span>
       <img src="img/Profile bild.png" alt="" />
       <div>
         <button (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">

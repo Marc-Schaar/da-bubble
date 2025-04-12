@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,30 +25,10 @@ export class HeaderComponent {
   user: User | null = null;
   auth = inject(Auth);
   opened = 0;
-  chatmoduleenabled = inject(UserService);
   fireService = inject(FireServiceService);
   input: string = '';
 
-  show() {
-    this.opened++;
-    this.showmodifycontent = true;
-  }
-
-  showmenu() {
-    this.showmodifycontent = false;
-  }
-
-  async signOut() {
-    const currentUser = this.chatmoduleenabled.getUser();
-    currentUser.online = false;
-    await this.fireService.updateOnlineStatus(currentUser);
-    await signOut(this.auth);
-
-    this.chatmoduleenabled.redirectiontologinpage();
-  }
-
   userService = inject(UserService);
-  firestoreService = inject(FireServiceService);
   router: Router = inject(Router);
   public channels: any[] = [];
   public users: any[] = [];
@@ -72,7 +52,24 @@ export class HeaderComponent {
   currentUserId: string = '';
   currentChannelId: string = '';
   isFound: boolean = false;
-  private subscription?: Subscription;
+
+  show() {
+    this.opened++;
+    this.showmodifycontent = true;
+  }
+
+  showmenu() {
+    this.showmodifycontent = false;
+  }
+
+  async signOut() {
+    const currentUser = this.userService.getUser();
+    currentUser.online = false;
+    await this.fireService.updateOnlineStatus(currentUser);
+    await signOut(this.auth);
+
+    this.userService.redirectiontologinpage();
+  }
 
   async ngOnInit() {
     await this.loadChannels();
@@ -80,15 +77,9 @@ export class HeaderComponent {
     this.setCurrentUser();
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
   async loadUsers() {
     try {
-      this.users = await this.firestoreService.getUsers();
+      this.users = await this.fireService.getUsers();
     } catch (error) {
       console.error('Error loading users in component:', error);
     }
@@ -96,7 +87,7 @@ export class HeaderComponent {
 
   async loadChannels() {
     try {
-      this.channels = await this.firestoreService.getChannels();
+      this.channels = await this.fireService.getChannels();
     } catch (error) {
       console.error('Error loading channels in component:', error);
     }
