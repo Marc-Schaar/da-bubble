@@ -39,22 +39,19 @@ export class HeaderComponent {
   opened = 0;
 
   input: string = '';
-  message: string = '';
-  userID: string = '';
   whichMessage: string = '';
   channelType: string = '';
   docId: string = '';
-  currentRecieverId: string = '';
   currentUserId: string = '';
+  currentRecieverId: string = '';
   currentChannelId: string = '';
 
-  public channels: any[] = [];
-  public users: any[] = [];
-  public currentReciever: any = null;
-  public currentUser: any = null;
-  public currentChannel: any = null;
+  channels: any[] = [];
+  users: any[] = [];
+  currentReciever: any = null;
+  currentUser: any = null;
+  currentChannel: any = null;
   currentlist: any[] = [];
-  currentMessages: any[] = [];
   searchList: any[] = [];
   currentArray: any[] = [];
 
@@ -80,6 +77,7 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
+    console.log('Current user:', this.currentUser);
   }
 
   async loadUsers() {
@@ -193,17 +191,17 @@ export class HeaderComponent {
   }
 
   getList() {
-    if (this.message.includes('#')) {
+    if (this.input.includes('#')) {
       this.currentlist = this.channels;
       this.isClicked = true;
       this.isChannel = true;
     }
-    if (this.message.includes('@')) {
+    if (this.input.includes('@')) {
       this.isClicked = true;
       this.currentlist = this.users;
       this.isChannel = false;
     }
-    if (this.message === '' || (!this.message.includes('#') && !this.message.includes('@'))) {
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
       this.isClicked = false;
     }
   }
@@ -211,17 +209,17 @@ export class HeaderComponent {
   getReciever(index: number) {
     if (this.isChannel) {
       const currentChannel = this.currentlist[index];
-      if (this.message === '') {
-        this.message = '#' + currentChannel?.name;
+      if (this.input === '') {
+        this.input = '#' + currentChannel?.name;
       } else {
-        this.message = this.message + currentChannel?.name;
+        this.input = this.input + currentChannel?.name;
       }
     } else {
       const currentReciever = this.currentlist[index];
-      if (this.message === '') {
-        this.message = '@' + currentReciever?.fullname;
+      if (this.input === '') {
+        this.input = '@' + currentReciever?.fullname;
       } else {
-        this.message = this.message + currentReciever?.fullname;
+        this.input = this.input + currentReciever?.fullname;
       }
     }
   }

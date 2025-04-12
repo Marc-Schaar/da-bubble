@@ -4,7 +4,7 @@
   </div>
   <div class="searchbar">
     <div class="input" *ngIf="!userService.login && userService.dashboard">
-      <input [(ngModel)]="message" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
+      <input [(ngModel)]="input" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
 
@@ -21,7 +21,7 @@
         </div>
         <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
         <span>{{ object?.fullname || object?.name }}</span>
-        <span *ngIf="object?.name === currentUser.name">(Du)</span>
+        <span *ngIf="object?.fullname === currentUser.displayName">(Du)</span>
       </li>
     </ul>
   </div>
