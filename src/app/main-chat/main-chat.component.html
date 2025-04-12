@@ -1,40 +1,38 @@
-<header>
-  <app-header></app-header>
-  <div class="box">
-    <div class="input">
-      <input type="text" placeholder="Devspace durchsuchen" />
-      <button><img src="/img/icons.png" alt="" /></button>
+<main>
+  <section>
+    <app-header></app-header>
+    <!-- <div class="box">
+        <div class="input">
+          <input type="text" placeholder="Devspace durchsuchen" />
+          <button><img src="/img/icons.png" alt="" /></button>
+        </div>
+      </div> -->
+
+    <div class="content-container">
+      <app-contactbar></app-contactbar>
+
+      <mat-drawer-container class="chat-content" autosize>
+        <mat-drawer position="end" #drawer class="tread-container" mode="side">
+          <app-thread></app-thread>
+        </mat-drawer>
+
+        <!-- <ng-container *ngComponentOutlet="currentComponent"></ng-container> -->
+
+        <ng-container *ngIf="currentComponent === 'channel'">
+          <app-chat-content></app-chat-content>
+        </ng-container>
+        <ng-container *ngIf="currentComponent === 'direct'">
+          <app-direct-messages></app-direct-messages>
+        </ng-container>
+        <ng-container *ngIf="currentComponent === 'default'">
+          <app-newmessage></app-newmessage>
+        </ng-container>
+      </mat-drawer-container>
     </div>
-  </div>
-</header>
+  </section>
+</main>
 
-<div class="content-container">
-  <app-contactbar></app-contactbar>
-
-  <mat-drawer-container class="chat-content" autosize>
-    <mat-drawer position="end" #drawer class="tread-container" mode="side">
-      <app-thread></app-thread>
-    </mat-drawer>
-
-    <!-- <ng-container *ngComponentOutlet="currentComponent"></ng-container> -->
-
-    <ng-container *ngIf="currentComponent === 'channel'">
-      <app-chat-content></app-chat-content>
-    </ng-container>
-    <ng-container *ngIf="currentComponent === 'direct'">
-      <app-direct-messages></app-direct-messages>
-    </ng-container>
-    <ng-container *ngIf="currentComponent === 'default'">
-      <app-newmessage></app-newmessage>
-    </ng-container>
-  </mat-drawer-container>
-</div>
-
-<div
-  (click)="closeProfile()"
-  [ngClass]="{ show: isProfileCard }"
-  class="profileCard-Overlay"
->
+<div (click)="closeProfile()" [ngClass]="{ show: isProfileCard }" class="profileCard-Overlay">
   <div class="profileCard">
     <div class="profileHead">
       <span>Profile</span>
@@ -46,10 +44,7 @@
     <div class="profileStatus">
       <span>{{ currentReciever?.fullname }}</span>
       <div>
-        <div
-          class="status-dot-profile"
-          [ngClass]="{ green: currentReciever?.online }"
-        ></div>
+        <div class="status-dot-profile" [ngClass]="{ green: currentReciever?.online }"></div>
         <span>{{ currentReciever?.online ? "Aktiv" : "Abwesend" }}</span>
       </div>
     </div>
@@ -59,18 +54,11 @@
         <span>E-Mail-Adresse</span>
       </div>
       <div class="email-adress">
-        <a href="mailto:{{ currentReciever?.email }}">{{
-          currentReciever?.email
-        }}</a>
+        <a href="mailto:{{ currentReciever?.email }}">{{ currentReciever?.email }}</a>
       </div>
     </div>
-    <button>
-      <img src="./img/speechbubble.svg" alt="" /> <span>Nachricht</span>
-    </button>
+    <button><img src="./img/speechbubble.svg" alt="" /> <span>Nachricht</span></button>
   </div>
 </div>
 
-<div *ngIf="darkBackground" class="dark-background">
-
-
-</div>
+<div *ngIf="darkBackground" class="dark-background"></div>

@@ -69,30 +69,15 @@ app-add-channel {
 //   height: 100%;
 // }
 
-app-header {
-  display: flex;
-  justify-content: center;
-  background-color: #eceefe;
-}
-
 app-footer {
   width: 100%;
   height: 150px;
-  background-color: #eceefe;
   display: flex;
   justify-content: center;
   align-items: center;
   @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
     display: none !important;
   }
-}
-
-app-main-chat {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr;
-  height: 100vh;
-  background: var(--bg-color);
 }
 
 @font-face {

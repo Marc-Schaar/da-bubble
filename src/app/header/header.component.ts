@@ -160,7 +160,6 @@ export class HeaderComponent {
 
   getReciever(index: number) {
     this.docId = this.currentlist[index].id;
-
     if (this.isChannel) {
       this.userService.setUrl('channel', this.docId, this.userService.userId);
       this.userService.getChannel(this.currentlist[index], this.currentUser);

@@ -1,3 +1,19 @@
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+section {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  height: 100vh;
+  background: var(--bg-color);
+  flex: 1;
+  max-width: 1920px;
+}
+
 header {
   grid-column: span 1;
 }
