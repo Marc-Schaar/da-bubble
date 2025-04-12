@@ -20,38 +20,43 @@ import { FormsModule } from '@angular/forms';
 })
 export class HeaderComponent {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
-  showmodifycontent = false;
+
   displayName: string | null = null;
   user: User | null = null;
-  auth = inject(Auth);
-  opened = 0;
-  fireService = inject(FireServiceService);
-  input: string = '';
 
+  auth = inject(Auth);
+  fireService = inject(FireServiceService);
   userService = inject(UserService);
   router: Router = inject(Router);
-  public channels: any[] = [];
-  public users: any[] = [];
-  public currentReciever: any = null;
-  public currentUser: any = null;
-  public currentChannel: any = null;
-  currentlist: any[] = [];
-  message: string = '';
-  userID: string = '';
-  currentMessages: any[] = [];
-  searchList: any[] = [];
-  currentArray: any[] = [];
+
+  showmodifycontent = false;
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
+  isFound: boolean = false;
+
+  opened = 0;
+
+  input: string = '';
+  message: string = '';
+  userID: string = '';
   whichMessage: string = '';
   channelType: string = '';
   docId: string = '';
   currentRecieverId: string = '';
   currentUserId: string = '';
   currentChannelId: string = '';
-  isFound: boolean = false;
+
+  public channels: any[] = [];
+  public users: any[] = [];
+  public currentReciever: any = null;
+  public currentUser: any = null;
+  public currentChannel: any = null;
+  currentlist: any[] = [];
+  currentMessages: any[] = [];
+  searchList: any[] = [];
+  currentArray: any[] = [];
 
   show() {
     this.opened++;
