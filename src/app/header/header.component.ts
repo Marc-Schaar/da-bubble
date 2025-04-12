@@ -11,6 +11,7 @@ import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { onLog } from '@angular/fire/app';
 
 @Component({
   selector: 'app-header',
@@ -34,12 +35,10 @@ export class HeaderComponent {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
-  isFound: boolean = false;
 
   opened = 0;
 
   input: string = '';
-  whichMessage: string = '';
   channelType: string = '';
   docId: string = '';
   currentUserId: string = '';
@@ -77,7 +76,6 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
-    console.log('Current user:', this.currentUser);
   }
 
   async loadUsers() {
@@ -101,66 +99,66 @@ export class HeaderComponent {
     this.currentUserId = this.userService.user.uid;
   }
 
-  getCurrentChat() {
+  getList() {
     if (this.input.includes('#')) {
-      this.currentArray = this.channels;
-      this.searchForReciever('channel');
-    } else if (this.input.includes('@')) {
-      this.currentArray = this.users;
-      this.searchForReciever('user');
+      this.isChannel = true;
+      this.currentlist = this.channels;
+      this.isClicked = true;
+      this.searchInit('channel');
+    }
+    if (this.input.includes('@')) {
+      this.isChannel = false;
+      this.isClicked = true;
+      this.currentlist = this.users;
+      this.searchInit('user');
+    }
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
+      this.isChannel = false;
+      this.isClicked = false;
     }
   }
 
-  searchForReciever(chat: string) {
-    if (this.input.length > 3) {
-      this.searchList = [];
-      this.isFound = true;
-      const INPUT = this.input.slice(1).toLowerCase().trim();
-      this.whichMessage = chat;
-      this.startSearch(INPUT, chat);
-    } else {
-      this.resetSearch();
-    }
+  searchInit(searchlistType: string) {
+    this.input.length > 3 ? this.startSearch(searchlistType) : this.resetSearch();
   }
 
-  resetSearch() {
+  startSearch(searchlistType: string) {
     this.searchList = [];
-    this.isFound = false;
-    this.isChannel = false;
-    this.currentReciever = null;
-    this.currentChannel = null;
-  }
-
-  startSearch(input: string, chat: string) {
-    this.currentArray.forEach((object) => {
+    let modifyedInput = this.input.slice(1).trim();
+    this.currentlist.forEach((object) => {
       //diese if-abfrage zw Users und channels könnte man sich sparen, wenn users und channels den gleichen key für den namen hätten und die daraus resultierenden zwei funktionen searchInUsers udn searchInChannels!
-      if (chat === 'user') {
-        this.searchInUsers(object, input);
-      }
-      if (chat === 'channel') {
-        this.searchInChannels(object, input);
-      }
+      if (searchlistType == 'user') this.searchInUsers(object, modifyedInput);
+      if (searchlistType === 'channel') this.searchInChannels(object, modifyedInput);
     });
   }
 
   searchInUsers(object: any, input: string) {
+    this.isChannel = false;
     if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
-        this.isChannel = false;
         this.searchList.push(object);
+        this.currentlist = this.searchList;
       }
     }
   }
 
   searchInChannels(object: any, input: string) {
+    this.isChannel = true;
     if (object.name.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
-        this.isChannel = true;
+        this.currentlist.push(object);
         this.searchList.push(object);
+        this.currentlist = this.searchList;
       }
     }
+  }
+
+  resetSearch() {
+    this.searchList = [];
+    this.currentReciever = null;
+    this.currentChannel = null;
   }
 
   chooseReciever(index: number) {
@@ -174,7 +172,6 @@ export class HeaderComponent {
       this.currentChannelId = this.currentChannel.id;
       this.input = '#' + this.currentChannel.name;
     }
-    this.isFound = false;
     this.isChannel = false;
   }
 
@@ -187,23 +184,6 @@ export class HeaderComponent {
 
   hideList() {
     this.isClicked = false;
-    this.isFound = false;
-  }
-
-  getList() {
-    if (this.input.includes('#')) {
-      this.currentlist = this.channels;
-      this.isClicked = true;
-      this.isChannel = true;
-    }
-    if (this.input.includes('@')) {
-      this.isClicked = true;
-      this.currentlist = this.users;
-      this.isChannel = false;
-    }
-    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
-      this.isClicked = false;
-    }
   }
 
   getReciever(index: number) {
