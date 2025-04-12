@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { getAuth, User, updateProfile } from 'firebase/auth';
+import { UserService } from '../shared.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,6 +16,8 @@ export class UserProfileComponent implements OnInit {
   newname: string = '';
   @Input() menuTrigger!: MatMenuTrigger;
   @Input() showmodifycontent: boolean = false;
+
+  userService = inject(UserService);
   auth = getAuth();
   user: User | null = null;
   displayName: string | null = null;
