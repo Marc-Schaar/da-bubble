@@ -1,6 +1,6 @@
 import { inject, Injectable, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, confirmPasswordReset, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot, serverTimestamp } from '@angular/fire/firestore';
 import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { DirectmessagesComponent } from './direct-messages/direct-messages.component';
@@ -203,6 +203,12 @@ export class UserService {
         messageId: messageId,
       },
     });
+  }
+
+  openLink(type: string, id: string, listObject: string, component: string) {
+    this.setUrl(type, id, this.userId);
+    this.getChannel(listObject, this.currentUser);
+    this.loadComponent(component);
   }
 
   loadComponent(component: string) {

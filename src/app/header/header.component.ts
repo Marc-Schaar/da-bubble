@@ -146,7 +146,6 @@ export class HeaderComponent {
     if (object.name.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
-        this.currentlist.push(object);
         this.searchList.push(object);
         this.currentlist = this.searchList;
       }
@@ -160,27 +159,18 @@ export class HeaderComponent {
   }
 
   getReciever(index: number) {
+    this.docId = this.currentlist[index].id;
+
     if (this.isChannel) {
-      this.docId = this.currentlist[index].id;
       this.userService.setUrl('channel', this.docId, this.userService.userId);
       this.userService.getChannel(this.currentlist[index], this.currentUser);
       this.userService.loadComponent('channel');
     } else {
-      this.docId = this.currentlist[index].id;
-      this.userService.setUrl('direct', this.docId, this.userService.userId);
+      this.userService.setUrl('direct', this.userService.userId, this.docId);
       this.userService.getReciepent(this.currentlist[index], this.currentUser);
       this.userService.loadComponent('chat');
     }
-  }
-
-  toggleList(event: Event) {
-    this.isClicked = !this.isClicked;
-    this.currentlist = this.users;
-    this.isChannel = false;
-    event.stopPropagation();
-  }
-
-  hideList() {
     this.isClicked = false;
+    this.input = '';
   }
 }
