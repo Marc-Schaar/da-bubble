@@ -13,7 +13,7 @@
         (click)="getReciever(index)"
         [ngClass]="{ channelStyle: isChannel }"
         class="listrow"
-        *ngFor="let object of currentlist; let index = index"
+        *ngFor="let object of currentlist; index as index"
       >
         <div *ngIf="!isChannel" class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />

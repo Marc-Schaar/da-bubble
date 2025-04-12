@@ -9,9 +9,7 @@ import { signOut, User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
-import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { onLog } from '@angular/fire/app';
 
 @Component({
   selector: 'app-header',
@@ -161,18 +159,18 @@ export class HeaderComponent {
     this.currentChannel = null;
   }
 
-  chooseReciever(index: number) {
-    if (this.isChannel === false) {
-      this.currentReciever = this.searchList[index];
-      this.currentRecieverId = this.currentReciever.id;
-      this.input = '@' + this.currentReciever.fullname;
+  getReciever(index: number) {
+    if (this.isChannel) {
+      this.docId = this.currentlist[index].id;
+      this.userService.setUrl('channel', this.docId, this.userService.userId);
+      this.userService.getChannel(this.currentlist[index], this.currentUser);
+      this.userService.loadComponent('channel');
+    } else {
+      this.docId = this.currentlist[index].id;
+      this.userService.setUrl('direct', this.docId, this.userService.userId);
+      this.userService.getReciepent(this.currentlist[index], this.currentUser);
+      this.userService.loadComponent('chat');
     }
-    if (this.isChannel === true) {
-      this.currentChannel = this.searchList[index];
-      this.currentChannelId = this.currentChannel.id;
-      this.input = '#' + this.currentChannel.name;
-    }
-    this.isChannel = false;
   }
 
   toggleList(event: Event) {
@@ -184,23 +182,5 @@ export class HeaderComponent {
 
   hideList() {
     this.isClicked = false;
-  }
-
-  getReciever(index: number) {
-    if (this.isChannel) {
-      const currentChannel = this.currentlist[index];
-      if (this.input === '') {
-        this.input = '#' + currentChannel?.name;
-      } else {
-        this.input = this.input + currentChannel?.name;
-      }
-    } else {
-      const currentReciever = this.currentlist[index];
-      if (this.input === '') {
-        this.input = '@' + currentReciever?.fullname;
-      } else {
-        this.input = this.input + currentReciever?.fullname;
-      }
-    }
   }
 }
