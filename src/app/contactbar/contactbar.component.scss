@@ -1,6 +1,6 @@
 main {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   height: 100%;
 }
 
@@ -14,6 +14,40 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 25px;
+  max-height: calc(100svh - 147px);
+  .navbar-toggle-container {
+    width: 347px;
+    height: 60px;
+    position: absolute;
+    top: 581px;
+    left: -159px;
+    box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 0px 0 30px 30px;
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+    rotate: -90deg;
+    background-color: white;
+    padding: 23px 14px 23px 14px;
+    cursor: pointer;
+    svg {
+      rotate: 90deg;
+    }
+    &:hover {
+      span {
+        color: var(--dark-purple);
+      }
+      svg {
+        rect {
+          stroke: var(--dark-purple);
+        }
+        path {
+          stroke: var(--dark-purple);
+        }
+      }
+    }
+  }
 }
 
 button {
@@ -76,6 +110,7 @@ button {
   flex-direction: column;
   align-items: center;
   gap: 25px;
+  overflow: auto;
 }
 
 .channels {
@@ -362,6 +397,7 @@ button {
   flex-direction: column;
   align-items: center;
   transition: max-height 0.125s ease-in-out;
+  gap: 13px;
 }
 
 .contactsrow {
