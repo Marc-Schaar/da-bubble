@@ -25,6 +25,19 @@
   top: 200px;
   left: 200px;
   z-index: 2;
+  position: absolute;
+  .feedback-cont {
+    height: 50px;
+    width: auto;
+    position: absolute;
+    bottom: 50px;
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    border-radius: 30px;
+    padding: 0px 30px 0px 30px;
+    color: white;
+  }
   .add-channel-cont {
     width: 710px;
     height: 279px;

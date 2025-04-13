@@ -171,6 +171,8 @@ export class AddMemberComponent {
     } catch (error) {
       console.error('Fehler beim Hinzufügen:', error);
     }
+    this.userService.showFeedback("User hinzugefügt");
+
   }
 
   showProfile(member: any) {

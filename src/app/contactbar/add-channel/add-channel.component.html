@@ -4,8 +4,7 @@
     id="add-channel-cont"
     data-aos="flip-up"
     [ngClass]="{ 'change-size': !selectChannelMember }"
-    [attr.data-aos]="!selectChannelMember ? 'flip-up' : null"
-  >
+    [attr.data-aos]="!selectChannelMember ? 'flip-up' : null">
     <div *ngIf="!selectChannelMember" class="add-channel-create">
       <div class="add-channel-header">
         <div class="add-channel-text">Channel erstellen</div>
@@ -128,4 +127,6 @@
       </form>
     </div>
   </div>
+
+
 </div>

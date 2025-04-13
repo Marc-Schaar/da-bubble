@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -36,14 +36,16 @@ import { NewmessageComponent } from '../newmessage/newmessage.component';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
+
   shareddata = inject(UserService);
   fireService: FireServiceService = inject(FireServiceService);
 
+  feedbackVisible: boolean = false;
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
   currentReciever: any;
-  darkBackground: boolean = false;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private subscription!: Subscription;
@@ -76,6 +78,10 @@ export class MainChatComponent implements OnInit {
       this.openProfile();
     });
 
+    this.subscription = this.shareddata.showFeedback$.subscribe((message: string) => {
+      this.showFeedback(message);
+    });
+
     this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
       value === 'open' ? this.drawer.open() : this.drawer.close();
     });
@@ -96,5 +102,17 @@ export class MainChatComponent implements OnInit {
     this.isProfileCard = !this.isProfileCard;
     console.log('OPEN');
     console.log(this.isProfileCard);
+  }
+
+  showFeedback(message: string) {
+    this.feedbackVisible = true;
+    setTimeout(() => {
+      if (this.feedbackRef) {
+        this.feedbackRef.nativeElement.textContent = message;
+      }
+    });
+    setTimeout(() => {
+      this.feedbackVisible = false;
+    }, 1000);
   }
 }

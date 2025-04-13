@@ -179,6 +179,8 @@ export class AddChannelComponent implements OnInit {
   onSubmit() {
     if (!this.selectChannelMember) {
       this.addChannel();
+      this.channelmodule.showFeedback("Channel erstellt");
+
       console.log('channel erstellt');
       console.log(this.channelmodule.getChannel);
 
@@ -189,8 +191,10 @@ export class AddChannelComponent implements OnInit {
   addUserToChannel() {
     if (!this.chooseMember) {
       this.pushAllUser();
+      this.channelmodule.showFeedback("User zum Channel hinzugefügt");
     } else {
       this.pushSelectedUser();
+      this.channelmodule.showFeedback("User zum Channel hinzugefügt");
     }
   }
 

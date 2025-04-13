@@ -38,13 +38,14 @@ export class ChannelEditComponent {
   }
 
   editChannelName(content: string) {
-    console.log(content);
     if (content == 'editName') {
       if (!this.channelnameEdit) {
         this.channelnameEdit = true;
       } else {
         this.channelnameEdit = false;
         this.saveNewChannelData(content);
+        this.userService.showFeedback("Channel Name geändert");
+
       }
     }
     if (content == 'editDescription') {
@@ -53,6 +54,8 @@ export class ChannelEditComponent {
       } else {
         this.channeldescriptionEdit = false;
         this.saveNewChannelData(content);
+        this.userService.showFeedback("Channel Beschreibung geändert");
+
       }
     }
   }
@@ -139,6 +142,8 @@ export class ChannelEditComponent {
         });
       }
     } catch (error) {}
+    this.userService.showFeedback("Channel verlassen");
+
   }
 
   @HostListener('document:click', ['$event'])

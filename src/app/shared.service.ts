@@ -50,6 +50,8 @@ export class UserService {
   openProfile$ = this.openProfile.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
+  private showFeedbackSubject = new Subject<string>();
+  showFeedback$ = this.showFeedbackSubject.asObservable();
   subscription: Subscription;
   currentReciever: any;
 
@@ -243,6 +245,10 @@ export class UserService {
 
   showRecieverProfile() {
     this.openProfile.next();
+  }
+
+  showFeedback(message: string) {
+    this.showFeedbackSubject.next(message);
   }
 
   isNewDay(messages: any): boolean {
