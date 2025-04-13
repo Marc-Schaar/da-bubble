@@ -29,30 +29,27 @@ export class AddMemberComponent {
   disabled: boolean = true;
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
+  filteredMembers: any[] = [];
   // reciepentId: string | null = null;
 
   async ngOnInit() {
     this.loadMember();
     await this.loadUsers();
     this.filterUsers()
+    this.filterMembers();
+    console.log("currentUser", this.userService.auth.currentUser);
+
+    console.log("filteredMembers", this.filteredMembers);
+
     console.log("users", this.users);
     console.log("member", this.members);
     console.log("filteredUser", this.filteredUsers);
   }
 
-  // filterUsers(): void {
-  //   let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
-  //   if (filter) {
-  //     const filterValue = filter.value.toLowerCase();
-  //     this.filteredUsers = this.users
-  //       .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-  //       .filter((user) => !this.members.some((member) => member.uid == user.id))
-  //   } else {
-  //     this.filteredUsers = this.users
-  //     .filter((user) => !this.members.some((member) => member.uid == user.id)
-  //     );
-  //   }
-  // }
+  filterMembers() {
+    this.filteredMembers = this.members
+    .filter((member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id)
+  }
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
@@ -98,8 +95,6 @@ export class AddMemberComponent {
 
   openUserBar() {
     this.showUserBar = true;
-    console.log("openuserbar", this.filteredUsers);
-
   }
 
   @HostListener('document:click', ['$event'])

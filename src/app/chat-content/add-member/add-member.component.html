@@ -14,12 +14,12 @@
       </div>
       <div>{{ userService.auth.currentUser?.displayName }} (Du)</div>
     </div>
-    <div (click)="showProfile(member)" class="user" *ngFor="let member of members; let i = index">
+    <div (click)="showProfile(filteredMember)" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
       <div class="img-status">
-        <img src="{{ member.profilephoto }}" alt="" />
-        <div class="dot" [ngClass]="{'green-circle': member.online}"></div>
+        <img src="{{ filteredMember.profilephoto }}" alt="" />
+        <div class="dot" [ngClass]="{'green-circle': filteredMember.online}"></div>
       </div>
-      <div>{{ member.fullname }}</div>
+      <div>{{ filteredMember.fullname }}</div>
     </div>
   </div>
 
