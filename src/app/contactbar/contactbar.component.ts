@@ -6,7 +6,6 @@ import { UserService } from '../shared.service';
 
 import { Router } from '@angular/router';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { HeaderComponent } from '../header/header.component';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,7 @@ import { HeaderComponent } from '../header/header.component';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent, HeaderComponent],
+  imports: [CommonModule, AddChannelComponent],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
