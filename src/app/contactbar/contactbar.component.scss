@@ -417,3 +417,9 @@ button {
 .green {
   background-color: #92c83e;
 }
+
+@media (max-width: 1023px) {
+  section {
+    flex: 1;
+  }
+}
