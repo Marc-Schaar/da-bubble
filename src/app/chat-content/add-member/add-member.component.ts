@@ -14,7 +14,6 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class AddMemberComponent {
   fireService: FireServiceService = inject(FireServiceService);
   userService = inject(UserService);
-
   @Input() addMemberInfoWindow: boolean = false;
   @Output() addMemberInfoWindowChange = new EventEmitter<boolean>();
 
@@ -32,20 +31,42 @@ export class AddMemberComponent {
   filteredUsers: any[] = [];
   // reciepentId: string | null = null;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadMember();
-    this.loadUsers();
-    console.log(this.userService.currentUser);
-    
+    await this.loadUsers();
+    this.filterUsers()
+    console.log("users", this.users);
+    console.log("member", this.members);
+    console.log("filteredUser", this.filteredUsers);
   }
+
+  // filterUsers(): void {
+  //   let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
+  //   if (filter) {
+  //     const filterValue = filter.value.toLowerCase();
+  //     this.filteredUsers = this.users
+  //       .filter((user) => user.fullname.toLowerCase().includes(filterValue))
+  //       .filter((user) => !this.members.some((member) => member.uid == user.id))
+  //   } else {
+  //     this.filteredUsers = this.users
+  //     .filter((user) => !this.members.some((member) => member.uid == user.id)
+  //     );
+  //   }
+  // }
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
-      this.filteredUsers = this.users.filter((user) => user.fullname.toLowerCase().includes(filterValue));
+      this.filteredUsers = this.users
+        .filter((user) => user.fullname.toLowerCase().includes(filterValue))
+        .filter((user) => !this.members.some((member) => member.uid === user.id))
+        .filter((user) => !this.members.some((member) => member.id === user.id))
+
     } else {
-      this.filteredUsers = this.users;
+      this.filteredUsers = this.users.filter(
+        (user) => !this.selectedUsers.some((selected) => selected.uid === user.id)
+      );
     }
   }
 
@@ -77,7 +98,8 @@ export class AddMemberComponent {
 
   openUserBar() {
     this.showUserBar = true;
-    this.filterUsers();
+    console.log("openuserbar", this.filteredUsers);
+
   }
 
   @HostListener('document:click', ['$event'])
@@ -97,10 +119,14 @@ export class AddMemberComponent {
   }
 
   addUserToSelection(index: number) {
-    this.selectedUsers.push(this.filteredUsers[index]);
+    const selectedUser = this.filteredUsers[index];
+    this.selectedUsers.push(selectedUser);
     this.removeUserFromBar(index);
+    this.users = this.users.filter((user) => user.id !== selectedUser.id);
     this.refreshBar();
+    this.filterUsers();
     this.checkButton();
+
   }
 
   checkButton() {
@@ -112,8 +138,7 @@ export class AddMemberComponent {
   }
 
   removeUserFromBar(index: number) {
-    this.users.splice(index, 1);
-    this.filterUsers();
+    this.filteredUsers.splice(index, 1);
     console.log(this.users);
     console.log(this.filteredUsers);
   }
@@ -129,8 +154,6 @@ export class AddMemberComponent {
   removeSelectedUser(index: number) {
     this.addUserToBar(index);
     this.selectedUsers.splice(index, 1);
-    console.log(this.selectedUsers.length);
-
     this.checkButton();
   }
 
@@ -158,8 +181,8 @@ export class AddMemberComponent {
   showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
-    console.log(this.userService.auth.currentUser);
-
+    console.log(member);
+    
   }
 
 }

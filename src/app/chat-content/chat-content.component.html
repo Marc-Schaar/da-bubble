@@ -39,7 +39,7 @@
           <ng-container *ngFor="let member of currentChannel?.member; index as i">
             <img *ngIf="i < 3" (click)="openMemberWindow(false)" class="avatar" [src]="member.profilephoto" alt="Name" />
           </ng-container>
-          <span *ngIf="currentChannel?.member?.length > 3">{{ currentChannel?.member?.length }}</span>
+          <span *ngIf="currentChannel?.member?.length">{{ currentChannel?.member?.length }}</span>
         </div>
         <!-- <span *ngIf="currentChannel?.member?.length > 3">{{ currentChannel?.member?.length - 3 }}</span> -->
 

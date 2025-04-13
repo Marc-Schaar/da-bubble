@@ -64,6 +64,7 @@ export class AddChannelComponent implements OnInit {
   allUser: boolean = true;
   creator: string = '';
   channelRef: string = '';
+  addMemberInfoWindow: boolean = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -80,7 +81,8 @@ export class AddChannelComponent implements OnInit {
     console.log(this.channel);
   }
 
-@ViewChild('mainDialog') mainDialog!: ElementRef;
+// @ViewChild('mainDialog') mainDialog!: ElementRef;
+
 
   handleOutsideClick(event: Event) {
     const inputField = document.getElementById('user-search-bar');
@@ -90,17 +92,21 @@ export class AddChannelComponent implements OnInit {
   }
 
   filterUsers() {
-    let filter = document.getElementById(
-      'user-search-bar'
-    ) as HTMLInputElement | null;
+    let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
-      this.filteredUsers = this.users.filter((user) =>
-        user.fullname.toLowerCase().includes(filterValue)
-      );
+      this.filteredUsers = this.users
+        .filter((user) => user.fullname.toLowerCase().includes(filterValue))
+        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     } else {
-      this.filteredUsers = this.users;
+      this.filteredUsers = this.users.filter(
+        (user) => !this.selectedUsers.some((selected) => selected.uid === user.uid)
+      );
     }
+  }
+
+  closeWindow() {
+    this.addMemberInfoWindow = false;
   }
 
   async loadUsers() {
@@ -120,8 +126,14 @@ export class AddChannelComponent implements OnInit {
   }
 
   addUserToSelection(index: number) {
-    this.selectedUsers.push(this.filteredUsers[index]);
-    this.removeUserFromBar(index);
+    const selectedUser = this.filteredUsers[index];
+    this.selectedUsers.push(selectedUser);
+    this.filteredUsers.splice(index, 1);
+    // this.users = this.users.filter((user) => user.id !== selectedUser.id);
+    this.filterUsers();
+
+    console.log(this.filteredUsers);
+    
     this.refreshBar();
   }
 
@@ -133,12 +145,17 @@ export class AddChannelComponent implements OnInit {
   }
 
   removeSelectedUser(index: number) {
-    this.addUserToBar(index);
+    const removedUser = this.selectedUsers[index];
+    if (!this.users.some((user) => user.uid === removedUser.uid)) {
+      this.users.push(removedUser);
+    }
     this.selectedUsers.splice(index, 1);
+    this.filterUsers();
   }
 
   addUserToBar(index: number) {
     this.users.push(this.selectedUsers[index]);
+    this.selectedUsers.splice(index, 1);
     this.filterUsers();
     console.log(this.users);
     console.log(this.filteredUsers);
@@ -157,7 +174,6 @@ export class AddChannelComponent implements OnInit {
   closeScreen() {
     this.addChannelWindow = false;
     this.addChannelWindowChange.emit(this.addChannelWindow);
-
   }
 
   onSubmit() {
@@ -196,7 +212,7 @@ export class AddChannelComponent implements OnInit {
 
   async pushAllUser() {
     try {
-      const channelId = 'LPRVbdSLkaDmZSzumHJA';
+      const channelId = 'KqvcY68R1jP2UsQkv6Nz';
       const mainChannelRef = doc(this.firestore, 'channels', channelId);
       const mainChannelDoc = await getDoc(mainChannelRef);
       const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
@@ -302,26 +318,11 @@ export class AddChannelComponent implements OnInit {
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   openUserBar(){
     this.showUserBar = true;
     this.filterUsers();
   }
 
-  @HostListener('document:click', ['$event'])
-  closeUserBar(event: Event) {
-    if (
-      this.userSearchInput &&
-      this.chooseUserBar &&
-      !this.userSearchInput.nativeElement.contains(event.target) &&
-      !this.chooseUserBar.nativeElement.contains(event.target)
-    ) {
-      this.showUserBar = false;
-    }
-    const targetElement = event.target as HTMLElement;
-    if (!this.mainDialog.nativeElement.contains(targetElement)) {
-      this.closeScreen();
-    }
-  }
+
 }

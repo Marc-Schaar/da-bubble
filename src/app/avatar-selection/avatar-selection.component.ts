@@ -83,7 +83,7 @@ export class AvatarselectionComponent implements OnInit {
           .then(() => {
             const userDocRef = doc(
               this.firestore,
-              `channels/LPRVbdSLkaDmZSzumHJA/`
+              `channels/KqvcY68R1jP2UsQkv6Nz/`
             );
             return updateDoc(userDocRef, {
               member: arrayUnion({
