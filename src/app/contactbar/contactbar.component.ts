@@ -6,6 +6,7 @@ import { UserService } from '../shared.service';
 
 import { Router } from '@angular/router';
 import { AddChannelComponent } from './add-channel/add-channel.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ import { AddChannelComponent } from './add-channel/add-channel.component';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent],
+  imports: [CommonModule, AddChannelComponent, HeaderComponent],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
@@ -23,6 +24,8 @@ export class ContactbarComponent {
   public users: any = [];
   active: boolean = false;
   message: boolean = false;
+
+  isMobile: boolean = false;
   userService = inject(UserService);
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
@@ -34,6 +37,9 @@ export class ContactbarComponent {
   addChannelWindow: boolean = false;
 
   async ngOnInit() {
+    this.userService.dashboard = true;
+    this.userService.login = false;
+    this.isMobile = this.userService.isMobile;
     await this.loadUsers();
     await this.loadChannels();
     this.findCurrentUser();

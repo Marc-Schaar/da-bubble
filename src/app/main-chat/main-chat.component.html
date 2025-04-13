@@ -1,6 +1,6 @@
 <main>
   <section>
-    <app-header></app-header>
+    <app-header *ngIf="!isMobile"></app-header>
     <!-- <div class="box">
         <div class="input">
           <input type="text" placeholder="Devspace durchsuchen" />
