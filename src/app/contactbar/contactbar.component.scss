@@ -1,6 +1,6 @@
 main {
   display: flex;
-  // flex-direction: column;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -469,5 +469,9 @@ button {
 @media (max-width: 1023px) {
   section {
     flex: 1;
+
+    .navbar-toggle-container {
+      display: none;
+    }
   }
 }
