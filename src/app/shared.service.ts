@@ -43,7 +43,6 @@ export class UserService {
   startLoadingChat$ = this.startLoadingChat.asObservable();
   private startLoadingChannel = new Subject<void>();
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
-
   private threadToggleSubject = new Subject<string>();
   threadToggle$ = this.threadToggleSubject.asObservable();
   private openProfile = new Subject<void>();
@@ -189,12 +188,6 @@ export class UserService {
       });
     }
   }
-
-  // getCurrentChannel() {
-  //   let storedChannel = localStorage.getItem('currentChannel');
-  //   if (storedChannel) this.currentChannel = JSON.parse(storedChannel);
-  //   else console.log('Channel konnte nicht geladen werden aus Local Storage');
-  // }
 
   setUrl(channelType: string, id?: string, reciepentId?: string, messageId?: string) {
     this.router.navigate(['/chat'], {

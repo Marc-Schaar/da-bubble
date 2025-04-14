@@ -36,6 +36,7 @@ import { NewmessageComponent } from '../newmessage/newmessage.component';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
 
   shareddata = inject(UserService);
