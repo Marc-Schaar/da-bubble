@@ -36,7 +36,6 @@ import { NewmessageComponent } from '../newmessage/newmessage.component';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
 
   shareddata = inject(UserService);
@@ -62,12 +61,6 @@ export class MainChatComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-
-    // this.componentSubscription = this.shareddata.component$.subscribe(() => {
-    //this.currentComponent = component;
-    // console.log('Aktuelle Komponente:', component);
-    // });
-
     this.shareddata.component$.subscribe(() => {
       this.currentComponent = this.shareddata.channelType;
       console.log('Aktuelle Komponente:', this.currentComponent);
@@ -91,6 +84,10 @@ export class MainChatComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.componentSubscription) {
       this.componentSubscription.unsubscribe();
+    }
+
+    if (this.threadSubscription) {
+      this.threadSubscription.unsubscribe();
     }
   }
 

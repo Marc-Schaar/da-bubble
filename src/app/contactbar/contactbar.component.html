@@ -14,11 +14,9 @@
 
     <div class="contactbar">
       <div class="channels">
-        <div class="channelbar">
+        <div (click)="toggleActive()" class="channelbar">
           <div>
-            <button (click)="toggleActive()">
-              <img [ngClass]="{ rotate: isActive() }" class="image-down" src="./img/arrow_drop_down-1.svg" alt="" />
-            </button>
+            <img [ngClass]="{ rotate: isActive() }" class="image-down" src="./img/arrow_drop_down-1.svg" alt="" />
             <div>
               <img src="./img/workspaces_black.svg" alt="" />
               <span>Channels</span>
@@ -42,11 +40,9 @@
         </div>
       </div>
       <div class="messages">
-        <div class="messagebar">
+        <div class="messagebar" (click)="toggleMessage()">
           <div>
-            <button (click)="toggleMessage()">
-              <img [ngClass]="{ rotate: isOpen() }" src="/img/arrow_drop_down-1.svg" alt="" />
-            </button>
+            <img class="image-down" [ngClass]="{ rotate: isOpen() }" src="/img/arrow_drop_down-1.svg" alt="" />
             <div>
               <img src="/img/account_circle.svg" alt="" />
               <span>Direktnachrichten</span>

@@ -34,6 +34,7 @@ export class HeaderComponent {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
+  isMobile: boolean = false;
 
   opened = 0;
 
@@ -80,6 +81,7 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
+    this.isMobile = this.userService.isMobile;
   }
 
   async loadUsers() {

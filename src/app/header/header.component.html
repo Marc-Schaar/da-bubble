@@ -25,16 +25,17 @@
       </li>
     </ul>
   </div>
+
   <div class="signup" *ngIf="userService.login && !userService.dashboard">
     <p>Neu bei DABubble?</p>
     <a routerLink="/signup">Konto erstellen</a>
   </div>
   <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
-    <div>
+    <div (click)="isMobile ? showmenu() : null" [matMenuTriggerFor]="isMobile ? beforeMenu : null">
       <span>{{ this.userService.user.displayName || "Gast" }}</span>
       <img src="img/Profile bild.png" alt="" />
       <div>
-        <button (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
+        <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">

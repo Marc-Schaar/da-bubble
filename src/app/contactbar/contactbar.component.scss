@@ -14,7 +14,7 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 25px;
-  max-height: calc(100svh - 147px);
+  //max-height: calc(100svh - 147px);
   height: 100%;
 }
 
@@ -98,8 +98,6 @@ button {
   align-items: center;
 
   > div {
-    width: 176px;
-    height: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -111,16 +109,9 @@ button {
     }
 
     > div {
-      width: 121px;
-      height: 27px;
       display: flex;
       align-items: center;
       gap: 10px;
-
-      > img {
-        width: 24px;
-        height: 24px;
-      }
 
       > span {
         font-size: 20px;
@@ -131,7 +122,7 @@ button {
     &:hover {
       > div {
         > span {
-          color: #535af1;
+          color: var(--dark-purple);
         }
 
         > img {
@@ -139,14 +130,12 @@ button {
         }
       }
 
-      > button {
-        > .image-down {
-          content: url(/img/arrow_drop_down-1-purple.svg);
-        }
+      > .image-down {
+        content: url(/img/arrow_drop_down-1-purple.svg);
+      }
 
-        > .image-right {
-          content: url(/img/arrow_drop_down-2-purple.svg);
-        }
+      > .image-right {
+        content: url(/img/arrow_drop_down-2-purple.svg);
       }
     }
   }
@@ -296,7 +285,7 @@ button {
 
 .messages {
   width: 100%;
-  height: 800px;
+  // height: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -313,13 +302,12 @@ button {
   > div {
     width: 243px;
     height: 30px;
-    padding: 5px 10px;
     display: flex;
     align-items: center;
     gap: 25px;
 
     &:hover {
-      > button > img {
+      img {
         content: url(/img/arrow_drop_down-1-purple.svg);
       }
 
