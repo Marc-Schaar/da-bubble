@@ -119,6 +119,5 @@ export class MainChatComponent implements OnInit {
 
   toggleWorkspaceMenu() {
     this.barOpen = !this.barOpen;
-    const img = document.getElementById('menuImg') as HTMLImageElement;  
   }
 }
