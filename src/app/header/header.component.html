@@ -26,6 +26,8 @@
     </ul>
   </div>
 
+  <div *ngIf="isMobile && userService.dashboard" class="bg-wrapper-mobile"></div>
+
   <div class="signup" *ngIf="userService.login && !userService.dashboard">
     <p>Neu bei DABubble?</p>
     <a routerLink="/signup">Konto erstellen</a>

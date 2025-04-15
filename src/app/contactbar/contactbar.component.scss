@@ -33,7 +33,6 @@ button {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 306px;
   height: 60px;
 
   > div {
@@ -189,7 +188,6 @@ button {
 }
 
 .channelrow {
-  width: calc(100% - 25px);
   height: 33px;
   padding-left: 25px;
   display: flex;
@@ -199,8 +197,6 @@ button {
 
   > div {
     width: fit-content;
-    height: calc(100% - 8px);
-    border: none;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -414,7 +410,10 @@ button {
 
 @media (max-width: 1023px) {
   section {
-    flex: 1;
+    margin: 0;
+    padding: 0;
+    max-height: 100svh;
+    border-radius: 0;
 
     .navbar-toggle-container {
       display: none;
