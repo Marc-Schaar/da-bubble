@@ -14,8 +14,8 @@
 
     <div class="contactbar">
       <div class="channels">
-        <div (click)="toggleActive()" class="channelbar curser-pointer">
-          <div>
+        <div class="channelbar">
+          <div class="curser-pointer" (click)="toggleActive()">
             <img [ngClass]="{ rotate: isActive() }" class="image-down" src="./img/arrow_drop_down-1.svg" alt="" />
             <div>
               <img src="./img/workspaces_black.svg" alt="" />
@@ -46,8 +46,8 @@
       </div>
 
       <div class="messages">
-        <div (click)="toggleMessage()" class="messagebar curser-pointer">
-          <div>
+        <div class="messagebar">
+          <div class="curser-pointer" (click)="toggleMessage()">
             <img class="image-down" [ngClass]="{ rotate: isOpen() }" src="/img/arrow_drop_down-1.svg" alt="" />
             <div>
               <img src="/img/account_circle.svg" alt="" />
