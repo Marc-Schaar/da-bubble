@@ -2,7 +2,6 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: var(--contactbar-width) 1fr auto;
-  gap: 24px;
 }
 
 .logo-container {
@@ -242,6 +241,7 @@
   .header {
     grid-template-columns: 1fr 1fr;
     padding: 15px 16px;
+    row-gap: 48px;
 
     .logo-container {
       z-index: 10;

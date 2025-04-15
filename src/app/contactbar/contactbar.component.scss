@@ -72,8 +72,6 @@ button {
 
 .contactbar {
   width: 100%;
-  //max-width: 305px;
-  // height: 671px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,16 +82,14 @@ button {
 
 .channels {
   width: 100%;
-  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: 25px;
 }
 
 .channelbar {
   width: 100%;
-  height: 46px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -180,59 +176,49 @@ button {
 .channellist {
   width: 100%;
   max-height: 0;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
   transition: max-height 0.125s ease-in-out;
+  gap: 13px;
+  overflow: hidden;
 }
 
 .channelrow {
-  height: 33px;
-  padding-left: 25px;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  margin-top: 25px;
+  width: fit-content;
+  gap: 10px;
+  padding: 4px 20px;
+  margin-left: 8px;
 
-  > div {
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 20px;
+  > img {
+    width: 16px;
+  }
 
-    > img {
-      width: 16px;
-    }
+  > span {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  &:hover {
+    background-color: #eceefe;
+    border-radius: 20px;
 
     > span {
-      font-size: 18px;
-      font-weight: 400;
+      color: #535af1 !important;
+      font-weight: 700;
     }
 
-    &:hover {
-      background-color: #eceefe;
-      border-radius: 20px;
-
-      > span {
-        color: #535af1 !important;
-        font-weight: 700;
-      }
-
-      > img {
-        content: url(/img/tag-purple.svg);
-      }
+    > img {
+      content: url(/img/tag-purple.svg);
     }
   }
 }
 
 .addChannel {
-  width: 100%;
-  height: 33px;
-  margin-top: 25px;
   display: flex;
-  justify-content: center;
+  margin-left: 8px;
+  width: 100%;
 
   &:hover {
     > div > button > img {
@@ -269,8 +255,6 @@ button {
 }
 
 .show {
-  // max-height: 500px !important;
-
   max-height: 100% !important;
 }
 
@@ -284,10 +268,8 @@ button {
 
 .messagebar {
   width: 100%;
-  height: 40px;
   display: flex;
   align-items: center;
-  padding-block: 3px;
 
   > div {
     width: 243px;
@@ -340,42 +322,35 @@ button {
   max-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
   transition: max-height 0.125s ease-in-out;
   gap: 13px;
   overflow: hidden;
 }
 
 .contactsrow {
-  width: 281px;
-  height: 58px;
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   padding-left: 25px;
   cursor: pointer;
-  > div {
-    width: fit-content;
-    height: 50px;
-    padding: 4px 20px;
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 35px;
-    gap: 15px;
+  width: fit-content;
+  padding: 4px 20px;
+  border-radius: 35px;
+  gap: 15px;
+  margin-left: 8px;
 
-    &:hover {
-      background-color: #eceefe;
-
-      > span {
-        font-weight: 700;
-        color: #535af1;
-      }
-    }
+  &:hover {
+    background-color: var(--bg-color);
 
     > span {
-      font-size: 18px;
-      font-weight: 400;
+      font-weight: 700;
+      color: var(--dark-purple);
     }
+  }
+
+  > span {
+    font-size: 18px;
+    font-weight: 400;
   }
 }
 
@@ -410,6 +385,7 @@ button {
 
 @media (max-width: 1023px) {
   section {
+    flex: 1;
     margin: 0;
     padding: 0;
     max-height: 100svh;
@@ -418,5 +394,19 @@ button {
     .navbar-toggle-container {
       display: none;
     }
+  }
+
+  .headline {
+    display: none;
+  }
+
+  .contactbar {
+    padding: 0 80px;
+  }
+}
+
+@media (max-width: 500px) {
+  .contactbar {
+    padding: 0 40px;
   }
 }
