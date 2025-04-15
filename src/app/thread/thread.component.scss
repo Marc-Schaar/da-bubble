@@ -10,7 +10,7 @@ section {
   border-radius: 30px;
   margin: 16px;
   flex: 1;
-  max-height: calc(100svh - 140px);
+  max-height: calc(100vh - var(--header-offset));
 }
 
 .thread-channel-close-button-container {

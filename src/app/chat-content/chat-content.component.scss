@@ -11,7 +11,7 @@ main {
   border-radius: 30px;
   margin: 16px;
   flex: 1;
-  max-height: calc(100svh - 147px);
+  max-height: calc(100svh - var(--header-offset));
 }
 
 .card-header {

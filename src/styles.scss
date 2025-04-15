@@ -35,19 +35,6 @@ body {
   src: url("/fonts/Figtree-VariableFont_wght.ttf") format("woff");
 }
 
-// app-add-channel {
-//   background: rgba(0, 0, 0, 0.5);
-//   z-index: 4;
-//   position: fixed;
-//   left: 0;
-//   right: 0;
-//   top: 0;
-//   bottom: 0;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
-
 .dark-background {
   background: rgba(0, 0, 0, 0.5);
   z-index: 4;
@@ -91,6 +78,7 @@ app-footer {
     contrast(102%);
 
   --contactbar-width: 366px;
+  --header-offset: 147px;
   --mat-sys-label-large-size: 24px;
 }
 
