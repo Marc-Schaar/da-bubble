@@ -4,9 +4,11 @@
 
     <div class="content-container">
       <mat-drawer-container class="chat-content">
-        <aside (click)="drawerContactbar.toggle()" class="navbar-toggle-container">
-          <span>Workspacemenü schließen</span>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <aside (click)="drawerContactbar.toggle(); toggleWorkspaceMenu()" class="navbar-toggle-container">
+          <span *ngIf="barOpen">Workspacemenü schließen</span>
+          <span *ngIf="!barOpen">Workspacemenü öffnen</span>
+
+          <svg [ngStyle]="{ transform: !barOpen ? 'rotate(180deg)' : 'rotate(0deg)' }" id="" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="1" y="1" width="16" height="16" rx="1" stroke="black" stroke-width="2" />
             <path d="M6.71423 0.999969V17" stroke="black" stroke-width="2" />
             <path

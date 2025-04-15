@@ -56,6 +56,9 @@ export class MainChatComponent implements OnInit {
   channelMessages: any = [];
   docId: string = '';
 
+  barOpen: boolean = true;
+
+
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -112,5 +115,10 @@ export class MainChatComponent implements OnInit {
     setTimeout(() => {
       this.feedbackVisible = false;
     }, 1000);
+  }
+
+  toggleWorkspaceMenu() {
+    this.barOpen = !this.barOpen;
+    const img = document.getElementById('menuImg') as HTMLImageElement;  
   }
 }
