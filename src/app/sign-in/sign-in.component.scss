@@ -16,7 +16,22 @@
   @media (max-width: 743px) {
     width: 91%;
   }
+  @media (max-height: 920px) {
+    gap: 30px;
+    max-width: 545px;
+  }
+  @media (max-width: 860px) {
+    gap: 24px;
+    max-width: 460px;
+  }
+  @media (max-width: 500px) {
+    max-width: 398px;
+    gap: 20px;
+  }
   > div:nth-child(1) {
+    @media (max-width: 500px) {
+      gap: 15px;
+    }
     > div:nth-child(1) {
       > h1:nth-child(1) {
         text-align: center;
@@ -44,6 +59,10 @@
         @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
           font-size: 17px;
         }
+        @media (max-width: 500px) {
+          width: 100%;
+          
+        }
         > div:nth-child(1) {
           width: 70%;
           display: flex;
@@ -68,7 +87,10 @@
     align-items: center;
     width: 82%;
     @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-      gap: 15px;
+      gap: 0px;
+    }
+    @media (max-width: 500px) {
+      width: 100%;
     }
     > div:nth-child(1) {
       display: flex;
@@ -81,7 +103,9 @@
         gap: 15px;
       }
       > div:nth-child(1) {
-        width: calc(100% - 120px);
+        width: 100%;
+
+        // width: calc(100% - 120px);
         height: 76px;
         > div:nth-child(1) {
           background-color: #eceefe;
@@ -103,7 +127,9 @@
         }
       }
       > div:nth-child(2) {
-        width: calc(100% - 120px);
+        width: 100%;
+
+        // width: calc(100% - 120px);
         height: 90px;
         div > :nth-child(1) {
           background-color: #eceefe;
@@ -180,9 +206,13 @@
       &:hover {
         cursor: pointer;
       }
+      @media (max-width: 500px) {
+        height: 50px;
+      }
       @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
         padding: 6px 32px;
       }
+
     }
     > div:nth-child(1) {
       display: flex;
@@ -212,9 +242,7 @@
         background: none;
         border: none;
         cursor: pointer;
-        @media (max-width: 490px) {
-          font-size: 1rem;
-        }
+
         &:hover {
           font-weight: 700;
         }
@@ -226,13 +254,14 @@
       display: flex;
       justify-content: space-evenly;
       @media (max-width: 446px) {
-        justify-content: unset;
+        // justify-content: unset;
         gap: 15px;
-        flex-direction: column;
+        // flex-direction: column;
+        // justify-content: center;
       }
       @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-        justify-content: center;
-        flex-direction: row;
+        // justify-content: center;
+        // flex-direction: row;
       }
 
       > button {

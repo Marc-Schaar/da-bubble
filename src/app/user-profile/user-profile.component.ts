@@ -46,8 +46,17 @@ export class UserProfileComponent implements OnInit {
   }
 
   closeMenu() {
-    this.showmodifycontent = false;
-    this.menuTrigger.closeMenu();
+    // this.showmodifycontent = false;
+    // this.menuTrigger.closeMenu();
+    console.log('menuTrigger:', this.menuTrigger);
+
+    if (this.menuTrigger) {
+      this.menuTrigger.closeMenu();
+      console.log('Menü wurde geschlossen.');
+
+    } else {
+      console.error('menuTrigger ist nicht definiert.');
+    }
   }
 
   cancel() {
