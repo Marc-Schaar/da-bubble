@@ -59,7 +59,7 @@
     </div>
     <div [ngClass]="{ show: isClicked }" class="lists">
       <div
-        (click)="getReciever(index)"
+        (click)="openReciver(index, object.id)"
         [ngClass]="{ channelStyle: isChannel }"
         class="listrow"
         *ngFor="let object of currentList; let index = index"

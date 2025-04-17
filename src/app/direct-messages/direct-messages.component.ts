@@ -253,6 +253,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   toggleList(event: Event) {
     this.isClicked = !this.isClicked;
     this.currentList = this.users;
+    this.isChannel=false
     event.stopPropagation();
   }
 
@@ -288,15 +289,17 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.userService.showRecieverProfile();
   }
 
-  getReciever(index: number) {
-    console.log(this.isChannel);
 
+  openReciver(i: number, key: string) {    
     if (this.isChannel) {
-      const currentChannel = this.currentList[index];
-      this.message = this.message + currentChannel?.name;
+      this.userService.setUrl('channel', key);
+      this.userService.getChannel(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('channel');
     } else {
-      const currentReciever = this.currentList[index];
-      this.message = '@' + currentReciever?.fullname;
+      this.userService.setUrl('direct', this.userService.auth.currentUser?.uid, key);
+      this.userService.getReciepent(this.currentList[i], this.currentUser);
+      this.userService.loadComponent('chat');
     }
+   
   }
 }
