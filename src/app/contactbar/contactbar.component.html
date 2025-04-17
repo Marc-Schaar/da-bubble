@@ -59,9 +59,9 @@
         <ul [ngClass]="{ show: isOpen() }" class="contacts">
           <ng-container
             *ngFor="let user of this.users; let index = index"
-            (click)="openWindow('chat'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)"
+           
           >
-            <li class="contactsrow">
+            <li  (click)="openWindow('chat'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)" class="contactsrow">
               <div class="imageContainer">
                 <img class="profile-image" [src]="user.profilephoto" alt="" />
                 <div class="status-dot" [ngClass]="{ green: user.online }"></div>
