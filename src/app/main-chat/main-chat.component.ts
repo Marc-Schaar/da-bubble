@@ -36,6 +36,7 @@ import { NewmessageComponent } from '../newmessage/newmessage.component';
 })
 export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
 
   shareddata = inject(UserService);
@@ -45,9 +46,11 @@ export class MainChatComponent implements OnInit {
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
+  barOpen:boolean= false
   currentReciever: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
+  private contactbarSubscription!: Subscription
   private subscription!: Subscription;
 
   //Neue Logik ab hier:
@@ -56,7 +59,6 @@ export class MainChatComponent implements OnInit {
   channelMessages: any = [];
   docId: string = '';
 
-  barOpen: boolean = true;
 
 
   constructor(private cdr: ChangeDetectorRef) {}
@@ -82,6 +84,11 @@ export class MainChatComponent implements OnInit {
     this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
       value === 'open' ? this.drawer.open() : this.drawer.close();
     });
+
+    this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
+      this.drawerContactbar.toggle();
+    });
+    
   }
 
   ngOnDestroy(): void {
@@ -117,7 +124,14 @@ export class MainChatComponent implements OnInit {
     }, 1000);
   }
 
-  toggleWorkspaceMenu() {
-    this.barOpen = !this.barOpen;
-  }
+
+  toogleContactbar(){
+this.drawerContactbar.toggle()
+ //this.shareddata.toggleContactbar()
+ }
+
+  
+ toggleWorkspaceMenu() {
+ this.barOpen = !this.barOpen;
+}
 }

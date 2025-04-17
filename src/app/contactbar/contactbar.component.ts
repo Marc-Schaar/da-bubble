@@ -26,6 +26,8 @@ export class ContactbarComponent {
   message: boolean = false;
 
   isMobile: boolean = false;
+  barOpen: boolean = true;
+
   userService = inject(UserService);
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
@@ -114,4 +116,6 @@ export class ContactbarComponent {
   openAddChannel() {
     this.addChannelWindow = true;
   }
+
+
 }

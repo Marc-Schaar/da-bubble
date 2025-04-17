@@ -49,6 +49,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   isEditing: boolean = false;
   isMobile: boolean = false;
   isChannel: boolean = false;
+
   showAllReactions: boolean = false;
 
   channels: any = [];
@@ -249,6 +250,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     else this.userService.toggleThread('open');
     $event.stopPropagation();
   }
+
 
   openChannelInfo() {
     this.channelInfo = true;

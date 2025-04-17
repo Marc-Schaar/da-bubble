@@ -43,8 +43,13 @@ export class UserService {
   startLoadingChat$ = this.startLoadingChat.asObservable();
   private startLoadingChannel = new Subject<void>();
   startLoadingChannel$ = this.startLoadingChannel.asObservable();
+
+  private contactbarToggleSubject = new Subject<void>();
+  contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
+  
   private threadToggleSubject = new Subject<string>();
   threadToggle$ = this.threadToggleSubject.asObservable();
+
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
@@ -220,6 +225,10 @@ export class UserService {
 
   toggleThread(value: string) {
     this.threadToggleSubject.next(value);
+  }
+
+  toggleContactbar() {
+    this.contactbarToggleSubject.next();
   }
 
   checkScreenWidth(): boolean {
