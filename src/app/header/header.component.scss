@@ -242,9 +242,10 @@
     grid-template-columns: 1fr 1fr;
     padding: 15px 16px;
     row-gap: 48px;
+    background-color: var(--bg-color);
+    height: 50%;
 
     .logo-container {
-      z-index: 10;
       width: fit-content;
       img {
         width: 161.5px;
@@ -264,7 +265,7 @@
     .user-menu {
       grid-row: 1;
       grid-column: 2;
-      z-index: 10;
+
       div {
         img {
           width: 50px;
