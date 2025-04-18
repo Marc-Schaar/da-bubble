@@ -1,38 +1,51 @@
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: var(--bg-color);
-}
-
-// Custom Theming for Angular Material
-// // For more information: https://material.angular.io/guide/theming
-// @use "@angular/material" as mat;
-
-// html {
-//   @include mat.theme(
-//     (
-//       color: (
-//         theme-type: light,
-//         primary: mat.$azure-palette,
-//         tertiary: mat.$blue-palette,
-//       ),
-//       typography: Roboto,
-//       density: 0,
-//     )
-//   );
-// }
-
 @import "aos/dist/aos.css";
-
-// @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 @font-face {
   font-family: "Figtree";
   src: url("/fonts/Figtree-VariableFont_wght.ttf") format("woff");
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-VariableFont_wght.ttf") format("woff");
+}
+
+:root {
+  --bg-color: rgba(236, 238, 254, 1);
+  --light-purple: rgba(173, 176, 217, 1);
+  --medium-purple: rgba(121, 126, 243, 1);
+  --dark-purple: rgba(68, 77, 242, 1);
+  --dark-purple-text: rgba(83, 90, 241, 1);
+  --blue-email-color: rgba(19, 129, 255, 1);
+  --mat-sys-primary: rgba(68, 77, 242, 1); // Material Design
+  --text-grey: rgba(104, 104, 104, 1);
+
+  --dark-purple-filter: brightness(0) saturate(100%) invert(37%) sepia(80%) saturate(5262%) hue-rotate(231deg) brightness(94%)
+    contrast(102%);
+
+  --contactbar-width: 366px;
+  --header-offset: 147px;
+  --mat-sys-label-large-size: 24px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--bg-color);
 }
 
 .dark-background {
@@ -59,44 +72,8 @@ app-footer {
   }
 }
 
-@font-face {
-  font-family: "Nunito";
-  src: url("/fonts/Nunito-VariableFont_wght.ttf") format("woff");
-}
-
-:root {
-  --bg-color: rgba(236, 238, 254, 1);
-  --light-purple: rgba(173, 176, 217, 1);
-  --medium-purple: rgba(121, 126, 243, 1);
-  --dark-purple: rgba(68, 77, 242, 1);
-  --dark-purple-text: rgba(83, 90, 241, 1);
-  --blue-email-color: rgba(19, 129, 255, 1);
-  --mat-sys-primary: rgba(68, 77, 242, 1); // Material Design
-  --text-grey: rgba(104, 104, 104, 1);
-
-  --dark-purple-filter: brightness(0) saturate(100%) invert(37%) sepia(80%) saturate(5262%) hue-rotate(231deg) brightness(94%)
-    contrast(102%);
-
-  --contactbar-width: 366px;
-  --header-offset: 147px;
-  --mat-sys-label-large-size: 24px;
-}
-
 .mat-mdc-menu-panel {
   max-width: unset !important;
-}
-
-body,
-html {
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-  box-sizing: border-box;
 }
 
 .menu-box {
@@ -273,7 +250,7 @@ a {
   width: 347px;
   height: auto;
   position: fixed;
-  bottom: 480px;
+  bottom: 27%;
   left: -138px;
   box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
   border-radius: 0px 0 30px 30px;
