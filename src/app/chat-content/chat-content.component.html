@@ -123,7 +123,7 @@
         </div>
         }
 
-        <img [src]="message.avatar" alt=" Avatar" />
+        <img [src]="message.avatar || 'img/profilephoto.png'" alt=" Avatar" />
 
         @if (!(isEditing && editingMessageId === i)) {
         <div class="content-container">
@@ -193,23 +193,24 @@
                 <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
               </button>
 
-              <div *ngIf="reactionMenuOpenInFooter && editingMessageId === i" class="reaction-menu">
-                <ng-container *ngFor="let emoji of emojis">
-                  <div
-                    class="emoji"
-                    [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }"
-                    (click)="addReaction(message, emoji)"
-                  >
-                    <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
-                  </div>
-                </ng-container>
+              @if (reactionMenuOpenInFooter && editingMessageId === i) {
+              <div class="reaction-menu">
+                @for (emoji of emojis; track $index) {
+                <div
+                  class="emoji"
+                  [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }"
+                  (click)="addReaction(message, emoji)"
+                >
+                  <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+                </div>
+                }
               </div>
+              }
             </div>
           </div>
         </div>
-        }
-
-        <div *ngIf="isEditing && editingMessageId === i" class="input-container edit-input full-width">
+        } @if (isEditing && editingMessageId === i) {
+        <div class="input-container edit-input full-width">
           <textarea [(ngModel)]="inputEdit" rows="3"></textarea>
 
           <div class="action-container">
@@ -219,6 +220,7 @@
             </div>
           </div>
         </div>
+        }
       </li>
       }
     </ul>
