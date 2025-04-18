@@ -4,7 +4,12 @@
   gap: 24px;
   @media (max-width: 1066px) {
     align-items: center;
-    
+  }
+  .logo-cont {
+    display: none;
+    @media (max-width: 1066px) {
+      display: flex;
+    }
   }
 }
 

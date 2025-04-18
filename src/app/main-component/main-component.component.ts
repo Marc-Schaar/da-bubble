@@ -4,10 +4,12 @@ import { FooterComponent } from '../footer/footer.component';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { UserService } from '../shared.service';
 import { IntroComponent } from '../intro/intro.component';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-main-component',
-  imports: [HeaderComponent, FooterComponent, SignInComponent, IntroComponent],
+  imports: [HeaderComponent, FooterComponent, SignInComponent, IntroComponent, RouterModule],
   templateUrl: './main-component.component.html',
   styleUrl: './main-component.component.scss',
 })
