@@ -79,7 +79,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   unsubMessages!: () => void;
 
   async ngOnInit() {
-    // if (!this.userService.auth.currentUser) this.router.navigate(['/main']);
     this.startChannel();
     this.subscriptions.add(
       this.userService.startLoadingChannel$.subscribe(() => {
@@ -193,7 +192,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
-    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
     if (!this.hasReacted(newReaction.emoji, message.reaction)) {
       message.reaction.push(newReaction);
       if (messageRef) {
@@ -224,7 +223,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addEmoji(emoji: string) {
     this.reactions = [];
-    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
     this.reactions.push(newReaction);
   }
 
@@ -250,7 +249,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     else this.userService.toggleThread('open');
     $event.stopPropagation();
   }
-
 
   openChannelInfo() {
     this.channelInfo = true;

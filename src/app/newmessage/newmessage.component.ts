@@ -145,7 +145,7 @@ export class NewmessageComponent {
       message: this.message || '',
       avatar: this.userService.user?.photoURL || '',
       date: new Date().toISOString().split('T')[0],
-      name: this.userService.user?.displayName || 'Unbekannt',
+      name: this.userService.user?.displayName || 'Gast',
       newDay: false,
       timestamp: serverTimestamp(),
     };

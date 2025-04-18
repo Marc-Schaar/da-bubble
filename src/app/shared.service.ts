@@ -46,7 +46,7 @@ export class UserService {
 
   private contactbarToggleSubject = new Subject<void>();
   contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
-  
+
   private threadToggleSubject = new Subject<string>();
   threadToggle$ = this.threadToggleSubject.asObservable();
 
@@ -282,7 +282,7 @@ export class UserService {
       message: input || '',
       avatar: this.user?.photoURL || '',
       date: new Date().toISOString().split('T')[0],
-      name: this.user?.displayName || 'Unbekannt',
+      name: this.user?.displayName || 'Gast',
       newDay: this.isNewDay(messages),
       timestamp: serverTimestamp(),
       reaction: reactions || [],

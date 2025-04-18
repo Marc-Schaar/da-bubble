@@ -200,7 +200,7 @@ export class ThreadComponent implements OnInit {
   }
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
-    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
     if (!this.hasReacted(newReaction.emoji, message.reaction)) {
       message.reaction.push(newReaction);
       if (messageRef) {
@@ -231,7 +231,7 @@ export class ThreadComponent implements OnInit {
 
   addEmoji(emoji: string) {
     this.reactions = [];
-    let newReaction = { emoji: emoji, from: this.userId || 'Unbekannt' };
+    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
     this.reactions.push(newReaction);
   }
 
