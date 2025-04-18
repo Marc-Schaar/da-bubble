@@ -26,6 +26,9 @@
   left: 200px;
   z-index: 2;
   position: absolute;
+  @media screen {
+    
+  }
   .feedback-cont {
     height: 50px;
     width: auto;

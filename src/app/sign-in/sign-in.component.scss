@@ -1,3 +1,13 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  @media (max-width: 1066px) {
+    align-items: center;
+    
+  }
+}
+
 .signinbox {
   max-width: 606px;
   width: 100%;

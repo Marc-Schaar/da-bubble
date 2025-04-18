@@ -2,6 +2,15 @@ div {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  @media (max-width: 1066px) {
+    justify-content: center;
+    }
+}
+
+app-header {
+  @media (max-width: 1066px) {
+    display: none;
+  }
 }
 
 app-sign-in {
@@ -10,6 +19,9 @@ app-sign-in {
   justify-content: center;
   align-items: center;
   background-color: #eceefe;
+  @media (max-width: 1066px) {
+    flex: unset;
+  }
 }
 
 app-intro {
@@ -41,6 +53,7 @@ app-intro {
   }
   @media (max-width: 1204px) {
     height: unset;
+    margin-top: 24px;
   }
   > p:nth-child(1) {
     font-family: "Nunito";
