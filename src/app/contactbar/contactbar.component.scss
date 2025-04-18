@@ -358,6 +358,9 @@ button {
 .green {
   background-color: #92c83e;
 }
+.pin-right-bottom-mobile {
+  display: none;
+}
 
 @media (max-width: 1023px) {
   section {
@@ -394,6 +397,19 @@ button {
   .addChannel {
     color: var(--dark-purple);
     font-size: 17px;
+  }
+
+  .pin-right-bottom-mobile {
+    display: block;
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--dark-purple);
+    padding: 8px;
+    border-radius: 50%;
+    color: white;
   }
 }
 
