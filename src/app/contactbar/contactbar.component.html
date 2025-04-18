@@ -39,12 +39,10 @@
           } @empty {No Channel found}
         </ul>
 
-        <div class="addChannel">
-          <div (click)="openAddChannel()">
-            <button><img src="/img/add_circle.svg" alt="" /></button>
-            <span>Channel hinzufügen</span>
-          </div>
-        </div>
+        <button class="addChannel" (click)="openAddChannel()">
+          <mat-icon>add</mat-icon>
+          <span>Channel hinzufügen</span>
+        </button>
       </div>
 
       <div class="messages">
