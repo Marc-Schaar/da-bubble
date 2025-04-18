@@ -6,13 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
 import { DirectMessage } from '../directmessage.class';
+import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-direct-messages',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink, MatIconModule],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
@@ -37,6 +39,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
+  isMobile: boolean = false;
 
   channelType: string = '';
   docId: string = '';
@@ -46,6 +49,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
   constructor() {
     this.startChat();
+    this.isMobile = this.userService.isMobile;
   }
 
   async ngOnInit() {
@@ -253,7 +257,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   toggleList(event: Event) {
     this.isClicked = !this.isClicked;
     this.currentList = this.users;
-    this.isChannel=false
+    this.isChannel = false;
     event.stopPropagation();
   }
 
@@ -289,8 +293,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.userService.showRecieverProfile();
   }
 
-
-  openReciver(i: number, key: string) {    
+  openReciver(i: number, key: string) {
     if (this.isChannel) {
       this.userService.setUrl('channel', key);
       this.userService.getChannel(this.currentList[i], this.currentUser);
@@ -300,6 +303,5 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.userService.getReciepent(this.currentList[i], this.currentUser);
       this.userService.loadComponent('chat');
     }
-   
   }
 }

@@ -312,3 +312,9 @@ a {
     transform: translate(0, 0);
   }
 }
+
+@media (max-width: 1023px) {
+  :root {
+    --header-offset: 80px;
+  }
+}
