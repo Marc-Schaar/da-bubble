@@ -598,3 +598,19 @@ button {
   align-items: flex-start;
   gap: 15px;
 }
+
+@media (max-width: 1023px) {
+  section {
+    justify-content: space-between;
+  }
+
+  .textField {
+    padding: 20px 16px 7px 16px;
+  }
+  .textContainer {
+    padding: 16px;
+    > div {
+      width: 100%;
+    }
+  }
+}
