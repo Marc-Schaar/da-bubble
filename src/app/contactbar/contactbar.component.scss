@@ -413,6 +413,42 @@ button {
   }
 }
 
+.searchbar {
+  flex: 1;
+  position: relative;
+}
+input {
+  border-radius: 42px;
+  padding: 17.5px 45px 17.5px 45px;
+  background-color: #ffff;
+  display: flex;
+  justify-content: space-between;
+
+  > input {
+    border: none;
+    outline: none;
+    font-size: 26px;
+    font-weight: 700;
+    font-family: "Nunito";
+
+    &::placeholder {
+      font-size: 18px;
+      font-weight: 400px;
+    }
+    @media (max-width: 400px) {
+      width: 100%;
+    }
+    &:hover {
+      outline: none;
+    }
+  }
+  > button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 500px) {
   .contactbar {
     padding: 0 40px;

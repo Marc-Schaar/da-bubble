@@ -83,7 +83,6 @@ export class HeaderComponent {
     await this.loadUsers();
     this.setCurrentUser();
     this.isMobile = this.userService.isMobile;
-    this.setPlaceholderBasedOnDevice();
   }
 
   async loadUsers() {
@@ -181,9 +180,5 @@ export class HeaderComponent {
     }
     this.isClicked = false;
     this.input = '';
-  }
-
-  setPlaceholderBasedOnDevice() {
-    this.placeholderText = this.isMobile ? 'Gehe zu...' : 'Devspace durchsuchen';
   }
 }

@@ -13,6 +13,30 @@
       </button>
     </div>
 
+    <div class="searchbar">
+      <div class="input" *ngIf="!userService.login && userService.dashboard">
+        <input [(ngModel)]="input" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
+        <button><img src="/img/icons.png" alt="" /></button>
+      </div>
+
+      <ul [ngClass]="{ show: isClicked }" class="lists">
+        @for (object of currentlist; track $index; let index =$index) {
+        <li (click)="getReciever(index)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
+          @if (!isChannel) {
+          <div class="imageContainer">
+            <img [src]="object?.profilephoto" alt="" />
+            <div class="status-dot" [ngClass]="{ green: object?.online }"></div>
+          </div>
+          }@else { <img class="tag" src="./img/tag.svg" alt="" />}
+          <span>{{ object?.fullname || object?.name }}</span>
+          @if (object?.fullname === currentUser?.displayName) {
+          <span>(Du)</span>
+          }
+        </li>
+        }
+      </ul>
+    </div>
+
     <div class="contactbar">
       <div class="channels">
         <div class="channelbar">

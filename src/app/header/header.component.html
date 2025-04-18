@@ -4,7 +4,7 @@
   </div>
   <div class="searchbar">
     <div class="input" *ngIf="!userService.login && userService.dashboard">
-      <input [(ngModel)]="input" (input)="getList()" type="text" [placeholder]="placeholderText" class="full-width" />
+      <input [(ngModel)]="input" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
 

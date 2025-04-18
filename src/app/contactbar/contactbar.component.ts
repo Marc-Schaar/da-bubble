@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent, HeaderComponent, MatIconModule],
+  imports: [CommonModule, AddChannelComponent, HeaderComponent, MatIconModule, FormsModule],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
@@ -34,10 +35,18 @@ export class ContactbarComponent {
   firestoreService = inject(FireServiceService);
   router: Router = inject(Router);
   currentUser: any = [];
+  currentlist: any[] = [];
+  searchList: any[] = [];
+  currentArray: any[] = [];
   currentReceiver: any;
   userID: string = '';
+  currentReciever: any;
   currentChannel: any;
   addChannelWindow: boolean = false;
+  isClicked: boolean = false;
+  isChannel: boolean = false;
+
+  input: any = '';
 
   async ngOnInit() {
     this.userService.dashboard = true;
@@ -116,5 +125,81 @@ export class ContactbarComponent {
 
   openAddChannel() {
     this.addChannelWindow = true;
+  }
+
+  getList() {
+    if (this.input.includes('#')) {
+      this.isChannel = true;
+      this.currentlist = this.channels;
+      this.isClicked = true;
+      this.searchInit('channel');
+    }
+    if (this.input.includes('@')) {
+      this.isChannel = false;
+      this.isClicked = true;
+      this.currentlist = this.users;
+      this.searchInit('user');
+    }
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
+      this.isChannel = false;
+      this.isClicked = false;
+    }
+  }
+
+  searchInit(searchlistType: string) {
+    this.input.length > 3 ? this.startSearch(searchlistType) : this.resetSearch();
+  }
+
+  startSearch(searchlistType: string) {
+    this.searchList = [];
+    let modifyedInput = this.input.slice(1).trim();
+    this.currentlist.forEach((object) => {
+      //diese if-abfrage zw Users und channels könnte man sich sparen, wenn users und channels den gleichen key für den namen hätten und die daraus resultierenden zwei funktionen searchInUsers udn searchInChannels!
+      if (searchlistType == 'user') this.searchInUsers(object, modifyedInput);
+      if (searchlistType === 'channel') this.searchInChannels(object, modifyedInput);
+    });
+  }
+
+  searchInUsers(object: any, input: string) {
+    this.isChannel = false;
+    if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
+      const duplette = this.searchList.find((search) => search.id === object.id);
+      if (!duplette) {
+        this.searchList.push(object);
+        this.currentlist = this.searchList;
+      }
+    }
+  }
+
+  searchInChannels(object: any, input: string) {
+    this.isChannel = true;
+    if (object.name.toLowerCase().includes(input)) {
+      const duplette = this.searchList.find((search) => search.id === object.id);
+      if (!duplette) {
+        this.searchList.push(object);
+        this.currentlist = this.searchList;
+      }
+    }
+  }
+
+  resetSearch() {
+    this.searchList = [];
+    this.currentReciever = null;
+    this.currentChannel = null;
+  }
+
+  getReciever(index: number) {
+    this.userID = this.currentlist[index].id;
+    if (this.isChannel) {
+      this.userService.setUrl('channel', this.userID, this.userService.userId);
+      this.userService.getChannel(this.currentlist[index], this.currentUser);
+      this.userService.loadComponent('channel');
+    } else {
+      this.userService.setUrl('direct', this.userService.userId, this.userID);
+      this.userService.getReciepent(this.currentlist[index], this.currentUser);
+      this.userService.loadComponent('chat');
+    }
+    this.isClicked = false;
+    this.input = '';
   }
 }
