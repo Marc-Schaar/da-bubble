@@ -4,25 +4,25 @@
   </div>
   <div class="searchbar">
     <div class="input" *ngIf="!userService.login && userService.dashboard">
-      <input [(ngModel)]="input" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
+      <input [(ngModel)]="input" (input)="getList()" type="text" [placeholder]="placeholderText" class="full-width" />
       <button><img src="/img/icons.png" alt="" /></button>
     </div>
 
     <ul [ngClass]="{ show: isClicked }" class="lists">
-      <li
-        (click)="getReciever(index)"
-        [ngClass]="{ channelStyle: isChannel }"
-        class="listrow"
-        *ngFor="let object of currentlist; index as index"
-      >
-        <div *ngIf="!isChannel" class="imageContainer">
+      @for (object of currentlist; track $index; let index =$index) {
+      <li (click)="getReciever(index)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
+        @if (!isChannel) {
+        <div class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />
           <div class="status-dot" [ngClass]="{ green: object?.online }"></div>
         </div>
-        <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
+        }@else { <img class="tag" src="./img/tag.svg" alt="" />}
         <span>{{ object?.fullname || object?.name }}</span>
-        <span *ngIf="object?.fullname === currentUser?.displayName">(Du)</span>
+        @if (object?.fullname === currentUser?.displayName) {
+        <span>(Du)</span>
+        }
       </li>
+      }
     </ul>
   </div>
 

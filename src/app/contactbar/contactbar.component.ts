@@ -7,6 +7,7 @@ import { UserService } from '../shared.service';
 import { Router } from '@angular/router';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ import { HeaderComponent } from '../header/header.component';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent, HeaderComponent],
+  imports: [CommonModule, AddChannelComponent, HeaderComponent, MatIconModule],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
@@ -116,6 +117,4 @@ export class ContactbarComponent {
   openAddChannel() {
     this.addChannelWindow = true;
   }
-
-
 }

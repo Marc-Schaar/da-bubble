@@ -22,19 +22,21 @@
               <span>Channels</span>
             </div>
           </div>
-          <button class="addButton" (click)="openAddChannel()"><img src="./img/add.svg" alt="" /></button>
+          <button class="addButton" (click)="openAddChannel()">
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
 
         <ul [ngClass]="{ show: isActive() }" class="channellist">
-          <ng-container *ngFor="let channel of channels; let index = index">
-            <li
-              class="channelrow"
-              (click)="openWindow('channel'); openChannel(index); this.userService.setUrl('channel', channel.id, currentUser.id)"
-            >
-              <img src="/img/tag.svg" alt="" />
-              <span>{{ channel.name }}</span>
-            </li>
-          </ng-container>
+          @for (channel of channels; track $index; let index = $index) {
+          <li
+            class="channelrow"
+            (click)="openWindow('channel'); openChannel(index); this.userService.setUrl('channel', channel.id, currentUser.id)"
+          >
+            <img src="/img/tag.svg" alt="" />
+            <span>{{ channel.name }}</span>
+          </li>
+          } @empty {No Channel found}
         </ul>
 
         <div class="addChannel">
@@ -57,19 +59,19 @@
         </div>
 
         <ul [ngClass]="{ show: isOpen() }" class="contacts">
-          <ng-container
-            *ngFor="let user of this.users; let index = index"
-           
+          @for (user of users; track $index; let index = $index) {
+          <li
+            (click)="openWindow('chat'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)"
+            class="contactsrow"
           >
-            <li  (click)="openWindow('chat'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)" class="contactsrow">
-              <div class="imageContainer">
-                <img class="profile-image" [src]="user.profilephoto" alt="" />
-                <div class="status-dot" [ngClass]="{ green: user.online }"></div>
-              </div>
+            <div class="imageContainer">
+              <img class="profile-image" [src]="user.profilephoto" alt="" />
+              <div class="status-dot" [ngClass]="{ green: user.online }"></div>
+            </div>
 
-              <span>{{ user.fullname }}</span>
-            </li>
-          </ng-container>
+            <span>{{ user.fullname }}</span>
+          </li>
+          }@empty {No User found}
         </ul>
       </div>
     </div>

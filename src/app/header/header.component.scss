@@ -2,7 +2,6 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: var(--contactbar-width) 1fr auto;
-
 }
 
 .logo-container {
@@ -13,7 +12,6 @@
 .searchbar {
   grid-row: 1;
   grid-column: 2;
-
 }
 
 .user-menu {
@@ -247,6 +245,7 @@
 
     .logo-container {
       z-index: 10;
+      width: fit-content;
       img {
         width: 161.5px;
         height: 45px;
