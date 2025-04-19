@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { AfterViewInit, Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
-export class ContactbarComponent {
+export class ContactbarComponent implements OnInit {
   constructor() {}
   public channels: any = [];
   public users: any = [];
@@ -46,7 +46,7 @@ export class ContactbarComponent {
   isClicked: boolean = false;
   isChannel: boolean = false;
 
-  input: any = '';
+  input: string = '';
 
   async ngOnInit() {
     this.userService.dashboard = true;
@@ -131,19 +131,14 @@ export class ContactbarComponent {
     if (this.input.includes('#')) {
       this.isChannel = true;
       this.currentlist = this.channels;
-      this.isClicked = true;
       this.searchInit('channel');
     }
     if (this.input.includes('@')) {
       this.isChannel = false;
-      this.isClicked = true;
       this.currentlist = this.users;
       this.searchInit('user');
     }
-    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
-      this.isChannel = false;
-      this.isClicked = false;
-    }
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) this.isChannel = false;
   }
 
   searchInit(searchlistType: string) {
@@ -154,7 +149,6 @@ export class ContactbarComponent {
     this.searchList = [];
     let modifyedInput = this.input.slice(1).trim();
     this.currentlist.forEach((object) => {
-      //diese if-abfrage zw Users und channels könnte man sich sparen, wenn users und channels den gleichen key für den namen hätten und die daraus resultierenden zwei funktionen searchInUsers udn searchInChannels!
       if (searchlistType == 'user') this.searchInUsers(object, modifyedInput);
       if (searchlistType === 'channel') this.searchInChannels(object, modifyedInput);
     });
@@ -186,6 +180,10 @@ export class ContactbarComponent {
     this.searchList = [];
     this.currentReciever = null;
     this.currentChannel = null;
+  }
+
+  resetInput() {
+    this.input = '';
   }
 
   getReciever(index: number) {

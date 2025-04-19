@@ -410,43 +410,95 @@ button {
     padding: 8px;
     border-radius: 50%;
     color: white;
+    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
   }
 }
 
 .searchbar {
   flex: 1;
+  width: 100%;
+  padding: 0 16px;
   position: relative;
 }
-input {
-  border-radius: 42px;
-  padding: 17.5px 45px 17.5px 45px;
-  background-color: #ffff;
-  display: flex;
-  justify-content: space-between;
 
-  > input {
+.input {
+  border-radius: 42px;
+  padding: 8px 24px;
+  background-color: #ffff;
+  outline: 1px solid var(--light-purple);
+  display: flex;
+  align-items: center;
+
+  input {
     border: none;
     outline: none;
-    font-size: 26px;
-    font-weight: 700;
-    font-family: "Nunito";
+    font-size: 17px;
+    height: 32px;
+  }
+}
 
-    &::placeholder {
-      font-size: 18px;
-      font-weight: 400px;
-    }
-    @media (max-width: 400px) {
-      width: 100%;
-    }
-    &:hover {
-      outline: none;
-    }
+.lists {
+  display: flex;
+  width: 100%;
+  height: calc(100% - var(--header-offset) - 225px);
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 21px;
+  background-color: white;
+  overflow-y: scroll;
+  z-index: 99;
+}
+
+.listrow {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  gap: 10px;
+  border-radius: 30px;
+  padding: 4px 20px;
+  cursor: pointer;
+  transition: all 0.125s ease-in-out;
+  font-size: 17px;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 0;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border: solid;
+  background-color: gray;
+  border-radius: 50%;
+  border-color: #eceefe;
+  border-width: 2px;
+}
+
+.green {
+  background-color: #92c83e;
+}
+
+.imageContainer {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 30px;
   }
-  > button {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
+}
+
+.tag {
+  border-radius: unset !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
 }
 
 @media (max-width: 500px) {

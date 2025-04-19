@@ -13,13 +13,29 @@
       </button>
     </div>
 
+    @if (isClicked) {
+    <div class="justify-sb full-width p-lr-16">
+      <h2>Search</h2>
+      <button (click)="isClicked = false; resetSearch(); resetInput()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    }
     <div class="searchbar">
       <div class="input" *ngIf="!userService.login && userService.dashboard">
-        <input [(ngModel)]="input" (input)="getList()" type="text" placeholder="Devspace durchsuchen" class="full-width" />
-        <button><img src="/img/icons.png" alt="" /></button>
+        <input
+          (click)="isClicked = true; input = '@'"
+          [(ngModel)]="input"
+          (input)="getList()"
+          type="text"
+          placeholder="Gehe zu ..."
+          class="full-width"
+        />
+        <mat-icon>search</mat-icon>
       </div>
 
-      <ul [ngClass]="{ show: isClicked }" class="lists">
+      @if (currentlist.length>0 && input.trim().length >0 && (input[0]== "#" || input[0] =="@")) {
+      <ul class="lists">
         @for (object of currentlist; track $index; let index =$index) {
         <li (click)="getReciever(index)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
           @if (!isChannel) {
@@ -35,8 +51,10 @@
         </li>
         }
       </ul>
+      }
     </div>
 
+    @if (!isClicked) {
     <div class="contactbar">
       <div class="channels">
         <div class="channelbar">
@@ -98,6 +116,7 @@
         </ul>
       </div>
     </div>
+    }
   </section>
 
   <button class="add-message-btn-mobile" (click)="openWindow('chat'); this.userService.setUrl('default')">

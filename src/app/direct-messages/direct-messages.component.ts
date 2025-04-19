@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
-import { DirectMessage } from '../directmessage.class';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { DirectMessage } from '../models/direct-message';
 
 @Injectable({
   providedIn: 'root',

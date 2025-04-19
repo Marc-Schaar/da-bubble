@@ -2,19 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable } from '@angular/core';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
-import {
-  Firestore,
-  arrayUnion,
-  doc,
-  updateDoc,
-  onSnapshot,
-  serverTimestamp,
-} from '@angular/fire/firestore';
+import { Firestore, arrayUnion, doc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
-import { DirectMessage } from '../directmessage.class';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from '../models/message';
+import { DirectMessage } from '../models/direct-message';
 @Injectable({
   providedIn: 'root',
 })
@@ -115,10 +108,7 @@ export class NewmessageComponent {
     );
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
-    const currentReceiverRef = doc(
-      this.firestore,
-      `users/${this.currentRecieverId}`
-    );
+    const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
     if (this.currentRecieverId !== this.currentUserId) {
       await updateDoc(currentReceiverRef, {
         messages: arrayUnion(messageData),
@@ -152,10 +142,7 @@ export class NewmessageComponent {
   }
 
   sendChannelMessage() {
-    this.firestoreService.sendMessage(
-      this.currentChannelId,
-      new Message(this.buildMessageObject())
-    );
+    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
   }
 
   getCurrentChat() {
@@ -201,13 +188,8 @@ export class NewmessageComponent {
   }
 
   searchInUsers(object: any, input: string) {
-    if (
-      object.fullname.toLowerCase().includes(input) ||
-      object.email.toLowerCase().includes(input)
-    ) {
-      const duplette = this.searchList.find(
-        (search) => search.id === object.id
-      );
+    if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
+      const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
         this.isChannel = false;
         this.searchList.push(object);
@@ -217,9 +199,7 @@ export class NewmessageComponent {
 
   searchInChannels(object: any, input: string) {
     if (object.name.toLowerCase().includes(input)) {
-      const duplette = this.searchList.find(
-        (search) => search.id === object.id
-      );
+      const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
         this.isChannel = true;
         this.searchList.push(object);
@@ -247,11 +227,7 @@ export class NewmessageComponent {
       return;
     } else if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
-      this.userService.setUrl(
-        'direct',
-        this.currentUserId,
-        this.currentRecieverId
-      );
+      this.userService.setUrl('direct', this.currentUserId, this.currentRecieverId);
       this.userService.loadComponent('chat');
     } else if (this.whichMessage === 'channel') {
       this.sendChannelMessage();
@@ -285,10 +261,7 @@ export class NewmessageComponent {
       this.currentList = this.users;
       this.isChannel = false;
     }
-    if (
-      this.message === '' ||
-      (!this.message.includes('#') && !this.message.includes('@'))
-    ) {
+    if (this.message === '' || (!this.message.includes('#') && !this.message.includes('@'))) {
       this.isClicked = false;
     }
   }
