@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 
@@ -53,7 +53,7 @@ export class ContactbarComponent implements OnInit {
     this.userService.login = false;
     this.isMobile = this.userService.isMobile;
     await this.loadUsers();
-    await this.loadChannels();
+    this.loadChannels();
     this.findCurrentUser();
     this.openDropdown();
   }
@@ -66,11 +66,16 @@ export class ContactbarComponent implements OnInit {
     }
   }
 
-  async loadChannels() {
-    try {
-      this.channels = await this.firestoreService.getChannels();
-    } catch (error) {
-      console.error('Error loading channels in component:', error);
+  loadChannels() {
+    let channelRef = this.firestoreService.getCollectionRef('channels');
+    this.channels = [];
+    if (channelRef) {
+      onSnapshot(channelRef, (colSnap) => {
+        this.channels = colSnap.docs.map((colSnap) => ({
+          id: colSnap.id,
+          ...colSnap.data(),
+        }));
+      });
     }
   }
 
