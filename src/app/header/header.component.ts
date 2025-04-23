@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { signOut, User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
-import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
 import { FormsModule } from '@angular/forms';
 

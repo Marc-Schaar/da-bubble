@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { IntroComponent } from './intro/intro.component';
 import { MainComponentComponent } from './main-component/main-component.component';
 import { SignInComponent } from './sign-in/sign-in.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from './header/user-profile/user-profile.component';
 import { SignupComponent } from './sign-up/sign-up.component';
 import { ForgotpasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetpasswordComponent } from './reset-password/reset-password.component';

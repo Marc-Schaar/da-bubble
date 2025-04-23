@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { getAuth, User, updateProfile } from 'firebase/auth';
-import { UserService } from '../shared.service';
+import { UserService } from '../../shared.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,6 +16,8 @@ export class UserProfileComponent implements OnInit {
   newname: string = '';
   @Input() menuTrigger!: MatMenuTrigger;
   @Input() showmodifycontent: boolean = false;
+
+  @Output() showmodifycontentChange = new EventEmitter<boolean>();
 
   userService = inject(UserService);
   auth = getAuth();
@@ -40,19 +42,25 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  handleClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if(target.classList.contains('menu-trigger')) {
+      return
+    }
+    event.stopPropagation();
+    console.log("handleClick");
+    
+  }
+
   async modify() {
     this.modifyinfos = true;
     this.newname = this.user?.displayName ?? ''; 
   }
 
   closeMenu() {
-    // this.showmodifycontent = false;
-    // this.menuTrigger.closeMenu();
-    console.log('menuTrigger:', this.menuTrigger);
-
     if (this.menuTrigger) {
       this.menuTrigger.closeMenu();
-      console.log('Menü wurde geschlossen.');
+      this.showmodifycontentChange.emit(false);
 
     } else {
       console.error('menuTrigger ist nicht definiert.');

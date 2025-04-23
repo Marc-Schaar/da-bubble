@@ -1,4 +1,3 @@
-<app-add-channel *ngIf="addChannelWindow" [(addChannelWindow)]="addChannelWindow" [(showBackground)]="showBackground"></app-add-channel>
 
 
 <main>
@@ -125,4 +124,7 @@
   </button>
 </main>
 
-<div *ngIf="showBackground" class="background"></div>
+<div *ngIf="showBackground" class="background">
+  <app-add-channel *ngIf="addChannelWindow" [(addChannelWindow)]="addChannelWindow" [(showBackground)]="showBackground"></app-add-channel>
+
+</div>

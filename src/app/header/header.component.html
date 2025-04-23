@@ -48,9 +48,8 @@
           </ng-container>
 
           <app-user-profile
-            (click)="$event.stopPropagation()"
             [menuTrigger]="menuTriggerRef"
-            [showmodifycontent]="showmodifycontent"
+            [(showmodifycontent)]="showmodifycontent"
             *ngIf="showmodifycontent"
           ></app-user-profile>
         </mat-menu>
