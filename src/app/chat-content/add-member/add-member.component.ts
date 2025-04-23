@@ -20,7 +20,11 @@ export class AddMemberComponent {
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() addMemberWindow: boolean = false;
+  @Input() showBackground: boolean = true;
+
   @Output() addMemberWindowChange = new EventEmitter<boolean>();
+  @Output() showBackgroundChange = new EventEmitter<boolean>();
+
   @Input() currentUser: any;
   members: any[] = [];
   users: any[] = [];
@@ -86,7 +90,9 @@ export class AddMemberComponent {
 
   closeWindow() {
     this.addMemberInfoWindow = false;
+    this.showBackground = false;
     this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
+    this.showBackgroundChange.emit(this.showBackground);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
@@ -179,7 +185,6 @@ export class AddMemberComponent {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
     console.log(member);
-    
   }
 
 }

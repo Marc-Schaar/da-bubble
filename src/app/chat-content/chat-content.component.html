@@ -13,21 +13,21 @@
 
 <main>
   <app-channel-edit
-    class="dark-background"
     *ngIf="channelInfo"
     [(channelInfo)]="channelInfo"
     [currentChannel]="currentChannel"
     [currentChannelId]="currentChannelId"
     [currentUser]="currentUser"
+    [(showBackground)]="showBackground"
   ></app-channel-edit>
   <app-add-member
-    class="dark-background"
     *ngIf="addMemberInfoWindow"
     [(addMemberInfoWindow)]="addMemberInfoWindow"
     [currentChannel]="currentChannel"
     [currentChannelId]="currentChannelId"
     [currentUser]="currentUser"
     [(addMemberWindow)]="addMemberWindow"
+    [(showBackground)]="showBackground"
   ></app-add-member>
   <div class="card">
     <section class="card-header">
@@ -281,3 +281,5 @@
     </section>
   </div>
 </main>
+
+<div *ngIf="showBackground" class="background"></div>

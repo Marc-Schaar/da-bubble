@@ -49,6 +49,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   isEditing: boolean = false;
   isMobile: boolean = false;
   isChannel: boolean = false;
+  showBackground: boolean = false;
 
   showAllReactions: boolean = false;
 
@@ -252,11 +253,13 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openChannelInfo() {
     this.channelInfo = true;
+    this.showBackground = true;
   }
 
   openMemberWindow(toggle: boolean) {
     this.addMemberInfoWindow = true;
     this.addMemberWindow = toggle;
+    this.showBackground = true;
   }
 
   uniqueEmojis(reactions: any[]): any[] {

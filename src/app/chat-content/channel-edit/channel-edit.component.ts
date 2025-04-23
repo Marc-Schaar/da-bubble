@@ -16,8 +16,10 @@ export class ChannelEditComponent {
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() currentUser: any;
+  @Input() showBackground: boolean = true;
   userService = inject(UserService);
   @Output() channelInfoChange = new EventEmitter<boolean>();
+  @Output() showBackgroundChange = new EventEmitter<boolean>();
   channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
   users: any[] = [];
@@ -96,7 +98,9 @@ export class ChannelEditComponent {
 
   close() {
     this.channelInfo = false;
+    this.showBackground = false;
     this.channelInfoChange.emit(this.channelInfo);
+    this.showBackgroundChange.emit(this.showBackground);
   }
 
   // async exitChannel() {
