@@ -38,7 +38,8 @@
         <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
-        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
+        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()"
+        >
           <ng-container *ngIf="showmenu">
             <button *ngIf="!showmodifycontent" (click)="show()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
               Profil

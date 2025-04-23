@@ -29,6 +29,7 @@ export class ContactbarComponent implements OnInit {
 
   isMobile: boolean = false;
   barOpen: boolean = true;
+  showBackground: boolean = false;
 
   userService = inject(UserService);
   firestore = inject(Firestore);
@@ -130,6 +131,7 @@ export class ContactbarComponent implements OnInit {
 
   openAddChannel() {
     this.addChannelWindow = true;
+    this.showBackground = true;
   }
 
   getList() {

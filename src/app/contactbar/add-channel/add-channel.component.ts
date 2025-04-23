@@ -46,7 +46,9 @@ import { FireServiceService } from '../../fire-service.service';
 })
 export class AddChannelComponent implements OnInit {
   @Input() addChannelWindow:boolean = false;
+  @Input() showBackground: boolean = true;
   @Output() addChannelWindowChange = new EventEmitter<boolean>();
+  @Output() showBackgroundChange = new EventEmitter<boolean>();
   channelName: string = '';
   selectChannelMember: boolean = false;
   channelDescription: HTMLInputElement | null = null;
@@ -101,6 +103,8 @@ export class AddChannelComponent implements OnInit {
 
   closeWindow() {
     this.addMemberInfoWindow = false;
+    this.showBackground = false;
+    this.showBackgroundChange.emit(this.showBackground);
   }
 
   async loadUsers() {
@@ -168,6 +172,8 @@ export class AddChannelComponent implements OnInit {
   closeScreen() {
     this.addChannelWindow = false;
     this.addChannelWindowChange.emit(this.addChannelWindow);
+    this.showBackground = false;
+    this.showBackgroundChange.emit(this.showBackground);
   }
 
   onSubmit() {
