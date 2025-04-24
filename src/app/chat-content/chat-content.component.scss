@@ -553,5 +553,14 @@ header {
   bottom: 0;
   right: 0;
   background-color: #72727258;
-  z-index: 3;
+  z-index: 1000;
 }
+
+.app-add-member-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+}
+

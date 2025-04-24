@@ -11,24 +11,34 @@
   <img [src]="this.userService.auth.currentUser?.photoURL" alt="this.userService.auth.currentUser?.displayName" />
 </header>
 
+
+
+  <!-- <app-channel-edit
+*ngIf="channelInfo"
+[(channelInfo)]="channelInfo"
+[currentChannel]="currentChannel"
+[currentChannelId]="currentChannelId"
+[currentUser]="currentUser"
+[(showBackground)]="showBackground"
+></app-channel-edit>
+<app-add-member
+*ngIf="addMemberInfoWindow"
+[(addMemberInfoWindow)]="addMemberInfoWindow"
+[currentChannel]="currentChannel"
+[currentChannelId]="currentChannelId"
+[currentUser]="currentUser"
+[(addMemberWindow)]="addMemberWindow"
+[(showBackground)]="showBackground"
+></app-add-member> -->
+
+
+
+
+
+
+
 <main>
-  <app-channel-edit
-    *ngIf="channelInfo"
-    [(channelInfo)]="channelInfo"
-    [currentChannel]="currentChannel"
-    [currentChannelId]="currentChannelId"
-    [currentUser]="currentUser"
-    [(showBackground)]="showBackground"
-  ></app-channel-edit>
-  <app-add-member
-    *ngIf="addMemberInfoWindow"
-    [(addMemberInfoWindow)]="addMemberInfoWindow"
-    [currentChannel]="currentChannel"
-    [currentChannelId]="currentChannelId"
-    [currentUser]="currentUser"
-    [(addMemberWindow)]="addMemberWindow"
-    [(showBackground)]="showBackground"
-  ></app-add-member>
+
   <div class="card">
     <section class="card-header">
       <div class="align-center hover-bg" (click)="openChannelInfo()">
@@ -282,4 +292,3 @@
   </div>
 </main>
 
-<div *ngIf="showBackground" class="background"></div>

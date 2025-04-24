@@ -12,6 +12,10 @@ import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
 import { AddMemberComponent } from './add-member/add-member.component';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+
+
 
 // @Injectable({
 //   providedIn: 'root',
@@ -27,6 +31,8 @@ import { AddMemberComponent } from './add-member/add-member.component';
     ChannelEditComponent,
     AddMemberComponent,
     RouterLink,
+    MatMenuModule,
+    MatDialogModule
   ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
@@ -39,6 +45,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   userService: UserService = inject(UserService);
   router: Router = inject(Router);
   firestore: Firestore = inject(Firestore);
+  dialog = inject(MatDialog);
 
   loading: boolean = false;
   menuOpen: boolean = false;
@@ -101,6 +108,23 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.subscriptions) this.subscriptions.unsubscribe();
+  }
+
+  openChannelInfo() {
+    console.log('openChannelInfo');
+    
+    const dialogData = {
+      currentChannel: this.currentChannel,
+      currentChannelId: this.currentChannelId,
+      currentUser: this.currentUser,
+    };
+
+    this.dialog.open(ChannelEditComponent, {
+      data: dialogData,
+      width: '872px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+    });
   }
 
   startChannel() {
@@ -251,15 +275,17 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  openChannelInfo() {
-    this.channelInfo = true;
-    this.showBackground = true;
-  }
+  // openChannelInfo() {
+  //   this.channelInfo = true;
+  //   this.showBackground = true;
+
+  // }
 
   openMemberWindow(toggle: boolean) {
     this.addMemberInfoWindow = true;
     this.addMemberWindow = toggle;
     this.showBackground = true;
+    // this.userService.showChatOverlay();
   }
 
   uniqueEmojis(reactions: any[]): any[] {

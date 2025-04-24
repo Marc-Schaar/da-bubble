@@ -47,9 +47,11 @@ export class MainChatComponent implements OnInit {
   isMobile: boolean = false;
   isProfileCard: boolean = false;
   barOpen:boolean= false
+  isChatOverlayVisible = false;
   currentReciever: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
+  private overlaySubscription: Subscription | null = null;
   private contactbarSubscription!: Subscription
   private subscription!: Subscription;
 
@@ -87,6 +89,10 @@ export class MainChatComponent implements OnInit {
 
     this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
       this.drawerContactbar.toggle();
+    });
+
+    this.overlaySubscription = this.shareddata.chatOverlayState$.subscribe(isVisible => {
+      this.isChatOverlayVisible = isVisible;
     });
     
   }
