@@ -28,8 +28,6 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
     CommonModule,
     FormsModule,
     MatSidenavModule,
-    ChannelEditComponent,
-    AddMemberComponent,
     RouterLink,
     MatMenuModule,
     MatDialogModule
@@ -110,17 +108,19 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscriptions) this.subscriptions.unsubscribe();
   }
 
-  openChannelInfo() {
-    console.log('openChannelInfo');
-    
+  openChannelInfo() {   
+    console.log('Versuche AddMember zu öffnen. Aktuelle Daten:');
+    console.log('Current Channel:', this.currentChannel);
+    console.log('Current Channel ID:', this.currentChannelId);
+    console.log('Current User:', this.currentUser); 
     const dialogData = {
       currentChannel: this.currentChannel,
       currentChannelId: this.currentChannelId,
       currentUser: this.currentUser,
     };
-
     this.dialog.open(ChannelEditComponent, {
       data: dialogData,
+      position: { top: '200px' },
       width: '872px',
       maxWidth: '95vw',
       maxHeight: '90vh',
@@ -282,10 +282,18 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   openMemberWindow(toggle: boolean) {
-    this.addMemberInfoWindow = true;
     this.addMemberWindow = toggle;
-    this.showBackground = true;
-    // this.userService.showChatOverlay();
+    const dialogData = {
+      currentChannel: this.currentChannel,
+      currentChannelId: this.currentChannelId,
+      currentUser: this.currentUser,
+    };
+    this.dialog.open(AddMemberComponent, {
+      data: dialogData,
+      width: 'auto',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+    });
   }
 
   uniqueEmojis(reactions: any[]): any[] {

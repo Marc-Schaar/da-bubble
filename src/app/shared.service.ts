@@ -34,10 +34,6 @@ export class UserService {
   login: boolean = false;
   isMobile: boolean = false;
 
-  private chatOverlaySubject = new BehaviorSubject<boolean>(false);
-  chatOverlayState$ = this.chatOverlaySubject.asObservable();
-
-
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
@@ -83,13 +79,6 @@ export class UserService {
 
   unsubChannels!: () => void;
   unsubMessages!: () => void;
-
-  showChatOverlay() {
-    this.chatOverlaySubject.next(true);
-  }
-  hideChatOverlay() {
-    this.chatOverlaySubject.next(false);
-  }
 
   setUser(user: User) {
     this.user = user;

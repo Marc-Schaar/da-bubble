@@ -3,7 +3,7 @@ import { AfterViewInit, Component, inject, Injectable, Input, OnInit, ViewChild 
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
-
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
@@ -21,7 +21,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './contactbar.component.scss',
 })
 export class ContactbarComponent implements OnInit {
-  constructor() {}
   public channels: any = [];
   public users: any = [];
   active: boolean = false;
@@ -48,6 +47,8 @@ export class ContactbarComponent implements OnInit {
   isChannel: boolean = false;
 
   input: string = '';
+
+  constructor(private dialog: MatDialog) {} // MatDialog injizieren
 
   async ngOnInit() {
     this.userService.dashboard = true;
@@ -130,8 +131,11 @@ export class ContactbarComponent implements OnInit {
   }
 
   openAddChannel() {
-    this.addChannelWindow = true;
-    this.showBackground = true;
+    this.dialog.open(AddChannelComponent, {
+      width: '872px', 
+      maxWidth: '95vw',
+    });
+
   }
 
   getList() {

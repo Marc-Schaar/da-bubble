@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, HostListener, inject, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { FireServiceService } from '../../fire-service.service';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { UserService } from '../../shared.service';
@@ -11,7 +13,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })
-export class AddMemberComponent {
+export class AddMemberComponent implements OnInit{
   fireService: FireServiceService = inject(FireServiceService);
   userService = inject(UserService);
   @Input() addMemberInfoWindow: boolean = false;
@@ -35,6 +37,15 @@ export class AddMemberComponent {
   filteredUsers: any[] = [];
   filteredMembers: any[] = [];
   // reciepentId: string | null = null;
+
+  constructor(
+    public dialogRef: MatDialogRef<AddMemberComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.currentChannel = data.currentChannel;
+    this.currentChannelId = data.currentChannelId;
+    this.currentUser = data.currentUser;
+  }
 
   async ngOnInit() {
     this.loadMember();

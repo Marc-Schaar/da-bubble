@@ -89,12 +89,7 @@ export class MainChatComponent implements OnInit {
 
     this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
       this.drawerContactbar.toggle();
-    });
-
-    this.overlaySubscription = this.shareddata.chatOverlayState$.subscribe(isVisible => {
-      this.isChatOverlayVisible = isVisible;
-    });
-    
+    }); 
   }
 
   ngOnDestroy(): void {

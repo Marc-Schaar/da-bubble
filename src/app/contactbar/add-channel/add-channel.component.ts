@@ -37,6 +37,8 @@ import { getAuth } from 'firebase/auth';
 import { User } from '../../models/user';
 import { Channel } from '../../models/channel';
 import { FireServiceService } from '../../fire-service.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-add-channel',
@@ -70,7 +72,8 @@ export class AddChannelComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    public firestore: Firestore
+    public firestore: Firestore,
+    public dialogRef: MatDialogRef<AddChannelComponent>
   ) {}
 
   ngOnInit() {
