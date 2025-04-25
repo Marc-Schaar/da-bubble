@@ -130,11 +130,7 @@ export class ContactbarComponent implements OnInit {
   }
 
   openAddChannel() {
-<<<<<<< HEAD
     const dialogRef = this.dialog.open(AddChannelComponent, {
-=======
-    this.dialog.open(AddChannelComponent, {
->>>>>>> 5548ec7f30e23cc6731962f7bdb44f4ba5326d43
       width: '872px',
       maxWidth: '95vw',
       height: 'auto',

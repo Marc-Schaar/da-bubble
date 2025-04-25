@@ -29,6 +29,7 @@ import {
   updateDoc,
   doc,
   getDoc,
+  arrayUnion
 } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
@@ -177,7 +178,7 @@ export class AddChannelComponent implements OnInit {
       const targetChannelDoc = await getDoc(targetChannelRef);
       if (targetChannelDoc.exists()) {
         const targetChannelData = targetChannelDoc.data();
-        await updateDoc(targetChannelRef, { member: this.selectedUsers });
+        await updateDoc(targetChannelRef, { member: arrayUnion(...this.selectedUsers) });
         this.selectedUsers = [];
       } else {
         console.error('Fehler: Der Channel existiert nicht.');
@@ -185,6 +186,7 @@ export class AddChannelComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Hinzufügen der ausgewählten Benutzer:', error);
     }
+    this.dialogRef.close();
   }
 
   async pushAllUser() {
@@ -207,38 +209,50 @@ export class AddChannelComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Hinzufügen der Benutzer:', error);
     }
+    this.dialogRef.close();
+
   }
 
   async addChannel() {
-    const channelDescription = document.getElementById(
+    const channelDescriptionElement = document.getElementById(
       'channel-description'
     ) as HTMLInputElement | null;
+    const descriptionValue = channelDescriptionElement ? channelDescriptionElement.value : '';
+    const currentUserAuth = this.auth.currentUser;
+    if (!currentUserAuth) {
+      console.error('Fehler: Kein Benutzer eingeloggt.');
+      this.channelmodule.showFeedback("Fehler: Sie müssen eingeloggt sein.");
+      return;
+    }
+    const creatorProfile = this.users.find(u => u.uid === currentUserAuth.uid);
+    if (!creatorProfile) {
+        this.channelmodule.showFeedback("Fehler: Benutzerprofil konnte nicht geladen werden.");
+        return;
+    }
     try {
-      const newChannel: Channel = {
+      const creatorMember = {
+        id: creatorProfile.uid,
+        fullname: creatorProfile.fullname,
+        profilephoto: creatorProfile.profilephoto,
+        email: creatorProfile.email,
+        online: creatorProfile.online
+      };
+      const channelData = {
         name: this.channelName,
-        description: channelDescription ? channelDescription.value : '',
-        member: this.auth.currentUser ? [this.auth.currentUser.uid] : [],
-        creator: this.auth.currentUser?.displayName ?? 'Unknown',
+        description: descriptionValue,
+        member: [creatorMember],
+        creator: creatorProfile.fullname ?? 'Unknown',
       };
       const channelsCollection = collection(this.firestore, 'channels');
-      const channelRef = await addDoc(channelsCollection, {
-        name: newChannel.name,
-        description: newChannel.description,
-        member: newChannel.member,
-        creator: newChannel.creator,
-      });
+      const channelRef = await addDoc(channelsCollection, channelData);
       this.channelRef = channelRef.id;
-      console.log('Channel erstellt mit ID:', channelRef.id);
-
-      this.channelName = '';
-      if (this.channelDescription) {
-        this.channelDescription.value = '';
-      }
-      this.selectedUsers = [];
+      this.channelmodule.showFeedback("Channel erstellt");
     } catch (error) {
       console.error('Fehler beim Erstellen des Channels:', error);
+      this.channelmodule.showFeedback("Fehler beim Erstellen des Channels.");
     }
   }
+
 
   // async pushAllUser() {
 
