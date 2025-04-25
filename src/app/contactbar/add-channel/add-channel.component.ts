@@ -21,8 +21,6 @@ import {
 } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import * as AOS from 'aos';
-import 'aos/dist/aos.css';
 import {
   Firestore,
   collection,
@@ -47,10 +45,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./add-channel.component.scss'],
 })
 export class AddChannelComponent implements OnInit {
-  @Input() addChannelWindow:boolean = false;
-  @Input() showBackground: boolean = true;
-  @Output() addChannelWindowChange = new EventEmitter<boolean>();
-  @Output() showBackgroundChange = new EventEmitter<boolean>();
   channelName: string = '';
   selectChannelMember: boolean = false;
   channelDescription: HTMLInputElement | null = null;
@@ -77,18 +71,14 @@ export class AddChannelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      AOS.init();
-    }
     this.loadUsers();
     this.loadChannel();
-    // document.addEventListener('click', this.handleOutsideClick.bind(this));
     console.log(this.channel);
+    console.log(this.auth.currentUser);
+    
   }
 
 @ViewChild('mainDialog') mainDialog!: ElementRef;
-
-
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
@@ -104,12 +94,6 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-  // closeWindow() {
-  //   this.addMemberInfoWindow = false;
-  //   this.showBackground = false;
-  //   this.showBackgroundChange.emit(this.showBackground);
-  // }
-
   async loadUsers() {
     try {
       const usersCollection = collection(this.firestore, 'users');
@@ -121,7 +105,6 @@ export class AddChannelComponent implements OnInit {
       this.users = [];
     }
   }
-
   async loadChannel() {
     this.channels = this.channelmodule.getChannels();
   }
@@ -130,19 +113,13 @@ export class AddChannelComponent implements OnInit {
     const selectedUser = this.filteredUsers[index];
     this.selectedUsers.push(selectedUser);
     this.filteredUsers.splice(index, 1);
-    // this.users = this.users.filter((user) => user.id !== selectedUser.id);
-    this.filterUsers();
-
-    console.log(this.filteredUsers);
-    
+    this.filterUsers();    
     this.refreshBar();
   }
 
   removeUserFromBar(index: number) {
     this.users.splice(index, 1);
     this.filterUsers();
-    console.log(this.users);
-    console.log(this.filteredUsers);
   }
 
   removeSelectedUser(index: number) {
@@ -173,20 +150,13 @@ export class AddChannelComponent implements OnInit {
   }
 
   closeScreen() {
-    // this.addChannelWindow = false;
-    // this.addChannelWindowChange.emit(this.addChannelWindow);
     this.dialogRef.close()
-
   }
 
   onSubmit() {
     if (!this.selectChannelMember) {
       this.addChannel();
       this.channelmodule.showFeedback("Channel erstellt");
-
-      console.log('channel erstellt');
-      console.log(this.channelmodule.getChannel);
-
       this.selectChannelMember = true;
     }
   }
@@ -247,7 +217,7 @@ export class AddChannelComponent implements OnInit {
       const newChannel: Channel = {
         name: this.channelName,
         description: channelDescription ? channelDescription.value : '',
-        member: this.selectedUsers,
+        member: this.auth.currentUser ? [this.auth.currentUser.uid] : [],
         creator: this.auth.currentUser?.displayName ?? 'Unknown',
       };
       const channelsCollection = collection(this.firestore, 'channels');
@@ -330,16 +300,4 @@ export class AddChannelComponent implements OnInit {
     this.showUserBar = true;
     this.filterUsers();
   }
-
-  // handleOutsideClick(event: Event) {
-  //   if (
-  //     this.mainDialog &&
-  //     !this.mainDialog.nativeElement.contains(event.target as Node)
-  //   ) {
-  //     this.closeScreen();
-  //   }
-  // }
-
-
-
 }

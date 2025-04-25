@@ -19,10 +19,14 @@
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </div>
       <div class="align-center gap-10">
-        <div class="avatar-container hover-bg">
-          @for (member of currentChannel?.member; track $index; let i = $index) {
-          <img *ngIf="i < 3" (click)="openMemberWindow(false)" class="avatar" [src]="member.profilephoto" alt="Name" />
-          } @if (currentChannel?.member?.length) {
+
+        <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
+          <div class="member-img-cont">
+            @for (member of currentChannel?.member; track $index; let i = $index) {
+              <img *ngIf="i < 3"  class="avatar" [src]="member.profilephoto" alt="Name" />
+              }
+          </div>
+            @if (currentChannel?.member?.length) {
           <span>{{ currentChannel?.member?.length }}</span>
           }
         </div>
