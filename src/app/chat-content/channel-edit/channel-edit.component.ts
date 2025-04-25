@@ -6,7 +6,6 @@ import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-
 @Component({
   selector: 'app-channel-edit',
   imports: [CommonModule],
@@ -40,9 +39,6 @@ export class ChannelEditComponent {
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
 
-
-
-
   async fetchUsers() {
     const usersCollection = collection(this.firestore, 'users');
     const usersSnapshot = await getDocs(usersCollection);
@@ -56,8 +52,7 @@ export class ChannelEditComponent {
       } else {
         this.channelnameEdit = false;
         this.saveNewChannelData(content);
-        this.userService.showFeedback("Channel Name geändert");
-
+        this.userService.showFeedback('Channel Name geändert');
       }
     }
     if (content == 'editDescription') {
@@ -66,8 +61,7 @@ export class ChannelEditComponent {
       } else {
         this.channeldescriptionEdit = false;
         this.saveNewChannelData(content);
-        this.userService.showFeedback("Channel Beschreibung geändert");
-
+        this.userService.showFeedback('Channel Beschreibung geändert');
       }
     }
   }
@@ -107,10 +101,11 @@ export class ChannelEditComponent {
   }
 
   close() {
+    // this.addChannelWindow = false;
+    // this.addChannelWindowChange.emit(this.addChannelWindow);
+    this.dialogRef.close();
     this.channelInfo = false;
-    this.showBackground = false;
     this.channelInfoChange.emit(this.channelInfo);
-    this.showBackgroundChange.emit(this.showBackground);
   }
 
   // async exitChannel() {
@@ -156,18 +151,6 @@ export class ChannelEditComponent {
         });
       }
     } catch (error) {}
-    this.userService.showFeedback("Channel verlassen");
-
+    this.userService.showFeedback('Channel verlassen');
   }
-
-  @HostListener('document:click', ['$event'])
-closeOnClick(event: Event) {
-  const targetElement = event.target as HTMLElement;
-  if (this.mainDialog && this.mainDialog.nativeElement && !this.mainDialog.nativeElement.contains(targetElement)) {
-    this.closeDialog();
-  }
-}
-closeDialog(): void {
-  this.dialogRef.close();
-}
 }

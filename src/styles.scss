@@ -48,18 +48,23 @@ body {
   background-color: var(--bg-color);
 }
 
-.dark-background {
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 4;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.transparent-dialog-bg .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: rgba(0, 0, 0, 0) !important;
+  box-shadow: none !important;
 }
+
+// .dark-background {
+//   background: rgba(0, 0, 0, 0.5);
+//   z-index: 4;
+//   position: fixed;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
 
 app-footer {
   width: 100%;

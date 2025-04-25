@@ -82,7 +82,7 @@ export class AddChannelComponent implements OnInit {
     }
     this.loadUsers();
     this.loadChannel();
-    document.addEventListener('click', this.handleOutsideClick.bind(this));
+    // document.addEventListener('click', this.handleOutsideClick.bind(this));
     console.log(this.channel);
   }
 
@@ -104,11 +104,11 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-  closeWindow() {
-    this.addMemberInfoWindow = false;
-    this.showBackground = false;
-    this.showBackgroundChange.emit(this.showBackground);
-  }
+  // closeWindow() {
+  //   this.addMemberInfoWindow = false;
+  //   this.showBackground = false;
+  //   this.showBackgroundChange.emit(this.showBackground);
+  // }
 
   async loadUsers() {
     try {
@@ -173,10 +173,10 @@ export class AddChannelComponent implements OnInit {
   }
 
   closeScreen() {
-    this.addChannelWindow = false;
-    this.addChannelWindowChange.emit(this.addChannelWindow);
-    this.showBackground = false;
-    this.showBackgroundChange.emit(this.showBackground);
+    // this.addChannelWindow = false;
+    // this.addChannelWindowChange.emit(this.addChannelWindow);
+    this.dialogRef.close()
+
   }
 
   onSubmit() {
@@ -331,14 +331,14 @@ export class AddChannelComponent implements OnInit {
     this.filterUsers();
   }
 
-  handleOutsideClick(event: Event) {
-    if (
-      this.mainDialog &&
-      !this.mainDialog.nativeElement.contains(event.target as Node)
-    ) {
-      this.closeScreen();
-    }
-  }
+  // handleOutsideClick(event: Event) {
+  //   if (
+  //     this.mainDialog &&
+  //     !this.mainDialog.nativeElement.contains(event.target as Node)
+  //   ) {
+  //     this.closeScreen();
+  //   }
+  // }
 
 
 

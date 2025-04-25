@@ -564,3 +564,8 @@ header {
   z-index: 1001;
 }
 
+.transparent-dialog-bg .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: rgba(0, 0, 0, 0) !important;
+  box-shadow: none !important;
+}
+

@@ -293,6 +293,9 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       width: 'auto',
       maxWidth: '95vw',
       maxHeight: '90vh',
+      height: '413px',
+      // height: 'auto',
+      panelClass: ['add-member-dialog', 'transparent-dialog-bg']
     });
   }
 

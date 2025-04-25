@@ -25,7 +25,6 @@ export class AddMemberComponent implements OnInit{
   @Input() showBackground: boolean = true;
 
   @Output() addMemberWindowChange = new EventEmitter<boolean>();
-  @Output() showBackgroundChange = new EventEmitter<boolean>();
 
   @Input() currentUser: any;
   members: any[] = [];
@@ -100,10 +99,9 @@ export class AddMemberComponent implements OnInit{
   }
 
   closeWindow() {
+    this.dialogRef.close();
     this.addMemberInfoWindow = false;
-    this.showBackground = false;
     this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
-    this.showBackgroundChange.emit(this.showBackground);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
