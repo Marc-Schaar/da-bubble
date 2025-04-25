@@ -9,6 +9,7 @@ import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,7 @@ export class ContactbarComponent implements OnInit {
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
   router: Router = inject(Router);
+
   currentUser: any = [];
   currentlist: any[] = [];
   searchList: any[] = [];
@@ -47,6 +49,8 @@ export class ContactbarComponent implements OnInit {
   isChannel: boolean = false;
 
   input: string = '';
+
+  navigationService: NavigationService = inject(NavigationService);
 
   constructor(private dialog: MatDialog) {} // MatDialog injizieren
 
@@ -116,15 +120,15 @@ export class ContactbarComponent implements OnInit {
   }
 
   openWindow(window: string) {
-    this.userService.loadComponent(window);
+    this.navigationService.loadComponent(window);
     this.userService.toggleThread('close');
   }
 
   openDropdown() {
-    if (this.userService.channelType === 'channel') {
+    if (this.navigationService.channelType === 'channel') {
       this.active = true;
     }
-    if (this.userService.channelType === 'direct') {
+    if (this.navigationService.channelType === 'direct') {
       this.message = true;
     }
   }

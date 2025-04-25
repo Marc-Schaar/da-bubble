@@ -14,6 +14,7 @@ import { FireServiceService } from '../fire-service.service';
 import { ChatContentComponent } from '../chat-content/chat-content.component';
 import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
 import { NewmessageComponent } from '../newmessage/newmessage.component';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -46,13 +47,13 @@ export class MainChatComponent implements OnInit {
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
-  barOpen:boolean= false
+  barOpen: boolean = false;
   isChatOverlayVisible = false;
   currentReciever: any;
   private componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private overlaySubscription: Subscription | null = null;
-  private contactbarSubscription!: Subscription
+  private contactbarSubscription!: Subscription;
   private subscription!: Subscription;
 
   //Neue Logik ab hier:
@@ -61,15 +62,16 @@ export class MainChatComponent implements OnInit {
   channelMessages: any = [];
   docId: string = '';
 
-
+  //Cleancode Servives update
+  navigationService: NavigationService = inject(NavigationService);
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-    this.shareddata.component$.subscribe(() => {
-      this.currentComponent = this.shareddata.channelType;
+    this.navigationService.component$.subscribe(() => {
+      this.currentComponent = this.navigationService.channelType;
       console.log('Aktuelle Komponente:', this.currentComponent);
       if (this.currentComponent === 'direct') this.shareddata.toggleThread('close');
       this.cdr.detectChanges();
@@ -89,7 +91,7 @@ export class MainChatComponent implements OnInit {
 
     this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
       this.drawerContactbar.toggle();
-    }); 
+    });
   }
 
   ngOnDestroy(): void {
@@ -125,14 +127,12 @@ export class MainChatComponent implements OnInit {
     }, 1000);
   }
 
+  toogleContactbar() {
+    this.drawerContactbar.toggle();
+    //this.shareddata.toggleContactbar()
+  }
 
-  toogleContactbar(){
-this.drawerContactbar.toggle()
- //this.shareddata.toggleContactbar()
- }
-
-  
- toggleWorkspaceMenu() {
- this.barOpen = !this.barOpen;
-}
+  toggleWorkspaceMenu() {
+    this.barOpen = !this.barOpen;
+  }
 }

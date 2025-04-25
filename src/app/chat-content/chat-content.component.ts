@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, query, orderBy, collection, doc, getDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Message } from '../models/message';
 import { UserService } from '../shared.service';
@@ -14,28 +14,19 @@ import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.
 import { AddMemberComponent } from './add-member/add-member.component';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-
-
+import { MessagesService } from '../service/messages/messages.service';
+import { User } from '../models/user';
 
 // @Injectable({
 //   providedIn: 'root',
 // })
 @Component({
   selector: 'app-chat-content',
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    CommonModule,
-    FormsModule,
-    MatSidenavModule,
-    RouterLink,
-    MatMenuModule,
-    MatDialogModule
-  ],
+  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, RouterLink, MatMenuModule, MatDialogModule],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })
-export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
   private subscriptions = new Subscription();
 
@@ -44,6 +35,8 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   router: Router = inject(Router);
   firestore: Firestore = inject(Firestore);
   dialog = inject(MatDialog);
+  messagesService: MessagesService = inject(MessagesService);
+  route: ActivatedRoute = inject(ActivatedRoute);
 
   loading: boolean = false;
   menuOpen: boolean = false;
@@ -59,18 +52,15 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   showAllReactions: boolean = false;
 
   channels: any = [];
-  messages: any[] = [];
+  messages: any;
   currentChannel: any = {};
   reactions: any = [];
   currentList: any = [];
 
-  currentUser: any;
-  userId: string = '';
   editingMessageId: any = '';
   input: string = '';
 
   inputEdit: string = '';
-  currentChannelId: string = '';
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
@@ -82,37 +72,38 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     'emoji _white heavy check mark_',
   ];
 
+  //Neu für cleancode
+
   unsubMessages!: () => void;
 
+  currentUser: User = new User(null);
+  userId: string = '';
+  currentChannelId: string = '';
+
   async ngOnInit() {
-    this.startChannel();
-    this.subscriptions.add(
-      this.userService.startLoadingChannel$.subscribe(() => {
-        this.startChannel();
-      })
-    );
+    this.route.queryParamMap.subscribe((params) => {
+      this.currentChannelId = params.get('id') || '';
+      this.userId = params.get('reciepentId') || '';
 
-    this.subscriptions.add(
-      this.userService.screenWidth$.subscribe((isMobile) => {
-        this.isMobile = isMobile;
-        console.log('Ist Mobile Ansicht aktiv?:', this.isMobile);
-      })
-    );
-  }
-
-  ngAfterViewInit() {
-    window.addEventListener('resize', this.userService.checkScreenWidth.bind(this));
+      console.log('ChatContentComponent initialized');
+      console.log('id:', this.currentChannelId);
+      console.log('reciepentId:', this.userId);
+      this.getMessages();
+      this.getChannelFromUrl();
+      this.currentUser = this.userService.currentUser;
+    });
   }
 
   ngOnDestroy() {
-    if (this.subscriptions) this.subscriptions.unsubscribe();
+    if (this.unsubMessages) this.unsubMessages();
+    this.subscriptions.unsubscribe();
   }
 
-  openChannelInfo() {   
+  openChannelInfo() {
     console.log('Versuche AddMember zu öffnen. Aktuelle Daten:');
     console.log('Current Channel:', this.currentChannel);
     console.log('Current Channel ID:', this.currentChannelId);
-    console.log('Current User:', this.currentUser); 
+    console.log('Current User:', this.currentUser);
     const dialogData = {
       currentChannel: this.currentChannel,
       currentChannelId: this.currentChannelId,
@@ -127,21 +118,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  startChannel() {
-    if (this.userService.user != null) {
-      this.isMobile = this.userService.checkScreenWidth();
-      this.setChannelData();
-      this.getMessages();
-    } else console.error('keine User oder Channel');
-  }
-
-  setChannelData() {
-    this.currentChannelId = this.userService.docId;
-    this.userId = this.userService.reciepentId;
-    this.currentUser = this.userService.currentUser;
-    this.getChannelFromUrl();
-  }
-
   async getChannelFromUrl() {
     if (this.currentChannelId) {
       const docRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -151,18 +127,13 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getMessages() {
-    let messagesRef = this.fireService.getCollectionRef(`channels/${this.currentChannelId}/messages`);
-    if (messagesRef) {
-      let messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
-      this.unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
-        this.messages = this.userService.processData(snapshot);
-        this.messages.forEach((message) => {
-          this.getThread(message.id);
-          this.scrollToBottom();
-        });
+    this.unsubMessages = this.messagesService.getChannelMessages(this.currentChannelId, (messages) => {
+      this.messages = messages;
+      this.messages.forEach((message: any) => {
+        this.getThread(message.id);
+        this.scrollToBottom();
       });
-    }
+    });
   }
 
   getThread(messageId: string) {
@@ -172,7 +143,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
 
       onSnapshot(threadQuery, (snapshot) => {
         const updatedThreads = this.userService.processData(snapshot);
-        const msgIndex = this.messages.findIndex((m) => m.id === messageId);
+        const msgIndex = this.messages.findIndex((m: any) => m.id === messageId);
         if (msgIndex >= 0) this.messages[msgIndex].thread = updatedThreads;
       });
     }
@@ -295,7 +266,7 @@ export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
       maxHeight: '90vh',
       height: '413px',
       // height: 'auto',
-      panelClass: ['add-member-dialog', 'transparent-dialog-bg']
+      panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
     });
   }
 

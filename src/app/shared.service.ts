@@ -20,9 +20,9 @@ export class UserService {
     this.getUrlData();
     this.getChannels();
     this.getUsers();
-    this.subscription = this.screenWidth$.subscribe((isMobile) => {
-      this.isMobile = isMobile;
-    });
+    // this.subscription = this.screenWidth$.subscribe((isMobile) => {
+    //   this.isMobile = isMobile;
+    // });
   }
 
   auth: Auth = inject(Auth);
@@ -36,9 +36,7 @@ export class UserService {
 
   private indexSource = new BehaviorSubject<number>(-1);
   currentIndex$ = this.indexSource.asObservable();
-  private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
 
-  component$ = this.currentComponent.asObservable();
   private startLoadingChat = new Subject<void>();
   startLoadingChat$ = this.startLoadingChat.asObservable();
   private startLoadingChannel = new Subject<void>();
@@ -52,11 +50,11 @@ export class UserService {
 
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
-  private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
-  screenWidth$ = this.screenWidthSubject.asObservable();
+  // private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
+  // screenWidth$ = this.screenWidthSubject.asObservable();
   private showFeedbackSubject = new Subject<string>();
   showFeedback$ = this.showFeedbackSubject.asObservable();
-  subscription: Subscription;
+  // subscription: Subscription;
   currentReciever: any;
 
   component: string = '';
@@ -72,7 +70,7 @@ export class UserService {
 
   //Neu ab hier
 
-  channelType: any;
+  // channelType: any;
   docId: any;
   reciepentId: any;
   messageId: string = '';
@@ -148,12 +146,12 @@ export class UserService {
   }
 
   getUrlData() {
-    this.route.queryParams.subscribe((params) => {
-      this.channelType = params['channelType'] || 'default';
-      this.docId = params['id'] || '';
-      this.reciepentId = params['reciepentId'] || '';
-      this.messageId = params['messageId'] || '';
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   this.channelType = params['channelType'] || 'default';
+    //   this.docId = params['id'] || '';
+    //   this.reciepentId = params['reciepentId'] || '';
+    //   this.messageId = params['messageId'] || '';
+    // });
   }
 
   async getReciepent(reciever: any, user: any) {
@@ -176,22 +174,22 @@ export class UserService {
 
   //!Wichtig verhindert doppelklick!!
   async loadMessages() {
-    if (this.docId && this.channelType === 'channel') {
-      return new Promise<void>((resolve) => {
-        this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`channel/${this.docId}/messages`)!, (colSnap) => {
-          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
-          resolve();
-        });
-      });
-    }
-    if (this.docId && this.channelType === 'direct') {
-      return new Promise<void>((resolve) => {
-        this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`direct/${this.docId}/messages`)!, (colSnap) => {
-          this.messages = colSnap.docs.map((colSnap) => colSnap.data());
-          resolve();
-        });
-      });
-    }
+    // if (this.docId && this.channelType === 'channel') {
+    //   return new Promise<void>((resolve) => {
+    //     this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`channel/${this.docId}/messages`)!, (colSnap) => {
+    //       this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+    //       resolve();
+    //     });
+    //   });
+    // }
+    // if (this.docId && this.channelType === 'direct') {
+    //   return new Promise<void>((resolve) => {
+    //     this.unsubMessages = onSnapshot(this.fireService.getCollectionRef(`direct/${this.docId}/messages`)!, (colSnap) => {
+    //       this.messages = colSnap.docs.map((colSnap) => colSnap.data());
+    //       resolve();
+    //     });
+    //   });
+    // }
   }
 
   setUrl(channelType: string, id?: string, reciepentId?: string, messageId?: string) {
@@ -206,21 +204,21 @@ export class UserService {
   }
 
   loadComponent(component: string) {
-    setTimeout(() => {
-      if (component === 'chat') {
-        if (this.isMobile)
-          this.router.navigate(['/direct'], {
-            queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId },
-          });
-        else this.currentComponent.next(DirectmessagesComponent);
-      } else if (component === 'channel') {
-        if (this.isMobile)
-          this.router.navigate(['/channel'], {
-            queryParams: { channelType: 'channel', id: this.docId, reciepentId: this.reciepentId },
-          });
-        else this.currentComponent.next(ChatContentComponent);
-      }
-    }, 0);
+    // setTimeout(() => {
+    //   if (component === 'chat') {
+    //     if (this.isMobile)
+    //       this.router.navigate(['/direct'], {
+    //         queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId },
+    //       });
+    //     else this.currentComponent.next(DirectmessagesComponent);
+    //   } else if (component === 'channel') {
+    //     if (this.isMobile)
+    //       this.router.navigate(['/channel'], {
+    //         queryParams: { channelType: 'channel', id: this.docId, reciepentId: this.reciepentId },
+    //       });
+    //     else this.currentComponent.next(ChatContentComponent);
+    //   }
+    // }, 0);
   }
 
   toggleThread(value: string) {
@@ -236,13 +234,13 @@ export class UserService {
   }
 
   observeScreenWidth() {
-    fromEvent(window, 'resize')
-      .pipe(
-        map(() => this.checkScreenWidth()),
-        distinctUntilChanged(),
-        startWith(this.checkScreenWidth())
-      )
-      .subscribe(this.screenWidthSubject);
+    // fromEvent(window, 'resize')
+    //   .pipe(
+    //     map(() => this.checkScreenWidth()),
+    //     distinctUntilChanged(),
+    //     startWith(this.checkScreenWidth())
+    //   )
+    //   .subscribe(this.screenWidthSubject);
   }
 
   showRecieverProfile() {
@@ -292,7 +290,6 @@ export class UserService {
   processData(snap: any) {
     return snap.docs.map((doc: any) => {
       let data = doc.data();
-
       return {
         id: doc.id,
         ...data,
