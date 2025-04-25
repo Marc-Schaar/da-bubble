@@ -31,6 +31,7 @@ export class NavigationService {
   constructor() {
     this.subscription = this.screenWidth$.subscribe((isMobile) => {
       this.isMobile = isMobile;
+      console.log(isMobile);
     });
 
     this.route.queryParams.subscribe((params) => {
@@ -42,21 +43,29 @@ export class NavigationService {
   }
 
   loadComponent(component: string) {
-    setTimeout(() => {
-      if (component === 'chat') {
-        if (this.isMobile)
+    switch (component) {
+      case 'chat':
+        console.log('Chat component loaded');
+
+        if (this.isMobile) {
           this.router.navigate(['/direct'], {
             queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId },
           });
-        else this.currentComponent.next(DirectmessagesComponent);
-      } else if (component === 'channel') {
-        if (this.isMobile)
+        } else {
+          this.currentComponent.next(DirectmessagesComponent);
+        }
+        break;
+
+      case 'channel':
+        if (this.isMobile) {
           this.router.navigate(['/channel'], {
             queryParams: { channelType: 'channel', id: this.docId, reciepentId: this.reciepentId },
           });
-        else this.currentComponent.next(ChatContentComponent);
-      }
-    }, 0);
+        } else {
+          this.currentComponent.next(ChatContentComponent);
+        }
+        break;
+    }
   }
 
   checkScreenWidth(): boolean {

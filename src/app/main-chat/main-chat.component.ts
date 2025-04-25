@@ -11,9 +11,6 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
 import { FireServiceService } from '../fire-service.service';
-import { ChatContentComponent } from '../chat-content/chat-content.component';
-import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
-import { NewmessageComponent } from '../newmessage/newmessage.component';
 import { NavigationService } from '../service/navigation/navigation.service';
 
 @Component({
@@ -28,9 +25,6 @@ import { NavigationService } from '../service/navigation/navigation.service';
     MatSidenavModule,
     ContactbarComponent,
     ThreadComponent,
-    ChatContentComponent,
-    DirectmessagesComponent,
-    NewmessageComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
@@ -50,14 +44,13 @@ export class MainChatComponent implements OnInit {
   barOpen: boolean = false;
   isChatOverlayVisible = false;
   currentReciever: any;
-  private componentSubscription: Subscription | null = null;
+  componentSubscription: Subscription | null = null;
   private threadSubscription!: Subscription;
   private overlaySubscription: Subscription | null = null;
   private contactbarSubscription!: Subscription;
   private subscription!: Subscription;
 
   //Neue Logik ab hier:
-  currentComponent: any;
   channelType: string = 'default';
   channelMessages: any = [];
   docId: string = '';
@@ -71,9 +64,9 @@ export class MainChatComponent implements OnInit {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
     this.navigationService.component$.subscribe(() => {
-      this.currentComponent = this.navigationService.channelType;
-      console.log('Aktuelle Komponente:', this.currentComponent);
-      if (this.currentComponent === 'direct') this.shareddata.toggleThread('close');
+      this.navigationService.channelType;
+      console.error('Aktuelle Komponente:', this.navigationService.channelType);
+      if (this.navigationService.channelType === 'direct') this.shareddata.toggleThread('close');
       this.cdr.detectChanges();
     });
 

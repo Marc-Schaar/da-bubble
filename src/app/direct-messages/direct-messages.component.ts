@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Subscription } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DirectMessage } from '../models/direct-message';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -39,25 +40,31 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
-  isMobile: boolean = false;
 
-  channelType: string = '';
-  docId: string = '';
+  //Cleancode Update
   currentRecieverId: string = '';
   currentUserId: string = '';
 
-  private subscription?: Subscription;
-  constructor() {
-    this.startChat();
-    this.isMobile = this.userService.isMobile;
-  }
+  route: ActivatedRoute = inject(ActivatedRoute);
+  navigationService = inject(NavigationService);
+  constructor() {}
 
-  async ngOnInit() {
-    this.subscription = this.userService.startLoadingChat$.subscribe(() => {
-      this.startChat();
+  ngOnInit() {
+    this.route.queryParamMap.subscribe((params) => {
+      this.currentUserId = params.get('id') || '';
+      this.currentRecieverId = params.get('reciepentId') || '';
+      this.isChat = true;
+
+      this.currentUser = this.userService.currentUser;
+      console.log('DirectComponent initialized');
+      console.log('id:', this.currentRecieverId);
+      console.log('reciepentId:', this.currentUserId);
+      console.log('currentUser:', this.currentUser);
+      this.getRecieverFromUrl();
+      this.loadMessages();
+      this.loadChannels();
+      this.loadUsers();
     });
-    await this.loadChannels();
-    await this.loadUsers();
   }
 
   async loadUsers() {
@@ -76,33 +83,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  async startChat() {
-    console.log('start');
-    if (this.userService.user != null && this.userService.reciepentId != null) {
-      this.setCurrentData();
-      // this.setCurrentUserAndReciever();
-      this.loadMessages();
-      this.checkReciever();
-
-      this.isChat = true;
-    } else {
-      this.isChat === false;
-      console.log('Chat muss per click initialisiert werden');
-    }
-  }
-
-  setCurrentData() {
-    this.currentRecieverId = this.userService.reciepentId;
-    this.currentUserId = this.userService.docId;
-    this.currentUser = this.userService.currentUser;
-    this.getRecieverFromUrl();
-  }
+  ngOnDestroy() {}
 
   async getRecieverFromUrl() {
     if (this.currentRecieverId) {
@@ -172,7 +153,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 */
 
   loadMessages() {
-    const messagesRef = doc(this.firestore, `users/${this.userService.docId}`);
+    const messagesRef = doc(this.firestore, `users/${this.currentRecieverId}`);
     onSnapshot(messagesRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const messageData = docSnapshot.data();
