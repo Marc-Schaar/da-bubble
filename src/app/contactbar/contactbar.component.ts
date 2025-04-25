@@ -53,7 +53,6 @@ export class ContactbarComponent implements OnInit {
   async ngOnInit() {
     this.userService.dashboard = true;
     this.userService.login = false;
-    this.isMobile = this.userService.isMobile;
     await this.loadUsers();
     this.loadChannels();
     this.findCurrentUser();
@@ -132,10 +131,9 @@ export class ContactbarComponent implements OnInit {
 
   openAddChannel() {
     this.dialog.open(AddChannelComponent, {
-      width: '872px', 
+      width: '872px',
       maxWidth: '95vw',
     });
-
   }
 
   getList() {
