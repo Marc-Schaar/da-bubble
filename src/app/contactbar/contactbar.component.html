@@ -1,8 +1,6 @@
-
-
 <main>
   <section>
-    <app-header *ngIf="isMobile"></app-header>
+    <app-header *ngIf="this.userService.isMobile"></app-header>
     <div class="headline">
       <div>
         <img src="/img/workspace-logo.svg" alt="" />
@@ -20,7 +18,7 @@
         <mat-icon>close</mat-icon>
       </button>
     </div>
-    }
+    } @if(this.userService.isMobile){
     <div class="searchbar">
       <div class="input" *ngIf="!userService.login && userService.dashboard">
         <input
@@ -54,7 +52,7 @@
       }
     </div>
 
-    @if (!isClicked) {
+    } @if (!isClicked) {
     <div class="contactbar">
       <div class="channels">
         <div class="channelbar">
@@ -123,3 +121,8 @@
     <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
   </button>
 </main>
+<<<<<<< HEAD
+=======
+
+<app-add-channel *ngIf="addChannelWindow" [(addChannelWindow)]="addChannelWindow"></app-add-channel>
+>>>>>>> 5548ec7f30e23cc6731962f7bdb44f4ba5326d43
