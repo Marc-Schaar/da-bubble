@@ -3,11 +3,7 @@ import {
   OnInit,
   Inject,
   PLATFORM_ID,
-  NgModule,
   inject,
-  Input,
-  Output,
-  EventEmitter,
   ViewChild,
   ElementRef,
   HostListener,
@@ -37,7 +33,6 @@ import { User } from '../../models/user';
 import { Channel } from '../../models/channel';
 import { FireServiceService } from '../../fire-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
 
 @Component({
   selector: 'app-add-channel',
@@ -80,6 +75,8 @@ export class AddChannelComponent implements OnInit {
   }
 
 @ViewChild('mainDialog') mainDialog!: ElementRef;
+@ViewChild('userSearchInput') userSearchInput!: ElementRef;
+@ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
@@ -253,28 +250,6 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-
-  // async pushAllUser() {
-
-  //   try {
-  //     const allUser = this.users
-  //     const channel = this.channelmodule.channels[0];
-  //     if (channel) {
-  //       const channelRef = doc(this.firestore, 'channels', channel.key);
-  //       const updatedMembers = [...new Set([...channel.data.member, ...allUser])]; // Doppelte Einträge vermeiden
-  //       await updateDoc(channelRef, {
-  //         member: updatedMembers,
-  //       });
-  //       console.log('Alle Benutzer wurden dem Channel "DaBubble" hinzugefügt.');
-  //     } else {
-  //       console.error('Channel "DaBubble" nicht gefunden.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Fehler beim Hinzufügen der Benutzer zum Channel:', error);
-  //   }
-  //   console.log(this.channelmodule.channels[0].data.member);
-  // }
-
   setChannelMember(value: boolean, setHeight: string) {
     const heightElement = document.getElementById(
       'add-channel-cont'
@@ -308,10 +283,18 @@ export class AddChannelComponent implements OnInit {
     textarea.style.height = '60px';
   }
 
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-
   openUserBar(){
     this.showUserBar = true;
     this.filterUsers();
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeUserBar(event: Event) {
+    const targetElement = event.target as Node;
+    const clickedInsideInput = this.userSearchInput?.nativeElement?.contains(targetElement);
+    const clickedInsideBar = this.chooseUserBar?.nativeElement?.contains(targetElement);
+    if (!clickedInsideInput && !clickedInsideBar) {
+      this.showUserBar = false;
+    }
   }
 }
