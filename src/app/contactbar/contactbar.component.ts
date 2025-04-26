@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
-import { Firestore, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, onSnapshot, collection, QuerySnapshot, QueryDocumentSnapshot, DocumentData, Query } from '@angular/fire/firestore';
+import { query, where } from 'firebase/firestore';
+
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -22,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ContactbarComponent implements OnInit {
   public channels: any = [];
+  public allChannels: any = [];
   public users: any = [];
   active: boolean = false;
   message: boolean = false;
