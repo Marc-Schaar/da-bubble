@@ -29,9 +29,6 @@ export class NavigationService {
     this.observeScreenWidth();
     this.screenWidth$.subscribe((mobile) => {
       this.isMobile = mobile;
-      console.log('Screen width changed:', mobile);
-      console.log('Current channel type:', this.channelType);
-
       if (mobile) {
         this.router.navigate(['/contactbar']);
         if (this.channelType === 'direct') {
@@ -107,20 +104,6 @@ export class NavigationService {
     }
   }
 
-  // showMainChat(): void {
-  //   this.router.navigate(['/chat'], {
-  //     queryParams: {
-  //       channelType: 'default',
-  //       id: this.docId,
-  //       reciepentId: this.reciepentId,
-  //     },
-  //   });
-  //   this.currentComponent.next(MainChatComponent);
-  // }
-
-  /**
-   * Überwacht Änderungen der Fenstergröße und pusht neue Werte in das Subject
-   */
   private observeScreenWidth(): void {
     fromEvent(window, 'resize')
       .pipe(
@@ -131,9 +114,6 @@ export class NavigationService {
       .subscribe(this.screenWidthSubject);
   }
 
-  /**
-   * Prüft, ob wir im Mobile-Layout sind (Breite < 1024px)
-   */
   private checkScreenWidth(): boolean {
     return window.innerWidth < 1024;
   }
