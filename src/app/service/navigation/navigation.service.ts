@@ -31,15 +31,9 @@ export class NavigationService {
       this.isMobile = mobile;
       if (mobile) {
         this.router.navigate(['/contactbar']);
-        if (this.channelType === 'direct') {
-          this.showDirect();
-        }
-        if (this.channelType === 'channel') {
-          this.showChannel();
-        }
-      } else {
-        this.showChat();
-      }
+        if (this.channelType === 'direct') this.showDirect();
+        if (this.channelType === 'channel') this.showChannel();
+      } else this.showChat();
     });
 
     this.route.queryParams.subscribe((params) => {
@@ -48,13 +42,9 @@ export class NavigationService {
       this.reciepentId = params['reciepentId'] || '';
       this.messageId = params['messageId'] || '';
 
-      if (this.channelType === 'direct') {
-        this.showDirect();
-      } else if (this.channelType === 'channel') {
-        this.showChannel();
-      } else if (this.channelType === 'default' && this.isMobile) {
-        this.router.navigate(['/contactbar']);
-      }
+      if (this.channelType === 'direct') this.showDirect();
+      else if (this.channelType === 'channel') this.showChannel();
+      else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
     });
   }
 
@@ -89,9 +79,7 @@ export class NavigationService {
           reciepentId: this.reciepentId,
         },
       });
-    } else {
-      this.currentComponent.next(DirectmessagesComponent);
-    }
+    } else this.currentComponent.next(DirectmessagesComponent);
   }
 
   public showChannel(): void {
@@ -103,9 +91,7 @@ export class NavigationService {
           reciepentId: this.reciepentId,
         },
       });
-    } else {
-      this.currentComponent.next(ChatContentComponent);
-    }
+    } else this.currentComponent.next(ChatContentComponent);
   }
 
   private observeScreenWidth(): void {
