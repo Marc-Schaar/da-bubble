@@ -101,41 +101,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-
-  openChannelInfo() {
-    console.log('Versuche AddMember zu öffnen. Aktuelle Daten:');
-    console.log('Current Channel:', this.currentChannel);
-    console.log('Current Channel ID:', this.currentChannelId);
-    console.log('Current User:', this.currentUser);
-    const dialogData = {
-      currentChannel: this.currentChannel,
-      currentChannelId: this.currentChannelId,
-      currentUser: this.currentUser,
-    };
-    this.dialog.open(ChannelEditComponent, {
-      data: dialogData,
-      position: { top: '200px' },
-      width: '872px',
-      maxWidth: '95vw',
-      maxHeight: '90vh',
-    });
-
-  startChannel() {
-    if (this.userService.user != null) {
-      this.isMobile = this.userService.checkScreenWidth();
-      this.setChannelData();
-      this.getMessages();
-    } else console.error('keine User oder Channel');
-  }
-
-  setChannelData() {
-    this.currentChannelId = this.userService.docId;
-    this.userId = this.userService.reciepentId;
-    this.currentUser = this.userService.currentUser;
-    this.getChannelFromUrl();
-
-  }
-
   async getChannelFromUrl() {
     if (this.currentChannelId) {
       const docRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -264,7 +229,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  openChannelInfo() {   
+  openChannelInfo() {
     const dialogData = {
       currentChannel: this.currentChannel,
       currentChannelId: this.currentChannelId,
@@ -285,7 +250,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       currentChannel: this.currentChannel,
       currentChannelId: this.currentChannelId,
       currentUser: this.currentUser,
-      addMemberWindow: toggle
+      addMemberWindow: toggle,
     };
     this.dialog.open(AddMemberComponent, {
       data: dialogData,
@@ -298,7 +263,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
 
       position: { top: '200px', right: '150px' },
-
     });
   }
 
