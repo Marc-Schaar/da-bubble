@@ -1,4 +1,4 @@
-<header class="justify-sb full-width" *ngIf="isMobile">
+<header class="justify-sb full-width" *ngIf="this.navigationService.isMobile">
   <div class="align-center">
     <button>
       <a [routerLink]="['/contactbar']" routerLinkActive="router-link-active">
@@ -11,7 +11,6 @@
   <img [src]="this.userService.auth.currentUser?.photoURL" alt="this.userService.auth.currentUser?.displayName" />
 </header>
 <main>
-
   <div class="card">
     <section class="card-header">
       <div class="align-center hover-bg" (click)="openChannelInfo()">
@@ -46,7 +45,9 @@
       @for (message of messages; track $index; let i = $index) {
       <li *ngIf="message.newDay">
         <div class="date-container">
-          <span class="date">{{ this.userService.isToday(message.date) ? "Heute" : this.userService.formateDate(message.date) }}</span>
+          <span class="date">{{
+            this.messagesService.isToday(message.date) ? "Heute" : this.messagesService.formateDate(message.date)
+          }}</span>
         </div>
       </li>
 
@@ -268,4 +269,3 @@
     </section>
   </div>
 </main>
-

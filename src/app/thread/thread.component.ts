@@ -7,6 +7,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message } from '../models/message';
+import { MessagesService } from '../service/messages/messages.service';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-thread',
@@ -20,6 +22,8 @@ export class ThreadComponent implements OnInit {
   fireService: FireServiceService = inject(FireServiceService);
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
+  messagesService: MessagesService = inject(MessagesService);
+  navigationService: NavigationService = inject(NavigationService);
 
   currentUser: any;
   userId: string = '';
@@ -32,7 +36,6 @@ export class ThreadComponent implements OnInit {
 
   editingMessageId: number | null = null;
 
-  isMobile: boolean = false;
   listOpen: boolean = false;
   isChannel: boolean = false;
   isEditing: boolean = false;
@@ -59,13 +62,12 @@ export class ThreadComponent implements OnInit {
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.currentChannelId = params['id'] || '';
+      this.userId = params['reciepentId'] || '';
       this.parentMessageId = params['messageId'] || '';
       await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
       this.currentUser = this.userService.currentUser;
-      this.userId = this.userService.reciepentId;
-      this.isMobile = this.userService.isMobile;
     });
   }
 
@@ -107,7 +109,7 @@ export class ThreadComponent implements OnInit {
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
 
       onSnapshot(threadQuery, (snapshot) => {
-        this.messages = this.userService.processData(snapshot);
+        this.messages = this.messagesService.processData(snapshot);
       });
     }
   }
@@ -116,7 +118,7 @@ export class ThreadComponent implements OnInit {
     if (this.input.trim() !== '') {
       this.fireService.sendThreadMessage(
         this.currentChannelId,
-        new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions)),
+        new Message(this.messagesService.buildMessageObject(this.input, this.messages, this.reactions)),
         this.parentMessageId
       );
       this.input = '';
@@ -124,9 +126,9 @@ export class ThreadComponent implements OnInit {
   }
 
   closeThread() {
-    if (this.userService.isMobile) {
+    if (this.navigationService.isMobile) {
       this.router.navigate(['/channel'], {
-        queryParams: { channelType: 'channel', id: this.currentChannelId, reciepentId: this.userService.docId },
+        queryParams: { channelType: 'channel', id: this.currentChannelId, reciepentId: this.navigationService.docId },
       });
     }
     this.userService.toggleThread('close');
@@ -153,15 +155,7 @@ export class ThreadComponent implements OnInit {
   }
 
   openReciver(i: number, key: string) {
-    if (this.isChannel) {
-      this.userService.setUrl('channel', key);
-      this.userService.getChannel(this.currentList[i], this.currentUser);
-      this.userService.loadComponent('channel');
-    } else {
-      this.userService.setUrl('direct', this.userId, key);
-      this.userService.getReciepent(this.currentList[i], this.currentUser);
-      this.userService.loadComponent('chat');
-    }
+    this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
     this.resetList();
     this.userService.toggleThread('close');
   }

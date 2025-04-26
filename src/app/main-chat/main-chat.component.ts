@@ -11,9 +11,8 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
 import { FireServiceService } from '../fire-service.service';
-import { ChatContentComponent } from '../chat-content/chat-content.component';
-import { DirectmessagesComponent } from '../direct-messages/direct-messages.component';
-import { NewmessageComponent } from '../newmessage/newmessage.component';
+import { NavigationService } from '../service/navigation/navigation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-chat',
@@ -27,9 +26,6 @@ import { NewmessageComponent } from '../newmessage/newmessage.component';
     MatSidenavModule,
     ContactbarComponent,
     ThreadComponent,
-    ChatContentComponent,
-    DirectmessagesComponent,
-    NewmessageComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
@@ -40,77 +36,54 @@ export class MainChatComponent implements OnInit {
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
 
   shareddata = inject(UserService);
-  fireService: FireServiceService = inject(FireServiceService);
 
   feedbackVisible: boolean = false;
   showFiller = true;
   isMobile: boolean = false;
   isProfileCard: boolean = false;
-  barOpen:boolean= false
+  barOpen: boolean = false;
   isChatOverlayVisible = false;
   currentReciever: any;
-  private componentSubscription: Subscription | null = null;
-  private threadSubscription!: Subscription;
-  private overlaySubscription: Subscription | null = null;
-  private contactbarSubscription!: Subscription
-  private subscription!: Subscription;
 
   //Neue Logik ab hier:
-  currentComponent: any;
+
   channelType: string = 'default';
   channelMessages: any = [];
   docId: string = '';
 
+  //Cleancode Servives update
 
+  fireService: FireServiceService = inject(FireServiceService);
+  router: Router = inject(Router);
+  navigationService: NavigationService = inject(NavigationService);
+
+  private subscriptions: Subscription[] = [];
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-    this.shareddata.component$.subscribe(() => {
-      this.currentComponent = this.shareddata.channelType;
-      console.log('Aktuelle Komponente:', this.currentComponent);
-      if (this.currentComponent === 'direct') this.shareddata.toggleThread('close');
-      this.cdr.detectChanges();
-    });
 
-    this.subscription = this.shareddata.openProfile$.subscribe(() => {
-      this.openProfile();
-    });
-
-    this.subscription = this.shareddata.showFeedback$.subscribe((message: string) => {
-      this.showFeedback(message);
-    });
-
-    this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
-      value === 'open' ? this.drawer.open() : this.drawer.close();
-    });
-
-    this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
-      this.drawerContactbar.toggle();
-    }); 
+    this.subscriptions.push(
+      this.navigationService.component$.subscribe(() => {
+        if (this.navigationService.channelType === 'direct') {
+          this.shareddata.toggleThread('close');
+        }
+        this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.push(this.shareddata.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
+    this.subscriptions.push(this.shareddata.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close())));
+    this.subscriptions.push(this.shareddata.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
   ngOnDestroy(): void {
-    if (this.componentSubscription) {
-      this.componentSubscription.unsubscribe();
-    }
-
-    if (this.threadSubscription) {
-      this.threadSubscription.unsubscribe();
-    }
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   closeProfile() {
     this.isProfileCard = false;
-  }
-
-  openProfile() {
-    this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden
-    this.isProfileCard = !this.isProfileCard;
-    console.log('OPEN');
-    console.log(this.isProfileCard);
   }
 
   showFeedback(message: string) {
@@ -125,14 +98,11 @@ export class MainChatComponent implements OnInit {
     }, 1000);
   }
 
+  toogleContactbar() {
+    this.drawerContactbar.toggle();
+  }
 
-  toogleContactbar(){
-this.drawerContactbar.toggle()
- //this.shareddata.toggleContactbar()
- }
-
-  
- toggleWorkspaceMenu() {
- this.barOpen = !this.barOpen;
-}
+  toggleWorkspaceMenu() {
+    this.barOpen = !this.barOpen;
+  }
 }
