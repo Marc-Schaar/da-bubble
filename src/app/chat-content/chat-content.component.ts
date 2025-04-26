@@ -309,15 +309,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   openReciver(i: number, key: string) {
-    if (this.isChannel) {
-      this.userService.setUrl('channel', key);
-      // this.userService.getChannel(this.currentList[i], this.currentUser);
-      //  this.navigationService.loadComponent('channel');
-    } else {
-      this.userService.setUrl('direct', this.userId, key);
-      //   this.userService.getReciepent(this.currentList[i], this.currentUser);
-      //   this.navigationService.loadComponent('direct');
-    }
+    this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
     this.resetList();
   }
 

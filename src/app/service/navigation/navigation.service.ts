@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
-import { MainChatComponent } from '../../main-chat/main-chat.component';
 
 @Injectable({
   providedIn: 'root',
@@ -74,16 +73,9 @@ export class NavigationService {
         this.showDirect();
       } else if (this.channelType === 'channel') {
         this.showChannel();
-      }
-      // else if (!this.isMobile) {
-      //   this.router.navigate(['/chat']);
-      //}
-      else if (this.channelType === 'default' && this.isMobile) {
+      } else if (this.channelType === 'default' && this.isMobile) {
         this.router.navigate(['/contactbar']);
       }
-      // else {
-      //   this.router.navigate(['/chat']);
-      // }
     });
   }
 

@@ -36,8 +36,6 @@ export class MainChatComponent implements OnInit {
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
 
   shareddata = inject(UserService);
-  fireService: FireServiceService = inject(FireServiceService);
-  router: Router = inject(Router);
 
   feedbackVisible: boolean = false;
   showFiller = true;
@@ -46,20 +44,20 @@ export class MainChatComponent implements OnInit {
   barOpen: boolean = false;
   isChatOverlayVisible = false;
   currentReciever: any;
-  componentSubscription: Subscription | null = null;
-  private threadSubscription!: Subscription;
-  private overlaySubscription: Subscription | null = null;
-  private contactbarSubscription!: Subscription;
-  private subscription!: Subscription;
 
-  private subscriptions: Subscription[] = [];
   //Neue Logik ab hier:
+
   channelType: string = 'default';
   channelMessages: any = [];
   docId: string = '';
 
   //Cleancode Servives update
+
+  fireService: FireServiceService = inject(FireServiceService);
+  router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
+
+  private subscriptions: Subscription[] = [];
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -102,7 +100,6 @@ export class MainChatComponent implements OnInit {
 
   toogleContactbar() {
     this.drawerContactbar.toggle();
-    //this.shareddata.toggleContactbar()
   }
 
   toggleWorkspaceMenu() {

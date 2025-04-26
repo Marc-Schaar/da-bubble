@@ -169,15 +169,10 @@ export class HeaderComponent {
 
   getReciever(index: number) {
     this.docId = this.currentlist[index].id;
-    if (this.isChannel) {
-      this.userService.setUrl('channel', this.docId, this.userService.userId);
-      //   this.userService.getChannel(this.currentlist[index], this.currentUser);
-      // this.navigationService.loadComponent('channel');
-    } else {
-      this.userService.setUrl('direct', this.userService.userId, this.docId);
-      //  this.userService.getReciepent(this.currentlist[index], this.currentUser);
-      //  this.navigationService.loadComponent('direct');
-    }
+    this.isChannel
+      ? this.userService.setUrl('channel', this.docId, this.userService.userId)
+      : this.userService.setUrl('direct', this.userService.userId, this.docId);
+
     this.isClicked = false;
     this.input = '';
   }

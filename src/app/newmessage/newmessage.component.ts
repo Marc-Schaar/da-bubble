@@ -205,11 +205,9 @@ export class NewmessageComponent {
     } else if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
       this.userService.setUrl('direct', this.currentUserId, this.currentRecieverId);
-      //   this.navigationService.loadComponent('direct');
     } else if (this.whichMessage === 'channel') {
       this.sendChannelMessage();
       this.userService.setUrl('channel', this.currentChannelId);
-      // this.navigationService.loadComponent('channel');
     }
     this.currentReciever = null;
     this.currentChannel = null;

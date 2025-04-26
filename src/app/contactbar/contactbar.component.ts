@@ -120,7 +120,6 @@ export class ContactbarComponent implements OnInit {
   }
 
   openWindow(window: 'direct' | 'channel') {
-    // this.navigationService.loadComponent(window);
     window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.userService.toggleThread('close');
   }
@@ -204,13 +203,9 @@ export class ContactbarComponent implements OnInit {
     this.userID = this.currentlist[index].id;
     if (this.isChannel) {
       this.userService.setUrl('channel', this.userID, this.userService.userId);
-      //   this.userService.getChannel(this.currentlist[index], this.currentUser);
-      //   this.navigationService.loadComponent('channel');
       this.navigationService.showChannel();
     } else {
       this.userService.setUrl('direct', this.userService.userId, this.userID);
-      //   this.userService.getReciepent(this.currentlist[index], this.currentUser);
-      //  this.navigationService.loadComponent('direct');
       this.navigationService.showDirect();
     }
     this.isClicked = false;
