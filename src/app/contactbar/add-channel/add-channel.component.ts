@@ -3,11 +3,7 @@ import {
   OnInit,
   Inject,
   PLATFORM_ID,
-  NgModule,
   inject,
-  Input,
-  Output,
-  EventEmitter,
   ViewChild,
   ElementRef,
   HostListener,
@@ -21,8 +17,6 @@ import {
 } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import * as AOS from 'aos';
-import 'aos/dist/aos.css';
 import {
   Firestore,
   collection,
@@ -31,6 +25,7 @@ import {
   updateDoc,
   doc,
   getDoc,
+  arrayUnion
 } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
@@ -39,7 +34,6 @@ import { Channel } from '../../models/channel';
 import { FireServiceService } from '../../fire-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
 @Component({
   selector: 'app-add-channel',
   imports: [CommonModule, FormsModule, NgClass, NgIf, NgFor, MatRadioModule],
@@ -47,10 +41,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./add-channel.component.scss'],
 })
 export class AddChannelComponent implements OnInit {
-  @Input() addChannelWindow:boolean = false;
-  @Input() showBackground: boolean = true;
-  @Output() addChannelWindowChange = new EventEmitter<boolean>();
-  @Output() showBackgroundChange = new EventEmitter<boolean>();
   channelName: string = '';
   selectChannelMember: boolean = false;
   channelDescription: HTMLInputElement | null = null;
@@ -77,18 +67,16 @@ export class AddChannelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      AOS.init();
-    }
     this.loadUsers();
     this.loadChannel();
-    // document.addEventListener('click', this.handleOutsideClick.bind(this));
     console.log(this.channel);
+    console.log(this.auth.currentUser);
+    
   }
 
 @ViewChild('mainDialog') mainDialog!: ElementRef;
-
-
+@ViewChild('userSearchInput') userSearchInput!: ElementRef;
+@ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
@@ -104,12 +92,6 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
-  // closeWindow() {
-  //   this.addMemberInfoWindow = false;
-  //   this.showBackground = false;
-  //   this.showBackgroundChange.emit(this.showBackground);
-  // }
-
   async loadUsers() {
     try {
       const usersCollection = collection(this.firestore, 'users');
@@ -121,7 +103,6 @@ export class AddChannelComponent implements OnInit {
       this.users = [];
     }
   }
-
   async loadChannel() {
     this.channels = this.channelmodule.getChannels();
   }
@@ -130,19 +111,13 @@ export class AddChannelComponent implements OnInit {
     const selectedUser = this.filteredUsers[index];
     this.selectedUsers.push(selectedUser);
     this.filteredUsers.splice(index, 1);
-    // this.users = this.users.filter((user) => user.id !== selectedUser.id);
-    this.filterUsers();
-
-    console.log(this.filteredUsers);
-    
+    this.filterUsers();    
     this.refreshBar();
   }
 
   removeUserFromBar(index: number) {
     this.users.splice(index, 1);
     this.filterUsers();
-    console.log(this.users);
-    console.log(this.filteredUsers);
   }
 
   removeSelectedUser(index: number) {
@@ -173,20 +148,13 @@ export class AddChannelComponent implements OnInit {
   }
 
   closeScreen() {
-    // this.addChannelWindow = false;
-    // this.addChannelWindowChange.emit(this.addChannelWindow);
     this.dialogRef.close()
-
   }
 
   onSubmit() {
     if (!this.selectChannelMember) {
       this.addChannel();
       this.channelmodule.showFeedback("Channel erstellt");
-
-      console.log('channel erstellt');
-      console.log(this.channelmodule.getChannel);
-
       this.selectChannelMember = true;
     }
   }
@@ -207,7 +175,7 @@ export class AddChannelComponent implements OnInit {
       const targetChannelDoc = await getDoc(targetChannelRef);
       if (targetChannelDoc.exists()) {
         const targetChannelData = targetChannelDoc.data();
-        await updateDoc(targetChannelRef, { member: this.selectedUsers });
+        await updateDoc(targetChannelRef, { member: arrayUnion(...this.selectedUsers) });
         this.selectedUsers = [];
       } else {
         console.error('Fehler: Der Channel existiert nicht.');
@@ -215,6 +183,7 @@ export class AddChannelComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Hinzufügen der ausgewählten Benutzer:', error);
     }
+    this.dialogRef.close();
   }
 
   async pushAllUser() {
@@ -237,59 +206,49 @@ export class AddChannelComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Hinzufügen der Benutzer:', error);
     }
+    this.dialogRef.close();
+
   }
 
   async addChannel() {
-    const channelDescription = document.getElementById(
+    const channelDescriptionElement = document.getElementById(
       'channel-description'
     ) as HTMLInputElement | null;
+    const descriptionValue = channelDescriptionElement ? channelDescriptionElement.value : '';
+    const currentUserAuth = this.auth.currentUser;
+    if (!currentUserAuth) {
+      console.error('Fehler: Kein Benutzer eingeloggt.');
+      this.channelmodule.showFeedback("Fehler: Sie müssen eingeloggt sein.");
+      return;
+    }
+    const creatorProfile = this.users.find(u => u.uid === currentUserAuth.uid);
+    if (!creatorProfile) {
+        this.channelmodule.showFeedback("Fehler: Benutzerprofil konnte nicht geladen werden.");
+        return;
+    }
     try {
-      const newChannel: Channel = {
+      const creatorMember = {
+        id: creatorProfile.uid,
+        fullname: creatorProfile.fullname,
+        profilephoto: creatorProfile.profilephoto,
+        email: creatorProfile.email,
+        online: creatorProfile.online
+      };
+      const channelData = {
         name: this.channelName,
-        description: channelDescription ? channelDescription.value : '',
-        member: this.selectedUsers,
-        creator: this.auth.currentUser?.displayName ?? 'Unknown',
+        description: descriptionValue,
+        member: [creatorMember],
+        creator: creatorProfile.fullname ?? 'Unknown',
       };
       const channelsCollection = collection(this.firestore, 'channels');
-      const channelRef = await addDoc(channelsCollection, {
-        name: newChannel.name,
-        description: newChannel.description,
-        member: newChannel.member,
-        creator: newChannel.creator,
-      });
+      const channelRef = await addDoc(channelsCollection, channelData);
       this.channelRef = channelRef.id;
-      console.log('Channel erstellt mit ID:', channelRef.id);
-
-      this.channelName = '';
-      if (this.channelDescription) {
-        this.channelDescription.value = '';
-      }
-      this.selectedUsers = [];
+      this.channelmodule.showFeedback("Channel erstellt");
     } catch (error) {
       console.error('Fehler beim Erstellen des Channels:', error);
+      this.channelmodule.showFeedback("Fehler beim Erstellen des Channels.");
     }
   }
-
-  // async pushAllUser() {
-
-  //   try {
-  //     const allUser = this.users
-  //     const channel = this.channelmodule.channels[0];
-  //     if (channel) {
-  //       const channelRef = doc(this.firestore, 'channels', channel.key);
-  //       const updatedMembers = [...new Set([...channel.data.member, ...allUser])]; // Doppelte Einträge vermeiden
-  //       await updateDoc(channelRef, {
-  //         member: updatedMembers,
-  //       });
-  //       console.log('Alle Benutzer wurden dem Channel "DaBubble" hinzugefügt.');
-  //     } else {
-  //       console.error('Channel "DaBubble" nicht gefunden.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Fehler beim Hinzufügen der Benutzer zum Channel:', error);
-  //   }
-  //   console.log(this.channelmodule.channels[0].data.member);
-  // }
 
   setChannelMember(value: boolean, setHeight: string) {
     const heightElement = document.getElementById(
@@ -324,22 +283,18 @@ export class AddChannelComponent implements OnInit {
     textarea.style.height = '60px';
   }
 
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-
   openUserBar(){
     this.showUserBar = true;
     this.filterUsers();
   }
 
-  // handleOutsideClick(event: Event) {
-  //   if (
-  //     this.mainDialog &&
-  //     !this.mainDialog.nativeElement.contains(event.target as Node)
-  //   ) {
-  //     this.closeScreen();
-  //   }
-  // }
-
-
-
+  @HostListener('document:click', ['$event'])
+  closeUserBar(event: Event) {
+    const targetElement = event.target as Node;
+    const clickedInsideInput = this.userSearchInput?.nativeElement?.contains(targetElement);
+    const clickedInsideBar = this.chooseUserBar?.nativeElement?.contains(targetElement);
+    if (!clickedInsideInput && !clickedInsideBar) {
+      this.showUserBar = false;
+    }
+  }
 }

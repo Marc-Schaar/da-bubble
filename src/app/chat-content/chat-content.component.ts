@@ -101,6 +101,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+
   openChannelInfo() {
     console.log('Versuche AddMember zu öffnen. Aktuelle Daten:');
     console.log('Current Channel:', this.currentChannel);
@@ -118,6 +119,21 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh',
     });
+
+  startChannel() {
+    if (this.userService.user != null) {
+      this.isMobile = this.userService.checkScreenWidth();
+      this.setChannelData();
+      this.getMessages();
+    } else console.error('keine User oder Channel');
+  }
+
+  setChannelData() {
+    this.currentChannelId = this.userService.docId;
+    this.userId = this.userService.reciepentId;
+    this.currentUser = this.userService.currentUser;
+    this.getChannelFromUrl();
+
   }
 
   async getChannelFromUrl() {
@@ -248,11 +264,20 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  // openChannelInfo() {
-  //   this.channelInfo = true;
-  //   this.showBackground = true;
-
-  // }
+  openChannelInfo() {   
+    const dialogData = {
+      currentChannel: this.currentChannel,
+      currentChannelId: this.currentChannelId,
+      currentUser: this.currentUser,
+    };
+    this.dialog.open(ChannelEditComponent, {
+      data: dialogData,
+      position: { top: '200px' },
+      width: '872px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+    });
+  }
 
   openMemberWindow(toggle: boolean) {
     this.addMemberWindow = toggle;
@@ -260,6 +285,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       currentChannel: this.currentChannel,
       currentChannelId: this.currentChannelId,
       currentUser: this.currentUser,
+      addMemberWindow: toggle
     };
     this.dialog.open(AddMemberComponent, {
       data: dialogData,
@@ -267,8 +293,12 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh',
       height: '413px',
+
       // height: 'auto',
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
+
+      position: { top: '200px', right: '150px' },
+
     });
   }
 

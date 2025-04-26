@@ -48,9 +48,9 @@ body {
   background-color: var(--bg-color);
 }
 
-.transparent-dialog-bg .mat-mdc-dialog-container .mdc-dialog__surface {
+.mdc-dialog__surface {
   background-color: rgba(0, 0, 0, 0) !important;
-  box-shadow: none !important;
+  // box-shadow: none !important;
 }
 
 // .dark-background {

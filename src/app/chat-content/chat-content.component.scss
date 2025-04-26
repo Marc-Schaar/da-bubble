@@ -55,6 +55,9 @@ main {
   height: 50px;
   align-items: center;
   cursor: pointer;
+  .member-img-cont {
+    display: flex;
+  }
   &:hover {
     span {
       color: var(--dark-purple-text);
@@ -68,18 +71,14 @@ main {
     border: 2px solid white;
   }
 
-  img:nth-child(1) {
-    transform: translateX(10px);
-    z-index: 1;
-  }
-
   img:nth-child(2) {
-    z-index: 2;
+    transform: translateX(-10px);
+
   }
 
   img:nth-child(3) {
-    transform: translateX(-10px);
-    z-index: 3;
+    transform: translateX(-20px);
+
   }
 }
 
@@ -562,10 +561,5 @@ header {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1001;
-}
-
-.transparent-dialog-bg .mat-mdc-dialog-container .mdc-dialog__surface {
-  background-color: rgba(0, 0, 0, 0) !important;
-  box-shadow: none !important;
 }
 

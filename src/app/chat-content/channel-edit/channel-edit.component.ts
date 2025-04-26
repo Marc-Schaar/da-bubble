@@ -13,24 +13,25 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './channel-edit.component.scss',
 })
 export class ChannelEditComponent {
-  @Input() channelInfo: boolean = false;
-  @Input() currentChannel: any = {};
-  @Input() currentChannelId: any;
-  @Input() currentUser: any;
-  @Input() showBackground: boolean = true;
   userService = inject(UserService);
-  @Output() channelInfoChange = new EventEmitter<boolean>();
-  @Output() showBackgroundChange = new EventEmitter<boolean>();
   channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
   users: any[] = [];
   auth = getAuth();
 
+  currentChannel: any = {};
+  currentChannelId: any;
+  currentUser: any;
+
   constructor(
     public firestore: Firestore,
     public dialogRef: MatDialogRef<ChannelEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+    this.currentChannel = data.currentChannel
+    this.currentChannelId = data.currentChannelId;
+    this.currentUser = data.currentUser;
+  }
 
   ngOnInit() {
     this.fetchUsers();
@@ -101,11 +102,7 @@ export class ChannelEditComponent {
   }
 
   close() {
-    // this.addChannelWindow = false;
-    // this.addChannelWindowChange.emit(this.addChannelWindow);
     this.dialogRef.close();
-    this.channelInfo = false;
-    this.channelInfoChange.emit(this.channelInfo);
   }
 
   // async exitChannel() {

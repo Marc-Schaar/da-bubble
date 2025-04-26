@@ -17,7 +17,7 @@ import { NavigationService } from '../service/navigation/navigation.service';
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, AddChannelComponent, HeaderComponent, MatIconModule, FormsModule],
+  imports: [CommonModule, HeaderComponent, MatIconModule, FormsModule],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
@@ -134,9 +134,11 @@ export class ContactbarComponent implements OnInit {
   }
 
   openAddChannel() {
-    this.dialog.open(AddChannelComponent, {
+    const dialogRef = this.dialog.open(AddChannelComponent, {
       width: '872px',
       maxWidth: '95vw',
+      height: 'auto',
+      position: {top: '150px', left: '350px'}
     });
   }
 

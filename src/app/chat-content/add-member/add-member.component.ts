@@ -16,15 +16,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class AddMemberComponent implements OnInit{
   fireService: FireServiceService = inject(FireServiceService);
   userService = inject(UserService);
-  @Input() addMemberInfoWindow: boolean = false;
-  @Output() addMemberInfoWindowChange = new EventEmitter<boolean>();
 
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
-  @Input() addMemberWindow: boolean = false;
   @Input() showBackground: boolean = true;
-
-  @Output() addMemberWindowChange = new EventEmitter<boolean>();
 
   @Input() currentUser: any;
   members: any[] = [];
@@ -35,6 +30,7 @@ export class AddMemberComponent implements OnInit{
   selectedUsers: any[] = [];
   filteredUsers: any[] = [];
   filteredMembers: any[] = [];
+  addMemberWindow: boolean = false;
   // reciepentId: string | null = null;
 
   constructor(
@@ -44,6 +40,7 @@ export class AddMemberComponent implements OnInit{
     this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
     this.currentUser = data.currentUser;
+    this.addMemberWindow = data.addMemberWindow;
   }
 
   async ngOnInit() {
@@ -51,13 +48,8 @@ export class AddMemberComponent implements OnInit{
     await this.loadUsers();
     this.filterUsers()
     this.filterMembers();
-    console.log("currentUser", this.userService.auth.currentUser);
-
-    console.log("filteredMembers", this.filteredMembers);
-
-    console.log("users", this.users);
-    console.log("member", this.members);
-    console.log("filteredUser", this.filteredUsers);
+    console.log(this.showUserBar);
+    
   }
 
   filterMembers() {
@@ -87,7 +79,6 @@ export class AddMemberComponent implements OnInit{
     } catch (error) {
       console.error('Error loading users in component:', error);
     }
-    console.log(this.userService.currentReciever);
   }
 
   changeWindow() {
@@ -100,8 +91,6 @@ export class AddMemberComponent implements OnInit{
 
   closeWindow() {
     this.dialogRef.close();
-    this.addMemberInfoWindow = false;
-    this.addMemberInfoWindowChange.emit(this.addMemberInfoWindow);
   }
 
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
@@ -114,17 +103,11 @@ export class AddMemberComponent implements OnInit{
 
   @HostListener('document:click', ['$event'])
   closeUserBar(event: Event) {
+    const targetElement = event.target as Node;
     if (
-      this.userSearchInput &&
-      this.chooseUserBar &&
-      !this.userSearchInput.nativeElement.contains(event.target) &&
-      !this.chooseUserBar.nativeElement.contains(event.target)
+      !this.chooseUserBar.nativeElement.contains(targetElement)
     ) {
       this.showUserBar = false;
-    }
-    const targetElement = event.target as HTMLElement;
-    if (!this.mainDialog.nativeElement.contains(targetElement)) {
-      this.closeWindow();
     }
   }
 
@@ -193,7 +176,7 @@ export class AddMemberComponent implements OnInit{
   showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
-    console.log(member);
+    this.closeWindow();
   }
 
 }

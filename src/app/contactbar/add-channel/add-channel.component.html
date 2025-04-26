@@ -2,9 +2,7 @@
   <div
     class="add-channel-cont"
     id="add-channel-cont"
-    data-aos="flip-up"
-    [ngClass]="{ 'change-size': !selectChannelMember }"
-    [attr.data-aos]="!selectChannelMember ? 'flip-up' : null">
+    [ngClass]="{ 'change-size': !selectChannelMember }">
     <div *ngIf="!selectChannelMember" class="add-channel-create">
       <div class="add-channel-header">
         <div class="add-channel-text">Channel erstellen</div>
@@ -115,7 +113,7 @@
             <input
               name=""
               id="user-search-bar"
-              (focus)="openUserBar()"
+              (input)="openUserBar()"
               (keyup)="filterUsers()"
               #userSearchInput
             />
