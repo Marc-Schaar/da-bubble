@@ -124,6 +124,6 @@ export class ChannelEditComponent {
     } catch (error) {}
     this.userService.showFeedback('Channel verlassen');
     this.dialogRef.close();
-    this.userService.setUrl('direct', this.currentUser.id)  
+    this.userService.setUrl('chat', this.currentUser.id)  
   }
 }
