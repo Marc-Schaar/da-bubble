@@ -104,9 +104,8 @@ export class AddMemberComponent implements OnInit{
   @HostListener('document:click', ['$event'])
   closeUserBar(event: Event) {
     const targetElement = event.target as Node;
-    if (
-      !this.chooseUserBar.nativeElement.contains(targetElement)
-    ) {
+
+    if (this.showUserBar && !this.chooseUserBar.nativeElement.contains(targetElement)) {
       this.showUserBar = false;
     }
   }
@@ -119,7 +118,6 @@ export class AddMemberComponent implements OnInit{
     this.refreshBar();
     this.filterUsers();
     this.checkButton();
-
   }
 
   checkButton() {

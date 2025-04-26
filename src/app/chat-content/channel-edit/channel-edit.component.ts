@@ -105,33 +105,7 @@ export class ChannelEditComponent {
     this.dialogRef.close();
   }
 
-  // async exitChannel() {
-  //   const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-  //   const currentUser = this.userService.auth.currentUser;
-  //   try {
-  //     const channelDoc = await getDoc(channelRef);
-  //     const channelData = channelDoc.data();
-  //     if (channelData && currentUser) {
-  //       // channelData['member'] = channelData['member'].filter((uid: string) => uid !== currentUser.uid);
-  //       let updateMember: any[] = [];
-  //       updateMember.push(channelData['member']);
-  //       const index = updateMember.findIndex(member => member.uid === currentUser.uid);
-
-  //       if (index !== -1) {
-  //         updateMember.splice(index, 1);
-  //     }
-  //       console.log(updateMember);
-
-  //       await updateDoc(channelRef, {
-  //         member: updateMember,
-  //       });
-  //     }
-  //   } catch (error) {}
-  // }
-
   async exitChannel() {
-    console.log(this.userService.auth.currentUser);
-
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
     const currentUser = this.userService.auth.currentUser;
     try {
@@ -149,5 +123,7 @@ export class ChannelEditComponent {
       }
     } catch (error) {}
     this.userService.showFeedback('Channel verlassen');
+    this.dialogRef.close();
+    this.userService.setUrl('direct', this.currentUser.id)  
   }
 }
