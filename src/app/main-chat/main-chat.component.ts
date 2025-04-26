@@ -12,6 +12,7 @@ import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
 import { FireServiceService } from '../fire-service.service';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-chat',
@@ -36,6 +37,7 @@ export class MainChatComponent implements OnInit {
 
   shareddata = inject(UserService);
   fireService: FireServiceService = inject(FireServiceService);
+  router: Router = inject(Router);
 
   feedbackVisible: boolean = false;
   showFiller = true;
@@ -50,6 +52,7 @@ export class MainChatComponent implements OnInit {
   private contactbarSubscription!: Subscription;
   private subscription!: Subscription;
 
+  private subscriptions: Subscription[] = [];
   //Neue Logik ab hier:
   channelType: string = 'default';
   channelMessages: any = [];
@@ -63,49 +66,26 @@ export class MainChatComponent implements OnInit {
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-    this.navigationService.component$.subscribe(() => {
-      this.navigationService.channelType;
-      console.error('Aktuelle Komponente:', this.navigationService.channelType);
-      if (this.navigationService.channelType === 'direct') this.shareddata.toggleThread('close');
-      this.cdr.detectChanges();
-    });
 
-    this.subscription = this.shareddata.openProfile$.subscribe(() => {
-      this.openProfile();
-    });
-
-    this.subscription = this.shareddata.showFeedback$.subscribe((message: string) => {
-      this.showFeedback(message);
-    });
-
-    this.threadSubscription = this.shareddata.threadToggle$.subscribe((value: string) => {
-      value === 'open' ? this.drawer.open() : this.drawer.close();
-    });
-
-    this.contactbarSubscription = this.shareddata.contactbarSubscription$.subscribe(() => {
-      this.drawerContactbar.toggle();
-    });
+    this.subscriptions.push(
+      this.navigationService.component$.subscribe(() => {
+        if (this.navigationService.channelType === 'direct') {
+          this.shareddata.toggleThread('close');
+        }
+        this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.push(this.shareddata.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
+    this.subscriptions.push(this.shareddata.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close())));
+    this.subscriptions.push(this.shareddata.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
   ngOnDestroy(): void {
-    if (this.componentSubscription) {
-      this.componentSubscription.unsubscribe();
-    }
-
-    if (this.threadSubscription) {
-      this.threadSubscription.unsubscribe();
-    }
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   closeProfile() {
     this.isProfileCard = false;
-  }
-
-  openProfile() {
-    this.currentReciever = this.shareddata.currentReciever; // muss nach dem reload der currentReciever neu gesetzt werden
-    this.isProfileCard = !this.isProfileCard;
-    console.log('OPEN');
-    console.log(this.isProfileCard);
   }
 
   showFeedback(message: string) {

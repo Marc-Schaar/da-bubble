@@ -16,6 +16,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MessagesService } from '../service/messages/messages.service';
 import { User } from '../models/user';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 // @Injectable({
 //   providedIn: 'root',
@@ -35,6 +36,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   router: Router = inject(Router);
   firestore: Firestore = inject(Firestore);
   dialog = inject(MatDialog);
+  navigationService: NavigationService = inject(NavigationService);
   messagesService: MessagesService = inject(MessagesService);
   route: ActivatedRoute = inject(ActivatedRoute);
 
@@ -142,7 +144,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
 
       onSnapshot(threadQuery, (snapshot) => {
-        const updatedThreads = this.userService.processData(snapshot);
+        const updatedThreads = this.messagesService.processData(snapshot);
         const msgIndex = this.messages.findIndex((m: any) => m.id === messageId);
         if (msgIndex >= 0) this.messages[msgIndex].thread = updatedThreads;
       });
@@ -153,7 +155,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     if (this.input.trim() !== '') {
       this.fireService.sendMessage(
         this.currentChannelId,
-        new Message(this.userService.buildMessageObject(this.input, this.messages, this.reactions))
+        new Message(this.messagesService.buildMessageObject(this.input, this.messages, this.reactions))
       );
       this.input = '';
     }
@@ -309,12 +311,12 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   openReciver(i: number, key: string) {
     if (this.isChannel) {
       this.userService.setUrl('channel', key);
-      this.userService.getChannel(this.currentList[i], this.currentUser);
-      this.userService.loadComponent('channel');
+      // this.userService.getChannel(this.currentList[i], this.currentUser);
+      //  this.navigationService.loadComponent('channel');
     } else {
       this.userService.setUrl('direct', this.userId, key);
-      this.userService.getReciepent(this.currentList[i], this.currentUser);
-      this.userService.loadComponent('chat');
+      //   this.userService.getReciepent(this.currentList[i], this.currentUser);
+      //   this.navigationService.loadComponent('direct');
     }
     this.resetList();
   }

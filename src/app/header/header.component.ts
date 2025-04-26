@@ -10,6 +10,7 @@ import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
 import { FormsModule } from '@angular/forms';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +28,7 @@ export class HeaderComponent {
   fireService = inject(FireServiceService);
   userService = inject(UserService);
   router: Router = inject(Router);
+  navigationService: NavigationService = inject(NavigationService);
 
   showBackground = false;
   showmodifycontent = false;
@@ -34,7 +36,6 @@ export class HeaderComponent {
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
-  isMobile: boolean = false;
 
   opened = 0;
 
@@ -82,7 +83,6 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
-    this.isMobile = this.userService.isMobile;
   }
 
   async loadUsers() {
@@ -102,8 +102,8 @@ export class HeaderComponent {
   }
 
   setCurrentUser() {
-    this.currentUser = this.userService.user;
-    this.currentUserId = this.userService.user.uid;
+    this.currentUser = this.userService.currentUser;
+    this.currentUserId = this.userService.currentUser.uid;
   }
 
   getList() {
@@ -171,12 +171,12 @@ export class HeaderComponent {
     this.docId = this.currentlist[index].id;
     if (this.isChannel) {
       this.userService.setUrl('channel', this.docId, this.userService.userId);
-      this.userService.getChannel(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('channel');
+      //   this.userService.getChannel(this.currentlist[index], this.currentUser);
+      // this.navigationService.loadComponent('channel');
     } else {
       this.userService.setUrl('direct', this.userService.userId, this.docId);
-      this.userService.getReciepent(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('chat');
+      //  this.userService.getReciepent(this.currentlist[index], this.currentUser);
+      //  this.navigationService.loadComponent('direct');
     }
     this.isClicked = false;
     this.input = '';

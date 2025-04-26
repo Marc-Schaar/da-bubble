@@ -1,16 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
+import { MainChatComponent } from '../../main-chat/main-chat.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NavigationService {
-  router: Router = inject(Router);
-  route: ActivatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
   component$ = this.currentComponent.asObservable();
@@ -18,20 +19,49 @@ export class NavigationService {
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
 
-  subscription: Subscription;
-
-  isMobile: boolean = false;
+  isMobile: boolean = this.checkScreenWidth();
 
   docId: string = '';
   reciepentId: string = '';
   messageId: string = '';
-
-  channelType: string = '';
+  channelType: 'direct' | 'channel' | 'default' = 'default';
 
   constructor() {
-    this.subscription = this.screenWidth$.subscribe((isMobile) => {
-      this.isMobile = isMobile;
-      console.log(isMobile);
+    this.observeScreenWidth();
+    this.screenWidth$.subscribe((mobile) => {
+      this.isMobile = mobile;
+      console.log('Screen width changed:', mobile);
+      console.log('Current channel type:', this.channelType);
+
+      if (mobile) {
+        this.router.navigate(['/contactbar']);
+        if (this.channelType === 'direct') {
+          this.showDirect();
+        }
+        if (this.channelType === 'channel') {
+          this.showChannel();
+        }
+      } else {
+        this.router.navigate(['/chat']);
+        if (this.channelType === 'direct') {
+          this.router.navigate(['/chat'], {
+            queryParams: {
+              channelType: 'direct',
+              id: this.docId,
+              reciepentId: this.reciepentId,
+            },
+          });
+        }
+        if (this.channelType === 'channel') {
+          this.router.navigate(['/chat'], {
+            queryParams: {
+              channelType: 'channel',
+              id: this.docId,
+              reciepentId: this.reciepentId,
+            },
+          });
+        }
+      }
     });
 
     this.route.queryParams.subscribe((params) => {
@@ -39,40 +69,67 @@ export class NavigationService {
       this.docId = params['id'] || '';
       this.reciepentId = params['reciepentId'] || '';
       this.messageId = params['messageId'] || '';
+
+      if (this.channelType === 'direct') {
+        this.showDirect();
+      } else if (this.channelType === 'channel') {
+        this.showChannel();
+      }
+      // else if (!this.isMobile) {
+      //   this.router.navigate(['/chat']);
+      //}
+      else if (this.channelType === 'default' && this.isMobile) {
+        this.router.navigate(['/contactbar']);
+      }
+      // else {
+      //   this.router.navigate(['/chat']);
+      // }
     });
   }
 
-  loadComponent(component: string) {
-    switch (component) {
-      case 'chat':
-        console.log('Chat component loaded');
-
-        if (this.isMobile) {
-          this.router.navigate(['/direct'], {
-            queryParams: { channelType: 'direct', id: this.docId, reciepentId: this.reciepentId },
-          });
-        } else {
-          this.currentComponent.next(DirectmessagesComponent);
-        }
-        break;
-
-      case 'channel':
-        if (this.isMobile) {
-          this.router.navigate(['/channel'], {
-            queryParams: { channelType: 'channel', id: this.docId, reciepentId: this.reciepentId },
-          });
-        } else {
-          this.currentComponent.next(ChatContentComponent);
-        }
-        break;
+  showDirect(): void {
+    if (this.isMobile) {
+      this.router.navigate(['/direct'], {
+        queryParams: {
+          channelType: 'direct',
+          id: this.docId,
+          reciepentId: this.reciepentId,
+        },
+      });
+    } else {
+      this.currentComponent.next(DirectmessagesComponent);
     }
   }
 
-  checkScreenWidth(): boolean {
-    return window.innerWidth < 1024;
+  showChannel(): void {
+    if (this.isMobile) {
+      this.router.navigate(['/channel'], {
+        queryParams: {
+          channelType: 'channel',
+          id: this.docId,
+          reciepentId: this.reciepentId,
+        },
+      });
+    } else {
+      this.currentComponent.next(ChatContentComponent);
+    }
   }
 
-  observeScreenWidth() {
+  // showMainChat(): void {
+  //   this.router.navigate(['/chat'], {
+  //     queryParams: {
+  //       channelType: 'default',
+  //       id: this.docId,
+  //       reciepentId: this.reciepentId,
+  //     },
+  //   });
+  //   this.currentComponent.next(MainChatComponent);
+  // }
+
+  /**
+   * Überwacht Änderungen der Fenstergröße und pusht neue Werte in das Subject
+   */
+  private observeScreenWidth(): void {
     fromEvent(window, 'resize')
       .pipe(
         map(() => this.checkScreenWidth()),
@@ -80,5 +137,12 @@ export class NavigationService {
         startWith(this.checkScreenWidth())
       )
       .subscribe(this.screenWidthSubject);
+  }
+
+  /**
+   * Prüft, ob wir im Mobile-Layout sind (Breite < 1024px)
+   */
+  private checkScreenWidth(): boolean {
+    return window.innerWidth < 1024;
   }
 }

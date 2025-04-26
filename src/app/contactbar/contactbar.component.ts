@@ -85,8 +85,8 @@ export class ContactbarComponent implements OnInit {
   }
 
   findCurrentUser() {
-    if (this.userService.user?.uid) {
-      this.userID = this.userService.user.uid;
+    if (this.userService.currentUser?.uid) {
+      this.userID = this.userService.currentUser.uid;
       this.currentUser = this.users.find((user: any) => this.userID === user.id);
     } else {
       console.log('user wurde nicht richtig geladen');
@@ -95,12 +95,12 @@ export class ContactbarComponent implements OnInit {
 
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
-    this.userService.getChannel(this.currentChannel, this.currentUser);
+    //   this.userService.getChannel(this.currentChannel, this.currentUser);
   }
 
   openPersonalChat(index: any) {
     this.currentReceiver = this.users[index];
-    this.userService.getReciepent(this.currentReceiver, this.currentUser);
+    //  this.userService.getReciepent(this.currentReceiver, this.currentUser);
   }
 
   toggleActive() {
@@ -119,8 +119,9 @@ export class ContactbarComponent implements OnInit {
     return this.active === true;
   }
 
-  openWindow(window: string) {
-    this.navigationService.loadComponent(window);
+  openWindow(window: 'direct' | 'channel') {
+    // this.navigationService.loadComponent(window);
+    window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.userService.toggleThread('close');
   }
 
@@ -203,12 +204,14 @@ export class ContactbarComponent implements OnInit {
     this.userID = this.currentlist[index].id;
     if (this.isChannel) {
       this.userService.setUrl('channel', this.userID, this.userService.userId);
-      this.userService.getChannel(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('channel');
+      //   this.userService.getChannel(this.currentlist[index], this.currentUser);
+      //   this.navigationService.loadComponent('channel');
+      this.navigationService.showChannel();
     } else {
       this.userService.setUrl('direct', this.userService.userId, this.userID);
-      this.userService.getReciepent(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('chat');
+      //   this.userService.getReciepent(this.currentlist[index], this.currentUser);
+      //  this.navigationService.loadComponent('direct');
+      this.navigationService.showDirect();
     }
     this.isClicked = false;
     this.input = '';
