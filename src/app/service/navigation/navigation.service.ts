@@ -80,7 +80,7 @@ export class NavigationService {
     }
   }
 
-  showDirect(): void {
+  public showDirect(): void {
     if (this.isMobile) {
       this.router.navigate(['/direct'], {
         queryParams: {
@@ -94,7 +94,7 @@ export class NavigationService {
     }
   }
 
-  showChannel(): void {
+  public showChannel(): void {
     if (this.isMobile) {
       this.router.navigate(['/channel'], {
         queryParams: {
