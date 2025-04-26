@@ -76,13 +76,23 @@ export class ContactbarComponent implements OnInit {
 
   loadChannels() {
     let channelRef = this.firestoreService.getCollectionRef('channels');
-    this.channels = [];
+    this.allChannels = [];
     if (channelRef) {
       onSnapshot(channelRef, (colSnap) => {
-        this.channels = colSnap.docs.map((colSnap) => ({
+        this.allChannels = colSnap.docs.map((colSnap) => ({
           id: colSnap.id,
           ...colSnap.data(),
         }));
+        this.channels = [];
+        for (let i = 0; i < this.allChannels.length; i++) {
+          const element = this.allChannels[i];
+          for (let y = 0; y < this.allChannels[i].member.length; y++) {
+            const userId = this.allChannels[i].member[y].id;
+            if( userId == this.userService.currentUser?.uid) {
+              this.channels.push(element);
+            }
+          }
+        }
       });
     }
   }
@@ -141,7 +151,7 @@ export class ContactbarComponent implements OnInit {
       width: '872px',
       maxWidth: '95vw',
       height: 'auto',
-      position: {top: '150px', left: '350px'}
+      position: { top: '150px', left: '350px' },
     });
   }
 
