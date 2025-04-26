@@ -38,25 +38,7 @@ export class NavigationService {
           this.showChannel();
         }
       } else {
-        this.router.navigate(['/chat']);
-        if (this.channelType === 'direct') {
-          this.router.navigate(['/chat'], {
-            queryParams: {
-              channelType: 'direct',
-              id: this.docId,
-              reciepentId: this.reciepentId,
-            },
-          });
-        }
-        if (this.channelType === 'channel') {
-          this.router.navigate(['/chat'], {
-            queryParams: {
-              channelType: 'channel',
-              id: this.docId,
-              reciepentId: this.reciepentId,
-            },
-          });
-        }
+        this.showChat();
       }
     });
 
@@ -74,6 +56,28 @@ export class NavigationService {
         this.router.navigate(['/contactbar']);
       }
     });
+  }
+
+  private showChat() {
+    this.router.navigate(['/chat']);
+    if (this.channelType === 'direct') {
+      this.router.navigate(['/chat'], {
+        queryParams: {
+          channelType: 'direct',
+          id: this.docId,
+          reciepentId: this.reciepentId,
+        },
+      });
+    }
+    if (this.channelType === 'channel') {
+      this.router.navigate(['/chat'], {
+        queryParams: {
+          channelType: 'channel',
+          id: this.docId,
+          reciepentId: this.reciepentId,
+        },
+      });
+    }
   }
 
   showDirect(): void {
