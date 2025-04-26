@@ -2,7 +2,15 @@
   <span *ngIf="barOpen">Workspacemenü schließen</span>
   <span *ngIf="!barOpen">Workspacemenü öffnen</span>
 
-  <svg [ngStyle]="{ transform: !barOpen ? 'rotate(180deg)' : 'rotate(0deg)' }" id="" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    [ngStyle]="{ transform: !barOpen ? 'rotate(180deg)' : 'rotate(0deg)' }"
+    id=""
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <rect x="1" y="1" width="16" height="16" rx="1" stroke="black" stroke-width="2" />
     <path d="M6.71423 0.999969V17" stroke="black" stroke-width="2" />
     <path
@@ -16,11 +24,10 @@
 
 <main>
   <section>
-    <app-header *ngIf="!isMobile"></app-header>
+    <app-header *ngIf="!this.navigationService.isMobile"></app-header>
 
     <div class="content-container">
       <mat-drawer-container class="chat-content">
-       
         <mat-drawer class="contactbar-container" mode="side" #drawerContactbar opened>
           <app-contactbar></app-contactbar>
         </mat-drawer>
@@ -29,16 +36,8 @@
           <app-thread></app-thread>
         </mat-drawer>
 
-        <!-- <ng-container *ngComponentOutlet="currentComponent"></ng-container> -->
-
-        <ng-container *ngIf="currentComponent === 'channel'">
-          <app-chat-content></app-chat-content>
-        </ng-container>
-        <ng-container *ngIf="currentComponent === 'direct'">
-          <app-direct-messages></app-direct-messages>
-        </ng-container>
-        <ng-container *ngIf="currentComponent === 'default'">
-          <app-newmessage></app-newmessage>
+        <ng-container *ngIf="navigationService.component$ | async as cmp">
+          <ng-container *ngComponentOutlet="cmp"></ng-container>
         </ng-container>
       </mat-drawer-container>
     </div>
@@ -75,5 +74,3 @@
 </div>
 
 <div *ngIf="feedbackVisible" #feedback class="feedback-cont"></div>
-
-

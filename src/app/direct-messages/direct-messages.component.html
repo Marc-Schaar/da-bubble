@@ -1,4 +1,4 @@
-<header class="justify-sb full-width" *ngIf="isMobile">
+<header class="justify-sb full-width" *ngIf="this.navigationService.isMobile">
   <div class="align-center">
     <button>
       <a [routerLink]="['/contactbar']" routerLinkActive="router-link-active">

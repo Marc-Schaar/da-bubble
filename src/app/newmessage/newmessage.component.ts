@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from '../models/message';
 import { DirectMessage } from '../models/direct-message';
+import { NavigationService } from '../service/navigation/navigation.service';
+import { MessagesService } from '../service/messages/messages.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,6 +23,8 @@ export class NewmessageComponent {
   userService = inject(UserService);
   firestoreService = inject(FireServiceService);
   router: Router = inject(Router);
+  navigationService: NavigationService = inject(NavigationService);
+  messageService: MessagesService = inject(MessagesService);
   public channels: any[] = [];
   public users: any[] = [];
   public currentReciever: any = null;
@@ -45,15 +49,9 @@ export class NewmessageComponent {
   currentUserId: string = '';
   currentChannelId: string = '';
   isFound: boolean = false;
-  private subscription?: Subscription;
-  constructor() {
-    this.startChat();
-  }
+  constructor() {}
 
   async ngOnInit() {
-    this.subscription = this.userService.startLoadingChat$.subscribe(() => {
-      this.startChat();
-    });
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
@@ -75,21 +73,11 @@ export class NewmessageComponent {
     }
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
+  ngOnDestroy() {}
 
-  async startChat() {
-    if (this.userService.user != null && this.userService.reciepentId != null) {
-    } else {
-      console.log('Chat muss per click initialisiert werden');
-    }
-  }
   setCurrentUser() {
-    this.currentUser = this.userService.user;
-    this.currentUserId = this.userService.user.uid;
+    this.currentUser = this.userService.currentUser;
+    this.currentUserId = this.userService.currentUser.uid;
     console.log(this.currentUserId);
 
     if (!this.currentUser) {
@@ -100,8 +88,8 @@ export class NewmessageComponent {
 
   async sendDirectMessage() {
     const message = new DirectMessage(
-      this.userService.user?.displayName || '',
-      this.userService.user?.photoURL || '',
+      this.userService.currentUser?.displayName || '',
+      this.userService.currentUser?.photoURL || '',
       this.message,
       this.currentUserId,
       this.currentRecieverId
@@ -130,19 +118,8 @@ export class NewmessageComponent {
     };
   }
 
-  buildMessageObject() {
-    return {
-      message: this.message || '',
-      avatar: this.userService.user?.photoURL || '',
-      date: new Date().toISOString().split('T')[0],
-      name: this.userService.user?.displayName || 'Gast',
-      newDay: false,
-      timestamp: serverTimestamp(),
-    };
-  }
-
   sendChannelMessage() {
-    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.buildMessageObject()));
+    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.messageService.buildMessageObject(this.input)));
   }
 
   getCurrentChat() {
@@ -228,11 +205,9 @@ export class NewmessageComponent {
     } else if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
       this.userService.setUrl('direct', this.currentUserId, this.currentRecieverId);
-      this.userService.loadComponent('chat');
     } else if (this.whichMessage === 'channel') {
       this.sendChannelMessage();
       this.userService.setUrl('channel', this.currentChannelId);
-      this.userService.loadComponent('channel');
     }
     this.currentReciever = null;
     this.currentChannel = null;

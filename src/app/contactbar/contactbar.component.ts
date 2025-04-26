@@ -11,6 +11,7 @@ import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { NavigationService } from '../service/navigation/navigation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,7 @@ export class ContactbarComponent implements OnInit {
   firestore = inject(Firestore);
   firestoreService = inject(FireServiceService);
   router: Router = inject(Router);
+
   currentUser: any = [];
   currentlist: any[] = [];
   searchList: any[] = [];
@@ -50,6 +52,8 @@ export class ContactbarComponent implements OnInit {
   isChannel: boolean = false;
 
   input: string = '';
+
+  navigationService: NavigationService = inject(NavigationService);
 
   constructor(private dialog: MatDialog) {} // MatDialog injizieren
 
@@ -84,8 +88,8 @@ export class ContactbarComponent implements OnInit {
   }
 
   findCurrentUser() {
-    if (this.userService.user?.uid) {
-      this.userID = this.userService.user.uid;
+    if (this.userService.currentUser?.uid) {
+      this.userID = this.userService.currentUser.uid;
       this.currentUser = this.users.find((user: any) => this.userID === user.id);
     } else {
       console.log('user wurde nicht richtig geladen');
@@ -94,12 +98,12 @@ export class ContactbarComponent implements OnInit {
 
   openChannel(index: any) {
     this.currentChannel = this.channels[index];
-    this.userService.getChannel(this.currentChannel, this.currentUser);
+    //   this.userService.getChannel(this.currentChannel, this.currentUser);
   }
 
   openPersonalChat(index: any) {
     this.currentReceiver = this.users[index];
-    this.userService.getReciepent(this.currentReceiver, this.currentUser);
+    //  this.userService.getReciepent(this.currentReceiver, this.currentUser);
   }
 
   toggleActive() {
@@ -118,16 +122,16 @@ export class ContactbarComponent implements OnInit {
     return this.active === true;
   }
 
-  openWindow(window: string) {
-    this.userService.loadComponent(window);
+  openWindow(window: 'direct' | 'channel') {
+    window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.userService.toggleThread('close');
   }
 
   openDropdown() {
-    if (this.userService.channelType === 'channel') {
+    if (this.navigationService.channelType === 'channel') {
       this.active = true;
     }
-    if (this.userService.channelType === 'direct') {
+    if (this.navigationService.channelType === 'direct') {
       this.message = true;
     }
   }
@@ -204,12 +208,10 @@ export class ContactbarComponent implements OnInit {
     this.userID = this.currentlist[index].id;
     if (this.isChannel) {
       this.userService.setUrl('channel', this.userID, this.userService.userId);
-      this.userService.getChannel(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('channel');
+      this.navigationService.showChannel();
     } else {
       this.userService.setUrl('direct', this.userService.userId, this.userID);
-      this.userService.getReciepent(this.currentlist[index], this.currentUser);
-      this.userService.loadComponent('chat');
+      this.navigationService.showDirect();
     }
     this.isClicked = false;
     this.input = '';

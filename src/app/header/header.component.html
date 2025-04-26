@@ -31,15 +31,17 @@
     <a routerLink="/signup">Konto erstellen</a>
   </div>
   <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
-    <div (click)="isMobile ? showmenu() : null" [matMenuTriggerFor]="isMobile ? beforeMenu : null">
-      <span>{{ this.userService.user.displayName || "Gast" }}</span>
-      <img src="img/Profile bild.png" alt="" />
+    <div
+      (click)="this.navigationService.isMobile ? showmenu() : null"
+      [matMenuTriggerFor]="this.navigationService.isMobile ? beforeMenu : null"
+    >
+      <span>{{ this.userService.currentUser?.displayName || "Gast" }}</span>
+      <img [src]="this.userService.currentUser?.photoURL" alt="" />
       <div>
         <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
-        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()"
-        >
+        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
           <ng-container *ngIf="showmenu">
             <button *ngIf="!showmodifycontent" (click)="show()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
               Profil

@@ -1,4 +1,4 @@
-<header class="justify-sb full-width" *ngIf="isMobile">
+<header class="justify-sb full-width" *ngIf="this.navigationService.isMobile">
   <div class="align-center">
     <button>
       <a [routerLink]="['/contactbar']" routerLinkActive="router-link-active">
@@ -76,7 +76,7 @@
                   *ngFor="
                     let emoji of showAllReactions
                       ? uniqueEmojis(message.reaction)
-                      : (uniqueEmojis(message.reaction) | slice : 0 : (isMobile ? 2 : 20))
+                      : (uniqueEmojis(message.reaction) | slice : 0 : (this.navigationService.isMobile ? 2 : 20))
                   "
                 >
                   <div
@@ -115,14 +115,14 @@
 
                 <button
                   class="emoji-box"
-                  *ngIf="countUniqueEmojis(message.reaction) > (isMobile ? 2 : 20) && !showAllReactions"
+                  *ngIf="countUniqueEmojis(message.reaction) > (this.navigationService.isMobile ? 2 : 20) && !showAllReactions"
                   (click)="showAllReactions = true"
                 >
-                  {{ countUniqueEmojis(message.reaction) - (isMobile ? 2 : 20) }} weitere
+                  {{ countUniqueEmojis(message.reaction) - (this.navigationService.isMobile ? 2 : 20) }} weitere
                 </button>
                 <button
                   class="emoji-box"
-                  *ngIf="message.reaction.length > (isMobile ? 2 : 20) && showAllReactions"
+                  *ngIf="message.reaction.length > (this.navigationService.isMobile ? 2 : 20) && showAllReactions"
                   (click)="showAllReactions = false"
                 >
                   Weniger anzeigen
