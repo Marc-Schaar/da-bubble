@@ -126,7 +126,7 @@ export class HeaderComponent {
   }
 
   searchInit(searchlistType: string) {
-    this.input.length > 3 ? this.startSearch(searchlistType) : this.resetSearch();
+    this.input.length > 1 ? this.startSearch(searchlistType) : this.resetSearch();
   }
 
   startSearch(searchlistType: string) {
@@ -141,7 +141,7 @@ export class HeaderComponent {
 
   searchInUsers(object: any, input: string) {
     this.isChannel = false;
-    if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
+    if (object.fullname.toLowerCase().includes(input.toLowerCase()) || object.email.toLowerCase().includes(input.toLowerCase())) {
       const duplette = this.searchList.find((search) => search.id === object.id);
       if (!duplette) {
         this.searchList.push(object);
