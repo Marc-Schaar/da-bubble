@@ -28,15 +28,6 @@ export class NavigationService {
 
   constructor() {
     this.observeScreenWidth();
-    this.screenWidth$.subscribe((mobile) => {
-      this.isMobile = mobile;
-      if (mobile) {
-        if (this.channelType === 'direct') this.showDirect();
-        if (this.channelType === 'channel') this.showChannel();
-        if (this.channelType === 'newMessage') this.showNewMessage();
-        if (this.channelType === 'default') this.router.navigate(['/contactbar']);
-      } else this.showChat();
-    });
 
     this.route.queryParams.subscribe((params) => {
       this.channelType = params['channelType'] || 'default';
@@ -48,6 +39,16 @@ export class NavigationService {
       else if (this.channelType === 'channel') this.showChannel();
       else if (this.channelType === 'newMessage') this.showNewMessage();
       else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
+    });
+
+    this.screenWidth$.subscribe((mobile) => {
+      this.isMobile = mobile;
+      if (mobile) {
+        if (this.channelType === 'direct') this.showDirect();
+        if (this.channelType === 'channel') this.showChannel();
+        if (this.channelType === 'newMessage') this.showNewMessage();
+        if (this.channelType === 'default') this.router.navigate(['/contactbar']);
+      } else this.showChat();
     });
   }
 

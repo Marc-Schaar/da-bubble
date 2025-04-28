@@ -61,6 +61,7 @@ export class ContactbarComponent implements OnInit {
   async ngOnInit() {
     this.userService.dashboard = true;
     this.userService.login = false;
+
     await this.loadUsers();
     this.loadChannels();
     this.findCurrentUser();
@@ -107,16 +108,6 @@ export class ContactbarComponent implements OnInit {
     }
   }
 
-  openChannel(index: any) {
-    this.currentChannel = this.channels[index];
-    //   this.userService.getChannel(this.currentChannel, this.currentUser);
-  }
-
-  openPersonalChat(index: any) {
-    this.currentReceiver = this.users[index];
-    //  this.userService.getReciepent(this.currentReceiver, this.currentUser);
-  }
-
   toggleActive() {
     this.active = !this.active;
   }
@@ -142,9 +133,13 @@ export class ContactbarComponent implements OnInit {
   openDropdown() {
     if (this.navigationService.channelType === 'channel') {
       this.active = true;
+      console.log(this.currentChannel);
+
+      this.currentLink = this.currentChannel;
     }
     if (this.navigationService.channelType === 'direct') {
       this.message = true;
+      this.currentLink = this.currentReceiver.fullname;
     }
   }
 
