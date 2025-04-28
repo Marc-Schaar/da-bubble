@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
+import { MainChatComponent } from '../../main-chat/main-chat.component';
 
 @Injectable({
   providedIn: 'root',
@@ -23,16 +24,17 @@ export class NavigationService {
   docId: string = '';
   reciepentId: string = '';
   messageId: string = '';
-  channelType: 'direct' | 'channel' | 'default' = 'default';
+  channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
 
   constructor() {
     this.observeScreenWidth();
     this.screenWidth$.subscribe((mobile) => {
       this.isMobile = mobile;
       if (mobile) {
-        this.router.navigate(['/contactbar']);
         if (this.channelType === 'direct') this.showDirect();
         if (this.channelType === 'channel') this.showChannel();
+        if (this.channelType === 'newMessage') this.showNewMessage();
+        if (this.channelType === 'default') this.router.navigate(['/contactbar']);
       } else this.showChat();
     });
 
@@ -44,6 +46,7 @@ export class NavigationService {
 
       if (this.channelType === 'direct') this.showDirect();
       else if (this.channelType === 'channel') this.showChannel();
+      else if (this.channelType === 'newMessage') this.showNewMessage();
       else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
     });
   }
@@ -59,6 +62,7 @@ export class NavigationService {
           },
         });
         break;
+
       case 'channel':
         this.router.navigate(['/chat'], {
           queryParams: {
@@ -67,6 +71,17 @@ export class NavigationService {
             reciepentId: this.reciepentId,
           },
         });
+        break;
+      case 'newMessage':
+        this.router.navigate(['/chat'], {
+          queryParams: {
+            channelType: 'newMessage',
+          },
+        });
+        break;
+
+      default:
+        this.router.navigate(['/chat']);
         break;
     }
   }
@@ -93,6 +108,16 @@ export class NavigationService {
         },
       });
     } else this.currentComponent.next(ChatContentComponent);
+  }
+
+  public showNewMessage(): void {
+    if (this.isMobile) {
+      this.router.navigate(['/new-message'], {
+        queryParams: {
+          channelType: 'newMessage',
+        },
+      });
+    } else this.currentComponent.next(NewmessageComponent);
   }
 
   private observeScreenWidth(): void {

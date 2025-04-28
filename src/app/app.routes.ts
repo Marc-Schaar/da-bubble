@@ -14,7 +14,6 @@ import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { NewmessageComponent } from './newmessage/newmessage.component';
 
-
 export const routes: Routes = [
   { path: '', component: MainComponentComponent },
   { path: 'signin', component: SignInComponent },
@@ -29,5 +28,5 @@ export const routes: Routes = [
   { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
-  { path: 'new', component: NewmessageComponent },
+  { path: 'new-message', component: NewmessageComponent },
 ];

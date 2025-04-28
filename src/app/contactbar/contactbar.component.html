@@ -6,7 +6,7 @@
         <img src="/img/workspace-logo.svg" alt="" />
         <h1>Devspace</h1>
       </div>
-      <button (click)="openWindow('direct'); this.userService.setUrl('default')">
+      <button (click)="this.navigationService.showNewMessage(); this.userService.setUrl('newMessage')">
         <img src="/img/edit_square.svg" alt="" />
       </button>
     </div>
@@ -123,7 +123,7 @@
     }
   </section>
 
-  <button class="add-message-btn-mobile" (click)="openWindow('direct'); this.userService.setUrl('default')">
+  <button class="add-message-btn-mobile" (click)="this.navigationService.showNewMessage(); this.userService.setUrl('newMessage')">
     <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
   </button>
 </main>

@@ -133,11 +133,10 @@ export class ContactbarComponent implements OnInit {
     return this.active === true;
   }
 
-  openWindow(window: 'direct' | 'channel', linkName?: string) {
+  openWindow(window: 'direct' | 'channel' | 'newMessage', linkName?: string) {
     window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.currentLink = linkName || '';
     this.userService.toggleThread('close');
-    console.log(this.currentLink);
   }
 
   openDropdown() {
