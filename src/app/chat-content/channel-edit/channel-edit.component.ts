@@ -4,6 +4,7 @@ import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/fires
 import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
+import { NavigationService } from '../../service/navigation/navigation.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -14,6 +15,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ChannelEditComponent {
   userService = inject(UserService);
+  navigationService = inject(NavigationService);
   channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
   users: any[] = [];
@@ -122,8 +124,9 @@ export class ChannelEditComponent {
         });
       }
     } catch (error) {}
-    this.userService.showFeedback('Channel verlassen');
     this.dialogRef.close();
-    this.userService.setUrl('chat', this.currentUser.id)  
+    this.userService.showFeedback('Channel verlassen');
+    this.navigationService.showNewMessage(); 
+    this.userService.setUrl('newMessage');
   }
 }
