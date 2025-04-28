@@ -91,6 +91,7 @@
       <div>
         <textarea
           (input)="getList()"
+          (keyup.enter)="sendMessage()"
           [(ngModel)]="message"
           name=""
           id=""
@@ -103,8 +104,8 @@
               <img class="at" src="./img/at.svg" alt="" />
             </button>
           </div>
-          <button (click)="sendMessage()" class="right">
-            <img src="./img/send.svg" alt="" />
+          <button [disabled]="message.trim() == ''" (click)="sendMessage()" class="right">
+            <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
           </button>
         </div>
       </div>

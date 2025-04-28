@@ -94,9 +94,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   async sendMessage() {
-    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
-      return;
-    }
     const message = new DirectMessage(
       this.userService.currentUser?.displayName || '',
       this.userService.currentUser?.photoURL || '',

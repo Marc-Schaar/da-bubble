@@ -49,24 +49,25 @@ export class NavigationService {
   }
 
   private showChat() {
-    this.router.navigate(['/chat']);
-    if (this.channelType === 'direct') {
-      this.router.navigate(['/chat'], {
-        queryParams: {
-          channelType: 'direct',
-          id: this.docId,
-          reciepentId: this.reciepentId,
-        },
-      });
-    }
-    if (this.channelType === 'channel') {
-      this.router.navigate(['/chat'], {
-        queryParams: {
-          channelType: 'channel',
-          id: this.docId,
-          reciepentId: this.reciepentId,
-        },
-      });
+    switch (this.channelType) {
+      case 'direct':
+        this.router.navigate(['/chat'], {
+          queryParams: {
+            channelType: 'direct',
+            id: this.docId,
+            reciepentId: this.reciepentId,
+          },
+        });
+        break;
+      case 'channel':
+        this.router.navigate(['/chat'], {
+          queryParams: {
+            channelType: 'channel',
+            id: this.docId,
+            reciepentId: this.reciepentId,
+          },
+        });
+        break;
     }
   }
 
