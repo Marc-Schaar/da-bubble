@@ -187,27 +187,12 @@ button {
   cursor: pointer;
   transition: all 0.125s ease-in-out;
   border-radius: 20px;
-
-  > img {
-    width: 16px;
-  }
-
-  > span {
-    font-size: 18px;
-    font-weight: 400;
-  }
+  font-size: 18px;
 
   &:hover {
     background-color: #eceefe;
-
-    > span {
-      color: #535af1 !important;
-      font-weight: 700;
-    }
-
-    > img {
-      content: url(/img/tag-purple.svg);
-    }
+    color: var(--dark-purple);
+    font-weight: 700;
   }
 }
 
@@ -314,19 +299,12 @@ button {
   border-radius: 35px;
   gap: 15px;
   margin-left: 8px;
+  font-size: 18px;
 
   &:hover {
     background-color: var(--bg-color);
-
-    > span {
-      font-weight: 700;
-      color: var(--dark-purple);
-    }
-  }
-
-  > span {
-    font-size: 18px;
-    font-weight: 400;
+    color: var(--dark-purple);
+    font-weight: 700;
   }
 }
 
@@ -351,7 +329,7 @@ button {
   border: solid;
   background-color: gray;
   border-radius: 50%;
-  border-color: #eceefe;
+  border-color: var(--bg-color);
   border-width: 2px;
 }
 
@@ -364,16 +342,9 @@ button {
 }
 
 .active-link {
-  background-color: #eceefe;
-
-  > span {
-    color: var(--dark-purple) !important;
-    font-weight: 700;
-  }
-
-  > img {
-    content: url(/img/tag-purple.svg);
-  }
+  background-color: var(--bg-color);
+  color: var(--dark-purple);
+  font-weight: 700;
 }
 
 .searchbar {
