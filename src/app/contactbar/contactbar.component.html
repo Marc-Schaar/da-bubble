@@ -71,8 +71,11 @@
         <ul [ngClass]="{ show: isActive() }" class="channellist">
           @for (channel of channels; track $index; let index = $index) {
           <li
+            [ngClass]="{ 'active-link': currentLink === channel.name }"
             class="channelrow"
-            (click)="openWindow('channel'); openChannel(index); this.userService.setUrl('channel', channel.id, currentUser.id)"
+            (click)="
+              openWindow('channel', channel.name); openChannel(index); this.userService.setUrl('channel', channel.id, currentUser.id)
+            "
           >
             <img src="/img/tag.svg" alt="" />
             <span>{{ channel.name }}</span>
@@ -100,7 +103,10 @@
         <ul [ngClass]="{ show: isOpen() }" class="contacts">
           @for (user of users; track $index; let index = $index) {
           <li
-            (click)="openWindow('direct'); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)"
+            [ngClass]="{ 'active-link': currentLink === user.fullname }"
+            (click)="
+              openWindow('direct', user.fullname); openPersonalChat(index); this.userService.setUrl('direct', this.currentUser.id, user.id)
+            "
             class="contactsrow"
           >
             <div class="imageContainer">

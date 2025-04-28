@@ -52,6 +52,7 @@ export class ContactbarComponent implements OnInit {
   isChannel: boolean = false;
 
   input: string = '';
+  currentLink: string = '';
 
   navigationService: NavigationService = inject(NavigationService);
 
@@ -88,7 +89,7 @@ export class ContactbarComponent implements OnInit {
           const element = this.allChannels[i];
           for (let y = 0; y < this.allChannels[i].member.length; y++) {
             const userId = this.allChannels[i].member[y].id;
-            if( userId == this.userService.currentUser?.uid) {
+            if (userId == this.userService.currentUser?.uid) {
               this.channels.push(element);
             }
           }
@@ -132,9 +133,11 @@ export class ContactbarComponent implements OnInit {
     return this.active === true;
   }
 
-  openWindow(window: 'direct' | 'channel') {
+  openWindow(window: 'direct' | 'channel', linkName?: string) {
     window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
+    this.currentLink = linkName || '';
     this.userService.toggleThread('close');
+    console.log(this.currentLink);
   }
 
   openDropdown() {
