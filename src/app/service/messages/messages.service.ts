@@ -67,21 +67,21 @@ export class MessagesService {
     return lastMessageDate !== todayDate;
   }
 
-  // private isToday(date: any): boolean {
-  //   if (!date) return false;
-  //   let today = new Date().toISOString().split('T')[0];
-  //   let messageDate = new Date(date).toISOString().split('T')[0];
+  public isToday(date: any): boolean {
+    if (!date) return false;
+    let today = new Date().toISOString().split('T')[0];
+    let messageDate = new Date(date).toISOString().split('T')[0];
 
-  //   return today === messageDate;
-  // }
+    return today === messageDate;
+  }
 
-  // private formateDate(data: any) {
-  //   return new Date(data).toLocaleDateString('de-DE', {
-  //     weekday: 'long',
-  //     day: 'numeric',
-  //     month: 'long',
-  //   });
-  // }
+  private formateDate(data: any) {
+    return new Date(data).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+  }
 
   public buildChannelMessageObject(input: string, messages?: any, reactions?: any): {} {
     return {
