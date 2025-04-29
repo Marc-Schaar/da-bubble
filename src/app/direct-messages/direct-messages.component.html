@@ -16,16 +16,12 @@
     <div *ngIf="isChat" class="chat-header">
       <div (click)="showProfile()">
         <div class="imageContainer">
-          <img [src]="currentReciever?.profilephoto" alt="" />
+          <img [src]="currentReciever?.profilephoto || 'img/profilephoto.png'" alt="" />
           <div class="status-dot" [ngClass]="{ green: currentReciever?.online }"></div>
         </div>
 
         <span>{{ currentReciever?.fullname }}</span>
       </div>
-    </div>
-    <div *ngIf="!isChat" class="textField">
-      <span class="newText">Neue Nachricht</span>
-      <input [(ngModel)]="input" (input)="getCurrentChat()" type="text" placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse" />
     </div>
 
     <div id="chat" *ngIf="isChat" class="chat-content">

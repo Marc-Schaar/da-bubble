@@ -102,7 +102,9 @@
           @for (user of users; track $index; let index = $index) {
           <li
             [ngClass]="{ 'active-link': currentLink === user.fullname }"
-            (click)="openWindow('direct', user.fullname); this.userService.setUrl('direct', user.id, this.currentUser.id)"
+            (click)="
+              openWindow('direct', user.fullname); this.userService.setUrl('direct', user.id, this.userService.auth.currentUser?.uid)
+            "
             class="contactsrow"
           >
             <div class="imageContainer">

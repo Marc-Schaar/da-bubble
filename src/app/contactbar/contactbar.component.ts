@@ -1,6 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
-import { Firestore, onSnapshot, collection, QuerySnapshot, QueryDocumentSnapshot, DocumentData, Query } from '@angular/fire/firestore';
+import {
+  Firestore,
+  onSnapshot,
+  collection,
+  QuerySnapshot,
+  QueryDocumentSnapshot,
+  DocumentData,
+  Query,
+  getDoc,
+  doc,
+} from '@angular/fire/firestore';
 import { query, where } from 'firebase/firestore';
 
 import { FireServiceService } from '../fire-service.service';
@@ -45,7 +55,7 @@ export class ContactbarComponent implements OnInit {
   currentArray: any[] = [];
   currentReceiver: any;
   userID: string = '';
-  currentReciever: any;
+
   currentChannel: any;
   addChannelWindow: boolean = false;
   isClicked: boolean = false;
@@ -64,7 +74,8 @@ export class ContactbarComponent implements OnInit {
 
     await this.loadUsers();
     this.loadChannels();
-    this.findCurrentUser();
+    this.userID = this.userService.currentUser.uid;
+    this.currentUser = this.userService.currentUser;
     this.openDropdown();
   }
 
@@ -99,15 +110,6 @@ export class ContactbarComponent implements OnInit {
     }
   }
 
-  findCurrentUser() {
-    if (this.userService.currentUser?.uid) {
-      this.userID = this.userService.currentUser.uid;
-      this.currentUser = this.users.find((user: any) => this.userID === user.id);
-    } else {
-      console.log('user wurde nicht richtig geladen');
-    }
-  }
-
   toggleActive() {
     this.active = !this.active;
   }
@@ -130,16 +132,22 @@ export class ContactbarComponent implements OnInit {
     this.userService.toggleThread('close');
   }
 
-  openDropdown() {
-    if (this.navigationService.channelType === 'channel') {
+  async openDropdown() {
+    this.active = false;
+    this.message = false;
+    const isChannel = this.navigationService.channelType === 'channel';
+    const collection = isChannel ? 'channels' : 'users';
+    const docRef = this.firestoreService.getDocRef(collection, this.navigationService.docId);
+    if (!docRef) return;
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return;
+    const data = docSnap.data();
+    if (isChannel) {
       this.active = true;
-      console.log(this.currentChannel);
-
-      this.currentLink = this.currentChannel;
-    }
-    if (this.navigationService.channelType === 'direct') {
+      this.currentLink = data['name'];
+    } else {
       this.message = true;
-      this.currentLink = this.currentReceiver.fullname;
+      this.currentLink = data['fullname'];
     }
   }
 
@@ -203,7 +211,7 @@ export class ContactbarComponent implements OnInit {
 
   resetSearch() {
     this.searchList = [];
-    this.currentReciever = null;
+    this.currentReceiver = null;
     this.currentChannel = null;
   }
 
