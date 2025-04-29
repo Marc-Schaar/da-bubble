@@ -33,10 +33,9 @@
         </li>
         }
 
-        <div [ngClass]="{ reverse: isUser(message) }" class="messagerow">
-          <div class="image">
-            <img [src]="message?.avatar" alt="" />
-          </div>
+        <li [ngClass]="{ reverse: isUser(message) }" class="messagerow">
+          <img class="image" [src]="message?.avatar" alt="" />
+
           <div [ngClass]="{ messageReverse: isUser(message) }" class="messageContainer">
             <div [ngClass]="{ reverse: isUser(message) }" class="messageData">
               <span>{{ message?.name }}</span>
@@ -45,28 +44,30 @@
             <div [ngClass]="{ bubbleReverse: isUser(message) }" class="messageBubble">
               <span>{{ message?.message }}</span>
             </div>
-            <div></div>
           </div>
-        </div>
+        </li>
       </ul>
-      }
-
-      <div class="startContainer" *ngIf="isEmpty">
+      } @if (isMessagesEmpty()) {
+      <section class="startContainer">
         <div class="userContainer">
           <img [src]="currentReciever?.profilephoto" alt="" />
           <span>{{ currentReciever?.fullname }}</span>
         </div>
         <div class="welcomeText">
-          <p *ngIf="!isYou">
+          @if (!isYou()) {
+          <p>
             Diese Unterhaltung findet nur zwischen
             <a href="">&commat;{{ currentReciever?.fullname }} </a>und dir statt.
           </p>
-          <p *ngIf="isYou">
+          } @else {
+          <p>
             <span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien
             griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
           </p>
+          }
         </div>
-      </div>
+      </section>
+      }
     </section>
     <div [ngClass]="{ show: isClicked }" class="lists">
       <div

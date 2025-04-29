@@ -34,14 +34,10 @@ export class MessagesService {
     const messagesRef = this.fireService.getCollectionRef(`users/${currentUserId}/conversations/${conversationId}/messages`);
 
     if (!messagesRef) return () => {};
-    console.log('messagesRef:', messagesRef);
-
     const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
     return onSnapshot(messagesQuery, (snapshot) => {
       const processedMessages = this.processData(snapshot);
-      console.log('processedMessages:', processedMessages);
-
       onUpdate(processedMessages);
     });
   }

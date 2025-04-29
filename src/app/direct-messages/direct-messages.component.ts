@@ -31,8 +31,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   currentList: any[] = [];
   currentMessages: any[] = [];
   firestore = inject(Firestore);
-  isEmpty: boolean = false;
-  isYou: boolean = false;
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
@@ -112,7 +110,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentUserId !== this.currentRecieverId ? addDoc(receiverConversationRef, messageData) : Promise.resolve(),
     ]);
 
-    this.isEmpty = false;
     this.input = '';
   }
 
@@ -124,15 +121,15 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   isMessagesEmpty() {
-    this.currentMessages.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
+    return this.currentMessages.length === 0;
   }
 
   isUser(message: any) {
     return message.from === this.currentUserId;
   }
 
-  checkReciever() {
-    this.currentRecieverId === this.currentUserId ? (this.isYou = true) : (this.isYou = false);
+  isYou() {
+    return this.currentRecieverId === this.currentUserId;
   }
 
   getCurrentChat() {
