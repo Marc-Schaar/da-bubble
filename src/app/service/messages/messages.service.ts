@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
 import { FireServiceService } from '../../fire-service.service';
 import { UserService } from '../../shared.service';
+import { DirectMessage } from '../../models/direct-message';
 
 @Injectable({
   providedIn: 'root',
@@ -76,5 +77,30 @@ export class MessagesService {
       timestamp: serverTimestamp(),
       reaction: reactions || [],
     };
+  }
+
+  ///Direct Messges
+
+  createMessageData(message: DirectMessage) {
+    return {
+      name: message.name,
+      photo: message.photo,
+      content: message.content,
+      time: message.time.toISOString(),
+      from: message.from,
+      to: message.to,
+    };
+  }
+
+  sortMessages(currentMessages: any[]) {
+    currentMessages.sort((a: any, b: any) => {
+      const timeA = new Date(a.time);
+      const timeB = new Date(b.time);
+      return timeA.getTime() - timeB.getTime();
+    });
+  }
+
+  isUser(message: any, currentUserId: string) {
+    return message.from === currentUserId;
   }
 }

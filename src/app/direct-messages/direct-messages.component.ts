@@ -9,6 +9,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DirectMessage } from '../models/direct-message';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { MessagesService } from '../service/messages/messages.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   route: ActivatedRoute = inject(ActivatedRoute);
   navigationService = inject(NavigationService);
+  messagesService = inject(MessagesService);
   constructor() {}
 
   ngOnInit() {
@@ -101,7 +103,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentUserId,
       this.currentRecieverId
     );
-    const messageData = this.createMessageData(message);
+    const messageData = this.messagesService.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
     const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
     if (this.currentRecieverId !== this.currentUserId) {
@@ -113,41 +115,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       messages: arrayUnion(messageData),
     });
     this.isEmpty = false;
-    //await this.updateUsers();
-    //this.loadMessages()
     this.message = '';
   }
-
-  createMessageData(message: DirectMessage) {
-    return {
-      name: message.name,
-      photo: message.photo,
-      content: message.content,
-      time: message.time.toISOString(),
-      from: message.from,
-      to: message.to,
-    };
-  }
-
-  /*
-  async updateUsers() {
-    try {
-      const receiverDocRef = doc(this.firestore, `users/${this.currentReciever.id}`);
-      const senderDocRef = doc(this.firestore, `users/${this.currentUser.id}`);
-      if (this.currentReciever.id !== this.currentUser.id) {
-        await updateDoc(receiverDocRef, {
-          messages: this.currentReciever.messages
-        });
-      }
-      await updateDoc(senderDocRef, {
-        messages: this.currentUser.messages
-      });
-     
-    } catch (error) {
-      console.error("Fehler beim Speichern der Nachricht: ", error);
-    }
-  }
-*/
 
   loadMessages() {
     const messagesRef = doc(this.firestore, `users/${this.currentRecieverId}`);
@@ -168,19 +137,11 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.sortMessages();
+        this.messagesService.sortMessages(this.currentMessages);
         this.checkMessages();
       } else {
         console.log('Benutzerdokument existiert nicht.');
       }
-    });
-  }
-
-  sortMessages() {
-    this.currentMessages.sort((a: any, b: any) => {
-      const timeA = new Date(a.time);
-      const timeB = new Date(b.time);
-      return timeA.getTime() - timeB.getTime();
     });
   }
 
