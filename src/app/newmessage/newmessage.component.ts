@@ -118,7 +118,7 @@ export class NewmessageComponent {
   }
 
   sendChannelMessage() {
-    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.messageService.buildMessageObject(this.input)));
+    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.messageService.buildChannelMessageObject(this.input)));
   }
 
   getCurrentChat() {

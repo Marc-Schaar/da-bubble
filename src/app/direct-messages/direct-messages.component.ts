@@ -114,7 +114,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   public sendMessage() {
     if (!this.input.trim()) return;
 
-    const messageData = this.messagesService.createMessageData(
+    const messageData = this.messagesService.buildDirectMessageObject(
       this.input,
       this.currentMessages,
       this.currentUserId,

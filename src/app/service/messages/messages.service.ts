@@ -12,12 +12,11 @@ export class MessagesService {
   private fireService = inject(FireServiceService);
   private userService = inject(UserService);
 
-  getChannelMessages(channelId: string, onUpdate: (messages: any[]) => void): () => void {
+  public getChannelMessages(channelId: string, onUpdate: (messages: any[]) => void): () => void {
     const messagesRef = this.fireService.getCollectionRef(`channels/${channelId}/messages`);
 
     if (messagesRef) {
       const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
       return onSnapshot(messagesQuery, (snapshot) => {
         const processedMessages = this.processData(snapshot);
         onUpdate(processedMessages);
@@ -27,19 +26,21 @@ export class MessagesService {
     return () => {};
   }
 
-  getConversationMessages(userA: string, userB: string, onUpdate: (messages: any[]) => void): () => void {
+  public getConversationMessages(userA: string, userB: string, onUpdate: (messages: any[]) => void): () => void {
     const currentUserId = this.userService.currentUser?.uid;
     const [uid1, uid2] = [userA, userB].sort();
     const conversationId = `${uid1}_${uid2}`;
     const messagesRef = this.fireService.getCollectionRef(`users/${currentUserId}/conversations/${conversationId}/messages`);
 
-    if (!messagesRef) return () => {};
-    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+    if (messagesRef) {
+      const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+      return onSnapshot(messagesQuery, (snapshot) => {
+        const processedMessages = this.processData(snapshot);
+        onUpdate(processedMessages);
+      });
+    }
 
-    return onSnapshot(messagesQuery, (snapshot) => {
-      const processedMessages = this.processData(snapshot);
-      onUpdate(processedMessages);
-    });
+    return () => {};
   }
 
   processData(snap: any) {
@@ -58,7 +59,7 @@ export class MessagesService {
     });
   }
 
-  isNewDay(messages: any): boolean {
+  private isNewDay(messages: any): boolean {
     if (messages.length === 0) return true;
     let lastMessage = messages[messages.length - 1];
     let lastMessageDate = lastMessage.date ? lastMessage.date : lastMessage.time;
@@ -66,23 +67,23 @@ export class MessagesService {
     return lastMessageDate !== todayDate;
   }
 
-  isToday(date: any): boolean {
-    if (!date) return false;
-    let today = new Date().toISOString().split('T')[0];
-    let messageDate = new Date(date).toISOString().split('T')[0];
+  // private isToday(date: any): boolean {
+  //   if (!date) return false;
+  //   let today = new Date().toISOString().split('T')[0];
+  //   let messageDate = new Date(date).toISOString().split('T')[0];
 
-    return today === messageDate;
-  }
+  //   return today === messageDate;
+  // }
 
-  formateDate(data: any) {
-    return new Date(data).toLocaleDateString('de-DE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
-  }
+  // private formateDate(data: any) {
+  //   return new Date(data).toLocaleDateString('de-DE', {
+  //     weekday: 'long',
+  //     day: 'numeric',
+  //     month: 'long',
+  //   });
+  // }
 
-  buildMessageObject(input: string, messages?: any, reactions?: any): {} {
+  public buildChannelMessageObject(input: string, messages?: any, reactions?: any): {} {
     return {
       message: input || '',
       avatar: this.userService.currentUser?.photoURL || '',
@@ -94,9 +95,7 @@ export class MessagesService {
     };
   }
 
-  ///Direct Messges
-
-  createMessageData(input: string, messages: any, from: string, to: string) {
+  public buildDirectMessageObject(input: string, messages: any, from: string, to: string) {
     return {
       name: this.userService.currentUser?.displayName || 'Gast',
       avatar: this.userService.currentUser?.photoURL || '',
@@ -107,9 +106,5 @@ export class MessagesService {
       to: to,
       newDay: this.isNewDay(messages),
     };
-  }
-
-  isUser(message: any, currentUserId: string) {
-    return message.from === currentUserId;
   }
 }

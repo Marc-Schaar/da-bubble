@@ -143,7 +143,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     if (this.input.trim() !== '') {
       this.fireService.sendMessage(
         this.currentChannelId,
-        new Message(this.messagesService.buildMessageObject(this.input, this.messages, this.reactions))
+        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions))
       );
       this.input = '';
     }

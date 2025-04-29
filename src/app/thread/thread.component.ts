@@ -118,7 +118,7 @@ export class ThreadComponent implements OnInit {
     if (this.input.trim() !== '') {
       this.fireService.sendThreadMessage(
         this.currentChannelId,
-        new Message(this.messagesService.buildMessageObject(this.input, this.messages, this.reactions)),
+        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions)),
         this.parentMessageId
       );
       this.input = '';
