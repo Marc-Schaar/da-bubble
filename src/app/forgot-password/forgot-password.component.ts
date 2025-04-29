@@ -3,20 +3,14 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { User } from '../models/user';
+import { User } from '../models/user/user';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../shared.service';
 
 @Component({
   selector: 'app-forgotpassword',
-  imports: [
-    HeaderComponent,
-    FooterComponent,
-    FormsModule,
-    CommonModule,
-    RouterLink,
-  ],
+  imports: [HeaderComponent, FooterComponent, FormsModule, CommonModule, RouterLink],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
@@ -46,7 +40,7 @@ export class ForgotpasswordComponent implements OnInit {
     setTimeout(() => {
       this.isOverlayActive = false;
       this.submitted = false;
-      this.shareddata.redirectiontologinpage()
+      this.shareddata.redirectiontologinpage();
     }, 1500);
   }
 }

@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup, signOut } from '@firebase/
 import { FormsModule, NgForm } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
-import { User } from '../models/user';
+import { User } from '../models/user/user';
 import { UserService } from '../shared.service';
 
 @Component({

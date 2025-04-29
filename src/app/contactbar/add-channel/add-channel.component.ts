@@ -1,36 +1,12 @@
-import {
-  Component,
-  OnInit,
-  Inject,
-  PLATFORM_ID,
-  inject,
-  ViewChild,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
-import {
-  CommonModule,
-  isPlatformBrowser,
-  NgClass,
-  NgFor,
-  NgIf,
-} from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID, inject, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { CommonModule, isPlatformBrowser, NgClass, NgFor, NgIf } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import {
-  Firestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  getDoc,
-  arrayUnion
-} from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, addDoc, updateDoc, doc, getDoc, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from '../../shared.service';
 import { getAuth } from 'firebase/auth';
-import { User } from '../../models/user';
-import { Channel } from '../../models/channel';
+import { User } from '../../models/user/user';
+import { Channel } from '../../models/channel/channel';
 import { FireServiceService } from '../../fire-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -71,12 +47,11 @@ export class AddChannelComponent implements OnInit {
     this.loadChannel();
     console.log(this.channel);
     console.log(this.auth.currentUser);
-    
   }
 
-@ViewChild('mainDialog') mainDialog!: ElementRef;
-@ViewChild('userSearchInput') userSearchInput!: ElementRef;
-@ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
+  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
@@ -86,19 +61,18 @@ export class AddChannelComponent implements OnInit {
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     } else {
-      this.filteredUsers = this.users.filter(
-        (user) => !this.selectedUsers.some((selected) => selected.uid === user.uid)
-      );
+      this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
   }
 
   async loadUsers() {
     try {
       const usersCollection = collection(this.firestore, 'users');
-      const querySnapshot = await getDocs(usersCollection);      
+      const querySnapshot = await getDocs(usersCollection);
       this.users = querySnapshot.docs.map((doc) => {
         return { ...doc.data(), uid: doc.id };
-      });    } catch (error) {
+      });
+    } catch (error) {
       console.error('Error loading users:', error);
       this.users = [];
     }
@@ -111,7 +85,7 @@ export class AddChannelComponent implements OnInit {
     const selectedUser = this.filteredUsers[index];
     this.selectedUsers.push(selectedUser);
     this.filteredUsers.splice(index, 1);
-    this.filterUsers();    
+    this.filterUsers();
     this.refreshBar();
   }
 
@@ -138,9 +112,7 @@ export class AddChannelComponent implements OnInit {
   }
 
   refreshBar() {
-    const refresh = document.getElementById(
-      'user-search-bar'
-    ) as HTMLInputElement | null;
+    const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
       console.log('refresh');
       refresh.value = '';
@@ -148,13 +120,13 @@ export class AddChannelComponent implements OnInit {
   }
 
   closeScreen() {
-    this.dialogRef.close()
+    this.dialogRef.close();
   }
 
   onSubmit() {
     if (!this.selectChannelMember) {
       this.addChannel();
-      this.channelmodule.showFeedback("Channel erstellt");
+      this.channelmodule.showFeedback('Channel erstellt');
       this.selectChannelMember = true;
     }
   }
@@ -162,10 +134,10 @@ export class AddChannelComponent implements OnInit {
   addUserToChannel() {
     if (!this.chooseMember) {
       this.pushAllUser();
-      this.channelmodule.showFeedback("User zum Channel hinzugefügt");
+      this.channelmodule.showFeedback('User zum Channel hinzugefügt');
     } else {
       this.pushSelectedUser();
-      this.channelmodule.showFeedback("User zum Channel hinzugefügt");
+      this.channelmodule.showFeedback('User zum Channel hinzugefügt');
     }
   }
 
@@ -207,24 +179,21 @@ export class AddChannelComponent implements OnInit {
       console.error('Fehler beim Hinzufügen der Benutzer:', error);
     }
     this.dialogRef.close();
-
   }
 
   async addChannel() {
-    const channelDescriptionElement = document.getElementById(
-      'channel-description'
-    ) as HTMLInputElement | null;
+    const channelDescriptionElement = document.getElementById('channel-description') as HTMLInputElement | null;
     const descriptionValue = channelDescriptionElement ? channelDescriptionElement.value : '';
     const currentUserAuth = this.auth.currentUser;
     if (!currentUserAuth) {
       console.error('Fehler: Kein Benutzer eingeloggt.');
-      this.channelmodule.showFeedback("Fehler: Sie müssen eingeloggt sein.");
+      this.channelmodule.showFeedback('Fehler: Sie müssen eingeloggt sein.');
       return;
     }
-    const creatorProfile = this.users.find(u => u.uid === currentUserAuth.uid);
+    const creatorProfile = this.users.find((u) => u.uid === currentUserAuth.uid);
     if (!creatorProfile) {
-        this.channelmodule.showFeedback("Fehler: Benutzerprofil konnte nicht geladen werden.");
-        return;
+      this.channelmodule.showFeedback('Fehler: Benutzerprofil konnte nicht geladen werden.');
+      return;
     }
     try {
       const creatorMember = {
@@ -232,7 +201,7 @@ export class AddChannelComponent implements OnInit {
         fullname: creatorProfile.fullname,
         profilephoto: creatorProfile.profilephoto,
         email: creatorProfile.email,
-        online: creatorProfile.online
+        online: creatorProfile.online,
       };
       const channelData = {
         name: this.channelName,
@@ -243,17 +212,15 @@ export class AddChannelComponent implements OnInit {
       const channelsCollection = collection(this.firestore, 'channels');
       const channelRef = await addDoc(channelsCollection, channelData);
       this.channelRef = channelRef.id;
-      this.channelmodule.showFeedback("Channel erstellt");
+      this.channelmodule.showFeedback('Channel erstellt');
     } catch (error) {
       console.error('Fehler beim Erstellen des Channels:', error);
-      this.channelmodule.showFeedback("Fehler beim Erstellen des Channels.");
+      this.channelmodule.showFeedback('Fehler beim Erstellen des Channels.');
     }
   }
 
   setChannelMember(value: boolean, setHeight: string) {
-    const heightElement = document.getElementById(
-      'add-channel-cont'
-    ) as HTMLElement;
+    const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
     this.chooseMember = value;
     if (heightElement) {
       heightElement.style.height = setHeight;
@@ -283,7 +250,7 @@ export class AddChannelComponent implements OnInit {
     textarea.style.height = '60px';
   }
 
-  openUserBar(){
+  openUserBar() {
     this.showUserBar = true;
     this.filterUsers();
   }

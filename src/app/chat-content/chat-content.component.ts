@@ -14,7 +14,7 @@ import { AddMemberComponent } from './add-member/add-member.component';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MessagesService } from '../service/messages/messages.service';
-import { User } from '../models/user';
+import { User } from '../models/user/user';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Message } from '../models/message/message';
@@ -97,10 +97,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.route.queryParamMap.subscribe((params) => {
       this.currentChannelId = params.get('id') || '';
       this.userId = params.get('reciepentId') || '';
-
-      console.log('ChatContentComponent initialized');
-      console.log('id:', this.currentChannelId);
-      console.log('reciepentId:', this.userId);
       this.getMessages();
       this.getChannelFromUrl();
       this.currentUser = this.userService.currentUser;

@@ -1,26 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
-import { User } from '../models/user';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from '@angular/fire/auth';
-import {
-  arrayUnion,
-  doc,
-  Firestore,
-  setDoc,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { User } from '../models/user/user';
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from '@angular/fire/auth';
+import { arrayUnion, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../shared.service';
 
@@ -56,11 +40,7 @@ export class AvatarselectionComponent implements OnInit {
 
   async login() {
     this.isOverlayActive = true;
-    await createUserWithEmailAndPassword(
-      this.auth,
-      this.user.email,
-      this.user.password
-    )
+    await createUserWithEmailAndPassword(this.auth, this.user.email, this.user.password)
       .then((userCredential) => {
         const user = userCredential.user;
         return updateProfile(user, {
@@ -68,10 +48,7 @@ export class AvatarselectionComponent implements OnInit {
           photoURL: this.user.profilephoto,
         })
           .then(() => {
-            const userDocRef = doc(
-              this.firestore,
-              `users/${this.user.fullname}`
-            );
+            const userDocRef = doc(this.firestore, `users/${this.user.fullname}`);
             return setDoc(userDocRef, {
               fullname: this.user.fullname,
               email: this.user.email,
@@ -81,10 +58,7 @@ export class AvatarselectionComponent implements OnInit {
             });
           })
           .then(() => {
-            const userDocRef = doc(
-              this.firestore,
-              `channels/KqvcY68R1jP2UsQkv6Nz/`
-            );
+            const userDocRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz/`);
             return updateDoc(userDocRef, {
               member: arrayUnion({
                 fullname: this.user.fullname,
