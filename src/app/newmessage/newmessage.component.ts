@@ -6,8 +6,8 @@ import { Firestore, arrayUnion, doc, updateDoc, serverTimestamp } from '@angular
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Message } from '../models/message';
-import { DirectMessage } from '../models/direct-message';
+import { Message } from '../models/message/message';
+import { DirectMessage } from '../models/direct-message/direct-message';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
 @Injectable({
@@ -87,13 +87,13 @@ export class NewmessageComponent {
   }
 
   async sendDirectMessage() {
-    const message = new DirectMessage(
-      this.userService.currentUser?.displayName || '',
-      this.userService.currentUser?.photoURL || '',
-      this.message,
-      this.currentUserId,
-      this.currentRecieverId
-    );
+    const message = new DirectMessage({
+      name: this.userService.currentUser?.displayName || '',
+      photo: this.userService.currentUser?.photoURL || '',
+      content: this.input,
+      from: this.currentUserId,
+      to: this.currentRecieverId,
+    });
     const messageData = this.createMessageData(message);
     const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
     const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
@@ -110,11 +110,11 @@ export class NewmessageComponent {
   createMessageData(message: DirectMessage) {
     return {
       name: message.name,
-      photo: message.photo,
-      content: message.content,
-      time: message.time.toISOString(),
-      from: message.from,
-      to: message.to,
+      // photo: message.photo,
+      // content: message.content,
+      // time: message.time.toISOString(),
+      // from: message.from,
+      // to: message.to,
     };
   }
 

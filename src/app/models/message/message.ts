@@ -1,11 +1,11 @@
 import { serverTimestamp } from '@angular/fire/firestore';
 export class Message {
   name: string;
+  avatar: string;
   message: string;
   date: string;
   timestamp: any;
   newDay: boolean;
-  avatar: string;
   reaction: string[];
 
   constructor(obj?: any) {

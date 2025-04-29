@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { MessagesService } from '../../../service/messages/messages.service';
+import { MessagesService } from '../../service/messages/messages.service';
 
 @Component({
   selector: 'app-divider-template',

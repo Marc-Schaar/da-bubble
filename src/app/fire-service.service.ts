@@ -1,13 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDocs, updateDoc } from '@angular/fire/firestore';
-import { Message } from './models/message';
+import { Message } from './models/message/message';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
-  constructor() {}
   firestore: Firestore = inject(Firestore);
+
+  constructor() {}
 
   async updateOnlineStatus(currentUser: any) {
     if (currentUser.uid) {

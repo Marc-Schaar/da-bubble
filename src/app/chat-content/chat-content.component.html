@@ -164,13 +164,13 @@
               </button>
               <button
                 class="emoji-box"
-                *ngIf="message.reaction.length > (isMobile ? 2 : 20) && showAllReactions"
+                *ngIf="message.reaction?.length > (isMobile ? 2 : 20) && showAllReactions"
                 (click)="showAllReactions = false"
               >
                 Weniger anzeigen
               </button>
               <button
-                *ngIf="message.reaction.length > 0"
+                *ngIf="message.reaction?.length > 0"
                 (click)="this.reactionMenuOpenInFooter = !this.reactionMenuOpenInFooter; this.editingMessageId = i"
                 class="hover-to-dark-purple"
               >

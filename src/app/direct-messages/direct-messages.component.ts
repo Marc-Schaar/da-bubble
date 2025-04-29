@@ -1,15 +1,15 @@
 import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { UserService } from '../shared.service';
-import { Firestore, updateDoc, doc, arrayUnion, getDoc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, updateDoc, doc, arrayUnion, getDoc, onSnapshot, collection, addDoc, query, orderBy } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { DirectMessage } from '../models/direct-message';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
-import { DividerTemplateComponent } from '../shared/divider/divider-template/divider-template.component';
+import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
+import { DirectMessage } from '../models/direct-message/direct-message';
 
 @Injectable({
   providedIn: 'root',
@@ -92,90 +92,47 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   async sendMessage() {
-    const message = new DirectMessage(
-      this.userService.currentUser?.displayName || '',
-      this.userService.currentUser?.photoURL || '',
+    if (!this.input.trim()) return;
+
+    const messageData = this.messagesService.createMessageData(
       this.input,
+      this.currentMessages,
       this.currentUserId,
       this.currentRecieverId
     );
-    const messageData = this.messagesService.createMessageData(message);
-    const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
-    const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
-    if (this.currentRecieverId !== this.currentUserId) {
-      await updateDoc(currentReceiverRef, {
-        messages: arrayUnion(messageData),
-      });
-    }
-    await updateDoc(currentUserRef, {
-      messages: arrayUnion(messageData),
-    });
+
+    const [uid1, uid2] = [this.currentUserId, this.currentRecieverId].sort();
+    const conversationId = `${uid1}_${uid2}`;
+
+    const senderConversationRef = collection(this.firestore, `users/${this.currentUserId}/conversations/${conversationId}/messages`);
+    const receiverConversationRef = collection(this.firestore, `users/${this.currentRecieverId}/conversations/${conversationId}/messages`);
+
+    await Promise.all([
+      addDoc(senderConversationRef, messageData),
+      this.currentUserId !== this.currentRecieverId ? addDoc(receiverConversationRef, messageData) : Promise.resolve(),
+    ]);
+
     this.isEmpty = false;
     this.input = '';
   }
 
   loadMessages() {
-    const messagesRef = doc(this.firestore, `users/${this.currentRecieverId}`);
-    onSnapshot(messagesRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const messageData = docSnapshot.data();
-        const messages = messageData['messages'] || [];
-        this.currentMessages = [];
-        messages.forEach((message: any) => {
-          if (this.currentUserId === this.currentRecieverId) {
-            if (message['to'] === this.currentRecieverId && message['from'] === this.currentRecieverId) {
-              this.currentMessages.push(message);
-            }
-          } else {
-            if (message['to'] === this.currentRecieverId || message['from'] === this.currentRecieverId) {
-              this.currentMessages.push(message);
-            }
-          }
-        });
-
-        this.messagesService.sortMessages(this.currentMessages);
-        this.checkMessages();
-      } else {
-        console.log('Benutzerdokument existiert nicht.');
-      }
+    this.messagesService.getConversationMessages(this.currentUserId, this.currentRecieverId, (messages) => {
+      this.currentMessages = messages;
+      this.isMessagesEmpty();
     });
   }
 
-  isNewDay(currentMessage: any, previousMessage: any) {
-    if (!previousMessage) {
-      return true;
-    }
-    const currentDate = new Date(currentMessage.time).toDateString();
-    const previousDate = new Date(previousMessage.time).toDateString();
-    const today = new Date().toDateString();
-
-    return currentDate !== previousDate;
+  isMessagesEmpty() {
+    this.currentMessages.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
   }
 
   isUser(message: any) {
     return message.from === this.currentUserId;
   }
 
-  isToday(date: string) {
-    const today = new Date().toDateString();
-    const messageDate = new Date(date);
-    return today === messageDate.toDateString();
-  }
-
-  checkMessages() {
-    if (this.currentMessages.length === 0) {
-      this.isEmpty = true;
-    } else {
-      this.isEmpty = false;
-    }
-  }
-
   checkReciever() {
-    if (this.currentRecieverId === this.currentUserId) {
-      this.isYou = true;
-    } else {
-      this.isYou = false;
-    }
+    this.currentRecieverId === this.currentUserId ? (this.isYou = true) : (this.isYou = false);
   }
 
   getCurrentChat() {

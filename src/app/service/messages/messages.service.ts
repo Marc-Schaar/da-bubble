@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
 import { FireServiceService } from '../../fire-service.service';
 import { UserService } from '../../shared.service';
-import { DirectMessage } from '../../models/direct-message';
+import { DirectMessage } from '../../models/direct-message/direct-message';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +27,25 @@ export class MessagesService {
     return () => {};
   }
 
+  getConversationMessages(userA: string, userB: string, onUpdate: (messages: any[]) => void): () => void {
+    const currentUserId = this.userService.currentUser?.uid;
+    const [uid1, uid2] = [userA, userB].sort();
+    const conversationId = `${uid1}_${uid2}`;
+    const messagesRef = this.fireService.getCollectionRef(`users/${currentUserId}/conversations/${conversationId}/messages`);
+
+    if (!messagesRef) return () => {};
+    console.log('messagesRef:', messagesRef);
+
+    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+    return onSnapshot(messagesQuery, (snapshot) => {
+      const processedMessages = this.processData(snapshot);
+      console.log('processedMessages:', processedMessages);
+
+      onUpdate(processedMessages);
+    });
+  }
+
   processData(snap: any) {
     return snap.docs.map((doc: any) => {
       let data = doc.data();
@@ -46,7 +65,7 @@ export class MessagesService {
   isNewDay(messages: any): boolean {
     if (messages.length === 0) return true;
     let lastMessage = messages[messages.length - 1];
-    let lastMessageDate = lastMessage.date;
+    let lastMessageDate = lastMessage.date ? lastMessage.date : lastMessage.time;
     let todayDate = new Date().toISOString().split('T')[0];
     return lastMessageDate !== todayDate;
   }
@@ -81,23 +100,17 @@ export class MessagesService {
 
   ///Direct Messges
 
-  createMessageData(message: DirectMessage) {
+  createMessageData(input: string, messages: any, from: string, to: string) {
     return {
-      name: message.name,
-      photo: message.photo,
-      content: message.content,
-      time: message.time.toISOString(),
-      from: message.from,
-      to: message.to,
+      name: this.userService.currentUser?.displayName || 'Gast',
+      avatar: this.userService.currentUser?.photoURL || '',
+      message: input,
+      date: new Date().toISOString().split('T')[0],
+      timestamp: serverTimestamp(),
+      from: from,
+      to: to,
+      newDay: this.isNewDay(messages),
     };
-  }
-
-  sortMessages(currentMessages: any[]) {
-    currentMessages.sort((a: any, b: any) => {
-      const timeA = new Date(a.time);
-      const timeB = new Date(b.time);
-      return timeA.getTime() - timeB.getTime();
-    });
   }
 
   isUser(message: any, currentUserId: string) {

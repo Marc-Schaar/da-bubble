@@ -1,0 +1,9 @@
+<div class="date-container">
+  <span class="date">
+    {{
+      messagesService.isToday(messageData.date || messageData.time)
+        ? "Heute"
+        : messagesService.formateDate(messageData.date || messageData.time)
+    }}
+  </span>
+</div>

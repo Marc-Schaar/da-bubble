@@ -6,7 +6,7 @@ import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query, serverT
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Message } from '../models/message';
+import { Message } from '../models/message/message';
 import { MessagesService } from '../service/messages/messages.service';
 import { NavigationService } from '../service/navigation/navigation.service';
 

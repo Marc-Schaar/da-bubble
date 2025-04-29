@@ -27,25 +27,23 @@
     <section id="chat" class="chat-content">
       @for (message of currentMessages; track $index;let i = $index) {
       <ul [ngClass]="{ change: isUser(message) }">
-        <app-divider-template [messageData]="message"></app-divider-template>
-        <!-- <div class="divider" *ngIf="isNewDay(message, currentMessages[i - 1])">
-          <div>
-            <p>
-              {{ isToday(message.time) ? "Heute" : (message.time | date : "EEEE, d MMMM") }}
-            </p>
-          </div>
-        </div> -->
+        @if (message.newDay) {
+        <li>
+          <app-divider-template [messageData]="message"></app-divider-template>
+        </li>
+        }
+
         <div [ngClass]="{ reverse: isUser(message) }" class="messagerow">
           <div class="image">
-            <img [src]="message.photo" alt="" />
+            <img [src]="message?.avatar" alt="" />
           </div>
           <div [ngClass]="{ messageReverse: isUser(message) }" class="messageContainer">
             <div [ngClass]="{ reverse: isUser(message) }" class="messageData">
-              <span>{{ message.name }}</span>
-              <p>{{ message.time | date : "HH:mm" }} Uhr</p>
+              <span>{{ message?.name }}</span>
+              <p>{{ message?.time }} Uhr</p>
             </div>
             <div [ngClass]="{ bubbleReverse: isUser(message) }" class="messageBubble">
-              <span>{{ message.content }}</span>
+              <span>{{ message?.message }}</span>
             </div>
             <div></div>
           </div>

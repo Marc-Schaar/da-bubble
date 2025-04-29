@@ -8,7 +8,6 @@ import { FireServiceService } from '../fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Message } from '../models/message';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
 import { AddMemberComponent } from './add-member/add-member.component';
@@ -17,7 +16,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MessagesService } from '../service/messages/messages.service';
 import { User } from '../models/user';
 import { NavigationService } from '../service/navigation/navigation.service';
-import { DividerTemplateComponent } from '../shared/divider/divider-template/divider-template.component';
+import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
+import { Message } from '../models/message/message';
 
 // @Injectable({
 //   providedIn: 'root',
