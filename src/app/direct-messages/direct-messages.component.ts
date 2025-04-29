@@ -52,10 +52,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentUserId = params.get('reciepentId') || '';
 
       this.currentUser = this.userService.currentUser;
-      console.log('DirectComponent initialized');
-      console.log('id:', this.currentRecieverId);
-      console.log('reciepentId:', this.currentUserId);
-      console.log('currentUser:', this.currentUser);
       this.getRecieverFromUrl();
       this.loadMessages();
       this.loadChannels();
@@ -133,7 +129,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   getCurrentChat() {
-    console.log(this.input);
     if (this.input.includes('#')) {
       console.log('Channel laden');
       // this.navigationService.loadComponent('channel');
