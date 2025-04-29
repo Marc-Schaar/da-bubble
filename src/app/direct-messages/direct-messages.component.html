@@ -13,7 +13,7 @@
 
 <main>
   <section (click)="hideList()">
-    <div *ngIf="isChat" class="chat-header">
+    <div class="chat-header">
       <div (click)="showProfile()">
         <div class="imageContainer">
           <img [src]="currentReciever?.profilephoto || 'img/profilephoto.png'" alt="" />
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div id="chat" *ngIf="isChat" class="chat-content">
+    <div id="chat" class="chat-content">
       <div *ngFor="let message of currentMessages; let i = index" [ngClass]="{ change: isUser(message) }">
         <div class="divider" *ngIf="isNewDay(message, currentMessages[i - 1])">
           <div>

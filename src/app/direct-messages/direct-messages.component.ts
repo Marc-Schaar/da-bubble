@@ -36,7 +36,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   firestore = inject(Firestore);
   isEmpty: boolean = false;
   isYou: boolean = false;
-  isChat: boolean = false;
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
@@ -55,7 +54,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.route.queryParamMap.subscribe((params) => {
       this.currentRecieverId = params.get('id') || '';
       this.currentUserId = params.get('reciepentId') || '';
-      this.isChat = true;
 
       this.currentUser = this.userService.currentUser;
       console.log('DirectComponent initialized');
