@@ -17,13 +17,24 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MessagesService } from '../service/messages/messages.service';
 import { User } from '../models/user';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { DividerTemplateComponent } from '../shared/divider/divider-template/divider-template.component';
 
 // @Injectable({
 //   providedIn: 'root',
 // })
 @Component({
   selector: 'app-chat-content',
-  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatSidenavModule, RouterLink, MatMenuModule, MatDialogModule],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    MatSidenavModule,
+    RouterLink,
+    MatMenuModule,
+    MatDialogModule,
+    DividerTemplateComponent,
+  ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
 })

@@ -1,0 +1,20 @@
+.date-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  text-align: center;
+
+  &::before,
+  &::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: var(--light-purple);
+  }
+  > .date {
+    border: 1px solid var(--light-purple);
+    border-radius: 30px;
+    padding: 5px 15px;
+  }
+}

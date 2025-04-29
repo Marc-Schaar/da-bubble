@@ -18,14 +18,13 @@
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </div>
       <div class="align-center gap-10">
-
         <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
           <div class="member-img-cont">
             @for (member of currentChannel?.member; track $index; let i = $index) {
-              <img *ngIf="i < 3"  class="avatar" [src]="member.profilephoto" alt="Name" />
-              }
+            <img *ngIf="i < 3" class="avatar" [src]="member.profilephoto" alt="Name" />
+            }
           </div>
-            @if (currentChannel?.member?.length) {
+          @if (currentChannel?.member?.length) {
           <span>{{ currentChannel?.member?.length }}</span>
           }
         </div>
@@ -42,14 +41,11 @@
     </section>
 
     <ul class="chat-content gap-10" #chatContent>
-      @for (message of messages; track $index; let i = $index) {
-      <li *ngIf="message.newDay">
-        <div class="date-container">
-          <span class="date">{{
-            this.messagesService.isToday(message.date) ? "Heute" : this.messagesService.formateDate(message.date)
-          }}</span>
-        </div>
+      @for (message of messages; track $index; let i = $index) { @if (message.newDay) {
+      <li>
+        <app-divider-template [messageData]="message"></app-divider-template>
       </li>
+      }
 
       <li
         (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"

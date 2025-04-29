@@ -4,19 +4,19 @@ import { Firestore, updateDoc, doc, arrayUnion, getDoc, onSnapshot } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DirectMessage } from '../models/direct-message';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
+import { DividerTemplateComponent } from '../shared/divider/divider-template/divider-template.component';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-direct-messages',
-  imports: [FormsModule, CommonModule, RouterLink, MatIconModule],
+  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
@@ -29,9 +29,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   public currentReciever: any = null;
   public currentUser: any = null;
   currentList: any[] = [];
-  message: string = '';
-  input: string = '';
-  userID: string = '';
   currentMessages: any[] = [];
   firestore = inject(Firestore);
   isEmpty: boolean = false;
@@ -44,6 +41,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   //Cleancode Update
   currentRecieverId: string = '';
   currentUserId: string = '';
+  input: string = '';
 
   route: ActivatedRoute = inject(ActivatedRoute);
   navigationService = inject(NavigationService);
@@ -97,7 +95,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     const message = new DirectMessage(
       this.userService.currentUser?.displayName || '',
       this.userService.currentUser?.photoURL || '',
-      this.message,
+      this.input,
       this.currentUserId,
       this.currentRecieverId
     );
@@ -113,7 +111,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       messages: arrayUnion(messageData),
     });
     this.isEmpty = false;
-    this.message = '';
+    this.input = '';
   }
 
   loadMessages() {
@@ -203,17 +201,17 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   getList() {
-    if (this.message.includes('#')) {
+    if (this.input.includes('#')) {
       this.currentList = this.channels;
       this.isClicked = true;
       this.isChannel = true;
     }
-    if (this.message.includes('@')) {
+    if (this.input.includes('@')) {
       this.isClicked = true;
       this.currentList = this.users;
       this.isChannel = false;
     }
-    if (this.message === '' || (!this.message.includes('#') && !this.message.includes('@'))) {
+    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
       this.isClicked = false;
     }
   }
