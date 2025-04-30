@@ -75,7 +75,7 @@ export class MessagesService {
     return today === messageDate;
   }
 
-  private formateDate(data: any) {
+  public formateDate(data: any) {
     return new Date(data).toLocaleDateString('de-DE', {
       weekday: 'long',
       day: 'numeric',

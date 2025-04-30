@@ -156,7 +156,8 @@ export class ContactbarComponent implements OnInit {
       width: '872px',
       maxWidth: '95vw',
       height: 'auto',
-      position: { top: '150px', left: '350px' },
+      position: { top: '150px', left: '140px' },
+      panelClass: 'fullscreen'
     });
   }
 
