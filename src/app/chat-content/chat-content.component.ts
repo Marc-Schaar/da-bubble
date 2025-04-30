@@ -248,6 +248,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       width: '872px',
       maxWidth: '95vw',
       maxHeight: '90vh',
+      panelClass: ['fullscreen']
     });
   }
 

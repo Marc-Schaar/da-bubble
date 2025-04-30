@@ -54,6 +54,9 @@
     transform 1s ease-in-out;
     transform-origin: center center;
     background: white;
+    @media (max-width: 1023px) {
+      border-radius: 0;
+    }
     .add-channel-create {
       display: flex;
       flex-direction: column;
@@ -310,12 +313,4 @@
 
 .d-none {
   display: none;
-}
-
-
-:host ::ng-deep .cdk-overlay-pane {
-
-  top: 0 !important;
-
-
 }

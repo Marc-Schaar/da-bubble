@@ -81,6 +81,25 @@ app-footer {
   }
 }
 
+.fullscreen.cdk-overlay-pane {
+  @media (max-width: 1023px) {
+    width: 100% !important;
+    max-width: 100% !important;
+    top: 0 !important;
+    height: 100% !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    max-height: 100% !important;
+  }
+}
+
+.fullscreen .mat-mdc-dialog-container .mdc-dialog__surface {
+  @media (max-width: 1023px) {
+    border-radius: 0 !important;
+    overflow-y: hidden !important;
+  }
+}
+
 .cdk-overlay-pane {
   top: 21px !important;
   position: absolute !important;
