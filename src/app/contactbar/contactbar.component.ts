@@ -176,7 +176,7 @@ export class ContactbarComponent implements OnInit {
   }
 
   searchInit(searchlistType: string) {
-    this.input.length > 3 ? this.startSearch(searchlistType) : this.resetSearch();
+    this.input.length > 1 ? this.startSearch(searchlistType) : this.resetSearch();
   }
 
   startSearch(searchlistType: string) {

@@ -108,11 +108,24 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  async getChannelFromUrl() {
+  // async getChannelFromUrl() {
+  //   if (this.currentChannelId) {
+  //     const docRef = doc(this.firestore, 'channels', this.currentChannelId);
+  //     const docSnap = await getDoc(docRef);
+  //     docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
+  //   }
+  // }
+
+  getChannelFromUrl() {
     if (this.currentChannelId) {
       const docRef = doc(this.firestore, 'channels', this.currentChannelId);
-      const docSnap = await getDoc(docRef);
-      docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
+      onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          this.currentChannel = { id: docSnap.id, ...docSnap.data() };
+        } else {
+          this.currentChannel = null;
+        }
+      });
     }
   }
 
