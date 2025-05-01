@@ -27,6 +27,12 @@ export class UserProfileComponent implements OnInit {
   uid: string | null = null;
   modifyinfos = false;
   selectedUsers: any[] = [];
+
+  /**
+   * Constructor for SomeComponent. Initializes the component with the Firestore service for interacting with the Firestore database.
+   *
+   * @param firestore - Firestore service instance used to interact with the Firestore database.
+   */
   constructor(public firestore: Firestore) {}
 
   /**
