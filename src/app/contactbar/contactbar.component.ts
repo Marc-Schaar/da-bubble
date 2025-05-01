@@ -48,6 +48,11 @@ export class ContactbarComponent implements OnInit {
   currentLink: string = '';
   navigationService: NavigationService = inject(NavigationService);
 
+  /**
+   * Constructor for SomeComponent. Initializes the component with the MatDialog service for dialog management.
+   *
+   * @param dialog - MatDialog service instance used to open and manage dialogs.
+   */
   constructor(private dialog: MatDialog) {}
 
   /**
