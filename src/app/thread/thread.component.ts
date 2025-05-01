@@ -24,7 +24,6 @@ export class ThreadComponent implements OnInit {
   router: Router = inject(Router);
   messagesService: MessagesService = inject(MessagesService);
   navigationService: NavigationService = inject(NavigationService);
-
   currentUser: any;
   userId: string = '';
   currentChannel: any;
@@ -33,9 +32,7 @@ export class ThreadComponent implements OnInit {
   input: string = '';
   inputEdit: string = '';
   parentMessageData: any = null;
-
   editingMessageId: number | null = null;
-
   listOpen: boolean = false;
   isChannel: boolean = false;
   isEditing: boolean = false;
@@ -45,11 +42,9 @@ export class ThreadComponent implements OnInit {
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInBar: boolean = false;
   showAllReactions: boolean = false;
-
   messages: any = [];
   reactions: any = [];
   currentList: any = [];
-
   emojis: string[] = [
     'emoji _nerd face_',
     'emoji _person raising both hands in celebration_',
@@ -59,6 +54,9 @@ export class ThreadComponent implements OnInit {
 
   unsubMessages!: () => void;
 
+  /**
+   * OnInit lifecycle hook to set up query params and fetch data when component is initialized.
+   */
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.currentChannelId = params['id'] || '';
@@ -71,6 +69,9 @@ export class ThreadComponent implements OnInit {
     });
   }
 
+  /**
+   * Fetches the current channel information from Firestore.
+   */
   async getCurrentChannel() {
     if (this.currentChannelId) {
       let channelRef = doc(this.firestore, `channels/${this.currentChannelId}`);
@@ -79,6 +80,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Fetches the parent message details for the thread.
+   */
   async getThreadParentMessage() {
     if (this.parentMessageId) {
       let parentMessageDocRef = doc(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}`);
@@ -91,6 +95,10 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Sets the parent message data.
+   * @param data - The parent message data from Firestore.
+   */
   setParentMessageData(data: any) {
     let parentMessage = data;
     this.parentMessageData = {
@@ -103,6 +111,9 @@ export class ThreadComponent implements OnInit {
     };
   }
 
+  /**
+   * Retrieves the messages in the current thread.
+   */
   getMessages() {
     if (this.parentMessageId) {
       let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
@@ -114,6 +125,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Sends a new message in the current thread.
+   */
   sendMessage() {
     if (this.input.trim() !== '') {
       this.fireService.sendThreadMessage(
@@ -125,6 +139,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes the current thread and redirects the user.
+   */
   closeThread() {
     if (this.navigationService.isMobile) {
       this.router.navigate(['/channel'], {
@@ -134,6 +151,10 @@ export class ThreadComponent implements OnInit {
     this.userService.toggleThread('close');
   }
 
+  /**
+   * Gets the list of channels or users based on input.
+   * @param type - The type of list to display (channels or users).
+   */
   getList(type?: string): void {
     if (type) this.input = type;
     if (this.input.includes('#') || this.input.includes('@')) {
@@ -154,18 +175,31 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Opens a receiver (channel or user) based on the message input.
+   * @param i - The index of the item in the list.
+   * @param key - The key identifying the receiver.
+   */
   openReciver(i: number, key: string) {
     this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
     this.resetList();
     this.userService.toggleThread('close');
   }
 
+  /**
+   * Resets the input list and hides the list menu.
+   */
   resetList() {
     this.currentList = [];
     this.listOpen = false;
     this.input = '';
   }
 
+  /**
+   * Starts editing a message.
+   * @param message - The message to edit.
+   * @param index - The index of the message being edited.
+   */
   editMessage(message: Message, index: number) {
     this.menuOpen = false;
     this.isEditing = true;
@@ -173,6 +207,10 @@ export class ThreadComponent implements OnInit {
     this.inputEdit = message.message;
   }
 
+  /**
+   * Updates the message after editing.
+   * @param message - The message to update.
+   */
   async updateMessage(message: any) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
     if (messageRef) {
@@ -187,11 +225,20 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * Cancels the edit process and closes the menu.
+   */
   cancel() {
     this.isEditing = false;
     this.editingMessageId = null;
     this.menuOpen = false;
   }
+
+  /**
+   * Adds a reaction (emoji) to a message.
+   * @param message - The message to react to.
+   * @param emoji - The emoji to add as a reaction.
+   */
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
     let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
@@ -208,6 +255,11 @@ export class ThreadComponent implements OnInit {
     } else this.removeReaction(message, emoji);
   }
 
+  /**
+   * Removes a reaction (emoji) from a message.
+   * @param message - The message to remove the reaction from.
+   * @param emoji - The emoji to remove.
+   */
   removeReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
     let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
