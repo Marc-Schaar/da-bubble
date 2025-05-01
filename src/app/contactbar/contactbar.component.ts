@@ -271,13 +271,12 @@ export class ContactbarComponent implements OnInit {
    * Sets the current receiver based on the selected index and opens the corresponding chat.
    * @param index - The index of the selected user or channel
    */
-  getReciever(index: number) {
-    this.userID = this.currentlist[index].id;
+  getReciever(key: string): void {
     if (this.isChannel) {
-      this.userService.setUrl('channel', this.userID, this.userService.userId);
+      this.userService.setUrl('channel', key);
       this.navigationService.showChannel();
-    } else {
-      this.userService.setUrl('direct', this.userService.userId, this.userID);
+    } else if (!this.isChannel) {
+      this.userService.setUrl('direct', key, this.userID);
       this.navigationService.showDirect();
     }
     this.isClicked = false;

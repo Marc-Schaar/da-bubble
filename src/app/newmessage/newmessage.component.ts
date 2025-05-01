@@ -255,7 +255,7 @@ export class NewmessageComponent {
       return;
     } else if (this.whichMessage === 'user') {
       await this.sendDirectMessage();
-      this.userService.setUrl('direct', this.currentUserId, this.currentRecieverId);
+      this.userService.setUrl('direct', this.currentRecieverId, this.currentUserId);
     } else if (this.whichMessage === 'channel') {
       this.sendChannelMessage();
       this.userService.setUrl('channel', this.currentChannelId);
