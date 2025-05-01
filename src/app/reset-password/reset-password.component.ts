@@ -24,6 +24,13 @@ export class ResetpasswordComponent implements OnInit {
   email: string | null = null;
   resetCode = '';
 
+  /**
+   * Constructor for SomeComponent. Initializes the component with the Router, ActivatedRoute, and FirebaseApp services.
+   *
+   * @param router - Router service instance used to navigate between views or routes in the application.
+   * @param activatedRoute - ActivatedRoute service instance used to access information about the current route.
+   * @param afApp - FirebaseApp service instance used to interact with Firebase services.
+   */
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private afApp: FirebaseApp) {}
 
   /**
