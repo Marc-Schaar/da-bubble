@@ -404,8 +404,14 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * @param i - The index of the message or item to open
    * @param key - The key identifier for the receiver (channel or direct message)
    */
-  openReciver(i: number, key: string) {
-    this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
+  public openReciver(key: string): void {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.navigationService.showChannel();
+    } else if (!this.isChannel) {
+      this.userService.setUrl('direct', key, this.userId);
+      this.navigationService.showDirect();
+    }
     this.resetList();
   }
 

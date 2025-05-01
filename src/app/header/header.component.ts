@@ -214,11 +214,14 @@ export class HeaderComponent {
    * Sets the receiver or channel based on the index and updates the URL.
    * @param index The index of the selected item (user or channel).
    */
-  getReciever(index: number) {
-    this.docId = this.currentlist[index].id;
-    this.isChannel
-      ? this.userService.setUrl('channel', this.docId, this.userService.userId)
-      : this.userService.setUrl('direct', this.userService.userId, this.docId);
+  getReciever(key: string) {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.navigationService.showChannel();
+    } else if (!this.isChannel) {
+      this.userService.setUrl('direct', key, this.currentUserId);
+      this.navigationService.showDirect();
+    }
     this.isClicked = false;
     this.input = '';
   }

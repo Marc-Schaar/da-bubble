@@ -10,7 +10,7 @@
 
     <ul [ngClass]="{ show: isClicked }" class="lists">
       @for (object of currentlist; track $index; let index =$index) {
-      <li (click)="getReciever(index)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
+      <li (click)="getReciever(object.id)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
         @if (!isChannel) {
         <div class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />

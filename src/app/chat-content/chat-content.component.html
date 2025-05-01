@@ -242,7 +242,7 @@
 
           <ul *ngIf="this.listOpen">
             <ng-container *ngFor="let elemnent of currentList; index as i">
-              <li (click)="openReciver(i, elemnent.key)">
+              <li (click)="openReciver(elemnent.key)">
                 <div *ngIf="isChannel"><mat-icon>tag</mat-icon></div>
                 <div class="userCircle" *ngIf="!isChannel">
                   <img class="profilephoto" src="{{ elemnent?.profilephoto }}" alt="" />
