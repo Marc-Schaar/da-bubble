@@ -11,6 +11,11 @@ import { RouterLink } from '@angular/router';
 })
 export class ImprintComponent implements OnInit {
   shared = inject(UserService);
+
+  /**
+   * Lifecycle hook that is called when the component is initialized.
+   * It sets the dashboard and login properties of the shared service to false.
+   */
   ngOnInit(): void {
     this.shared.dashboard = false;
     this.shared.login = false;
