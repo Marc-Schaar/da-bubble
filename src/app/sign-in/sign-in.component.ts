@@ -25,6 +25,10 @@ export class SignInComponent {
   fireService = inject(FireServiceService);
   user: User = new User();
 
+  /**
+   * Signs in the user with email and password.
+   * @param form - The form containing the sign-in credentials.
+   */
   async signin(form: NgForm) {
     try {
       await signInWithEmailAndPassword(this.auth, this.user.email, this.user.password);
@@ -36,6 +40,9 @@ export class SignInComponent {
     }
   }
 
+  /**
+   * Signs in the user using Google authentication.
+   */
   async signinwithgoogle() {
     try {
       await signInWithPopup(this.auth, this.googleAuthProvider);
