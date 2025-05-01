@@ -11,6 +11,11 @@ import { RouterLink } from '@angular/router';
 })
 export class DataprotectionComponent implements OnInit {
   shared = inject(UserService);
+  
+  /**
+   * Initializes the component and sets dashboard and login flags to false.
+   * This method is called once the component is initialized.
+   */
   ngOnInit(): void {
     this.shared.dashboard = false;
     this.shared.login = false;
