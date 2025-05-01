@@ -13,14 +13,12 @@ import { BehaviorSubject, Subject } from 'rxjs';
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })
-export class AddMemberComponent implements OnInit{
+export class AddMemberComponent implements OnInit {
   fireService: FireServiceService = inject(FireServiceService);
   userService = inject(UserService);
-
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() showBackground: boolean = true;
-
   @Input() currentUser: any;
   members: any[] = [];
   users: any[] = [];
@@ -31,32 +29,42 @@ export class AddMemberComponent implements OnInit{
   filteredUsers: any[] = [];
   filteredMembers: any[] = [];
   addMemberWindow: boolean = false;
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
+  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
+
   // reciepentId: string | null = null;
 
-  constructor(
-    public dialogRef: MatDialogRef<AddMemberComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor(public dialogRef: MatDialogRef<AddMemberComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
     this.currentUser = data.currentUser;
     this.addMemberWindow = data.addMemberWindow;
   }
 
+  /**
+   * Initializes component data, loads users and members, and applies filters.
+   */
   async ngOnInit() {
     this.loadMember();
     await this.loadUsers();
-    this.filterUsers()
+    this.filterUsers();
     this.filterMembers();
     console.log(this.showUserBar);
-    
   }
 
+  /**
+   * Filters current members to exclude the current authenticated user.
+   */
   filterMembers() {
-    this.filteredMembers = this.members
-    .filter((member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id)
+    this.filteredMembers = this.members.filter(
+      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id
+    );
   }
 
+  /**
+   * Filters available users for display in the search bar.
+   */
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
@@ -64,15 +72,15 @@ export class AddMemberComponent implements OnInit{
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !this.members.some((member) => member.uid === user.id))
-        .filter((user) => !this.members.some((member) => member.id === user.id))
-
+        .filter((user) => !this.members.some((member) => member.id === user.id));
     } else {
-      this.filteredUsers = this.users.filter(
-        (user) => !this.selectedUsers.some((selected) => selected.uid === user.id)
-      );
+      this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
     }
   }
 
+  /**
+   * Loads the list of all users from the backend.
+   */
   async loadUsers() {
     try {
       this.users = await this.fireService.getUsers();
@@ -81,26 +89,38 @@ export class AddMemberComponent implements OnInit{
     }
   }
 
+  /**
+   * Changes the state to show the add member window.
+   */
   changeWindow() {
     this.addMemberWindow = true;
   }
 
+  /**
+   * Loads current channel members into local state.
+   */
   loadMember() {
     this.members = this.currentChannel['member'];
   }
 
+  /**
+   * Closes the member addition dialog.
+   */
   closeWindow() {
     this.dialogRef.close();
   }
 
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
-  @ViewChild('mainDialog') mainDialog!: ElementRef;
-
+  /**
+   * Opens the user bar for member selection.
+   */
   openUserBar() {
     this.showUserBar = true;
   }
 
+  /**
+   * Closes the user bar when clicking outside of it.
+   * @param event DOM click event
+   */
   @HostListener('document:click', ['$event'])
   closeUserBar(event: Event) {
     const targetElement = event.target as Node;
@@ -110,6 +130,10 @@ export class AddMemberComponent implements OnInit{
     }
   }
 
+  /**
+   * Adds a user to the selection list for the channel.
+   * @param index Index of the user in the filtered list
+   */
   addUserToSelection(index: number) {
     const selectedUser = this.filteredUsers[index];
     this.selectedUsers.push(selectedUser);
@@ -120,6 +144,9 @@ export class AddMemberComponent implements OnInit{
     this.checkButton();
   }
 
+  /**
+   * Checks if the "Add" button should be enabled.
+   */
   checkButton() {
     if (this.selectedUsers.length > 0) {
       this.disabled = false;
@@ -128,12 +155,19 @@ export class AddMemberComponent implements OnInit{
     }
   }
 
+  /**
+   * Removes a user from the filtered user list.
+   * @param index Index to remove
+   */
   removeUserFromBar(index: number) {
     this.filteredUsers.splice(index, 1);
     console.log(this.users);
     console.log(this.filteredUsers);
   }
 
+  /**
+   * Clears the input in the user search bar.
+   */
   refreshBar() {
     const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
@@ -142,12 +176,20 @@ export class AddMemberComponent implements OnInit{
     }
   }
 
+  /**
+   * Removes a selected user from the selection list.
+   * @param index Index of the selected user
+   */
   removeSelectedUser(index: number) {
     this.addUserToBar(index);
     this.selectedUsers.splice(index, 1);
     this.checkButton();
   }
 
+  /**
+   * Adds a user back to the bar after removal.
+   * @param index Index of the selected user
+   */
   addUserToBar(index: number) {
     this.users.push(this.selectedUsers[index]);
     this.filterUsers();
@@ -155,6 +197,9 @@ export class AddMemberComponent implements OnInit{
     console.log(this.filteredUsers);
   }
 
+  /**
+   * Adds all selected users to the current channel in Firestore.
+   */
   async addUserToChannel() {
     const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
     try {
@@ -167,14 +212,16 @@ export class AddMemberComponent implements OnInit{
     } catch (error) {
       console.error('Fehler beim Hinzufügen:', error);
     }
-    this.userService.showFeedback("User hinzugefügt");
-
+    this.userService.showFeedback('User hinzugefügt');
   }
 
+  /**
+   * Shows the profile of a given member.
+   * @param member User object
+   */
   showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
     this.closeWindow();
   }
-
 }
