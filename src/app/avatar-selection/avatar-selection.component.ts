@@ -24,20 +24,36 @@ export class AvatarselectionComponent implements OnInit {
   newPassword: string;
   @ViewChild('loginbutton') loginbutton!: ElementRef<HTMLButtonElement>;
 
+  
+  /**
+   * Initializes component state on load.
+   */
   ngOnInit(): void {
     this.shareddata.login = false;
   }
 
+  /**
+   * Creates an instance of the component and sets user data.
+   * @param firestore Firestore service instance
+   * @param userService Service for retrieving user data
+   */
   constructor(public firestore: Firestore, private userService: UserService) {
     this.user = this.userService.getUser();
     this.newPassword = this.user.password;
   }
 
+   /**
+   * Sets the selected profile photo.
+   * @param profilephoto Path to the selected photo
+   */
   async selectphoto(profilephoto: string) {
     this.profilephoto = profilephoto;
     this.user.profilephoto = this.profilephoto;
   }
 
+   /**
+   * Registers the user, updates their profile and Firestore, and redirects to the login page.
+   */
   async login() {
     this.isOverlayActive = true;
     await createUserWithEmailAndPassword(this.auth, this.user.email, this.user.password)
@@ -81,5 +97,6 @@ export class AvatarselectionComponent implements OnInit {
         console.log('Password:', this.user.password);
         this.isOverlayActive = false;
       });
+      
   }
 }
