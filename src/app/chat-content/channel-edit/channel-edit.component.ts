@@ -26,6 +26,14 @@ export class ChannelEditComponent {
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
 
+  /**
+   * Constructor for ChannelEditComponent. Initializes the component with data passed
+   * from the parent component through MAT_DIALOG_DATA.
+   *
+   * @param firestore - Firestore service instance for interacting with the Firestore database.
+   * @param dialogRef - Reference to the dialog for controlling the dialog box.
+   * @param data - Data passed into the dialog, contains the current channel, current user, and the channel ID.
+   */
   constructor(
     public firestore: Firestore,
     public dialogRef: MatDialogRef<ChannelEditComponent>,
