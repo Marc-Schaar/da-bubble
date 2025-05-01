@@ -20,25 +20,20 @@ import { NavigationService } from '../service/navigation/navigation.service';
 })
 export class HeaderComponent {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
-
   displayName: string | null = null;
   user: User | null = null;
-
   auth = inject(Auth);
   fireService = inject(FireServiceService);
   userService = inject(UserService);
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
-
   showBackground = false;
   showmodifycontent = false;
   isClicked: boolean = false;
   listKey: string = '';
   isChannel: boolean = false;
   isProfileCard: boolean = false;
-
   opened = 0;
-
   input: string = '';
   channelType: string = '';
   docId: string = '';
@@ -46,7 +41,6 @@ export class HeaderComponent {
   currentRecieverId: string = '';
   currentChannelId: string = '';
   placeholderText: string = '';
-
   channels: any[] = [];
   users: any[] = [];
   currentReciever: any = null;
@@ -56,20 +50,32 @@ export class HeaderComponent {
   searchList: any[] = [];
   currentArray: any[] = [];
 
+  /**
+   * Increments the `opened` counter and sets `showmodifycontent` to true to display the modification content.
+   */
   show() {
     this.opened++;
     this.showmodifycontent = true;
   }
 
+  /**
+   * Handles the menu closure and sets the background visibility to false.
+   */
   onMenuClosed() {
     this.showBackground = false;
   }
 
+  /**
+   * Displays the menu and sets the background visibility to true.
+   */
   showmenu() {
     this.showmodifycontent = false;
     this.showBackground = true;
   }
 
+  /**
+   * Signs out the current user, updates the online status, and redirects to the login page.
+   */
   async signOut() {
     const currentUser = this.userService.getUser();
     currentUser.online = false;
@@ -79,12 +85,19 @@ export class HeaderComponent {
     this.userService.redirectiontologinpage();
   }
 
+  /**
+   * Lifecycle hook that is called when the component is initialized.
+   * Loads the channels and users, and sets the current user.
+   */
   async ngOnInit() {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
   }
 
+  /**
+   * Loads the users from the Firestore database.
+   */
   async loadUsers() {
     try {
       this.users = await this.fireService.getUsers();
@@ -93,6 +106,9 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Loads the channels from the Firestore database.
+   */
   async loadChannels() {
     try {
       this.channels = await this.fireService.getChannels();
@@ -101,11 +117,17 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Sets the current user and stores their ID.
+   */
   setCurrentUser() {
     this.currentUser = this.userService.currentUser;
     this.currentUserId = this.userService.currentUser.uid;
   }
 
+  /**
+   * Determines which list (channels or users) should be displayed based on the input.
+   */
   getList() {
     if (this.input.includes('#')) {
       this.isChannel = true;
@@ -125,10 +147,18 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Initializes the search by determining the search list type and starting the search.
+   * @param searchlistType The type of the list to search through ('channel' or 'user').
+   */
   searchInit(searchlistType: string) {
     this.input.length > 1 ? this.startSearch(searchlistType) : this.resetSearch();
   }
 
+  /**
+   * Starts searching through the list based on the input and list type (users or channels).
+   * @param searchlistType The type of the list to search through ('channel' or 'user').
+   */
   startSearch(searchlistType: string) {
     this.searchList = [];
     let modifyedInput = this.input.slice(1).trim();
@@ -139,6 +169,11 @@ export class HeaderComponent {
     });
   }
 
+  /**
+   * Searches through the users and adds matching results to the search list.
+   * @param object The user object to search in.
+   * @param input The input to search for.
+   */
   searchInUsers(object: any, input: string) {
     this.isChannel = false;
     if (object.fullname.toLowerCase().includes(input.toLowerCase()) || object.email.toLowerCase().includes(input.toLowerCase())) {
@@ -150,6 +185,11 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Searches through the channels and adds matching results to the search list.
+   * @param object The channel object to search in.
+   * @param input The input to search for.
+   */
   searchInChannels(object: any, input: string) {
     this.isChannel = true;
     if (object.name.toLowerCase().includes(input)) {
@@ -161,18 +201,24 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Resets the search results and clears the current receiver and channel.
+   */
   resetSearch() {
     this.searchList = [];
     this.currentReciever = null;
     this.currentChannel = null;
   }
 
+  /**
+   * Sets the receiver or channel based on the index and updates the URL.
+   * @param index The index of the selected item (user or channel).
+   */
   getReciever(index: number) {
     this.docId = this.currentlist[index].id;
     this.isChannel
       ? this.userService.setUrl('channel', this.docId, this.userService.userId)
       : this.userService.setUrl('direct', this.userService.userId, this.docId);
-
     this.isClicked = false;
     this.input = '';
   }
