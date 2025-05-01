@@ -45,8 +45,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private currentRecieverId: string = '';
   private currentUserId: string = '';
 
-  constructor() {}
-
   /**
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
    */
