@@ -89,7 +89,6 @@ export class ChannelEditComponent {
     try {
       if (content == 'editName') {
         const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannelId);
-
         await updateDoc(channelRef, {
           name: newChannelName.value,
         });
@@ -97,7 +96,6 @@ export class ChannelEditComponent {
       }
       if (content == 'editDescription') {
         const ChannelNameRef = doc(this.firestore, 'channels', this.currentChannelId);
-
         await updateDoc(channelRef, {
           description: newChannelDescription.value,
         });
