@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss'
 })
-export class MessageTemplateComponent {
-
-}
+export class MessageTemplateComponent {}

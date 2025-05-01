@@ -7,7 +7,6 @@ import { UserService } from '../../shared.service';
   providedIn: 'root',
 })
 export class MessagesService {
-  constructor() {}
   private fireService = inject(FireServiceService);
   private userService = inject(UserService);
 
