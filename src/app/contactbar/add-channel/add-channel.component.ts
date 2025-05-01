@@ -39,6 +39,14 @@ export class AddChannelComponent implements OnInit {
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
+  /**
+   * Constructor for AddChannelComponent. Initializes the component with the platform ID,
+   * Firestore service, and dialog reference.
+   *
+   * @param platformId - Platform ID, used to determine the platform the app is running on (e.g., browser or server).
+   * @param firestore - Firestore service instance for interacting with the Firestore database.
+   * @param dialogRef - Reference to the dialog for controlling the dialog box.
+   */
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     public firestore: Firestore,
