@@ -20,34 +20,43 @@ export class ChannelEditComponent {
   channeldescriptionEdit: boolean = false;
   users: any[] = [];
   auth = getAuth();
-
   currentChannel: any = {};
   currentChannelId: any;
   currentUser: any;
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
+  @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
 
   constructor(
     public firestore: Firestore,
     public dialogRef: MatDialogRef<ChannelEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.currentChannel = data.currentChannel
+    this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
     this.currentUser = data.currentUser;
   }
 
+  /**
+   * Angular lifecycle method called on component initialization.
+   * Fetches the list of users from Firestore.
+   */
   ngOnInit() {
     this.fetchUsers();
   }
 
-  @ViewChild('mainDialog') mainDialog!: ElementRef;
-  @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
-
+  /**
+   * Fetches all users from the Firestore 'users' collection.
+   */
   async fetchUsers() {
     const usersCollection = collection(this.firestore, 'users');
     const usersSnapshot = await getDocs(usersCollection);
     this.users = usersSnapshot.docs.map((doc) => doc.data());
   }
 
+  /**
+   * Toggles the edit mode for channel name or description and saves new data if exiting edit mode.
+   * @param content - Either 'editName' or 'editDescription'
+   */
   editChannelName(content: string) {
     if (content == 'editName') {
       if (!this.channelnameEdit) {
@@ -69,6 +78,10 @@ export class ChannelEditComponent {
     }
   }
 
+  /**
+   * Saves the new channel name or description to Firestore.
+   * @param content - Either 'editName' or 'editDescription'
+   */
   async saveNewChannelData(content: string) {
     const newChannelName = document.getElementById('changeNameInput') as HTMLInputElement;
     const newChannelDescription = document.getElementById('changeDescriptionInput') as HTMLInputElement;
@@ -95,6 +108,10 @@ export class ChannelEditComponent {
     }
   }
 
+  /**
+   * Dynamically adjusts the height of a textarea based on its scroll height.
+   * @param event - The input event triggered by the textarea.
+   */
   adjustTextareaHeight(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -103,10 +120,16 @@ export class ChannelEditComponent {
     }
   }
 
+  /**
+   * Closes the dialog window.
+   */
   close() {
     this.dialogRef.close();
   }
 
+  /**
+   * Removes the current user from the channel's member list and updates Firestore.
+   */
   async exitChannel() {
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
     const currentUser = this.userService.auth.currentUser;
@@ -126,7 +149,7 @@ export class ChannelEditComponent {
     } catch (error) {}
     this.dialogRef.close();
     this.userService.showFeedback('Channel verlassen');
-    this.navigationService.showNewMessage(); 
+    this.navigationService.showNewMessage();
     this.userService.setUrl('newMessage');
   }
 }
