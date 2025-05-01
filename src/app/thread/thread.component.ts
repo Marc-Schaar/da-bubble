@@ -52,6 +52,11 @@ export class ThreadComponent implements OnInit {
     'emoji _white heavy check mark_',
   ];
 
+  /**
+   * A function that will unsubscribe from the Firestore snapshot listener for messages.
+   *
+   * @type {() => void}
+   */
   unsubMessages!: () => void;
 
   /**
