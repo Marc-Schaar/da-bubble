@@ -20,10 +20,18 @@ export class ForgotpasswordComponent implements OnInit {
   submitted = false;
   shareddata = inject(UserService);
   auth = getAuth();
+
+  /**
+   * Lifecycle hook that is called when the component is initialized.
+   */
   ngOnInit(): void {
     this.shareddata.login = false;
   }
 
+  /**
+   * Handles the form submission, sends a password reset email and manages loading state.
+   * @param emailform The form containing the user's email.
+   */
   async onSubmit(emailform: NgForm) {
     this.isOverlayActive = true;
     await sendPasswordResetEmail(this.auth, this.user.email)
