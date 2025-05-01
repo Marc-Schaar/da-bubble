@@ -22,11 +22,13 @@ export class ResetpasswordComponent implements OnInit {
   users = new User();
   auth: any;
   email: string | null = null;
-
   resetCode = '';
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private afApp: FirebaseApp) {}
 
+  /**
+   * @description - Lifecycle hook that initializes the component and verifies the reset code from the URL.
+   */
   ngOnInit() {
     this.auth = getAuth(this.afApp);
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -39,6 +41,10 @@ export class ResetpasswordComponent implements OnInit {
       .catch((error) => {});
   }
 
+  /**
+   * @description - Submits the new password and confirms the reset code.
+   * @param emailform - The form containing the user's password input.
+   */
   async onSubmit(emailform: NgForm) {
     if (this.resetCode && this.users.password) {
       this.isOverlayActive = true;
