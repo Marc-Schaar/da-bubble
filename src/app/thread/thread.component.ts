@@ -64,8 +64,8 @@ export class ThreadComponent implements OnInit {
    */
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
-      this.currentChannelId = params['id'] || '';
-      this.userId = params['reciepentId'] || '';
+      this.currentChannelId = params['reciverId'] || '';
+      this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
       await this.getCurrentChannel();
       this.getThreadParentMessage();
@@ -150,7 +150,7 @@ export class ThreadComponent implements OnInit {
   closeThread() {
     if (this.navigationService.isMobile) {
       this.router.navigate(['/channel'], {
-        queryParams: { channelType: 'channel', id: this.currentChannelId, reciepentId: this.navigationService.docId },
+        queryParams: { channelType: 'channel', id: this.currentChannelId, currentUserId: this.userId },
       });
     }
     this.userService.toggleThread('close');

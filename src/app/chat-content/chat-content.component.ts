@@ -88,8 +88,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   async ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
-      this.currentChannelId = params.get('id') || '';
-      this.userId = params.get('reciepentId') || '';
+      this.currentChannelId = params.get('reciverId') || '';
+      this.userId = params.get('currentUserId') || '';
       this.getMessages();
       this.getChannelFromUrl();
       this.currentUser = this.userService.currentUser;

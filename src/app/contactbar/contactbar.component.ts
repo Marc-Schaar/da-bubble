@@ -154,7 +154,7 @@ export class ContactbarComponent implements OnInit {
     this.message = false;
     const isChannel = this.navigationService.channelType === 'channel';
     const collection = isChannel ? 'channels' : 'users';
-    const docRef = this.firestoreService.getDocRef(collection, this.navigationService.docId);
+    const docRef = this.firestoreService.getDocRef(collection, this.navigationService.reciverId);
     if (!docRef) return;
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) return;

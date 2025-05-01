@@ -155,12 +155,12 @@ export class UserService {
    * @param reciepentId The recipient id.
    * @param messageId The message id.
    */
-  setUrl(channelType: string, id?: string, reciepentId?: string, messageId?: string) {
+  setUrl(channelType: string, reciverId?: string, currentUserId?: string, messageId?: string) {
     this.router.navigate(['/chat'], {
       queryParams: {
         channelType: channelType,
-        id: id,
-        reciepentId: reciepentId,
+        reciverId: reciverId,
+        currentUserId: currentUserId,
         messageId: messageId,
       },
     });
@@ -179,14 +179,6 @@ export class UserService {
    */
   toggleContactbar() {
     this.contactbarToggleSubject.next();
-  }
-
-  /**
-   * Checks if the screen width is less than 1024px.
-   * @returns True if the screen width is less than 1024px, false otherwise.
-   */
-  checkScreenWidth(): boolean {
-    return window.innerWidth < 1024;
   }
 
   /**

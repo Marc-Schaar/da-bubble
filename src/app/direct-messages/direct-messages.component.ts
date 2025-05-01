@@ -50,8 +50,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
-      this.currentRecieverId = params.get('id') || '';
-      this.currentUserId = params.get('reciepentId') || '';
+      this.currentRecieverId = params.get('reciverId') || '';
+      this.currentUserId = params.get('currentUserId') || '';
 
       this.currentUser = this.userService.currentUser;
       this.getRecieverFromUrl();

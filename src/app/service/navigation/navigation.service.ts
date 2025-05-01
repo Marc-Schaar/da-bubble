@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
-import { MainChatComponent } from '../../main-chat/main-chat.component';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +16,8 @@ export class NavigationService {
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
   isMobile: boolean = this.checkScreenWidth();
-  docId: string = '';
-  reciepentId: string = '';
+  reciverId: string = '';
+  currentUserId: string = '';
   messageId: string = '';
   channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
 
@@ -30,8 +29,8 @@ export class NavigationService {
     this.observeScreenWidth();
     this.route.queryParams.subscribe((params) => {
       this.channelType = params['channelType'] || 'default';
-      this.docId = params['id'] || '';
-      this.reciepentId = params['reciepentId'] || '';
+      this.reciverId = params['reciverId'] || '';
+      this.currentUserId = params['currentUserId'] || '';
       this.messageId = params['messageId'] || '';
       if (this.channelType === 'direct') this.showDirect();
       else if (this.channelType === 'channel') this.showChannel();
@@ -58,8 +57,8 @@ export class NavigationService {
         this.router.navigate(['/chat'], {
           queryParams: {
             channelType: 'direct',
-            id: this.docId,
-            reciepentId: this.reciepentId,
+            reciverId: this.reciverId,
+            currentUserId: this.currentUserId,
           },
         });
         break;
@@ -67,8 +66,8 @@ export class NavigationService {
         this.router.navigate(['/chat'], {
           queryParams: {
             channelType: 'channel',
-            id: this.docId,
-            reciepentId: this.reciepentId,
+            reciverId: this.reciverId,
+            currentUserId: this.currentUserId,
           },
         });
         break;
@@ -93,8 +92,8 @@ export class NavigationService {
       this.router.navigate(['/direct'], {
         queryParams: {
           channelType: 'direct',
-          id: this.docId,
-          reciepentId: this.reciepentId,
+          reciverId: this.reciverId,
+          currentUserId: this.currentUserId,
         },
       });
     } else this.currentComponent.next(DirectmessagesComponent);
@@ -108,8 +107,8 @@ export class NavigationService {
       this.router.navigate(['/channel'], {
         queryParams: {
           channelType: 'channel',
-          id: this.docId,
-          reciepentId: this.reciepentId,
+          reciverId: this.reciverId,
+          currentUserId: this.currentUserId,
         },
       });
     } else this.currentComponent.next(ChatContentComponent);
