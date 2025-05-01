@@ -33,6 +33,14 @@ export class AddMemberComponent implements OnInit {
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   // reciepentId: string | null = null;
 
+  /**
+   * Constructor for AddMemberComponent. Initializes the component with data passed
+   * from the parent component through MAT_DIALOG_DATA.
+   *
+   * @param dialogRef - Reference to the dialog for controlling the dialog box.
+   * @param data - Data passed into the dialog, contains information like the current channel,
+   *               current user, and the state of the addMember window.
+   */
   constructor(public dialogRef: MatDialogRef<AddMemberComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
