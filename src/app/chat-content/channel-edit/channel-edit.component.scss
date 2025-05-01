@@ -1,100 +1,157 @@
 .main {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 30px 30px 30px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  font-family: "Nunito";
+  gap: 20px;
+  @media (max-width: 1023px) {
+    height: 100%;
+    border-radius: 0;
+    padding: 0;
+  }
+  .mobile-member-list {
+    width: 95%;
+    align-self: center;
+    border: 1px solid rgba(173, 176, 217, 1);
+    border-radius: 20px;
+    padding: 20px;
+    display: none;
     flex-direction: column;
-    // width: 872px;
-    // height: 616px;
-    border-radius: 0 30px 30px 30px;
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
-    // position: absolute;
-    // top: 90px;
-    // left: 70px;
-    padding: 40px;
-    font-family: "Nunito";
     gap: 20px;
-    // z-index: 999;
-    @media (max-width: 1023px) {
-      // border-radius: 0;
-      height: 100%;
-      border-radius: 0;
-    }
-
-    .exit-channel-cont {
-      width: 204px;
-      height: 49px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: var(--dark-purple);
-      border-radius: 25px;
-      color: white;
-      font-size: 18px;
-      font-weight: 700;
-      place-self: end;
-      cursor: pointer;
-      &:hover {
-        background-color: var(--medium-purple);
-      }
-    }
-    .channel-header {
-      display: flex;
-      justify-content: space-between;
+    .member-headline {
       font-size: 24px;
       font-weight: 700;
-      align-items: center;
-      img {
-        cursor: pointer;
-      }
-      .chanelname-cont {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-        .hash {
-          font-size: 35px;
-        }
-      }
     }
-    .channelname-edit-cont {
+    .member-list {
+      gap: 15px;
       display: flex;
       flex-direction: column;
-      padding: 20px;
-      border: 1px solid rgba(173, 176, 217, 1);
-      border-radius: 20px;
-      gap: 20px;
-      transition: padding 0.1s ease-in-out;
-      .channelname-header {
-        display: flex;
-        justify-content: space-between;
-        .channelname-headline {
-          font-weight: 700;
-        }
-        .nameedit-btn {
-          font-weight: 600;
-          color: var(--dark-purple-text);
-          cursor: pointer;
-          font-size: 18px;
-          width: 90px;
-          height: 25px;
-          &:hover {
-            font-weight: 700;
-            color: var(--dark-purple);
+      padding-left: 15px;
+      .member-cont {
+        .member {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          .member-img {
+            position: relative;
+            .status-dot {
+              width: 14px;
+              height: 14px;
+              border: 2px solid white;
+              background-color: var(--text-grey);
+              border-radius: 50%;
+              position: absolute;
+              bottom: 2px;
+              right: 0;
+            }
+          }
+          .member-name {
+            font-size: 18px;
+            font-weight: 400;
+          }
+
+          img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
           }
         }
       }
-      .hash-channelname {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        .small-hash {
-          font-size: 21px;
-        }
-        .small-channelname {
-          font-size: 18px;
-          font-weight: 400px;
-        }
+    }
+    @media (max-width: 1023px) {
+      display: flex;
+    }
+  }
+  .exit-channel-cont {
+    width: 204px;
+    height: 49px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--dark-purple);
+    border-radius: 25px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    place-self: end;
+    cursor: pointer;
+    @media (max-width: 1023px) {
+      margin-right: 2%;
+    }
+    &:hover {
+      background-color: var(--medium-purple);
+    }
+  }
+  .channel-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    font-weight: 700;
+    align-items: center;
+    @media (max-width: 1023px) {
+      padding: 40px 16px 10px 16px;
+      box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+    }
+    img {
+      cursor: pointer;
+    }
+    .chanelname-cont {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      .hash {
+        font-size: 35px;
       }
     }
   }
+  .channelname-edit-cont {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgba(173, 176, 217, 1);
+    border-radius: 20px;
+    gap: 20px;
+    transition: padding 0.1s ease-in-out;
+    @media (max-width: 1023px) {
+      width: 95%;
+      align-self: center;
+    }
+    .channelname-header {
+      display: flex;
+      justify-content: space-between;
+      .channelname-headline {
+        font-weight: 700;
+      }
+      .nameedit-btn {
+        font-weight: 600;
+        color: var(--dark-purple-text);
+        cursor: pointer;
+        font-size: 18px;
+        width: 90px;
+        height: 25px;
+        &:hover {
+          font-weight: 700;
+          color: var(--dark-purple);
+        }
+      }
+    }
+    .hash-channelname {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      .small-hash {
+        font-size: 21px;
+      }
+      .small-channelname {
+        font-size: 18px;
+        font-weight: 400px;
+      }
+    }
+  }
+}
 
 .channeldescription-cont {
   display: flex;
@@ -104,13 +161,17 @@
   border-radius: 20px;
   gap: 20px;
   transition: padding 0.1s ease-in-out;
+  @media (max-width: 1023px) {
+    width: 95%;
+    align-self: center;
+  }
   .creator-name {
     font-size: 24px;
     font-weight: 400;
     color: rgba(83, 90, 241, 1);
   }
   .line {
-    width: 739px;
+    width: 100%;
     border: 1px solid rgba(173, 176, 217, 1);
     place-self: center;
   }
@@ -190,3 +251,6 @@ textarea {
   font-weight: 700;
 }
 
+.green {
+  background-color: rgba(146, 200, 62, 1) !important;
+}
