@@ -35,6 +35,9 @@ export class AddChannelComponent implements OnInit {
   creator: string = '';
   channelRef: string = '';
   addMemberInfoWindow: boolean = false;
+  @ViewChild('mainDialog') mainDialog!: ElementRef;
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
+  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -42,6 +45,11 @@ export class AddChannelComponent implements OnInit {
     public dialogRef: MatDialogRef<AddChannelComponent>
   ) {}
 
+  /**
+   * Initializes the component by loading users and channel data.
+   *
+   * @returns {void}
+   */
   ngOnInit() {
     this.loadUsers();
     this.loadChannel();
@@ -49,10 +57,11 @@ export class AddChannelComponent implements OnInit {
     console.log(this.auth.currentUser);
   }
 
-  @ViewChild('mainDialog') mainDialog!: ElementRef;
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
-
+  /**
+   * Filters the users based on the input from the search bar and updates the list of filtered users.
+   *
+   * @returns {void}
+   */
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
@@ -65,6 +74,11 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads the users from Firestore and stores them in the component's `users` property.
+   *
+   * @returns {Promise<void>}
+   */
   async loadUsers() {
     try {
       const usersCollection = collection(this.firestore, 'users');
@@ -77,10 +91,22 @@ export class AddChannelComponent implements OnInit {
       this.users = [];
     }
   }
+
+  /**
+   * Loads the channels from the user service.
+   *
+   * @returns {void}
+   */
   async loadChannel() {
     this.channels = this.channelmodule.getChannels();
   }
 
+  /**
+   * Adds a user to the selection list from the filtered users.
+   *
+   * @param {number} index - The index of the user to add to the selection.
+   * @returns {void}
+   */
   addUserToSelection(index: number) {
     const selectedUser = this.filteredUsers[index];
     this.selectedUsers.push(selectedUser);
@@ -89,11 +115,23 @@ export class AddChannelComponent implements OnInit {
     this.refreshBar();
   }
 
+  /**
+   * Removes a user from the selection bar by index.
+   *
+   * @param {number} index - The index of the user to remove.
+   * @returns {void}
+   */
   removeUserFromBar(index: number) {
     this.users.splice(index, 1);
     this.filterUsers();
   }
 
+  /**
+   * Removes a selected user from the selection and adds them back to the users list.
+   *
+   * @param {number} index - The index of the selected user to remove.
+   * @returns {void}
+   */
   removeSelectedUser(index: number) {
     const removedUser = this.selectedUsers[index];
     if (!this.users.some((user) => user.uid === removedUser.uid)) {
@@ -103,6 +141,12 @@ export class AddChannelComponent implements OnInit {
     this.filterUsers();
   }
 
+  /**
+   * Adds a user back to the user bar from the selected users list.
+   *
+   * @param {number} index - The index of the selected user to add back to the user bar.
+   * @returns {void}
+   */
   addUserToBar(index: number) {
     this.users.push(this.selectedUsers[index]);
     this.selectedUsers.splice(index, 1);
@@ -111,6 +155,11 @@ export class AddChannelComponent implements OnInit {
     console.log(this.filteredUsers);
   }
 
+  /**
+   * Refreshes the user search bar input field.
+   *
+   * @returns {void}
+   */
   refreshBar() {
     const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
@@ -119,10 +168,20 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes the current dialog.
+   *
+   * @returns {void}
+   */
   closeScreen() {
     this.dialogRef.close();
   }
 
+  /**
+   * Handles form submission to create a new channel.
+   *
+   * @returns {void}
+   */
   onSubmit() {
     if (!this.selectChannelMember) {
       this.addChannel();
@@ -131,6 +190,11 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Adds users to the channel based on the selection type (all users or selected users).
+   *
+   * @returns {void}
+   */
   addUserToChannel() {
     if (!this.chooseMember) {
       this.pushAllUser();
@@ -141,6 +205,11 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Pushes selected users to the target channel.
+   *
+   * @returns {Promise<void>}
+   */
   async pushSelectedUser() {
     try {
       const targetChannelRef = doc(this.firestore, 'channels', this.channelRef);
@@ -158,6 +227,11 @@ export class AddChannelComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  /**
+   * Pushes all users to the target channel.
+   *
+   * @returns {Promise<void>}
+   */
   async pushAllUser() {
     try {
       const channelId = 'KqvcY68R1jP2UsQkv6Nz';
@@ -181,6 +255,11 @@ export class AddChannelComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  /**
+   * Adds a new channel to the Firestore database.
+   *
+   * @returns {Promise<void>}
+   */
   async addChannel() {
     const channelDescriptionElement = document.getElementById('channel-description') as HTMLInputElement | null;
     const descriptionValue = channelDescriptionElement ? channelDescriptionElement.value : '';
@@ -219,6 +298,13 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Sets the channel member selection state and adjusts the height of the channel section.
+   *
+   * @param {boolean} value - Whether to choose members or not.
+   * @param {string} setHeight - The height to set for the channel section.
+   * @returns {void}
+   */
   setChannelMember(value: boolean, setHeight: string) {
     const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
     this.chooseMember = value;
@@ -227,6 +313,12 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Adjusts the height of the textarea based on its content.
+   *
+   * @param {Event} event - The event object triggered by the textarea input.
+   * @returns {void}
+   */
   adjustTextareaHeight(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
@@ -237,6 +329,12 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Expands the textarea height based on its content.
+   *
+   * @param {Event} event - The event object triggered by the textarea input.
+   * @returns {void}
+   */
   expandTextarea(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = '90px';
@@ -245,16 +343,33 @@ export class AddChannelComponent implements OnInit {
     }
   }
 
+  /**
+   * Shrinks the textarea height to its minimum size.
+   *
+   * @param {Event} event - The event object triggered by the textarea input.
+   * @returns {void}
+   */
   shrinkTextarea(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = '60px';
   }
 
+  /**
+   * Opens the user selection bar.
+   *
+   * @returns {void}
+   */
   openUserBar() {
     this.showUserBar = true;
     this.filterUsers();
   }
 
+  /**
+   * Closes the user bar if clicked outside the input or bar.
+   *
+   * @param {Event} event - The click event object.
+   * @returns {void}
+   */
   @HostListener('document:click', ['$event'])
   closeUserBar(event: Event) {
     const targetElement = event.target as Node;
