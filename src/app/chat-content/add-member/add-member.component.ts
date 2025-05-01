@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Inject, HostListener, inject, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
 import { FireServiceService } from '../../fire-service.service';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { UserService } from '../../shared.service';
@@ -32,7 +31,6 @@ export class AddMemberComponent implements OnInit {
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
-
   // reciepentId: string | null = null;
 
   constructor(public dialogRef: MatDialogRef<AddMemberComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -206,7 +204,6 @@ export class AddMemberComponent implements OnInit {
       await updateDoc(channelRef, {
         member: arrayUnion(...this.selectedUsers),
       });
-
       console.log('Benutzer erfolgreich hinzugefügt:', this.selectedUsers);
       this.selectedUsers = [];
     } catch (error) {

@@ -24,7 +24,6 @@ export class AvatarselectionComponent implements OnInit {
   newPassword: string;
   @ViewChild('loginbutton') loginbutton!: ElementRef<HTMLButtonElement>;
 
-  
   /**
    * Initializes component state on load.
    */
