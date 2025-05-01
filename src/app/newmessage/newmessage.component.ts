@@ -49,14 +49,19 @@ export class NewmessageComponent {
   currentUserId: string = '';
   currentChannelId: string = '';
   isFound: boolean = false;
-  constructor() {}
 
+  /**
+   * ngOnInit lifecycle hook to load channels, users and set the current user.
+   */
   async ngOnInit() {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
   }
 
+  /**
+   * Loads users from the Firestore service.
+   */
   async loadUsers() {
     try {
       this.users = await this.firestoreService.getUsers();
@@ -65,6 +70,9 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Loads channels from the Firestore service.
+   */
   async loadChannels() {
     try {
       this.channels = await this.firestoreService.getChannels();
@@ -73,8 +81,9 @@ export class NewmessageComponent {
     }
   }
 
-  ngOnDestroy() {}
-
+  /**
+   * Sets the current user based on the UserService.
+   */
   setCurrentUser() {
     this.currentUser = this.userService.currentUser;
     this.currentUserId = this.userService.currentUser.uid;
@@ -85,6 +94,9 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Sends a direct message to a recipient.
+   */
   async sendDirectMessage() {
     const message = new DirectMessage({
       name: this.userService.currentUser?.displayName || '',
@@ -106,6 +118,11 @@ export class NewmessageComponent {
     this.input = '';
   }
 
+  /**
+   * Creates message data from the DirectMessage object.
+   * @param message The DirectMessage object.
+   * @returns A plain object containing message data.
+   */
   createMessageData(message: DirectMessage) {
     return {
       name: message.name,
@@ -117,10 +134,16 @@ export class NewmessageComponent {
     };
   }
 
+  /**
+   * Sends a message to a channel.
+   */
   sendChannelMessage() {
     this.firestoreService.sendMessage(this.currentChannelId, new Message(this.messageService.buildChannelMessageObject(this.input)));
   }
 
+  /**
+   * Determines the current chat type based on the message input and searches for a receiver.
+   */
   getCurrentChat() {
     if (this.input.includes('#')) {
       this.currentArray = this.channels;
@@ -131,6 +154,10 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Searches for a receiver based on the input text.
+   * @param chat Type of chat (either 'user' or 'channel').
+   */
   searchForReciever(chat: string) {
     if (this.input.length > 3) {
       this.searchList = [];
@@ -143,6 +170,9 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Resets the search list and flags.
+   */
   resetSearch() {
     this.searchList = [];
     this.isFound = false;
@@ -151,6 +181,11 @@ export class NewmessageComponent {
     this.currentChannel = null;
   }
 
+  /**
+   * Starts the search for the receiver.
+   * @param input Search query.
+   * @param chat Type of chat (either 'user' or 'channel').
+   */
   startSearch(input: string, chat: string) {
     this.currentArray.forEach((object) => {
       //diese if-abfrage zw Users und channels könnte man sich sparen, wenn users und channels den gleichen key für den namen hätten und die daraus resultierenden zwei funktionen searchInUsers udn searchInChannels!
@@ -163,6 +198,11 @@ export class NewmessageComponent {
     });
   }
 
+  /**
+   * Searches for users that match the input.
+   * @param object User object.
+   * @param input Search query.
+   */
   searchInUsers(object: any, input: string) {
     if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
@@ -173,6 +213,11 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Searches for channels that match the input.
+   * @param object Channel object.
+   * @param input Search query.
+   */
   searchInChannels(object: any, input: string) {
     if (object.name.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
@@ -183,6 +228,10 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Chooses a receiver from the search results.
+   * @param index Index of the selected receiver.
+   */
   chooseReciever(index: number) {
     if (this.isChannel === false) {
       this.currentReciever = this.searchList[index];
@@ -198,6 +247,9 @@ export class NewmessageComponent {
     this.isChannel = false;
   }
 
+  /**
+   * Sends a message to the selected receiver or channel.
+   */
   async sendMessage() {
     if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
       return;
@@ -212,6 +264,10 @@ export class NewmessageComponent {
     this.currentChannel = null;
   }
 
+  /**
+   * Toggles the user/channel list visibility.
+   * @param event Event object.
+   */
   toggleList(event: Event) {
     this.isClicked = !this.isClicked;
     this.currentList = this.users;
@@ -219,11 +275,17 @@ export class NewmessageComponent {
     event.stopPropagation();
   }
 
+  /**
+   * Hides the user/channel list.
+   */
   hideList() {
     this.isClicked = false;
     this.isFound = false;
   }
 
+  /**
+   * Displays the list of users or channels based on the message input.
+   */
   getList() {
     if (this.message.includes('#')) {
       this.currentList = this.channels;
@@ -240,6 +302,10 @@ export class NewmessageComponent {
     }
   }
 
+  /**
+   * Sets the message input to the selected receiver or channel.
+   * @param index Index of the selected receiver or channel.
+   */
   getReciever(index: number) {
     if (this.isChannel) {
       const currentChannel = this.currentList[index];
