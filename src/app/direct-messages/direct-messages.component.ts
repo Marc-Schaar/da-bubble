@@ -160,11 +160,16 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
 
   /**
    * Opens the receiver's profile or channel.
-   * @param i The index of the selected receiver.
    * @param key The unique key of the selected receiver or channel.
    */
-  public openReciver(i: number, key: string): void {
-    this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.currentUserId, key);
+  public openReciver(key: string): void {
+    if (this.isChannel) {
+      this.userService.setUrl('channel', key);
+      this.navigationService.showChannel();
+    } else if (!this.isChannel) {
+      this.userService.setUrl('direct', key, this.currentUserId);
+      this.navigationService.showDirect();
+    }
   }
 
   /**

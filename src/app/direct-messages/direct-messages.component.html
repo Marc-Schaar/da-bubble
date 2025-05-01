@@ -69,13 +69,9 @@
       </section>
       }
     </section>
-    <div [ngClass]="{ show: isClicked }" class="lists">
-      <div
-        (click)="openReciver(index, object.id)"
-        [ngClass]="{ channelStyle: isChannel }"
-        class="listrow"
-        *ngFor="let object of currentList; let index = index"
-      >
+    <ul [ngClass]="{ show: isClicked }" class="lists">
+      @for (object of currentList; track $index) {
+      <li (click)="openReciver(object.id)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
         <div *ngIf="!isChannel" class="imageContainer">
           <img [src]="object?.profilephoto" alt="" />
           <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
@@ -84,8 +80,9 @@
         <div>
           <span>{{ object?.fullname || object?.name }}</span>
         </div>
-      </div>
-    </div>
+      </li>
+      }
+    </ul>
     <div class="textContainer">
       <div>
         <textarea
