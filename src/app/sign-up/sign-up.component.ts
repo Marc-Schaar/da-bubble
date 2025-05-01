@@ -40,7 +40,6 @@ export class SignupComponent implements OnInit {
    */
   async onSubmit(useraccount: NgForm) {
     if (useraccount.valid) {
-      console.log(this.user);
       this.sharedservice.setUser(this.user);
       this.sharedservice.redirectiontoavatarselection();
       this.checked = false;
