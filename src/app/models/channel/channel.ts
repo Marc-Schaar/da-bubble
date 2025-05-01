@@ -4,6 +4,11 @@ export class Channel {
   description: string;
   creator: string;
 
+  /**
+   * @constructor
+   * Initializes a new instance of the Channel class.
+   * @param obj Optional object to initialize the Channel properties.
+   */
   constructor(obj?: any) {
     this.name = obj ? obj.name : '';
     this.member = obj ? obj.member : [];

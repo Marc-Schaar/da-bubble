@@ -10,6 +10,11 @@ export class DirectMessage {
   to: string;
   newDay: boolean;
 
+  /**
+   * @constructor
+   * Initializes a new instance of the DirectMessage class.
+   * @param obj Optional object to initialize the DirectMessage properties.
+   */
   constructor(obj?: any) {
     this.name = obj.username ? obj.username : '';
     this.avatar = obj.photo ? obj.photo : '';
@@ -21,6 +26,10 @@ export class DirectMessage {
     this.newDay = false;
   }
 
+  /**
+   * Converts the DirectMessage instance to a JSON object.
+   * @returns A JSON representation of the DirectMessage instance.
+   */
   toJSON() {
     return {
       name: this.name,

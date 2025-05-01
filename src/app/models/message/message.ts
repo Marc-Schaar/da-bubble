@@ -8,6 +8,11 @@ export class Message {
   newDay: boolean;
   reaction: string[];
 
+  /**
+   * @constructor
+   * Initializes a new instance of the Message class.
+   * @param obj Optional object to initialize the Message properties.
+   */
   constructor(obj?: any) {
     this.name = obj ? obj.name : '';
     this.message = obj ? obj.message : '';
@@ -18,6 +23,10 @@ export class Message {
     this.reaction = obj ? obj.reaction : [];
   }
 
+  /**
+   * Converts the Message instance to a JSON object.
+   * @returns A JSON representation of the Message instance.
+   */
   toJSON() {
     return {
       name: this.name,

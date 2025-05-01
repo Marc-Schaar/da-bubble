@@ -5,6 +5,11 @@ export class User {
   profilephoto: string;
   online: boolean;
 
+  /**
+   * @constructor
+   * Initializes a new instance of the User class.
+   * @param obj Optional object to initialize the User properties.
+   */
   constructor(obj?: any) {
     this.fullname = obj ? obj.fullname : '';
     this.email = obj ? obj.email : '';
