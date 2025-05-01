@@ -1,13 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
-import { GoogleAuthProvider, Auth, onAuthStateChanged } from '@angular/fire/auth';
-import { signInWithEmailAndPassword, signInWithPopup, signOut } from '@firebase/auth';
+import { GoogleAuthProvider, Auth } from '@angular/fire/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from '@firebase/auth';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
-import { User } from '../models/user/user';
 import { UserService } from '../shared.service';
+import { User } from '../models/user/user';
 
 @Component({
   selector: 'app-sign-in',

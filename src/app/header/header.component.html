@@ -1,4 +1,4 @@
-<main class="header">
+<main [ngClass]="{ 'header-login': userService.login }" class="header">
   <div class="logo-container">
     <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
   </div>
@@ -36,7 +36,7 @@
       [matMenuTriggerFor]="this.navigationService.isMobile ? beforeMenu : null"
     >
       <span>{{ this.userService.currentUser?.displayName || "Gast" }}</span>
-      <img [src]="this.userService.currentUser?.photoURL" alt="" />
+      <img [src]="this.userService.currentUser?.photoURL || 'img/profilephoto.png'" alt="" />
       <div>
         <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>

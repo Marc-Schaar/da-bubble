@@ -1,16 +1,16 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  // gap: 24px;
   @media (max-width: 1066px) {
     align-items: center;
   }
-  .logo-cont {
-    display: none;
-    @media (max-width: 1066px) {
-      display: flex;
-    }
-  }
+  // .logo-cont {
+  //   display: none;
+  //   @media (max-width: 1066px) {
+  //     display: flex;
+  //   }
+  // }
 }
 
 .signinbox {
@@ -24,7 +24,7 @@
   flex-direction: column;
   border-radius: 30px;
   background-color: #ffffff;
-  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+  @media only screen and (max-width: 1023px) {
     gap: 10px;
     padding: 20px 20px;
   }
@@ -43,25 +43,12 @@
     max-width: 398px;
     gap: 20px;
   }
+
   > div:nth-child(1) {
     @media (max-width: 500px) {
       gap: 15px;
     }
-    > div:nth-child(1) {
-      > h1:nth-child(1) {
-        text-align: center;
-        font-family: "Nunito";
-        font-size: 46px;
-        font-weight: 700;
-        color: #444df2;
-        @media (max-width: 400px) {
-          font-size: 2rem;
-        }
-        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-          font-size: 32px;
-        }
-      }
-    }
+
     > div:nth-child(2) {
       display: flex;
       justify-content: center;
@@ -71,12 +58,11 @@
         font-family: "Nunito";
         font-weight: 400;
         font-size: 20px;
-        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+        @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
           font-size: 17px;
         }
         @media (max-width: 500px) {
           width: 100%;
-          
         }
         > div:nth-child(1) {
           width: 70%;
@@ -84,6 +70,27 @@
           justify-content: center;
         }
       }
+    }
+  }
+
+  h1 {
+    text-align: center;
+    font-family: "Nunito";
+    font-size: 46px;
+    font-weight: 700;
+    color: #444df2;
+    @media (max-width: 400px) {
+      font-size: 2rem;
+    }
+    @media only screen and (max-device-width: 399px) {
+      font-size: 32px;
+    }
+  }
+
+  p {
+    font-size: 20px;
+    @media screen and (max-width: 1023px) {
+      font-size: 17px;
     }
   }
 
@@ -165,8 +172,8 @@
             background: none;
             width: 100%;
           }
-          &:focus-visible{
-            outline:none
+          &:focus-visible {
+            outline: none;
           }
         }
       }
@@ -227,7 +234,6 @@
       @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
         padding: 6px 32px;
       }
-
     }
     > div:nth-child(1) {
       display: flex;
