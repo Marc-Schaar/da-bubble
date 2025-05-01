@@ -34,9 +34,7 @@ export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
-
   shareddata = inject(UserService);
-
   feedbackVisible: boolean = false;
   showFiller = true;
   isMobile: boolean = false;
@@ -44,27 +42,24 @@ export class MainChatComponent implements OnInit {
   barOpen: boolean = false;
   isChatOverlayVisible = false;
   currentReciever: any;
-
   //Neue Logik ab hier:
-
   channelType: string = 'default';
   channelMessages: any = [];
   docId: string = '';
-
   //Cleancode Servives update
-
   fireService: FireServiceService = inject(FireServiceService);
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
-
   private subscriptions: Subscription[] = [];
-
   constructor(private cdr: ChangeDetectorRef) {}
 
+  /**
+   * Lifecycle hook that is called when the component is initialized.
+   * Sets the dashboard and login properties of the shared service and subscribes to various observables.
+   */
   ngOnInit(): void {
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
-
     this.subscriptions.push(
       this.navigationService.component$.subscribe(() => {
         if (this.navigationService.channelType === 'direct') {
@@ -78,14 +73,25 @@ export class MainChatComponent implements OnInit {
     this.subscriptions.push(this.shareddata.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
+  /**
+   * Lifecycle hook that is called when the component is destroyed.
+   * Unsubscribes from all active subscriptions.
+   */
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
+  /**
+   * Closes the profile card.
+   */
   closeProfile() {
     this.isProfileCard = false;
   }
 
+  /**
+   * Displays a feedback message for a brief period.
+   * @param message - The message to display.
+   */
   showFeedback(message: string) {
     this.feedbackVisible = true;
     setTimeout(() => {
@@ -98,10 +104,16 @@ export class MainChatComponent implements OnInit {
     }, 1000);
   }
 
+  /**
+   * Toggles the visibility of the contact bar.
+   */
   toogleContactbar() {
     this.drawerContactbar.toggle();
   }
 
+  /**
+   * Toggles the workspace menu.
+   */
   toggleWorkspaceMenu() {
     this.barOpen = !this.barOpen;
   }
