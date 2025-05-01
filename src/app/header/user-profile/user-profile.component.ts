@@ -16,9 +16,7 @@ export class UserProfileComponent implements OnInit {
   newname: string = '';
   @Input() menuTrigger!: MatMenuTrigger;
   @Input() showmodifycontent: boolean = false;
-
   @Output() showmodifycontentChange = new EventEmitter<boolean>();
-
   userService = inject(UserService);
   auth = getAuth();
   user: User | null = null;
@@ -31,6 +29,10 @@ export class UserProfileComponent implements OnInit {
   selectedUsers: any[] = [];
   constructor(public firestore: Firestore) {}
 
+  /**
+   * Lifecycle hook that is called when the component is initialized.
+   * It retrieves the current user information and sets the properties accordingly.
+   */
   ngOnInit() {
     this.user = this.auth.currentUser;
     if (this.user) {
@@ -42,35 +44,49 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles a click event, stops propagation if the target is not a menu trigger.
+   * @param event - The click event to be handled.
+   */
   handleClick(event: Event) {
     const target = event.target as HTMLElement;
-    if(target.classList.contains('menu-trigger')) {
-      return
+    if (target.classList.contains('menu-trigger')) {
+      return;
     }
     event.stopPropagation();
-    console.log("handleClick");
-    
+    console.log('handleClick');
   }
 
+  /**
+   * Enables the modification of user profile information by showing the input field to update the name.
+   */
   async modify() {
     this.modifyinfos = true;
-    this.newname = this.user?.displayName ?? ''; 
+    this.newname = this.user?.displayName ?? '';
   }
 
+  /**
+   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
+   */
   closeMenu() {
     if (this.menuTrigger) {
       this.menuTrigger.closeMenu();
       this.showmodifycontentChange.emit(false);
-
     } else {
       console.error('menuTrigger ist nicht definiert.');
     }
   }
 
+  /**
+   * Cancels the modification process and hides the input field for editing.
+   */
   cancel() {
     this.modifyinfos = false;
   }
 
+  /**
+   * Saves changes made to the user's display name by updating the Firebase user profile.
+   */
   async saveChanges() {
     if (this.user && this.newname) {
       try {
