@@ -51,6 +51,12 @@ export class MainChatComponent implements OnInit {
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
   private subscriptions: Subscription[] = [];
+
+  /**
+   * Constructor for SomeComponent. Initializes the component with the ChangeDetectorRef service to manually trigger change detection.
+   *
+   * @param cdr - ChangeDetectorRef service instance used to manually trigger change detection in the component.
+   */
   constructor(private cdr: ChangeDetectorRef) {}
 
   /**
