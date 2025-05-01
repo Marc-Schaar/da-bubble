@@ -41,7 +41,6 @@ import { Message } from '../models/message/message';
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
   private subscriptions = new Subscription();
-
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   router: Router = inject(Router);
@@ -50,7 +49,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   navigationService: NavigationService = inject(NavigationService);
   messagesService: MessagesService = inject(MessagesService);
   route: ActivatedRoute = inject(ActivatedRoute);
-
   loading: boolean = false;
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
@@ -61,38 +59,33 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   isChannel: boolean = false;
   showBackground: boolean = false;
-
   showAllReactions: boolean = false;
-
   channels: any = [];
   messages: any;
   currentChannel: any = {};
   reactions: any = [];
   currentList: any = [];
-
   editingMessageId: any = '';
   input: string = '';
-
   inputEdit: string = '';
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
-
   emojis: string[] = [
     'emoji _nerd face_',
     'emoji _person raising both hands in celebration_',
     'emoji _rocket_',
     'emoji _white heavy check mark_',
   ];
-
   //Neu für cleancode
-
   unsubMessages!: () => void;
-
   currentUser: User = new User(null);
   userId: string = '';
   currentChannelId: string = '';
 
+  /**
+   * Initializes the component, loads messages and channel data from URL parameters.
+   */
   async ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
       this.currentChannelId = params.get('id') || '';
@@ -103,6 +96,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Cleans up subscriptions and listeners when the component is destroyed.
+   */
   ngOnDestroy() {
     if (this.unsubMessages) this.unsubMessages();
     this.subscriptions.unsubscribe();
@@ -116,6 +112,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   //   }
   // }
 
+  /**
+   * Loads the current channel from Firestore based on the channel ID.
+   */
   getChannelFromUrl() {
     if (this.currentChannelId) {
       const docRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -129,6 +128,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Retrieves messages for the current channel and loads their threads.
+   */
   getMessages() {
     this.unsubMessages = this.messagesService.getChannelMessages(this.currentChannelId, (messages) => {
       this.messages = messages;
@@ -139,6 +141,10 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Loads the thread (replies) for a specific message.
+   * @param messageId - ID of the message to load the thread for
+   */
   getThread(messageId: string) {
     if (messageId) {
       let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${messageId}/thread`);
@@ -152,6 +158,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Sends a new message to the current channel.
+   */
   newMessage(): void {
     if (this.input.trim() !== '') {
       this.fireService.sendMessage(
@@ -162,6 +171,11 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Enables editing mode for a specific message.
+   * @param message - The message to edit
+   * @param index - Index of the message in the message list
+   */
   editMessage(message: Message, index: number) {
     this.menuOpen = false;
     this.isEditing = true;
@@ -169,6 +183,10 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.inputEdit = message.message;
   }
 
+  /**
+   * Updates the content of an edited message.
+   * @param message - The message to update
+   */
   async updateMessage(message: any) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     if (messageRef) {
@@ -183,12 +201,20 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Cancels editing mode and resets input.
+   */
   cancel() {
     this.isEditing = false;
     this.editingMessageId = null;
     this.menuOpen = false;
   }
 
+  /**
+   * Adds a reaction to a message or removes it if already reacted.
+   * @param message - The message to react to
+   * @param emoji - The emoji reaction
+   */
   addReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
@@ -205,6 +231,11 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     } else this.removeReaction(message, emoji);
   }
 
+  /**
+   * Removes a specific emoji reaction from a message.
+   * @param message - The message to update
+   * @param emoji - The emoji to remove
+   */
   removeReaction(message: any, emoji: string) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
@@ -220,12 +251,19 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Adds an emoji to the local reactions array.
+   * @param emoji - The emoji to add
+   */
   addEmoji(emoji: string) {
     this.reactions = [];
     let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
     this.reactions.push(newReaction);
   }
 
+  /**
+   * Scrolls the chat content area to the bottom.
+   */
   scrollToBottom() {
     setTimeout(() => {
       const chatContent = this.chatContentRef.nativeElement as HTMLElement;
@@ -235,6 +273,11 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  /**
+   * Opens the thread view for a specific message.
+   * @param messageId - ID of the message to open
+   * @param $event - The click event
+   */
   openThread(messageId: string, $event: Event) {
     if (this.isMobile)
       this.router.navigate(['/thread'], {
@@ -249,6 +292,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
+  /**
+   * Opens the dialog to view or edit channel information.
+   */
   openChannelInfo() {
     const dialogData = {
       currentChannel: this.currentChannel,
@@ -261,10 +307,14 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       width: '872px',
       maxWidth: '95vw',
       maxHeight: '90vh',
-      panelClass: ['fullscreen']
+      panelClass: ['fullscreen'],
     });
   }
 
+  /**
+   * Opens or closes the dialog to add members to the channel.
+   * @param toggle - Whether to show or hide the dialog
+   */
   openMemberWindow(toggle: boolean) {
     this.addMemberWindow = toggle;
     const dialogData = {
@@ -287,22 +337,48 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Filters unique emojis from the reactions array.
+   * @param reactions - Array of emoji reactions
+   * @returns Filtered array with unique emojis
+   */
   uniqueEmojis(reactions: any[]): any[] {
     return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
   }
 
+  /**
+   * Counts how many times an emoji was used in a reaction list.
+   * @param emoji - The emoji to count
+   * @param reactions - The array of reactions
+   * @returns Number of times the emoji was used
+   */
   countEmoji(emoji: any, reactions: any[]) {
     return reactions.filter((e) => e.emoji === emoji.emoji).length;
   }
 
+  /**
+   * Counts how many unique emojis exist in a list.
+   * @param iterable - The array to check
+   * @returns Count of unique emojis
+   */
   countUniqueEmojis(iterable: any[]): number {
     return new Set(iterable.map((e) => e.emoji)).size;
   }
 
+  /**
+   * Checks if the user has already reacted with a specific emoji.
+   * @param emoji - The emoji to check
+   * @param reactions - The list of reactions
+   * @returns True if the user has reacted, otherwise false
+   */
   hasReacted(emoji: any, reactions: any[]): boolean {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
   }
 
+  /**
+   * Handles autocomplete logic for mentions and channels in the input.
+   * @param type - Optional preset string to insert
+   */
   getList(type?: string): void {
     if (type) this.input = type;
     if (this.input.includes('#') || this.input.includes('@')) {
@@ -323,17 +399,31 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Opens a receiver (either a channel or a direct message) based on the input conditions.
+   * @param i - The index of the message or item to open
+   * @param key - The key identifier for the receiver (channel or direct message)
+   */
   openReciver(i: number, key: string) {
     this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
     this.resetList();
   }
 
+  /**
+   * Resets the list of items, clears the input, and closes the list.
+   */
   resetList() {
     this.currentList = [];
     this.listOpen = false;
     this.input = '';
   }
 
+  /**
+   * Returns the names of users who have reacted to a specific emoji.
+   * @param targetEmoji - The emoji to check reactions for
+   * @param reactions - The list of reactions to check
+   * @returns A list of user names who have reacted with the target emoji
+   */
   getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] {
     let allUsers = this.userService.users;
     let currentUserId = this.userId;
