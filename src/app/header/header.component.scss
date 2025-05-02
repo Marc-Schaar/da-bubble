@@ -86,10 +86,12 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  margin-left: 24px;
 
   > div:nth-child(1) {
     display: flex;
     align-items: center;
+    gap: 12px;
 
     img {
       width: 70px;
