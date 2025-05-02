@@ -104,6 +104,7 @@ export class UserService {
         this.currentUser = new User(null);
       }
       console.log('current USer', this.currentUser);
+      console.log('provider data', this.currentUser.providerData);
     });
   }
 

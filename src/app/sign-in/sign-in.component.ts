@@ -33,9 +33,6 @@ export class SignInComponent {
   signin(form: NgForm) {
     try {
       this.authService.logInWithEmailAndPassword(this.user.email, this.user.password);
-      // await signInWithEmailAndPassword(this.auth, this.user.email, this.user.password);
-      // await this.shared.setOnlineStatus();
-      // this.shared.redirectiontodashboard();
     } catch (error) {
       this.error = true;
       form.reset();
@@ -46,6 +43,6 @@ export class SignInComponent {
    * Signs in the user using Google authentication.
    */
   signinwithgoogle() {
-    this.authService.logInWithGoogle(this.user);
+    this.authService.logInWithGoogle();
   }
 }

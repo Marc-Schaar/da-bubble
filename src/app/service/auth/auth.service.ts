@@ -28,20 +28,27 @@ export class AuthService {
     this.shared.redirectiontodashboard();
   }
 
-  public async logInWithGoogle(user: User) {
-    await signInWithPopup(this.auth, this.googleAuthProvider);
-    // const userDocRef = doc(this.firestore, `users/${user.fullname}`);
-    // return setDoc(userDocRef, {
-    //   fullname: user.fullname,
-    //   email: user.email,
-    //   profilephoto: user.profilephoto,
-    //   online: false,
-    // });
-    //  await this.shared.setOnlineStatus();
+  public async logInWithGoogle() {
+    const result = await signInWithPopup(this.auth, this.googleAuthProvider);
+    const firebaseUser = result.user;
+
+    await updateProfile(firebaseUser, {
+      photoURL: 'img/profilephoto.png',
+    });
+
+    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+    await setDoc(userDocRef, {
+      fullname: firebaseUser.displayName,
+      email: firebaseUser.email,
+      profilephoto: 'img/profilephoto.png',
+      online: true,
+    });
+
+    await this.shared.setOnlineStatus();
     this.shared.redirectiontodashboard();
   }
 
-  async register(user: User): Promise<void> {
+  public async register(user: User): Promise<void> {
     const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.password);
     const firebaseUser = userCredential.user;
 
@@ -71,10 +78,8 @@ export class AuthService {
 
   public async logOut() {
     const currentUser = this.userService.getUser();
-    if (this.auth.currentUser?.providerData[0].providerId !== 'google.com') {
-      currentUser.online = false;
-      await this.fireService.updateOnlineStatus(currentUser);
-    }
+    currentUser.online = false;
+    await this.fireService.updateOnlineStatus(currentUser);
     await signOut(this.auth);
     this.navigationService.isInitialize = false;
     this.userService.redirectiontologinpage();
