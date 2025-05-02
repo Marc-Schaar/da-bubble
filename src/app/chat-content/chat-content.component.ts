@@ -87,6 +87,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
+    this.navigationService.initialize();
+    this.navigationService.isInitialize = true;
     this.route.queryParamMap.subscribe((params) => {
       this.currentChannelId = params.get('reciverId') || '';
       this.userId = params.get('currentUserId') || '';

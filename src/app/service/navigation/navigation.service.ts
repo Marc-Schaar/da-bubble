@@ -20,6 +20,7 @@ export class NavigationService {
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
   isMobile: boolean = this.checkScreenWidth();
+  isInitialize: boolean = false;
   reciverId: string = '';
   currentUserId: string = '';
   messageId: string = '';
@@ -29,27 +30,31 @@ export class NavigationService {
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
    * and manages component navigation based on the current channel type and screen size.
    */
-  constructor() {
-    // this.observeScreenWidth();
-    // this.route.queryParams.subscribe((params) => {
-    //   this.channelType = params['channelType'] || 'default';
-    //   this.reciverId = params['reciverId'] || '';
-    //   this.currentUserId = params['currentUserId'] || '';
-    //   this.messageId = params['messageId'] || '';
-    //   if (this.channelType === 'direct') this.showDirect();
-    //   else if (this.channelType === 'channel') this.showChannel();
-    //   else if (this.channelType === 'newMessage') this.showNewMessage();
-    //   else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
-    // });
-    // this.screenWidth$.subscribe((mobile) => {
-    //   this.isMobile = mobile;
-    //   if (mobile) {
-    //     if (this.channelType === 'direct') this.showDirect();
-    //     if (this.channelType === 'channel') this.showChannel();
-    //     if (this.channelType === 'newMessage') this.showNewMessage();
-    //     if (this.channelType === 'default') this.router.navigate(['/contactbar']);
-    //   } else this.showChat();
-    // });
+  constructor() {}
+
+  public initialize(): void {
+    if (this.isInitialize) {
+      this.observeScreenWidth();
+      this.route.queryParams.subscribe((params) => {
+        this.channelType = params['channelType'] || 'default';
+        this.reciverId = params['reciverId'] || '';
+        this.currentUserId = params['currentUserId'] || '';
+        this.messageId = params['messageId'] || '';
+        if (this.channelType === 'direct') this.showDirect();
+        else if (this.channelType === 'channel') this.showChannel();
+        else if (this.channelType === 'newMessage') this.showNewMessage();
+        else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
+      });
+      this.screenWidth$.subscribe((mobile) => {
+        this.isMobile = mobile;
+        if (mobile) {
+          if (this.channelType === 'direct') this.showDirect();
+          if (this.channelType === 'channel') this.showChannel();
+          if (this.channelType === 'newMessage') this.showNewMessage();
+          if (this.channelType === 'default') this.router.navigate(['/contactbar']);
+        } else this.showChat();
+      });
+    } else return;
   }
 
   /**

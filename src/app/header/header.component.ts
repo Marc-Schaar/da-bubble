@@ -81,7 +81,7 @@ export class HeaderComponent {
     currentUser.online = false;
     await this.fireService.updateOnlineStatus(currentUser);
     await signOut(this.auth);
-
+    this.navigationService.isInitialize = false;
     this.userService.redirectiontologinpage();
   }
 
