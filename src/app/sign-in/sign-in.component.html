@@ -73,10 +73,7 @@
     </div>
     <div>
       <button type="button" (click)="signinwithgoogle()"><img src="/img/Google.png" alt="" /> Anmelden mit Google</button>
-      <div>
-        <button [disabled]="userauth.invalid">Anmelden</button
-        ><button (click)="shared.redirectiontodashboard()" href="/chat">Gäste-Login</button>
-      </div>
+      <div><button [disabled]="userauth.invalid">Anmelden</button><button (click)="guestLogin()">Gäste-Login</button></div>
     </div>
   </form>
 </div>

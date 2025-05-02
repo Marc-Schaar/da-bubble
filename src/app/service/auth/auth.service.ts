@@ -5,7 +5,7 @@ import { NavigationService } from '../navigation/navigation.service';
 import { User } from '../../models/user/user';
 import { arrayUnion, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { signInWithEmailAndPassword } from '@firebase/auth';
+import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
 import { FireServiceService } from '../../fire-service.service';
 
 @Injectable({
@@ -44,6 +44,26 @@ export class AuthService {
       online: true,
     });
 
+    await this.shared.setOnlineStatus();
+    this.shared.redirectiontodashboard();
+  }
+
+  public async loginAsGuest() {
+    const result = await signInAnonymously(this.auth);
+    const firebaseUser = result.user;
+
+    await updateProfile(firebaseUser, {
+      displayName: 'Gast',
+      photoURL: 'img/profilephoto.png',
+    });
+
+    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+    await setDoc(userDocRef, {
+      fullname: 'Gast',
+      email: null,
+      profilephoto: 'img/profilephoto.png',
+      online: true,
+    });
     await this.shared.setOnlineStatus();
     this.shared.redirectiontodashboard();
   }

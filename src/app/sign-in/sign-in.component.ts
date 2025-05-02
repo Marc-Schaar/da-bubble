@@ -45,4 +45,8 @@ export class SignInComponent {
   signinwithgoogle() {
     this.authService.logInWithGoogle();
   }
+
+  public guestLogin() {
+    this.authService.loginAsGuest();
+  }
 }
