@@ -2,7 +2,8 @@
   <div
     class="add-channel-cont"
     id="add-channel-cont"
-    [ngClass]="{ 'change-size': !selectChannelMember }">
+    [ngClass]="{ 'change-size': !selectChannelMember, 'mobile-menu': selectChannelMember }">
+    
     <div *ngIf="!selectChannelMember" class="add-channel-create">
       <div class="add-channel-header">
         <div class="add-channel-text">Channel erstellen</div>

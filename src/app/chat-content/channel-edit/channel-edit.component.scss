@@ -21,6 +21,7 @@
     display: none;
     flex-direction: column;
     gap: 20px;
+    overflow: scroll;
     .member-headline {
       font-size: 24px;
       font-weight: 700;
@@ -244,6 +245,9 @@ textarea {
 .description-text {
   font-size: 18px;
   font-weight: 400;
+  overflow-wrap: break-word;
+  overflow: scroll;
+  max-height: 100px;
 }
 
 .channelname-headline {
