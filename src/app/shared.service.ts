@@ -103,6 +103,7 @@ export class UserService {
       } else {
         this.currentUser = new User(null);
       }
+      console.log('current USer', this.currentUser);
     });
   }
 

@@ -13,6 +13,7 @@ import { ThreadComponent } from '../thread/thread.component';
 import { FireServiceService } from '../fire-service.service';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -45,11 +46,11 @@ export class MainChatComponent implements OnInit {
   //Neue Logik ab hier:
   channelType: string = 'default';
   channelMessages: any = [];
-  docId: string = '';
   //Cleancode Servives update
   fireService: FireServiceService = inject(FireServiceService);
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
+  authService = inject(AuthService);
   private subscriptions: Subscription[] = [];
 
   /**

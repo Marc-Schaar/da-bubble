@@ -5,12 +5,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
-import { signOut, User } from '@firebase/auth';
+import { User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +28,7 @@ export class HeaderComponent {
   userService = inject(UserService);
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
+  private authService: AuthService = inject(AuthService);
   showBackground = false;
   showmodifycontent = false;
   isClicked: boolean = false;
@@ -76,13 +78,8 @@ export class HeaderComponent {
   /**
    * Signs out the current user, updates the online status, and redirects to the login page.
    */
-  async signOut() {
-    const currentUser = this.userService.getUser();
-    currentUser.online = false;
-    await this.fireService.updateOnlineStatus(currentUser);
-    await signOut(this.auth);
-    this.navigationService.isInitialize = false;
-    this.userService.redirectiontologinpage();
+  signOut() {
+    this.authService.logOut();
   }
 
   /**
