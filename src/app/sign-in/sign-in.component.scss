@@ -1,10 +1,11 @@
 .main {
   display: flex;
   flex-direction: column;
+  width: clamp(200px, 100%, 606px);
   // gap: 24px;
-  @media (max-width: 1066px) {
-    align-items: center;
-  }
+  // @media (max-width: 1023px) {
+  //   align-items: center;
+  // }
   // .logo-cont {
   //   display: none;
   //   @media (max-width: 1066px) {
@@ -14,8 +15,8 @@
 }
 
 .signinbox {
-  max-width: 606px;
-  width: 100%;
+  // max-width: 606px;
+  // width: 100%;
   display: flex;
   padding: 30px;
   gap: 45px;
@@ -29,18 +30,18 @@
     padding: 20px 20px;
   }
   @media (max-width: 743px) {
-    width: 91%;
+    // width: 91%;
   }
   @media (max-height: 920px) {
     gap: 18px;
-    max-width: 545px;
+    //  max-width: 545px;
   }
   @media (max-width: 860px) {
     gap: 24px;
-    max-width: 460px;
+    // max-width: 460px;
   }
   @media (max-width: 500px) {
-    max-width: 398px;
+    // max-width: 398px;
     gap: 20px;
   }
 
@@ -107,28 +108,27 @@
     flex-direction: column;
     // gap: 30px;
     align-items: center;
-    width: 82%;
-    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    width: 100%;
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
       gap: 0px;
     }
-    @media (max-width: 500px) {
-      width: 100%;
-    }
+
     > div:nth-child(1) {
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 30px;
       align-items: center;
-      width: calc(100% - 3px);
-      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      width: 100%;
+      // width: calc(100% - 3px);
+      @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
         gap: 15px;
       }
       > div:nth-child(1) {
         width: 100%;
 
         // width: calc(100% - 120px);
-        height: 76px;
+        // height: 76px;
         > div:nth-child(1) {
           background-color: #eceefe;
           padding: 18px 60px;
@@ -273,6 +273,7 @@
       height: fit-content;
       width: 100%;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-evenly;
       @media (max-width: 446px) {
         // justify-content: unset;

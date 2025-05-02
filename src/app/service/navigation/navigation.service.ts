@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
+import { UserService } from '../../shared.service';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +13,8 @@ import { ChatContentComponent } from '../../chat-content/chat-content.component'
 export class NavigationService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  private auth: Auth = inject(Auth);
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
@@ -20,43 +24,32 @@ export class NavigationService {
   currentUserId: string = '';
   messageId: string = '';
   channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
-  isChatPage: boolean =
-    this.router.url.includes('/chat') ||
-    this.router.url.includes('/direct') ||
-    this.router.url.includes('/channel') ||
-    this.router.url.includes('/new-message') ||
-    this.router.url.includes('/contactbar') ||
-    this.router.url.includes('/channel') ||
-    this.router.url.includes('/direct') ||
-    this.router.url.includes('/thread');
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
    * and manages component navigation based on the current channel type and screen size.
    */
   constructor() {
-    if (this.isChatPage) {
-      this.observeScreenWidth();
-      this.route.queryParams.subscribe((params) => {
-        this.channelType = params['channelType'] || 'default';
-        this.reciverId = params['reciverId'] || '';
-        this.currentUserId = params['currentUserId'] || '';
-        this.messageId = params['messageId'] || '';
-        if (this.channelType === 'direct') this.showDirect();
-        else if (this.channelType === 'channel') this.showChannel();
-        else if (this.channelType === 'newMessage') this.showNewMessage();
-        else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
-      });
-      this.screenWidth$.subscribe((mobile) => {
-        this.isMobile = mobile;
-        if (mobile) {
-          if (this.channelType === 'direct') this.showDirect();
-          if (this.channelType === 'channel') this.showChannel();
-          if (this.channelType === 'newMessage') this.showNewMessage();
-          if (this.channelType === 'default') this.router.navigate(['/contactbar']);
-        } else this.showChat();
-      });
-    }
+    // this.observeScreenWidth();
+    // this.route.queryParams.subscribe((params) => {
+    //   this.channelType = params['channelType'] || 'default';
+    //   this.reciverId = params['reciverId'] || '';
+    //   this.currentUserId = params['currentUserId'] || '';
+    //   this.messageId = params['messageId'] || '';
+    //   if (this.channelType === 'direct') this.showDirect();
+    //   else if (this.channelType === 'channel') this.showChannel();
+    //   else if (this.channelType === 'newMessage') this.showNewMessage();
+    //   else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
+    // });
+    // this.screenWidth$.subscribe((mobile) => {
+    //   this.isMobile = mobile;
+    //   if (mobile) {
+    //     if (this.channelType === 'direct') this.showDirect();
+    //     if (this.channelType === 'channel') this.showChannel();
+    //     if (this.channelType === 'newMessage') this.showNewMessage();
+    //     if (this.channelType === 'default') this.router.navigate(['/contactbar']);
+    //   } else this.showChat();
+    // });
   }
 
   /**
