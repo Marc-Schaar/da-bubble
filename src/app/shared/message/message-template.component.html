@@ -26,12 +26,14 @@
     <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="hover-to-dark-purple">
       <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
     </button>
+    @if (!isThread) {
     <button
       (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
       class="hover-to-dark-purple"
     >
-      <img src="/img/reaction-bar-icons/comment.png" alt="" />
-    </button>
+      <img src="/img/reaction-bar-icons/comment.png" alt="" /></button
+    >}
+
     <button
       *ngIf="message.name == this.userService.auth.currentUser?.displayName"
       class="hover-to-dark-purple"

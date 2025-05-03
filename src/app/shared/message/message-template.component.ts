@@ -26,7 +26,6 @@ export class MessageTemplateComponent {
   showAllReactions: boolean = false;
 
   userId: string | undefined = '';
-  editingMessageId: any = '';
   inputEdit: string = '';
 
   emojis: string[] = [
@@ -38,6 +37,8 @@ export class MessageTemplateComponent {
 
   @Input() message: any;
   @Input() currentChannelId: string = '';
+  @Input() parentMessageId: string = '';
+  @Input() isThread: boolean = false;
 
   constructor() {
     this.userId = this.userService.auth.currentUser?.uid;
@@ -54,15 +55,36 @@ export class MessageTemplateComponent {
     this.inputEdit = message.message;
   }
 
+  async updateMessage(message: any) {
+    this.isThread ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
+  }
+
+  /**
+   * Updates the message after editing.
+   * @param message - The message to update.
+   */
+  updateThreadMessage(message: any) {
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+    if (messageRef) {
+      this.isEditing = false;
+      try {
+        this.fireService.updateMessage(messageRef, this.inputEdit);
+        this.inputEdit = '';
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren der Nachricht:', error);
+      }
+    }
+  }
+
   /**
    * Updates the content of an edited message.
    * @param message - The message to update
    */
-  async updateMessage(message: any) {
+
+  updateChannelMessage(message: any) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     if (messageRef) {
       this.isEditing = false;
-      this.editingMessageId = null;
       try {
         this.fireService.updateMessage(messageRef, this.inputEdit);
         this.inputEdit = '';
@@ -97,17 +119,17 @@ export class MessageTemplateComponent {
    * @param emoji - The emoji reaction
    */
   addReaction(message: any, emoji: string) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
-    let newReaction = { emoji: emoji, from: this.userService.auth.currentUser?.uid || 'Gast' };
+    let messageRef;
+    this.isThread
+      ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
+      : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
+
+    let newReaction = { emoji: emoji, from: this.userService.auth.currentUser?.uid || 'n/a' };
     if (!this.hasReacted(newReaction.emoji, message.reaction)) {
       message.reaction.push(newReaction);
       if (messageRef) {
-        try {
-          this.fireService.updateReaction(messageRef, message.reaction);
-          this.reactionMenuOpen = false;
-        } catch (error) {
-          console.error('Fehler beim Aktualisieren der Nachricht:', error);
-        }
+        this.fireService.updateReaction(messageRef, message.reaction);
+        this.reactionMenuOpen = false;
       }
     } else this.removeReaction(message, emoji);
   }
@@ -128,7 +150,11 @@ export class MessageTemplateComponent {
    * @param emoji - The emoji to remove
    */
   removeReaction(message: any, emoji: string) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let messageRef;
+    this.isThread
+      ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
+      : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
+
     let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
     if (reactionIndex >= 0) {
       message.reaction.splice(reactionIndex, 1);
@@ -199,7 +225,6 @@ export class MessageTemplateComponent {
    */
   cancel() {
     this.isEditing = false;
-    this.editingMessageId = null;
     this.menuOpen = false;
   }
 }

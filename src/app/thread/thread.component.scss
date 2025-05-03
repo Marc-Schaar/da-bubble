@@ -64,24 +64,6 @@ section {
   background-color: #ffffff;
   transition: background-color 0.125s ease-in-out;
 
-  .message-container {
-    background-color: var(--bg-color);
-    transition: background-color 0.125s ease-in-out;
-  }
-
-  &:hover {
-    background-color: var(--bg-color);
-    transition: background-color 0.125s ease-in-out;
-
-    .message-container {
-      background-color: #ffffff;
-    }
-
-    .textarea-container {
-      background-color: white;
-    }
-  }
-
   .user-message-container {
     font-family: Nunito;
     font-size: 18px;
@@ -89,10 +71,6 @@ section {
     gap: 20px;
     padding: 10px 40px;
     position: relative;
-
-    &:hover .reaction-bar {
-      display: flex;
-    }
 
     .name-time-message-container {
       display: flex;
@@ -142,10 +120,6 @@ section {
     background-color: var(--medium-purple);
   }
 
-  .reaction-bar {
-    left: 20px;
-  }
-
   &:hover {
     background-color: var(--bg-color);
 
@@ -159,22 +133,6 @@ section {
 
   .message-container {
     border-radius: 20px 0 20px 20px !important;
-  }
-
-  .reaction-bar {
-    .reaction-menu {
-      left: 20px;
-      border-radius: 25px 25px 25px 0;
-    }
-  }
-
-  .user-message-container {
-    .name-time-message-container {
-      .reaction-menu {
-        left: unset;
-        right: 148px;
-      }
-    }
   }
 }
 
@@ -205,54 +163,8 @@ section {
   gap: 10px;
 }
 
-// TEXTAREA & BUTTONS WITH HOVER/FOCUS EFFECT
-
 .card-footer {
   padding: 25px;
-}
-
-.reaction-bar {
-  display: none;
-  position: absolute;
-  top: -15px;
-  right: 20px;
-  background-color: white;
-  border: 1px solid var(--light-purple);
-  border-radius: 25px 25px 0 25px;
-  padding: 3px 15px;
-  width: max-content;
-
-  > button {
-    padding: 10px;
-    border-radius: 50%;
-    position: relative;
-  }
-
-  .reaction-menu {
-    right: 20px;
-    border-radius: 25px 25px 0 25px;
-  }
-
-  .menu {
-    position: absolute;
-    left: 80px;
-    top: 20px;
-    border-radius: 0 30px 30px 30px;
-    padding: 10px 20px;
-    background-color: white;
-
-    button {
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-size: 24px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--bg-color);
-        scale: 1.02;
-      }
-    }
-  }
 }
 
 button {
@@ -270,78 +182,6 @@ button {
   }
 }
 
-.reaction-menu {
-  position: absolute;
-  right: 144px;
-  bottom: 40px;
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  width: 200px;
-  max-width: 300px;
-  max-height: 300px;
-  overflow-y: auto;
-  flex-wrap: wrap;
-  z-index: 10;
-  padding: 8px;
-  border: 1px solid var(--light-purple);
-  background-color: white;
-  border-radius: 25px 25px 0 25px;
-  > .emoji {
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.125s ease-in-out;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--bg-color) !important;
-    }
-  }
-
-  &:hover {
-    background-color: white !important;
-  }
-}
-
-.emoji-box {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  gap: 10px;
-  padding: 5px 10px;
-  border: 1px solid var(--light-purple);
-  border-radius: 20px;
-  cursor: pointer;
-
-  &:hover {
-    .reaction-from-dialog {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-  }
-}
-
-.reaction-from-dialog {
-  display: none;
-  position: absolute;
-  flex-wrap: wrap;
-  bottom: 40px;
-  left: 32px;
-  align-items: center;
-  background-color: var(--dark-purple);
-  border-radius: 30px 30px 30px 0;
-  padding: 10px 15px;
-  color: white;
-  z-index: 10;
-  font-size: 16px;
-  img {
-    width: 30px;
-    aspect-ratio: 1;
-  }
-}
-
 h3 {
   font-weight: 700;
   font-size: 18px;
@@ -353,26 +193,6 @@ h3 {
 
 .position-relative {
   position: relative;
-}
-
-.action-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  position: relative;
-  width: 100%;
-}
-
-.btn-primary {
-  transition: all 0.125s ease-in-out;
-  background-color: var(--medium-purple);
-  color: white;
-
-  &:hover {
-    outline: solid 1px var(--medium-purple) !important;
-    color: black;
-    background-color: white;
-  }
 }
 
 header {
