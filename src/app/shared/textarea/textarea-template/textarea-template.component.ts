@@ -8,6 +8,8 @@ import { MessagesService } from '../../../service/messages/messages.service';
 import { UserService } from '../../../shared.service';
 import { Navigation } from '@angular/router';
 import { NavigationService } from '../../../service/navigation/navigation.service';
+import { CollectionReference, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, DocumentData } from '@firebase/firestore';
 
 @Component({
   selector: 'app-textarea-template',
@@ -20,6 +22,7 @@ export class TextareaTemplateComponent {
   messagesService: MessagesService = inject(MessagesService);
   userService: UserService = inject(UserService);
   navigationService: NavigationService = inject(NavigationService);
+  firestore: Firestore = inject(Firestore);
 
   listOpen: boolean = false;
   reactionMenuOpenInTextarea: boolean = false;
@@ -36,20 +39,51 @@ export class TextareaTemplateComponent {
     'emoji _rocket_',
     'emoji _white heavy check mark_',
   ];
-  @Input() currentChannelId: string = '';
+  @Input() currentUserId: string = '';
+  @Input() reciverId: string = '';
   @Input() messages: any[] = [];
+  @Input() isChannelComponent: boolean = false;
 
   /**
    * Sends a new message to the current channel.
    */
   newMessage(): void {
+    this.isChannelComponent ? this.sendChannelMessage() : this.sendDirectMessage();
+  }
+
+  sendDirectMessage(): void {
+    if (!this.input.trim()) return;
+    const messageData = this.messagesService.buildDirectMessageObject(this.input, this.messages, this.currentUserId, this.reciverId);
+    const [uid1, uid2] = [this.currentUserId, this.reciverId].sort();
+    const conversationId = `${uid1}_${uid2}`;
+    const senderConversationRef = collection(this.firestore, `users/${this.currentUserId}/conversations/${conversationId}/messages`);
+    const receiverConversationRef = collection(this.firestore, `users/${this.reciverId}/conversations/${conversationId}/messages`);
+    this.postData(senderConversationRef, receiverConversationRef, messageData);
+    this.input = '';
+  }
+
+  sendChannelMessage(): void {
     if (this.input.trim() !== '') {
       this.fireService.sendMessage(
-        this.currentChannelId,
+        this.reciverId,
         new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions))
       );
       this.input = '';
     }
+  }
+
+  /**
+   * Posts the message data to both sender and receiver conversation collections in Firestore.
+   */
+  private async postData(
+    senderConversationRef: CollectionReference<any, DocumentData>,
+    receiverConversationRef: CollectionReference<any, DocumentData>,
+    messageData: any
+  ) {
+    await Promise.all([
+      addDoc(senderConversationRef, messageData),
+      this.currentUserId !== this.reciverId ? addDoc(receiverConversationRef, messageData) : Promise.resolve(),
+    ]);
   }
 
   /**

@@ -14,12 +14,15 @@
 
   <div class="action-container justify-sb">
     <div class="gap-10">
+      @if (isChannelComponent) {
       <button
         (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()"
         class="hover-to-dark-purple"
       >
         <mat-icon>sentiment_satisfied</mat-icon>
       </button>
+      }
+
       <button (click)="getList('@'); $event.stopPropagation()" class="hover-to-dark-purple">
         <mat-icon>alternate_email</mat-icon>
       </button>

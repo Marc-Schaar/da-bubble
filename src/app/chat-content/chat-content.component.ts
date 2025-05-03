@@ -75,8 +75,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   //Neu für cleancode
   unsubMessages!: () => void;
   currentUser: User = new User(null);
-  userId: string = '';
-  currentChannelId: string = '';
+  public userId: string = '';
+  public currentChannelId: string = '';
 
   /**
    * Initializes the component, loads messages and channel data from URL parameters.

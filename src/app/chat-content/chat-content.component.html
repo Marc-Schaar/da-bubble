@@ -210,7 +210,12 @@
     </ul>
 
     <section class="card-footer">
-      <app-textarea-template [currentChannelId]="currentChannelId" [messages]="messages"></app-textarea-template>
+      <app-textarea-template
+        [currentUserId]="userId"
+        [reciverId]="currentChannelId"
+        [messages]="messages"
+        [isChannelComponent]="true"
+      ></app-textarea-template>
     </section>
   </div>
 </main>
