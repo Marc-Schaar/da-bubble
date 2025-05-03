@@ -69,40 +69,14 @@
       </section>
       }
     </section>
-    <ul [ngClass]="{ show: isClicked }" class="lists">
-      @for (object of currentList; track $index) {
-      <li (click)="openReciver(object.id)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
-        <div *ngIf="!isChannel" class="imageContainer">
-          <img [src]="object?.profilephoto" alt="" />
-          <div *ngIf="!isChannel" class="status-dot" [ngClass]="{ green: object?.online }"></div>
-        </div>
-        <img class="tag" *ngIf="isChannel" src="./img/tag.svg" alt="" />
-        <div>
-          <span>{{ object?.fullname || object?.name }}</span>
-        </div>
-      </li>
-      }
-    </ul>
-    <div class="textContainer">
-      <div>
-        <textarea
-          (input)="getList()"
-          (keyup.enter)="input.trim() && sendMessage()"
-          [(ngModel)]="input"
-          placeholder="Nachricht an {{ currentReciever?.fullname }}"
-        ></textarea>
-        <div>
-          <div class="left">
-            <button><img class="smiley" src="./img/smiley.svg" alt="" /></button>
-            <button (click)="toggleList($event)">
-              <img class="at" src="./img/at.svg" alt="" />
-            </button>
-          </div>
-          <button [disabled]="input.trim() == ''" (click)="sendMessage()" class="right">
-            <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
-          </button>
-        </div>
-      </div>
-    </div>
+
+    <footer class="card-footer">
+      <app-textarea-template
+        [currentUserId]="currentUserId"
+        [reciverId]="currentRecieverId"
+        [messages]="currentMessages"
+        [isChannelComponent]="false"
+      ></app-textarea-template>
+    </footer>
   </section>
 </main>

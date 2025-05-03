@@ -1,6 +1,6 @@
 import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { UserService } from '../shared.service';
-import { Firestore, getDoc, collection, addDoc, DocumentData, CollectionReference } from '@angular/fire/firestore';
+import { getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FireServiceService } from '../fire-service.service';
@@ -10,13 +10,14 @@ import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Subscription } from 'rxjs';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template/textarea-template.component';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-direct-messages',
-  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent],
+  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent, TextareaTemplateComponent],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
@@ -26,24 +27,20 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   users: any[] = [];
   currentReciever: any = null;
   currentUser: any = null;
-  currentList: any[] = [];
   currentMessages: any[] = [];
   isClicked: boolean = false;
   listKey: string = '';
-  isChannel: boolean = false;
   isProfileCard: boolean = false;
   //Cleancode Update
   public userService = inject(UserService);
   public navigationService = inject(NavigationService);
-  private firestore = inject(Firestore);
   private firestoreService = inject(FireServiceService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
   private subscriptions = new Subscription();
   private unsubMessages!: () => void;
-  public input: string = '';
-  private currentRecieverId: string = '';
-  private currentUserId: string = '';
+  public currentRecieverId: string = '';
+  public currentUserId: string = '';
 
   /**
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
@@ -109,72 +106,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Sends a message if the input is not empty, and posts it to both sender and receiver conversations.
-   */
-  public sendMessage() {
-    if (!this.input.trim()) return;
-    const messageData = this.messagesService.buildDirectMessageObject(
-      this.input,
-      this.currentMessages,
-      this.currentUserId,
-      this.currentRecieverId
-    );
-    const [uid1, uid2] = [this.currentUserId, this.currentRecieverId].sort();
-    const conversationId = `${uid1}_${uid2}`;
-    const senderConversationRef = collection(this.firestore, `users/${this.currentUserId}/conversations/${conversationId}/messages`);
-    const receiverConversationRef = collection(this.firestore, `users/${this.currentRecieverId}/conversations/${conversationId}/messages`);
-    this.postData(senderConversationRef, receiverConversationRef, messageData);
-    this.input = '';
-  }
-
-  /**
-   * Posts the message data to both sender and receiver conversation collections in Firestore.
-   */
-  private async postData(
-    senderConversationRef: CollectionReference<any, DocumentData>,
-    receiverConversationRef: CollectionReference<any, DocumentData>,
-    messageData: any
-  ) {
-    await Promise.all([
-      addDoc(senderConversationRef, messageData),
-      this.currentUserId !== this.currentRecieverId ? addDoc(receiverConversationRef, messageData) : Promise.resolve(),
-    ]);
-  }
-
-  /**
-   * Filters and shows either the users or channels based on the input.
-   */
-  public getList() {
-    if (this.input.includes('#')) {
-      this.currentList = this.channels;
-      this.isClicked = true;
-      this.isChannel = true;
-    }
-    if (this.input.includes('@')) {
-      this.isClicked = true;
-      this.currentList = this.users;
-      this.isChannel = false;
-    }
-    if (this.input === '' || (!this.input.includes('#') && !this.input.includes('@'))) {
-      this.isClicked = false;
-    }
-  }
-
-  /**
-   * Opens the receiver's profile or channel.
-   * @param key The unique key of the selected receiver or channel.
-   */
-  public openReciver(key: string): void {
-    if (this.isChannel) {
-      this.userService.setUrl('channel', key);
-      this.navigationService.showChannel();
-    } else if (!this.isChannel) {
-      this.userService.setUrl('direct', key, this.currentUserId);
-      this.navigationService.showDirect();
-    }
-  }
-
-  /**
    * Hides the list of users or channels.
    */
   public hideList() {
@@ -229,16 +160,5 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   showProfile() {
     this.userService.showRecieverProfile();
-  }
-
-  /**
-   * Toggles the visibility of the list of users or channels.
-   * @param event The event triggered by the toggle action.
-   */
-  toggleList(event: Event) {
-    this.isClicked = !this.isClicked;
-    this.currentList = this.users;
-    this.isChannel = false;
-    event.stopPropagation();
   }
 }

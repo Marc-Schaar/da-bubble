@@ -93,108 +93,26 @@ main {
 }
 
 .card-footer {
-  padding: 0 25px 25px;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  height: 145px;
-  outline: 1px solid var(--light-purple);
-  border-radius: 20px;
-  padding: 20px;
-  transition: all 0.125s ease-in-out;
-
-  &:hover {
-    outline: 1px solid var(--medium-purple);
-  }
-  &:has(textarea:focus-visible) {
-    outline: 1px solid var(--dark-purple);
-  }
-}
-
-.action-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  .reaction-menu {
-    border-radius: 25px 25px 25px 0;
-    left: 20px;
-  }
-
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  ul {
-    position: absolute;
-    bottom: 44px;
-    left: 53px;
-    border: 1px solid var(--light-purple);
-    border-radius: 25px 25px 25px 0;
-    max-height: 250px;
-    overflow-y: auto;
-    background-color: white;
-    padding: 8px;
-  }
-
-  li {
-    list-style: none;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    &:hover {
-      background-color: var(--bg-color);
-    }
-  }
-
-  .userCircle {
-    position: relative;
-
-    .profilephoto {
-      width: 40px;
-      border-radius: 50%;
-    }
-
-    .status-dot {
-      position: absolute;
-      bottom: 0;
-      right: -2px;
-      width: 12px;
-      height: 12px;
-      border: solid;
-      background-color: gray;
-      border-radius: 50%;
-      border-color: #eceefe;
-      border-width: 2px;
-    }
-
-    .green {
-      background-color: #92c83e;
-    }
-  }
-}
-
-textarea {
-  border: none;
-  resize: none;
-  background: transparent;
-  font-family: "Nunito";
-  font-size: 18px;
-  &::-webkit-resizer {
-    display: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-  }
+  padding: 25px;
 }
 
 li {
   padding: 20px;
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: unset;
+  white-space: nowrap;
+  transition: all, 0.125s ease-in-out;
+  cursor: pointer;
+
+  &:disabled {
+    mat-icon {
+      color: var(--light-purple);
+    }
+  }
 }
 
 .message {
@@ -455,21 +373,6 @@ li {
 
 .font-size-18 {
   font-size: 18px;
-}
-
-button {
-  border: none;
-  outline: none;
-  background-color: unset;
-  white-space: nowrap;
-  transition: all, 0.125s ease-in-out;
-  cursor: pointer;
-
-  &:disabled {
-    mat-icon {
-      color: var(--light-purple);
-    }
-  }
 }
 
 header {
