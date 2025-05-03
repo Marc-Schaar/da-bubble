@@ -35,6 +35,7 @@ export class AddChannelComponent implements OnInit {
   creator: string = '';
   channelRef: string = '';
   addMemberInfoWindow: boolean = false;
+  isMobile: boolean = false;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
@@ -182,7 +183,9 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   closeScreen() {
-    this.dialogRef.close();
+    if (this.isMobile && this.selectChannelMember) {
+      this.selectChannelMember = false;
+    } else this.dialogRef.close();
   }
 
   /**
@@ -195,6 +198,11 @@ export class AddChannelComponent implements OnInit {
       this.addChannel();
       this.channelmodule.showFeedback('Channel erstellt');
       this.selectChannelMember = true;
+      if (isPlatformBrowser(this.platformId)) {
+        if (window.innerWidth <= 1023) {
+          this.isMobile = true;
+        }
+      }
     }
   }
 
@@ -314,11 +322,15 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   setChannelMember(value: boolean, setHeight: string) {
+    if (!this.isMobile) {
+      const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
+      this.chooseMember = value;
+      if (heightElement) {
+        heightElement.style.height = setHeight;
+      }
+    }
     const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
     this.chooseMember = value;
-    if (heightElement) {
-      heightElement.style.height = setHeight;
-    }
   }
 
   /**

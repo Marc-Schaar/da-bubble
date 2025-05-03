@@ -2,9 +2,9 @@
   <div
     class="add-channel-cont"
     id="add-channel-cont"
-    [ngClass]="{ 'change-size': !selectChannelMember, 'mobile-menu': selectChannelMember }">
-    
-    <div *ngIf="!selectChannelMember" class="add-channel-create">
+    [ngClass]="{ 'change-size': !selectChannelMember}">
+    <div *ngIf="selectChannelMember && isMobile" class="background"></div>
+    <div *ngIf="!selectChannelMember || isMobile" class="add-channel-create">
       <div class="add-channel-header">
         <div class="add-channel-text">Channel erstellen</div>
         <div class="close-cont" (click)="closeScreen()">
@@ -43,7 +43,8 @@
         <button [disabled]="!channelForm.valid">Erstellen</button> 
       </form>
     </div>
-    <div *ngIf="selectChannelMember" class="select-member-cont">
+    <div  class="select-member-cont" [ngClass]="{ 'visible-select-menu': selectChannelMember}" [style.height]="showUserBar ? '460px' : 'auto'">
+      <div (click)="closeScreen()" *ngIf="isMobile" class="mobile-btn-cont"><div class="mobile-btn"></div></div>
       <div class="add-channel-user-header">
         <div class="headline-channel-add-user">Leute hinzufügen</div>
         <div class="close-cont" (click)="closeScreen()">
