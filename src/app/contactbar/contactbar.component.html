@@ -73,7 +73,9 @@
           <li
             [ngClass]="{ 'active-link': currentLink === channel.name }"
             class="channelrow"
-            (click)="openWindow('channel', channel.name); this.userService.setUrl('channel', channel.id, currentUser.id)"
+            (click)="
+              openWindow('channel', channel.name); this.userService.setUrl('channel', channel.id, this.userService.auth.currentUser?.uid)
+            "
           >
             <mat-icon class="material-symbols-outlined">tag</mat-icon>
             <span>{{ channel.name }}</span>

@@ -11,17 +11,15 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
 import { AddMemberComponent } from './add-member/add-member.component';
-import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MessagesService } from '../service/messages/messages.service';
 import { User } from '../models/user/user';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Message } from '../models/message/message';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template/textarea-template.component';
 
-// @Injectable({
-//   providedIn: 'root',
-// })
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -34,6 +32,7 @@ import { Message } from '../models/message/message';
     MatMenuModule,
     MatDialogModule,
     DividerTemplateComponent,
+    TextareaTemplateComponent,
   ],
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.scss',
@@ -53,11 +52,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
-  reactionMenuOpenInTextarea: boolean = false;
-  listOpen: boolean = false;
   isEditing: boolean = false;
   isMobile: boolean = false;
-  isChannel: boolean = false;
   showBackground: boolean = false;
   showAllReactions: boolean = false;
   channels: any = [];
@@ -66,7 +62,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   reactions: any = [];
   currentList: any = [];
   editingMessageId: any = '';
-  input: string = '';
   inputEdit: string = '';
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
@@ -161,19 +156,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Sends a new message to the current channel.
-   */
-  newMessage(): void {
-    if (this.input.trim() !== '') {
-      this.fireService.sendMessage(
-        this.currentChannelId,
-        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions))
-      );
-      this.input = '';
-    }
-  }
-
-  /**
    * Enables editing mode for a specific message.
    * @param message - The message to edit
    * @param index - Index of the message in the message list
@@ -239,6 +221,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * @param emoji - The emoji to remove
    */
   removeReaction(message: any, emoji: string) {
+    console.log('sollte enfternen');
+
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
     if (reactionIndex >= 0) {
@@ -251,16 +235,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
         }
       }
     }
-  }
-
-  /**
-   * Adds an emoji to the local reactions array.
-   * @param emoji - The emoji to add
-   */
-  addEmoji(emoji: string) {
-    this.reactions = [];
-    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
-    this.reactions.push(newReaction);
   }
 
   /**
@@ -375,55 +349,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   hasReacted(emoji: any, reactions: any[]): boolean {
     return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
-  }
-
-  /**
-   * Handles autocomplete logic for mentions and channels in the input.
-   * @param type - Optional preset string to insert
-   */
-  getList(type?: string): void {
-    if (type) this.input = type;
-    if (this.input.includes('#') || this.input.includes('@')) {
-      if (this.input.includes('#')) {
-        this.currentList = this.userService.channels;
-        this.isChannel = true;
-        this.listOpen = true;
-      }
-
-      if (this.input.includes('@')) {
-        this.currentList = this.userService.users;
-        this.isChannel = false;
-        this.listOpen = true;
-      }
-    } else if (this.input === '') {
-      this.currentList = [];
-      this.listOpen = false;
-    }
-  }
-
-  /**
-   * Opens a receiver (either a channel or a direct message) based on the input conditions.
-   * @param i - The index of the message or item to open
-   * @param key - The key identifier for the receiver (channel or direct message)
-   */
-  public openReciver(key: string): void {
-    if (this.isChannel) {
-      this.userService.setUrl('channel', key);
-      this.navigationService.showChannel();
-    } else if (!this.isChannel) {
-      this.userService.setUrl('direct', key, this.userId);
-      this.navigationService.showDirect();
-    }
-    this.resetList();
-  }
-
-  /**
-   * Resets the list of items, clears the input, and closes the list.
-   */
-  resetList() {
-    this.currentList = [];
-    this.listOpen = false;
-    this.input = '';
   }
 
   /**
