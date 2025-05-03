@@ -2,17 +2,18 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
-import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message } from '../models/message/message';
 import { MessagesService } from '../service/messages/messages.service';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink],
+  imports: [CommonModule, FormsModule, MatIconModule, RouterLink, TextareaTemplateComponent],
   templateUrl: './thread.component.html',
   styleUrls: ['./thread.component.scss'],
 })
@@ -29,22 +30,18 @@ export class ThreadComponent implements OnInit {
   currentChannel: any;
   currentChannelId: string = '';
   parentMessageId: string = '';
-  input: string = '';
   inputEdit: string = '';
   parentMessageData: any = null;
   editingMessageId: number | null = null;
   listOpen: boolean = false;
-  isChannel: boolean = false;
   isEditing: boolean = false;
   menuOpen: boolean = false;
-  reactionMenuOpenInTextarea: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInBar: boolean = false;
   showAllReactions: boolean = false;
   messages: any = [];
   reactions: any = [];
-  currentList: any = [];
   emojis: string[] = [
     'emoji _nerd face_',
     'emoji _person raising both hands in celebration_',
@@ -131,20 +128,6 @@ export class ThreadComponent implements OnInit {
   }
 
   /**
-   * Sends a new message in the current thread.
-   */
-  sendMessage() {
-    if (this.input.trim() !== '') {
-      this.fireService.sendThreadMessage(
-        this.currentChannelId,
-        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions)),
-        this.parentMessageId
-      );
-      this.input = '';
-    }
-  }
-
-  /**
    * Closes the current thread and redirects the user.
    */
   closeThread() {
@@ -154,50 +137,6 @@ export class ThreadComponent implements OnInit {
       });
     }
     this.userService.toggleThread('close');
-  }
-
-  /**
-   * Gets the list of channels or users based on input.
-   * @param type - The type of list to display (channels or users).
-   */
-  getList(type?: string): void {
-    if (type) this.input = type;
-    if (this.input.includes('#') || this.input.includes('@')) {
-      if (this.input.includes('#')) {
-        this.currentList = this.userService.channels;
-        this.isChannel = true;
-        this.listOpen = true;
-      }
-
-      if (this.input.includes('@')) {
-        this.currentList = this.userService.users;
-        this.isChannel = false;
-        this.listOpen = true;
-      }
-    } else if (this.input === '') {
-      this.currentList = [];
-      this.listOpen = false;
-    }
-  }
-
-  /**
-   * Opens a receiver (channel or user) based on the message input.
-   * @param i - The index of the item in the list.
-   * @param key - The key identifying the receiver.
-   */
-  openReciver(i: number, key: string) {
-    this.isChannel ? this.userService.setUrl('channel', key) : this.userService.setUrl('direct', this.userId, key);
-    this.resetList();
-    this.userService.toggleThread('close');
-  }
-
-  /**
-   * Resets the input list and hides the list menu.
-   */
-  resetList() {
-    this.currentList = [];
-    this.listOpen = false;
-    this.input = '';
   }
 
   /**
@@ -278,12 +217,6 @@ export class ThreadComponent implements OnInit {
         }
       }
     }
-  }
-
-  addEmoji(emoji: string) {
-    this.reactions = [];
-    let newReaction = { emoji: emoji, from: this.userId || 'Gast' };
-    this.reactions.push(newReaction);
   }
 
   uniqueEmojis(reactions: any[]): any[] {

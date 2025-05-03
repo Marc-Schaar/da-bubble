@@ -10,7 +10,7 @@ import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Subscription } from 'rxjs';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template/textarea-template.component';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 
 @Injectable({
   providedIn: 'root',

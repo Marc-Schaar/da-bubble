@@ -18,7 +18,7 @@ import { User } from '../models/user/user';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Message } from '../models/message/message';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template/textarea-template.component';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 
 @Component({
   selector: 'app-chat-content',

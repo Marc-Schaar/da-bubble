@@ -213,8 +213,11 @@
       <app-textarea-template
         [currentUserId]="userId"
         [reciverId]="currentChannelId"
+        [reciverName]="currentChannel?.name"
+        [reciverCompontent]="'channel'"
         [messages]="messages"
         [isChannelComponent]="true"
+        [placeholderText]="'Nachricht an #' + currentChannel?.name"
       ></app-textarea-template>
     </section>
   </div>

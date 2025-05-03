@@ -2,12 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { FireServiceService } from '../../../fire-service.service';
-import { Message } from '../../../models/message/message';
-import { MessagesService } from '../../../service/messages/messages.service';
-import { UserService } from '../../../shared.service';
-import { Navigation } from '@angular/router';
-import { NavigationService } from '../../../service/navigation/navigation.service';
+import { FireServiceService } from '../../fire-service.service';
+import { Message } from '../../models/message/message';
+import { MessagesService } from '../../service/messages/messages.service';
+import { UserService } from '../../shared.service';
+import { NavigationService } from '../../service/navigation/navigation.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 
@@ -29,6 +28,7 @@ export class TextareaTemplateComponent {
   isChannel: boolean = false;
 
   input: string = '';
+
   currentChannel: any;
 
   reactions: any[] = [];
@@ -39,16 +39,52 @@ export class TextareaTemplateComponent {
     'emoji _rocket_',
     'emoji _white heavy check mark_',
   ];
+
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
+  @Input() reciverName: string = '';
   @Input() messages: any[] = [];
   @Input() isChannelComponent: boolean = false;
+  @Input() placeholderText: string = 'Starte eine neue Nachricht';
+  @Input() reciverCompontent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
+  @Input() threadId: string = '';
+
+  constructor() {}
 
   /**
    * Sends a new message to the current channel.
    */
   newMessage(): void {
-    this.isChannelComponent ? this.sendChannelMessage() : this.sendDirectMessage();
+    switch (this.reciverCompontent) {
+      case 'direct':
+        this.sendDirectMessage();
+        break;
+
+      case 'channel':
+        this.sendChannelMessage();
+        break;
+
+      case 'thread':
+        this.sendThreadMessage();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Sends a new message in the current thread.
+   */
+  sendThreadMessage() {
+    if (this.input.trim() !== '') {
+      this.fireService.sendThreadMessage(
+        this.reciverId,
+        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions)),
+        this.threadId
+      );
+      this.input = '';
+    }
   }
 
   sendDirectMessage(): void {

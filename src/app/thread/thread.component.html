@@ -199,60 +199,16 @@
       </ul>
     </div>
 
-    <!-- TEXT MESSAGE FIELD  -->
     <div class="card-footer" (mouseleave)="listOpen = false">
-      <div class="textarea-container">
-        <textarea
-          placeholder="Antworten..."
-          name="YourMessage"
-          rows="3"
-          [(ngModel)]="input"
-          (keyup.enter)="sendMessage()"
-          (click)="reactionMenuOpenInTextarea = false; listOpen = false"
-        ></textarea>
-        <div class="textarea-three-buttons-container">
-          <div class="textarea-two-left-buttons-container">
-            <button
-              (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()"
-              class="hover-to-dark-purple"
-            >
-              <mat-icon>sentiment_satisfied</mat-icon>
-            </button>
-            <button (click)="getList('@'); reactionMenuOpenInTextarea = false; $event.stopPropagation()" class="hover-to-dark-purple">
-              <mat-icon>alternate_email</mat-icon>
-            </button>
-            <button (click)="getList('#'); reactionMenuOpenInTextarea = false; $event.stopPropagation()" class="hover-to-dark-purple">
-              <mat-icon>tag</mat-icon>
-            </button>
-            <img *ngIf="reactions[0]" [src]="'img/emojis/' + reactions[0]?.emoji + '.png'" alt="{{ reactions[0]?.emoji }}" />
-          </div>
-
-          <button [disabled]="input.trim() == ''" (click)="sendMessage()">
-            <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
-          </button>
-        </div>
-
-        <ul *ngIf="this.listOpen">
-          <ng-container *ngFor="let elemnent of currentList; index as i">
-            <li (click)="openReciver(i, elemnent.key)">
-              <div *ngIf="isChannel"><mat-icon>tag</mat-icon></div>
-              <div class="userCircle" *ngIf="!isChannel">
-                <img class="profilephoto" src="{{ elemnent?.profilephoto }}" alt="" />
-                <div class="status-dot" [ngClass]="{ green: elemnent?.online }"></div>
-              </div>
-              {{ elemnent.fullname || elemnent.data.name }}
-            </li>
-          </ng-container>
-        </ul>
-
-        <div class="reaction-menu" *ngIf="reactionMenuOpenInTextarea">
-          <ng-container *ngFor="let emoji of emojis">
-            <div (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
-              <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
-            </div>
-          </ng-container>
-        </div>
-      </div>
+      <app-textarea-template
+        [currentUserId]="userId"
+        [reciverId]="currentChannelId"
+        [reciverCompontent]="'thread'"
+        [messages]="messages"
+        [isChannelComponent]="true"
+        [placeholderText]="'Antworten...'"
+        [threadId]="parentMessageId"
+      ></app-textarea-template>
     </div>
   </section>
 </main>
