@@ -131,6 +131,21 @@ a {
   background-color: var(--dark-purple);
 }
 
+textarea {
+  border: none;
+  resize: none;
+  background: transparent;
+  font-family: "Nunito";
+  font-size: 18px;
+  &::-webkit-resizer {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
 .hover-dark-purple-to-medium {
   transition: all 0.125s ease-in-out;
 

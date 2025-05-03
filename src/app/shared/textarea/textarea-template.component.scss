@@ -15,21 +15,6 @@
   }
 }
 
-textarea {
-  border: none;
-  resize: none;
-  background: transparent;
-  font-family: "Nunito";
-  font-size: 18px;
-  &::-webkit-resizer {
-    display: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-  }
-}
-
 .action-container {
   display: flex;
   align-items: center;
