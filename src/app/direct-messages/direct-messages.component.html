@@ -74,8 +74,10 @@
       <app-textarea-template
         [currentUserId]="currentUserId"
         [reciverId]="currentRecieverId"
+        [reciverName]="'direct'"
         [messages]="currentMessages"
         [isChannelComponent]="false"
+        [placeholderText]="'Nachricht an @' + currentReciever?.fullname"
       ></app-textarea-template>
     </footer>
   </section>

@@ -3,19 +3,19 @@ import { Component, inject, Injectable } from '@angular/core';
 import { UserService } from '../shared.service';
 import { FireServiceService } from '../fire-service.service';
 import { Firestore, arrayUnion, doc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
-import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from '../models/message/message';
 import { DirectMessage } from '../models/direct-message/direct-message';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-newmessage',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TextareaTemplateComponent],
   templateUrl: './newmessage.component.html',
   styleUrl: './newmessage.component.scss',
 })

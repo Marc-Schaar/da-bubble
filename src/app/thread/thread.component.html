@@ -201,7 +201,16 @@
 
     <!-- TEXT MESSAGE FIELD  -->
     <div class="card-footer" (mouseleave)="listOpen = false">
-      <div class="textarea-container">
+      <app-textarea-template
+        [currentUserId]="userId"
+        [reciverId]="currentChannelId"
+        [reciverCompontent]="'thread'"
+        [messages]="messages"
+        [isChannelComponent]="true"
+        [placeholderText]="'Antworten...'"
+        [threadId]="parentMessageId"
+      ></app-textarea-template>
+      <!-- <div class="textarea-container">
         <textarea
           placeholder="Antworten..."
           name="YourMessage"
@@ -252,7 +261,7 @@
             </div>
           </ng-container>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </main>
