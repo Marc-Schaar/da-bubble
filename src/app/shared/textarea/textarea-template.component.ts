@@ -72,6 +72,7 @@ export class TextareaTemplateComponent {
       default:
         break;
     }
+    console.log(this.reciverCompontent);
   }
 
   /**
