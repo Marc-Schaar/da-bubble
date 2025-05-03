@@ -6,7 +6,6 @@ import { FireServiceService } from '../../fire-service.service';
 import { Message } from '../../models/message/message';
 import { MessagesService } from '../../service/messages/messages.service';
 import { UserService } from '../../shared.service';
-import { Navigation } from '@angular/router';
 import { NavigationService } from '../../service/navigation/navigation.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
@@ -72,7 +71,6 @@ export class TextareaTemplateComponent {
       default:
         break;
     }
-    console.log(this.reciverCompontent);
   }
 
   /**
