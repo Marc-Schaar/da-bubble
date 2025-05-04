@@ -51,7 +51,6 @@ main {
     font-weight: 600;
   }
 }
-
 .avatar-container {
   display: flex;
   position: relative;
@@ -150,9 +149,14 @@ header {
 
   .card-header {
     padding: 10px 16px;
-
     .avatar-container {
       display: none;
+    }
+    .btn-add-member {
+      display: none;
+    }
+    .btn-add-member-mobile {
+      display: flex !important; 
     }
   }
 }
@@ -187,3 +191,8 @@ header {
   transform: translate(-50%, -50%);
   z-index: 1001;
 }
+
+.btn-add-member-mobile {
+  display: none !important;
+}
+

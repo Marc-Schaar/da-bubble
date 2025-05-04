@@ -193,7 +193,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
 
       // height: 'auto',
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
-
       position: { top: '200px', right: '150px' },
     });
   }
