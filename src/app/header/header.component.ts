@@ -21,8 +21,6 @@ import { AuthService } from '../service/auth/auth.service';
 })
 export class HeaderComponent {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
-  displayName: string | null = null;
-  user: User | null = null;
   auth = inject(Auth);
   fireService = inject(FireServiceService);
   userService = inject(UserService);

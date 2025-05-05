@@ -4,6 +4,7 @@ export class User {
   password: string;
   profilephoto: string;
   online: boolean;
+  id: string;
 
   /**
    * @constructor
@@ -16,5 +17,6 @@ export class User {
     this.password = obj ? obj.password : '';
     this.profilephoto = obj ? obj.profilephoto : '';
     this.online = obj ? obj.online : false;
+    this.id = obj ? obj.id : '';
   }
 }

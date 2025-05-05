@@ -30,18 +30,14 @@
     padding: 20px 20px;
   }
   @media (max-width: 743px) {
-    // width: 91%;
   }
   @media (max-height: 920px) {
     gap: 18px;
-    //  max-width: 545px;
   }
   @media (max-width: 860px) {
     gap: 24px;
-    // max-width: 460px;
   }
   @media (max-width: 500px) {
-    // max-width: 398px;
     gap: 20px;
   }
 
@@ -126,9 +122,6 @@
       }
       > div:nth-child(1) {
         width: 100%;
-
-        // width: calc(100% - 120px);
-        // height: 76px;
         > div:nth-child(1) {
           background-color: #eceefe;
           padding: 18px 60px;
@@ -151,7 +144,6 @@
       > div:nth-child(2) {
         width: 100%;
 
-        // width: calc(100% - 120px);
         height: 90px;
         div > :nth-child(1) {
           background-color: #eceefe;
@@ -210,65 +202,7 @@
     @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
       gap: 20px;
     }
-    > button:nth-child(1) {
-      padding: 11px 32px;
-      border: 1px solid #eceefe;
-      border-radius: 100px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      align-items: center;
-      max-width: 500px;
-      width: 100%;
-      height: 60px;
-      font-size: 18px;
-      font-family: "Nunito";
-      font-weight: 400;
-      color: #444df2;
-      &:hover {
-        cursor: pointer;
-      }
-      @media (max-width: 500px) {
-        height: 50px;
-      }
-      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-        padding: 6px 32px;
-      }
-    }
-    > div:nth-child(1) {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 75%;
-      background-color: #eceefe;
-      padding: 11px 32px;
-      border-radius: 100px;
-      &:hover {
-        color: #444df2;
-        transform: scale(1.1);
-      }
-      @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-        padding: 6px 32px;
-        width: 100%;
-      }
-      > button:nth-child(1) {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: 500;
-        font-family: "Nunito";
-        color: #444df2;
-        background: none;
-        border: none;
-        cursor: pointer;
 
-        &:hover {
-          font-weight: 700;
-        }
-      }
-    }
     > div:nth-child(2) {
       height: fit-content;
       width: 100%;
@@ -285,33 +219,51 @@
         // justify-content: center;
         // flex-direction: row;
       }
-
-      > button {
-        border-radius: 25px;
-        padding: 12px 25px;
-        font-family: "Nunito";
-        font-weight: 700;
-        font-size: 18px;
-        border: 1px solid #797ef3;
-        background: none;
-        cursor: pointer;
-        &:disabled {
-          background-color: #686868;
-          color: #ffffff;
-          cursor: unset;
-        }
-        @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-          max-width: 137px;
-          height: 49px;
-          font-size: 14px;
-        }
-        &:hover:not(:disabled) {
-          background-color: #444df2;
-          color: #ffffff;
-        }
-      }
     }
   }
+}
+
+.btn {
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-family: "Nunito";
+  font-size: 18px;
+  outline: 1px solid var(--medium-purple);
+  border: none;
+  background: none;
+  align-items: center;
+  color: var(--medium-purple);
+  cursor: pointer;
+  &:disabled {
+    cursor: unset;
+    outline: 1px solid var(text-grey);
+    color: var(--text-grey);
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--medium-purple);
+    color: white;
+  }
+  &:active:not(:disabled) {
+    background-color: var(--dark-purple);
+  }
+
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+    max-width: 137px;
+    height: 49px;
+    font-size: 14px;
+  }
+}
+
+.btn-google {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-radius: 30px;
+  font-weight: 400;
+  width: 100%;
+  background-color: var(--bg-color);
+  outline: none;
 }
 
 .divider {

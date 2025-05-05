@@ -33,7 +33,7 @@ export class NavigationService {
   constructor() {}
 
   public initialize(): void {
-    if (this.isInitialize) {
+    if (this.isInitialize === true) {
       this.observeScreenWidth();
       this.route.queryParams.subscribe((params) => {
         this.channelType = params['channelType'] || 'default';
@@ -45,6 +45,7 @@ export class NavigationService {
         else if (this.channelType === 'newMessage') this.showNewMessage();
         else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
       });
+
       this.screenWidth$.subscribe((mobile) => {
         this.isMobile = mobile;
         if (mobile) {

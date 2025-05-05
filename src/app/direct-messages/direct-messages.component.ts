@@ -47,7 +47,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.navigationService.initialize();
-    this.navigationService.isInitialize = true;
     this.route.queryParamMap.subscribe((params) => {
       this.currentRecieverId = params.get('reciverId') || '';
       this.currentUserId = params.get('currentUserId') || '';

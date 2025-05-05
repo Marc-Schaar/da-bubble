@@ -66,7 +66,6 @@ export class MainChatComponent implements OnInit {
    */
   ngOnInit(): void {
     this.navigationService.initialize();
-    this.navigationService.isInitialize = true;
     this.shareddata.dashboard = true;
     this.shareddata.login = false;
     this.subscriptions.push(

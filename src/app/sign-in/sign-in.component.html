@@ -72,8 +72,13 @@
       <div class="divider">ODER</div>
     </div>
     <div>
-      <button type="button" (click)="signinwithgoogle()"><img src="/img/Google.png" alt="" /> Anmelden mit Google</button>
-      <div><button [disabled]="userauth.invalid">Anmelden</button><button (click)="guestLogin()">Gäste-Login</button></div>
+      <button class="btn btn-google" type="button" (click)="signinwithgoogle()">
+        <img src="/img/Google.png" alt="Google Logo" /> Anmelden mit Google
+      </button>
+      <div>
+        <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
+        ><button class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
+      </div>
     </div>
   </form>
 </div>

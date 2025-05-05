@@ -157,7 +157,7 @@ export class TextareaTemplateComponent {
       this.userService.setUrl('channel', key);
       this.navigationService.showChannel();
     } else if (!this.isChannel) {
-      this.userService.setUrl('direct', key, this.userService.userId);
+      this.userService.setUrl('direct', key, this.userService.currentUser.id);
       this.navigationService.showDirect();
     }
     this.resetList();
@@ -178,7 +178,7 @@ export class TextareaTemplateComponent {
    */
   addEmoji(emoji: string) {
     this.reactions = [];
-    let newReaction = { emoji: emoji, from: this.userService.userId || 'n/a' };
+    let newReaction = { emoji: emoji, from: this.userService.currentUser.id || 'n/a' };
     this.reactions.push(newReaction);
     console.log(this.reactions);
   }
