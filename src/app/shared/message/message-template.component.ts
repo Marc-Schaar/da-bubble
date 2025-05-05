@@ -105,7 +105,7 @@ export class MessageTemplateComponent {
         queryParams: {
           channelType: 'channel',
           id: this.currentChannelId,
-          reciepentId: this.userService.userId,
+          reciepentId: this.userService.currentUser.id,
           messageId: messageId,
         },
       });

@@ -34,9 +34,8 @@ export class UserService {
   messages: any = [];
   currentChannel: any;
   //Neu ab hier
-  messageId: string = '';
-  currentUser: any;
-  userId: string = '';
+
+  public currentUser: any;
 
   constructor(private route: ActivatedRoute) {
     this.setCurrentUser();
@@ -75,6 +74,7 @@ export class UserService {
    */
   redirectiontodashboard() {
     this.navigationService.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
+    this.navigationService.isInitialize = true;
   }
 
   /**
@@ -82,6 +82,7 @@ export class UserService {
    */
   redirectiontologinpage() {
     this.router.navigate(['/']);
+    this.navigationService.isInitialize = false;
   }
 
   /**
@@ -98,13 +99,13 @@ export class UserService {
   setCurrentUser() {
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
-        this.currentUser = user;
-        this.userId = user.uid;
+        this.currentUser = {
+          id: user.uid,
+          ...user,
+        };
       } else {
         this.currentUser = new User(null);
       }
-      console.log('current USer', this.currentUser);
-      console.log('provider data', this.currentUser.providerData);
     });
   }
 

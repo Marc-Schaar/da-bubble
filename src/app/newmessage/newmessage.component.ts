@@ -55,7 +55,6 @@ export class NewmessageComponent {
    */
   async ngOnInit() {
     this.navigationService.initialize();
-    this.navigationService.isInitialize = true;
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();

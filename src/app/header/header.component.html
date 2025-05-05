@@ -31,12 +31,9 @@
     <a routerLink="/signup">Konto erstellen</a>
   </div>
   <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
-    <div
-      (click)="this.navigationService.isMobile ? showmenu() : null"
-      [matMenuTriggerFor]="this.navigationService.isMobile ? beforeMenu : null"
-    >
-      <span>{{ this.userService.currentUser?.displayName || "n/a" }}</span>
-      <img [src]="this.userService.currentUser?.photoURL || 'img/profilephoto.png'" alt="" />
+    <div (click)="navigationService.isMobile ? showmenu() : null" [matMenuTriggerFor]="navigationService.isMobile ? beforeMenu : null">
+      <span>{{ userService.currentUser?.displayName || "n/a" }}</span>
+      <img [src]="userService.currentUser?.photoURL || 'img/profilephoto.png'" alt="" />
       <div>
         <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>

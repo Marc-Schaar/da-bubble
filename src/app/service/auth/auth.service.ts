@@ -3,7 +3,7 @@ import { UserService } from '../../shared.service';
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 import { NavigationService } from '../navigation/navigation.service';
 import { User } from '../../models/user/user';
-import { arrayUnion, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
 import { FireServiceService } from '../../fire-service.service';
@@ -20,52 +20,69 @@ export class AuthService {
   private fireService = inject(FireServiceService);
   googleAuthProvider = new GoogleAuthProvider();
 
+  isLoading = false;
+
   constructor() {}
 
   public async logInWithEmailAndPassword(email: string, password: string) {
-    await signInWithEmailAndPassword(this.auth, email, password);
-    await this.shared.setOnlineStatus();
-    this.shared.redirectiontodashboard();
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      await this.shared.setOnlineStatus();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+      this.shared.redirectiontodashboard();
+    }
   }
 
   public async logInWithGoogle() {
-    const result = await signInWithPopup(this.auth, this.googleAuthProvider);
-    const firebaseUser = result.user;
+    try {
+      const result = await signInWithPopup(this.auth, this.googleAuthProvider);
+      const firebaseUser = result.user;
+      await updateProfile(firebaseUser, {
+        photoURL: 'img/profilephoto.png',
+      });
 
-    await updateProfile(firebaseUser, {
-      photoURL: 'img/profilephoto.png',
-    });
-
-    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-    await setDoc(userDocRef, {
-      fullname: firebaseUser.displayName,
-      email: firebaseUser.email,
-      profilephoto: 'img/profilephoto.png',
-      online: true,
-    });
-
-    await this.shared.setOnlineStatus();
-    this.shared.redirectiontodashboard();
+      const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+      await setDoc(userDocRef, {
+        fullname: firebaseUser.displayName,
+        email: firebaseUser.email,
+        profilephoto: 'img/profilephoto.png',
+        online: true,
+      });
+      await this.shared.setOnlineStatus();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+      this.shared.redirectiontodashboard();
+    }
   }
 
   public async loginAsGuest() {
-    const result = await signInAnonymously(this.auth);
-    const firebaseUser = result.user;
+    this.isLoading = true;
+    try {
+      const result = await signInAnonymously(this.auth);
+      await updateProfile(result.user, {
+        displayName: 'Gast',
+        photoURL: 'img/profilephoto.png',
+      });
 
-    await updateProfile(firebaseUser, {
-      displayName: 'Gast',
-      photoURL: 'img/profilephoto.png',
-    });
-
-    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-    await setDoc(userDocRef, {
-      fullname: 'Gast',
-      email: null,
-      profilephoto: 'img/profilephoto.png',
-      online: true,
-    });
-    await this.shared.setOnlineStatus();
-    this.shared.redirectiontodashboard();
+      const userDocRef = doc(this.firestore, `users/${result.user.uid}`);
+      await setDoc(userDocRef, {
+        fullname: 'Gast',
+        email: null,
+        profilephoto: 'img/profilephoto.png',
+        online: true,
+      });
+      await this.shared.setOnlineStatus();
+    } catch (error) {
+      console.error('Fehler beim Update des Profils:', error);
+    } finally {
+      this.isLoading = false;
+      this.shared.redirectiontodashboard();
+    }
   }
 
   public async register(user: User): Promise<void> {
@@ -97,11 +114,18 @@ export class AuthService {
   }
 
   public async logOut() {
+    this.navigationService.isInitialize = false;
     const currentUser = this.userService.getUser();
     currentUser.online = false;
     await this.fireService.updateOnlineStatus(currentUser);
-    await signOut(this.auth);
-    this.navigationService.isInitialize = false;
+    if (this.auth.currentUser?.isAnonymous) {
+      await deleteDoc(doc(this.firestore, `users/${currentUser.id}`));
+      await this.auth.currentUser.delete();
+    } else {
+      await signOut(this.auth);
+    }
+
     this.userService.redirectiontologinpage();
+    console.log(this.navigationService.isInitialize);
   }
 }
