@@ -55,6 +55,9 @@ body {
 
 .mat-mdc-dialog-surface {
   border-radius: 0 !important;
+  @media (max-width: 440px) {
+    overflow: hidden !important;
+  }
 }
 
 app-footer {
