@@ -24,6 +24,8 @@
   height: 514px;
   z-index: 4;
   overflow-x: hidden;
+  overflow-y: hidden;
+
   @media (max-width: 1023px) {
     width: 100%;
     height: 100%;
@@ -52,7 +54,8 @@
     transform 1s ease-in-out;
     transform-origin: center center;
     background: white;
-    overflow: hidden;
+    overflow: visible;
+
     @media (max-width: 1023px) {
       border-radius: 0px;
       width: 100%;
