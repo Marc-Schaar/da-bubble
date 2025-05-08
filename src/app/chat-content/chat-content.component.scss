@@ -12,6 +12,7 @@ main {
   margin: 16px;
   flex: 1;
   max-height: calc(100svh - var(--header-offset));
+  overflow: clip;
 }
 
 .card-header {
