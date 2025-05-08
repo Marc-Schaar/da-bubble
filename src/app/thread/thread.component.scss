@@ -11,6 +11,7 @@ section {
   margin: 16px;
   flex: 1;
   max-height: calc(100vh - var(--header-offset));
+  overflow: clip;
 }
 
 .thread-channel-close-button-container {

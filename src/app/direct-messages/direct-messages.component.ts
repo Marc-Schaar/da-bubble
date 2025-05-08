@@ -11,13 +11,15 @@ import { MessagesService } from '../service/messages/messages.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { Subscription } from 'rxjs';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { UserProfileComponent } from '../header/user-profile/user-profile.component';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-direct-messages',
-  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent, TextareaTemplateComponent],
+  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent, TextareaTemplateComponent, MatDialogModule],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
@@ -37,6 +39,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private firestoreService = inject(FireServiceService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
+  readonly dialog = inject(MatDialog);
   private subscriptions = new Subscription();
   private unsubMessages!: () => void;
   public currentRecieverId: string = '';
@@ -157,7 +160,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   /**
    * Displays the receiver's profile.
    */
-  showProfile() {
-    this.userService.showRecieverProfile();
+  public showProfile() {
+    this.dialog.open(UserProfileComponent, { width: '550px' });
+    // this.userService.showRecieverProfile();
   }
 }
