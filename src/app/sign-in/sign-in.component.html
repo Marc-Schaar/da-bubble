@@ -52,7 +52,7 @@
               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
             />
           </div>
-          @if (!email.valid && email.touched || error) {
+          @if (!email.valid && email.touched || authService.error) {
           <span class="error d-none" id="wrongemail">*Diese E-Mail-Adresse ist leider ungültig.</span>
           }
         </div>
@@ -61,7 +61,7 @@
           <div>
             <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
           </div>
-          @if(error){
+          @if(password.touched || authService.error){
           <span class="error d-none" id="wrongpassword">Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
           }
         </div>

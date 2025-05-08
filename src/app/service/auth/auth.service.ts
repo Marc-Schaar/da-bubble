@@ -19,20 +19,18 @@ export class AuthService {
   private shared: UserService = inject(UserService);
   private fireService = inject(FireServiceService);
   googleAuthProvider = new GoogleAuthProvider();
-
+  error = false;
   isLoading = false;
-
-  constructor() {}
 
   public async logInWithEmailAndPassword(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
       await this.shared.setOnlineStatus();
+      this.shared.redirectiontodashboard();
     } catch (error) {
-      console.error(error);
+      this.error = true;
     } finally {
       this.isLoading = false;
-      this.shared.redirectiontodashboard();
     }
   }
 
@@ -52,11 +50,11 @@ export class AuthService {
         online: true,
       });
       await this.shared.setOnlineStatus();
+      this.shared.redirectiontodashboard();
     } catch (error) {
-      console.error(error);
+      this.error = true;
     } finally {
       this.isLoading = false;
-      this.shared.redirectiontodashboard();
     }
   }
 
@@ -88,12 +86,10 @@ export class AuthService {
   public async register(user: User): Promise<void> {
     const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.password);
     const firebaseUser = userCredential.user;
-
     await updateProfile(firebaseUser, {
       displayName: user.fullname,
       photoURL: user.profilephoto,
     });
-
     const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
     await setDoc(userDocRef, {
       fullname: user.fullname,
@@ -101,7 +97,6 @@ export class AuthService {
       profilephoto: user.profilephoto,
       online: false,
     });
-
     const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
     await updateDoc(defaultChannelRef, {
       member: arrayUnion({
