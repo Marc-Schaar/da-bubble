@@ -33,6 +33,7 @@ export class NavigationService {
   constructor() {}
 
   public initialize(): void {
+    console.log(this.isInitialize);
     if (this.isInitialize === true) {
       this.observeScreenWidth();
       this.route.queryParams.subscribe((params) => {

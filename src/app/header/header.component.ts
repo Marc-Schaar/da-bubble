@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../shared.service';
-import { User } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { FireServiceService } from '../fire-service.service';
