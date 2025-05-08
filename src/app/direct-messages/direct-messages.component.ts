@@ -13,6 +13,8 @@ import { Subscription } from 'rxjs';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserProfileComponent } from '../header/user-profile/user-profile.component';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { DialogReciverComponent } from '../dialogs/dialog-reciver/dialog-reciver.component';
 
 @Injectable({
   providedIn: 'root',
@@ -161,7 +163,11 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * Displays the receiver's profile.
    */
   public showProfile() {
-    this.dialog.open(UserProfileComponent, { width: '550px' });
-    // this.userService.showRecieverProfile();
+    this.dialog.open(DialogReciverComponent, {
+      data: this.currentReciever,
+      width: '400px',
+
+      //  position: { top: 'calc(50vh - 100px)', left: 'calc( 50vw - 100px)' },
+    });
   }
 }

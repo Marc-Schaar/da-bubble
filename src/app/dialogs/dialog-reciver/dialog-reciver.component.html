@@ -1,0 +1,30 @@
+<main class="profile-main-cont">
+  <header class="profile-header">
+    <span>Profil</span>
+    <button class="close" (click)="closeMenu()">
+      <img src="img/close.png" alt="" />
+    </button>
+  </header>
+
+  <img class="profile-img" [src]="reciverData.profilephoto" alt="" />
+  <section class="discription-cont">
+    <p class="name">{{ reciverData.fullname }}</p>
+
+    @if(reciverData.online){
+    <div class="status-cont">
+      <div class="circle"></div>
+      <div class="status">Aktiv</div>
+    </div>
+    }
+  </section>
+
+  <section class="contact-cont">
+    <div>
+      <div class="envelope"><img src="img/mail.png" alt="" /></div>
+      <div class="contact">
+        <p class="email">Email-Adresse</p>
+        <div class="email-route">{{ reciverData.email }}</div>
+      </div>
+    </div>
+  </section>
+</main>
