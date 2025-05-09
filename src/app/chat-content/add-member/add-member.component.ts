@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Inject, HostListener, inject, Input, Output, ViewChild, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FireServiceService } from '../../fire-service.service';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { UserService } from '../../shared.service';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 
 @Component({
   selector: 'app-add-member',
@@ -20,6 +21,7 @@ export class AddMemberComponent implements OnInit {
   @Input() showBackground: boolean = true;
   @Input() currentUser: any;
   members: any[] = [];
+  currentRecieverId: string | null = null;
   users: any[] = [];
   showUserBar: boolean = false;
   chooseMember: boolean = false;
@@ -28,6 +30,8 @@ export class AddMemberComponent implements OnInit {
   filteredUsers: any[] = [];
   filteredMembers: any[] = [];
   addMemberWindow: boolean = false;
+  readonly dialog = inject(MatDialog);
+
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
@@ -56,7 +60,6 @@ export class AddMemberComponent implements OnInit {
     await this.loadUsers();
     this.filterUsers();
     this.filterMembers();
-    console.log(this.showUserBar);
   }
 
   /**
@@ -219,15 +222,21 @@ export class AddMemberComponent implements OnInit {
     }
     this.userService.showFeedback('User hinzugefügt');
   }
-
+  
   /**
    * Shows the profile of a given member.
    * @param member User object
    */
-  showProfile(member: any) {
+  public showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
-    console.log('show profile');
-    // this.closeWindow();
+    this.dialog.open(DialogReciverComponent, {
+      data: {
+        reciever: this.userService.currentReciever,
+        recieverId: this.currentRecieverId,
+      },
+      width: '400px',
+      position: { top: 'calc(50svh - 310px)' },
+    });
   }
 }
