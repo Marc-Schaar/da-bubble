@@ -1,6 +1,6 @@
 <main [ngClass]="{ 'header-login': userService.login }" class="header">
   <div class="logo-container">
-    <a routerLink="/main"><img src="img/headerlogo.png" alt="" /></a>
+    <a routerLink="/"><img src="img/headerlogo.png" alt="" /></a>
   </div>
   <div class="searchbar">
     <div class="input" *ngIf="!userService.login && userService.dashboard">
