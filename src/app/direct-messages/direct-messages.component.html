@@ -14,14 +14,13 @@
 <main>
   <section (click)="hideList()">
     <div class="chat-header">
-      <div (click)="showProfile()">
+      <button (click)="showProfile()">
         <div class="imageContainer">
           <img [src]="currentReciever?.profilephoto || 'img/profilephoto.png'" alt="" />
           <div class="status-dot" [ngClass]="{ green: currentReciever?.online }"></div>
         </div>
-
-        <span>{{ currentReciever?.fullname }}</span>
-      </div>
+        {{ currentReciever?.fullname }}
+      </button>
     </div>
 
     <div id="chat" class="chat-content">
