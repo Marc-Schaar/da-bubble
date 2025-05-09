@@ -75,11 +75,11 @@ export class AuthService {
         online: true,
       });
       await this.shared.setOnlineStatus();
+      this.shared.redirectiontodashboard();
     } catch (error) {
       console.error('Fehler beim Update des Profils:', error);
     } finally {
       this.isLoading = false;
-      this.shared.redirectiontodashboard();
     }
   }
 
@@ -119,8 +119,6 @@ export class AuthService {
     } else {
       await signOut(this.auth);
     }
-
     this.userService.redirectiontologinpage();
-    console.log(this.navigationService.isInitialize);
   }
 }
