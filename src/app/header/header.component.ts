@@ -116,8 +116,8 @@ export class HeaderComponent {
    * Sets the current user and stores their ID.
    */
   setCurrentUser() {
-    this.currentUser = this.userService.currentUser;
-    this.currentUserId = this.userService.currentUser.uid;
+    this.currentUser = this.auth.currentUser;
+    this.currentUserId = this.auth.currentUser!.uid;
   }
 
   /**
