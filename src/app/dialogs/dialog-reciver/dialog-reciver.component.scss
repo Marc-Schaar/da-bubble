@@ -28,9 +28,7 @@
         line-height: 0.9em;
       }
       .email-route {
-        font-size: 18px;
-        line-height: 21.6px;
-        font-weight: 500;
+        font-size: 1.125rem;
         color: var(--blue-email-color);
       }
     }
@@ -46,26 +44,25 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    .name {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
     .status-cont {
       display: flex;
       align-items: center;
       gap: 15px;
       .circle {
         width: 16px;
-        height: 16px;
-        border-radius: 100%;
+        aspect-ratio: 1;
+        border-radius: 50%;
         background-color: rgba(146, 200, 62, 1);
       }
       .status {
         color: rgba(146, 200, 62, 1);
         font-size: 1.25rem;
-        line-height: 27.28px;
       }
-    }
-
-    .name {
-      font-size: 2rem;
-      font-weight: 700;
     }
   }
 }
