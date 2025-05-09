@@ -20,13 +20,13 @@ export class MainComponentComponent implements OnInit {
    * Sets the dashboard and login properties of the shared service and hides the intro element after 4 seconds.
    */
   ngOnInit(): void {
-    this.shareddata.dashboard = false;
-    this.shareddata.login = true;
-    setTimeout(() => {
-      const projectName = document.getElementById('intro');
-      if (projectName) {
-        projectName.classList.add('d-none');
-      }
-    }, 4000);
+    // this.shareddata.dashboard = false;
+    // this.shareddata.login = true;
+    // setTimeout(() => {
+    //   const projectName = document.getElementById('intro');
+    //   if (projectName) {
+    //     projectName.classList.add('d-none');
+    //   }
+    // }, 4000);
   }
 }

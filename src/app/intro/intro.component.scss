@@ -1,160 +1,34 @@
-// .intro {
-//   max-width: 1920px;
-//   width: 100%;
-//   height: 100%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   > div:nth-child(1) {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     padding: 24px 0 20px 0;
-//     height: 184px;
-//     opacity: unset;
-//     margin-left: unset !important;
-//     @media (min-width: 969px) {
-//       animation: goup 1500ms ease-in-out 1500ms 1 normal forwards;
-//     }
-//     @media (max-width: 968px) {
-//       animation: goupresponsive 1500ms ease-in-out 1500ms 1 normal forwards;
-//     }
-//     > div:nth-child(1) {
-//       z-index: 1;
-//       position: relative;
-//       background-color: #5f66ee;
-//       display: flex;
-//       align-items: center;
-//       > div:nth-child(1) {
-//         position: absolute;
-//         background-color: #5f66ee;
-//         z-index: 1;
-//         margin-left: unset !important;
-//         @media (min-width: 969px) {
-//           animation: getssmaller 4000ms ease-in-out 500ms 1 normal forwards;
-//         }
-//         @media (max-width: 968px) {
-//           height: 70px;
-//         }
-//         > img:nth-child(1) {
-//           height: 100%;
-//         }
-//       }
-
-//       > div:nth-child(2) {
-//         font-size: 38px;
-//         color: white;
-//         font-family: "Nunito";
-//         max-width: 350px;
-//         z-index: 0;
-//         @media (min-width: 969px) {
-//           animation: turnright 2000ms ease-in-out 0ms 1 normal forwards, turnleft 1000ms ease-in-out 2200ms 1 normal forwards;
-//         }
-//         @media (max-width: 968px) {
-//           font-size: 25px;
-//           animation: turnrightmobile 2000ms ease-in-out 0ms 1 normal forwards;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @keyframes turnright {
-//   0% {
-//     transform: translateX(0, 0);
-//   }
-//   100% {
-//     transform: translateX(200px);
-//   }
-// }
-
-// @keyframes turnrightmobile {
-//   0% {
-//     transform: translateX(0, 0);
-//   }
-//   100% {
-//     transform: translateX(80px);
-//   }
-// }
-
-// @keyframes turnleft {
-//   0% {
-//     transform: translateX(200px);
-//   }
-//   100% {
-//     transform: translateX(90px);
-//   }
-// }
-
-// @keyframes showtext {
-//   0% {
-//     z-index: 0;
-//   }
-//   100% {
-//     z-index: 2;
-//   }
-// }
-
-// @keyframes goup {
-//   0% {
-//     transform: translate(0, 0);
-//   }
-//   100% {
-//     transform: translate(-52rem, -46.2vh);
-//   }
-// }
-
-// @keyframes getssmaller {
-//   0% {
-//     height: unset;
-//   }
-//   100% {
-//     height: 70px;
-//   }
-// }
-
-// @keyframes getssmallermobile {
-//   0% {
-//     height: unset;
-//   }
-//   100% {
-//     height: 60px;
-//   }
-// }
-
-// @keyframes goupresponsive {
-//   0% {
-//     transform: translate(0, 0);
-//   }
-//   100% {
-//     transform: translate(-3rem, -42vh);
-//   }
-// }
-
 .main {
   height: 100vh;
   width: 100%;
   background: linear-gradient(1.46deg, #313ae6 1.22%, #797ef3 98.76%) !important;
   opacity: 1;
-  animation: changeOpacity 1000ms ease-in-out 3000ms 1 normal forwards;
-
+  // animation: changeOpacity 1000ms ease-in-out 3000ms 1 normal forwards;
   .intro {
     display: flex;
     align-items: center;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 188px;
+    // width: 188px;
     height: 184px;
     transform: translate(-50%, -50%);
-    animation: moveLogo 500ms ease-in-out 3000ms 1 normal forwards;
+    // animation: moveLogo 500ms ease-in-out 3000ms 1 normal forwards;
     @media (max-width: 1023px) {
-      animation: moveLogoMobile 500ms ease-in-out 3000ms 1 normal forwards;
+      //  animation: moveLogoMobile 500ms ease-in-out 3000ms 1 normal forwards;
     }
     .logo-img {
-      animation: moveSide 500ms ease-in-out 1000ms 1 normal forwards;
+      // animation: moveSide 500ms ease-in-out 1000ms 1 normal forwards;
+      @media (max-width: 1023px) {
+        // animation: moveSideMobile 500ms ease-in-out 3000ms 1 normal forwards;
+      }
       img {
-        animation: changeSize 500ms ease-in-out 3000ms 1 normal forwards;
+        // animation: changeSize 500ms ease-in-out 3000ms 1 normal forwards;
+        @media (max-width: 1023px) {
+          // animation: changeSizeMobile 500ms ease-in-out 3000ms 1 normal forwards;
+          width: 70px;
+          height: 70px;
+        }
       }
     }
     .help-cont {
@@ -165,13 +39,24 @@
         transform: translateY(-50%);
         left: 130px;
         height: 70px;
-        animation: encrease 500ms ease-in-out 1800ms 1 normal forwards, moveAfterShrink 500ms ease-in-out 3000ms 1 normal forwards;
+        display: flex;
+        align-items: center;
+        // animation: encrease 500ms ease-in-out 1800ms 1 normal forwards, moveAfterShrink 500ms ease-in-out 3000ms 1 normal forwards;
+        @media (max-width: 1023px) {
+          // animation:encreaseMobile 500ms ease-in-out 1800ms 1 normal forwards;
+          // moveAfterShrinkMobile 500ms ease-in-out 3000ms 1 normal forwards; 
+          left: 45px;       
+        }
         span {
           position: inherit;
           color: white;
           font-size: 44px;
           right: 200px;
-          animation: showName 1000ms ease-in-out 100ms 1 normal forwards;
+          @media (max-width: 1023px) {
+           font-size: 24px;
+           right: 188px;
+          }
+          // animation: showName 1000ms ease-in-out 100ms 1 normal forwards;
         }
       }
     }
@@ -199,6 +84,15 @@
   }
 }
 
+@keyframes moveAfterShrinkMobile {
+  0% {
+    left: 130px;
+  }
+  100% {
+    left: 45px;
+  }
+}
+
 @keyframes moveLogo {
   0% {
     top: 50%;
@@ -216,11 +110,21 @@
     left: 50%;
   }
   100% {
-    top: 70px;
+    top: 150px;
+
   }
 }
 
 @keyframes moveSide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes moveSideMobile {
   0% {
     transform: translate(0, 0);
   }
@@ -234,7 +138,16 @@
     width: 0px;
   }
   100% {
-    width: 190px;
+    width: 203px;
+  }
+}
+
+@keyframes encreaseMobile {
+  0% {
+    width: 0px;
+  }
+  100% {
+    width: 300px;
   }
 }
 
@@ -246,6 +159,17 @@
   100% {
     width: 77px;
     height: 77px;
+  }
+}
+
+@keyframes changeSizeMobile {
+  0% {
+    width: 70px;
+    height: 70px;
+  }
+  100% {
+    width: 45px;
+    height: 45px;
   }
 }
 
