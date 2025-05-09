@@ -61,7 +61,9 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
    */
   ngOnInit() {
-    this.navigationService.initialize();
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
     this.route.queryParamMap.subscribe((params) => {
       this.currentRecieverId = params.get('reciverId') || '';
       this.currentUserId = params.get('currentUserId') || '';

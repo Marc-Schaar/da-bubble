@@ -87,6 +87,7 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
+    console.log(this.currentUser);
   }
 
   /**

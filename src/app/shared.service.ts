@@ -74,7 +74,9 @@ export class UserService {
    */
   redirectiontodashboard() {
     this.navigationService.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
-    this.navigationService.isInitialize = true;
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
   }
 
   /**
@@ -82,7 +84,7 @@ export class UserService {
    */
   redirectiontologinpage() {
     this.router.navigate(['/']);
-    this.navigationService.isInitialize = false;
+    this.navigationService.stopInitialize();
   }
 
   /**

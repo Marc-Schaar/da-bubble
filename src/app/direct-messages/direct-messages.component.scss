@@ -61,10 +61,11 @@ section {
   aspect-ratio: 1;
   outline: 2px solid var(--bg-color);
   border-radius: 50%;
+  background-color: var(--offline);
 }
 
 .green {
-  background-color: #92c83e;
+  background-color: var(--online);
 }
 
 .card-footer {

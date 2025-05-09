@@ -54,7 +54,9 @@ export class NewmessageComponent {
    * ngOnInit lifecycle hook to load channels, users and set the current user.
    */
   async ngOnInit() {
-    this.navigationService.initialize();
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();

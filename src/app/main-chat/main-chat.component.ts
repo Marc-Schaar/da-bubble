@@ -65,8 +65,9 @@ export class MainChatComponent implements OnInit {
    * Sets the dashboard and login properties of the shared service and subscribes to various observables.
    */
   ngOnInit(): void {
-    this.navigationService.initialize();
-    this.navigationService.isInitialize = true;
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
 
     this.shareddata.dashboard = true;
     this.shareddata.login = false;

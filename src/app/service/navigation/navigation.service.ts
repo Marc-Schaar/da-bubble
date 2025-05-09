@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
@@ -19,12 +19,17 @@ export class NavigationService {
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
-  isMobile: boolean = this.checkScreenWidth();
-  isInitialize: boolean = false;
-  reciverId: string = '';
-  currentUserId: string = '';
-  messageId: string = '';
-  channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
+
+  private queryParamsSubscription?: Subscription;
+  private screenWidthSubscription?: Subscription;
+  private resizeSubscription?: Subscription;
+
+  public isMobile: boolean = this.checkScreenWidth();
+  public isInitialize: boolean = false;
+  public reciverId: string = '';
+  public currentUserId: string = '';
+  public messageId: string = '';
+  public channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -33,10 +38,10 @@ export class NavigationService {
   constructor() {}
 
   public initialize(): void {
-    console.log(this.isInitialize);
-    if (this.isInitialize === true) {
+    this.isInitialize = true;
+    if (this.isInitialize) {
       this.observeScreenWidth();
-      this.route.queryParams.subscribe((params) => {
+      this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
         this.channelType = params['channelType'] || 'default';
         this.reciverId = params['reciverId'] || '';
         this.currentUserId = params['currentUserId'] || '';
@@ -47,7 +52,7 @@ export class NavigationService {
         else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
       });
 
-      this.screenWidth$.subscribe((mobile) => {
+      this.screenWidthSubscription = this.screenWidth$.subscribe((mobile) => {
         this.isMobile = mobile;
         if (mobile) {
           if (this.channelType === 'direct') this.showDirect();
@@ -56,7 +61,9 @@ export class NavigationService {
           if (this.channelType === 'default') this.router.navigate(['/contactbar']);
         } else this.showChat();
       });
-    } else return;
+    } else {
+      return;
+    }
   }
 
   /**
@@ -142,7 +149,7 @@ export class NavigationService {
    * Observes screen width changes and updates the screenWidthSubject.
    */
   private observeScreenWidth(): void {
-    fromEvent(window, 'resize')
+    this.resizeSubscription = fromEvent(window, 'resize')
       .pipe(
         map(() => this.checkScreenWidth()),
         distinctUntilChanged(),
@@ -157,5 +164,12 @@ export class NavigationService {
    */
   private checkScreenWidth(): boolean {
     return window.innerWidth < 1024;
+  }
+
+  public stopInitialize(): void {
+    this.isInitialize = false;
+    this.queryParamsSubscription?.unsubscribe();
+    this.screenWidthSubscription?.unsubscribe();
+    this.resizeSubscription?.unsubscribe();
   }
 }

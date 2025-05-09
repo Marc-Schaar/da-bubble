@@ -68,7 +68,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
-    this.navigationService.initialize();
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
     this.route.queryParamMap.subscribe((params) => {
       this.currentChannelId = params.get('reciverId') || '';
       this.userId = params.get('currentUserId') || '';
@@ -85,14 +87,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     if (this.unsubMessages) this.unsubMessages();
     this.subscriptions.unsubscribe();
   }
-
-  // async getChannelFromUrl() {
-  //   if (this.currentChannelId) {
-  //     const docRef = doc(this.firestore, 'channels', this.currentChannelId);
-  //     const docSnap = await getDoc(docRef);
-  //     docSnap.exists() ? (this.currentChannel = docSnap.data()) : null;
-  //   }
-  // }
 
   /**
    * Loads the current channel from Firestore based on the channel ID.

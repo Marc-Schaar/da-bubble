@@ -59,14 +59,15 @@ export class ContactbarComponent implements OnInit {
    * Initializes the component by loading users, channels, and setting the current user.
    */
   async ngOnInit() {
-    this.navigationService.initialize();
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
     this.userService.dashboard = true;
     this.userService.login = false;
     await this.loadUsers();
     this.loadChannels();
     this.userID = this.userService.currentUser.uid;
     this.currentUser = this.userService.currentUser;
-    console.log(this.currentUser);
 
     this.openDropdown();
   }
