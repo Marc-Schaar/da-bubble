@@ -77,7 +77,7 @@
       </button>
       <div>
         <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
-        ><button class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
+        ><button type="button" class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
       </div>
     </div>
   </form>

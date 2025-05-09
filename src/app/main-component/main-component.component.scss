@@ -13,12 +13,6 @@ main {
   }
 }
 
-// app-header {
-//   @media (max-width: 1066px) {
-//     display: none;
-//   }
-// }
-
 app-sign-in {
   flex: 1;
   display: flex;
@@ -55,14 +49,6 @@ app-intro {
     display: flex;
     padding-top: 8px;
   }
-  // @media (max-width: 400px) {
-  //   width: unset;
-  // }
-  // @media (max-width: 1023px) {
-  //   height: unset;
-  //   margin-top: 24px;
-  //
-  // }
   > p:nth-child(1) {
     font-family: "Nunito";
     font-size: 18px;
