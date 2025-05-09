@@ -227,6 +227,7 @@ export class AddMemberComponent implements OnInit {
   showProfile(member: any) {
     this.userService.currentReciever = member;
     this.userService.showRecieverProfile();
-    this.closeWindow();
+    console.log('show profile');
+    // this.closeWindow();
   }
 }
