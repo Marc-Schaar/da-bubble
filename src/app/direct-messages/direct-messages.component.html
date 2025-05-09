@@ -31,25 +31,11 @@
           <app-divider-template [messageData]="message"></app-divider-template>
         </li>
         }
-        <li><app-message-template [message]="message" [channelType]="'direct'"></app-message-template></li>
-
-        <!-- <li [ngClass]="{ reverse: isUser(message) }" class="messagerow">
-          <img class="image" [src]="message?.avatar" alt="" />
-
-          <div [ngClass]="{ messageReverse: isUser(message) }" class="messageContainer">
-            <div [ngClass]="{ reverse: isUser(message) }" class="messageData">
-              <span>{{ message?.name }}</span>
-              <p>{{ message?.time }} Uhr</p>
-            </div>
-            <div [ngClass]="{ bubbleReverse: isUser(message) }" class="messageBubble">
-              <span>{{ message?.message }}</span>
-            </div>
-          </div> -->
-        <!-- </li> -->
-
-        }
-        <!-- @empty {
-        <section class="startContainer">
+        <li>
+          <app-message-template [message]="message" [channelType]="'direct'"></app-message-template>
+        </li>
+        } @empty {
+        <li class="startContainer">
           <div class="userContainer">
             <img [src]="currentReciever?.profilephoto" alt="" />
             <span>{{ currentReciever?.fullname }}</span>
@@ -67,8 +53,8 @@
             </p>
             }
           </div>
-        </section>
-        } -->
+        </li>
+        }
       </ul>
     </div>
 
