@@ -211,7 +211,8 @@
 }
 
 .box {
-  height: 80px;
+  max-height: 80px;
+  height: 100%;
 }
 
 .passwordinput {
