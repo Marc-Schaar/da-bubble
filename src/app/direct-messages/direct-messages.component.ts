@@ -159,8 +159,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
         recieverId: this.currentRecieverId,
       },
       width: '400px',
-
-      //  position: { top: 'calc(50vh - 100px)', left: 'calc( 50vw - 100px)' },
+      position: { top: 'calc(50svh - 310px)' },
     });
   }
 }
