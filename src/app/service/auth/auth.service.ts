@@ -96,6 +96,7 @@ export class AuthService {
       email: user.email,
       profilephoto: user.profilephoto,
       online: false,
+      id: firebaseUser.uid,
     });
     const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
     await updateDoc(defaultChannelRef, {
@@ -104,6 +105,7 @@ export class AuthService {
         email: user.email,
         profilephoto: user.profilephoto,
         online: false,
+        id: firebaseUser.uid,
       }),
     });
   }
