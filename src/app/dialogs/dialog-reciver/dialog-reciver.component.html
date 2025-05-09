@@ -6,11 +6,11 @@
     </button>
   </header>
 
-  <img class="profile-img" [src]="reciverData.profilephoto" alt="" />
+  <img class="profile-img" [src]="reciverData.reciever.profilephoto" alt="" />
   <section class="discription-cont">
-    <p class="name">{{ reciverData.fullname }}</p>
+    <p class="name">{{ reciverData.reciever.fullname }}</p>
 
-    @if(reciverData.online){
+    @if(reciverData.reciever.online){
     <div class="status-cont">
       <div class="circle"></div>
       <div class="status">Aktiv</div>
@@ -23,8 +23,15 @@
       <div class="envelope"><img src="img/mail.png" alt="" /></div>
       <div class="contact">
         <p class="email">Email-Adresse</p>
-        <div class="email-route">{{ reciverData.email }}</div>
+        <div class="email-route">{{ reciverData.reciever.email }}</div>
       </div>
     </div>
   </section>
+
+  <footer>
+    <button (click)="openReciver()" class="btn align-center gap-10">
+      <mat-icon class="material-symbols-outlined">mode_comment</mat-icon>
+      Nachricht
+    </button>
+  </footer>
 </main>

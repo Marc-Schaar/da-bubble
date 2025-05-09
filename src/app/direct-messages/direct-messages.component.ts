@@ -149,22 +149,15 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  /*
-    toggleProfile() {
-      this.isProfileCard = !this.isProfileCard
-    }
-  
-    closeProfile() {
-      this.isProfileCard = false;
-    }
-  */
-
   /**
    * Displays the receiver's profile.
    */
   public showProfile() {
     this.dialog.open(DialogReciverComponent, {
-      data: this.currentReciever,
+      data: {
+        reciever: this.currentReciever,
+        recieverId: this.currentRecieverId,
+      },
       width: '400px',
 
       //  position: { top: 'calc(50vh - 100px)', left: 'calc( 50vw - 100px)' },

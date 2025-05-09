@@ -62,7 +62,7 @@
   @if (!isEditing) {
   <div class="content-container">
     <div class="message-header gap-20">
-      <b class="font-size-18">{{ message.name }}</b>
+      <b (click)="showProfile()" class="font-size-18 curser-pointer">{{ message.name }}</b>
       <span class="font-size-14">{{ message.time }} Uhr</span>
     </div>
     <div class="message-main">

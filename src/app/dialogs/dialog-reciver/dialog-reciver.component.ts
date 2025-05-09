@@ -1,41 +1,31 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { User } from '../../models/user/user';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { UserService } from '../../shared.service';
+import { NavigationService } from '../../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-dialog-reciver',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './dialog-reciver.component.html',
   styleUrl: './dialog-reciver.component.scss',
 })
-export class DialogReciverComponent implements OnInit {
-  user: User | null = null;
-  displayName: string | null = null;
-  email: string | null = null;
-  photoURL: string | null = null;
-  emailVerified: boolean = false;
-  uid: string | null = null;
-
-  readonly reciverData = inject<any>(MAT_DIALOG_DATA);
-  readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
-
-  ngOnInit() {
-    console.log('Daten', this.reciverData);
-
-    // this.user = new User();
-    // if (this.user) {
-    //   // this.displayName = this.user.displayName;
-    //   // this.email = this.user.email;
-    //   // this.photoURL = this.user.photoURL;
-    //   // this.emailVerified = this.user.emailVerified;
-    //   // this.uid = this.user.uid;
-    // }
-  }
+export class DialogReciverComponent {
+  public readonly reciverData = inject<{ reciever: any; recieverId: string }>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
+  private userService = inject(UserService);
+  private navigationService = inject(NavigationService);
 
   /**
    * Closes the menu and emits an event to notify the parent component that the content should be hidden.
    */
-  closeMenu() {
+  public closeMenu() {
     this.dialogRef.close();
+  }
+
+  public openReciver() {
+    this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
+    this.navigationService.showDirect();
+    this.closeMenu();
   }
 }

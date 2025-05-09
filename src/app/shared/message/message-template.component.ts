@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Message } from '../../models/message/message';
 import { FormsModule } from '@angular/forms';
+import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { getDoc, getDocs, query, where } from '@firebase/firestore';
 
 @Component({
   selector: 'app-message-template',
@@ -17,7 +20,7 @@ export class MessageTemplateComponent {
   userService: UserService = inject(UserService);
   fireService: FireServiceService = inject(FireServiceService);
   router: Router = inject(Router);
-
+  private dialog = inject(MatDialog);
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
@@ -226,5 +229,34 @@ export class MessageTemplateComponent {
   cancel() {
     this.isEditing = false;
     this.menuOpen = false;
+  }
+
+  /**
+   * Displays the receiver's profile.
+   */
+  public async showProfile() {
+    const reciverData = await this.getReceiverIdByName();
+    console.log(reciverData);
+
+    this.dialog.open(DialogReciverComponent, {
+      data: {
+        reciever: reciverData,
+        recieverId: reciverData?.id,
+      },
+      width: '400px',
+
+      //  position: { top: 'calc(50vh - 100px)', left: 'calc( 50vw - 100px)' },
+    });
+  }
+
+  private async getReceiverIdByName() {
+    const usersCollection = this.fireService.getCollectionRef('users');
+    const q = query(usersCollection!, where('fullname', '==', this.message.name));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      return { ...doc.data(), id: doc.id };
+    } else return null;
   }
 }
