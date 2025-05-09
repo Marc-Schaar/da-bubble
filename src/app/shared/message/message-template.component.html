@@ -5,7 +5,7 @@
     reverse: message.name == this.userService.auth.currentUser?.displayName
   }"
 >
-  @if (!isEditing) {
+  @if (!isEditing && channelType!=='direct') {
   <div class="reaction-bar">
     <button
       class="medium-purple-hover"
@@ -79,8 +79,7 @@
         >
         <span class="font-size-14">Letzte Antwort {{ message.thread[message.thread.length - 1]?.time }} Uhr</span>
       </div>
-      }
-
+      } @if (channelType!=='direct') {
       <div class="emoji-container">
         @for (emoji of showAllReactions ? uniqueEmojis(message.reaction) : (uniqueEmojis(message.reaction) | slice : 0 : (isMobile ? 2 :
         20)); track $index) {
@@ -137,6 +136,7 @@
         </div>
         }
       </div>
+      }
     </div>
   </div>
   } @if (isEditing) {

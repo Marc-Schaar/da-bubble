@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 import { Message } from '../../models/message/message';
 import { FormsModule } from '@angular/forms';
 import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { getDoc, getDocs, query, where } from '@firebase/firestore';
+import { MatDialog } from '@angular/material/dialog';
+import { getDocs, query, where } from '@firebase/firestore';
 
 @Component({
   selector: 'app-message-template',
@@ -17,9 +17,9 @@ import { getDoc, getDocs, query, where } from '@firebase/firestore';
   styleUrl: './message-template.component.scss',
 })
 export class MessageTemplateComponent {
-  userService: UserService = inject(UserService);
-  fireService: FireServiceService = inject(FireServiceService);
-  router: Router = inject(Router);
+  public userService: UserService = inject(UserService);
+  private fireService: FireServiceService = inject(FireServiceService);
+  private router: Router = inject(Router);
   private dialog = inject(MatDialog);
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
@@ -42,6 +42,7 @@ export class MessageTemplateComponent {
   @Input() currentChannelId: string = '';
   @Input() parentMessageId: string = '';
   @Input() isThread: boolean = false;
+  @Input() channelType: 'direct' | 'channel' | 'thread' | null = null;
 
   constructor() {
     this.userId = this.userService.auth.currentUser?.uid;
@@ -52,13 +53,13 @@ export class MessageTemplateComponent {
    * @param message - The message to edit
    * @param index - Index of the message in the message list
    */
-  editMessage(message: Message) {
+  public editMessage(message: Message) {
     this.menuOpen = false;
     this.isEditing = true;
     this.inputEdit = message.message;
   }
 
-  async updateMessage(message: any) {
+  public async updateMessage(message: any) {
     this.isThread ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
   }
 
@@ -66,7 +67,7 @@ export class MessageTemplateComponent {
    * Updates the message after editing.
    * @param message - The message to update.
    */
-  updateThreadMessage(message: any) {
+  private updateThreadMessage(message: any) {
     let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
     if (messageRef) {
       this.isEditing = false;
@@ -84,16 +85,12 @@ export class MessageTemplateComponent {
    * @param message - The message to update
    */
 
-  updateChannelMessage(message: any) {
+  private updateChannelMessage(message: any) {
     let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
     if (messageRef) {
       this.isEditing = false;
-      try {
-        this.fireService.updateMessage(messageRef, this.inputEdit);
-        this.inputEdit = '';
-      } catch (error) {
-        console.error('Fehler beim Aktualisieren der Nachricht:', error);
-      }
+      this.fireService.updateMessage(messageRef, this.inputEdit);
+      this.inputEdit = '';
     }
   }
 
@@ -102,7 +99,7 @@ export class MessageTemplateComponent {
    * @param messageId - ID of the message to open
    * @param $event - The click event
    */
-  openThread(messageId: string, $event: Event) {
+  public openThread(messageId: string, $event: Event) {
     if (this.isMobile)
       this.router.navigate(['/thread'], {
         queryParams: {
@@ -121,7 +118,7 @@ export class MessageTemplateComponent {
    * @param message - The message to react to
    * @param emoji - The emoji reaction
    */
-  addReaction(message: any, emoji: string) {
+  public addReaction(message: any, emoji: string) {
     let messageRef;
     this.isThread
       ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
@@ -143,8 +140,9 @@ export class MessageTemplateComponent {
    * @param reactions - The list of reactions
    * @returns True if the user has reacted, otherwise false
    */
-  hasReacted(emoji: any, reactions: any[]): boolean {
-    return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
+  public hasReacted(emoji: any, reactions: any[]): boolean | undefined {
+    if (this.channelType !== 'direct') return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
+    return;
   }
 
   /**
@@ -152,7 +150,7 @@ export class MessageTemplateComponent {
    * @param message - The message to update
    * @param emoji - The emoji to remove
    */
-  removeReaction(message: any, emoji: string) {
+  public removeReaction(message: any, emoji: string): any {
     let messageRef;
     this.isThread
       ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
@@ -162,11 +160,7 @@ export class MessageTemplateComponent {
     if (reactionIndex >= 0) {
       message.reaction.splice(reactionIndex, 1);
       if (messageRef) {
-        try {
-          this.fireService.updateReaction(messageRef, message.reaction);
-        } catch (error) {
-          console.error('Fehler beim Aktualisieren der Nachricht:', error);
-        }
+        this.fireService.updateReaction(messageRef, message.reaction);
       }
     }
   }
@@ -176,7 +170,7 @@ export class MessageTemplateComponent {
    * @param reactions - Array of emoji reactions
    * @returns Filtered array with unique emojis
    */
-  uniqueEmojis(reactions: any[]): any[] {
+  public uniqueEmojis(reactions: any[]): any[] {
     return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
   }
 
@@ -186,7 +180,7 @@ export class MessageTemplateComponent {
    * @param reactions - The array of reactions
    * @returns Number of times the emoji was used
    */
-  countEmoji(emoji: any, reactions: any[]) {
+  public countEmoji(emoji: any, reactions: any[]) {
     return reactions.filter((e) => e.emoji === emoji.emoji).length;
   }
 
@@ -195,7 +189,7 @@ export class MessageTemplateComponent {
    * @param iterable - The array to check
    * @returns Count of unique emojis
    */
-  countUniqueEmojis(iterable: any[]): number {
+  public countUniqueEmojis(iterable: any[]): number {
     return new Set(iterable.map((e) => e.emoji)).size;
   }
 
@@ -205,7 +199,7 @@ export class MessageTemplateComponent {
    * @param reactions - The list of reactions to check
    * @returns A list of user names who have reacted with the target emoji
    */
-  getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] {
+  public getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] | any {
     let allUsers = this.userService.users;
     let currentUserId = this.userId;
     let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
@@ -226,7 +220,7 @@ export class MessageTemplateComponent {
   /**
    * Cancels editing mode and resets input.
    */
-  cancel() {
+  public cancel() {
     this.isEditing = false;
     this.menuOpen = false;
   }
@@ -236,8 +230,6 @@ export class MessageTemplateComponent {
    */
   public async showProfile() {
     const reciverData = await this.getReceiverIdByName();
-    console.log(reciverData);
-
     this.dialog.open(DialogReciverComponent, {
       data: {
         reciever: reciverData,

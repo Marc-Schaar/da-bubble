@@ -266,7 +266,6 @@ button {
   flex-direction: column;
   flex: 1;
   overflow-x: scroll;
-  padding-top: 50px;
 }
 
 .messagerow {
@@ -277,14 +276,12 @@ button {
   align-items: center;
   box-sizing: border-box;
   padding: 10px 45px;
-
   display: flex;
   gap: 30px;
 }
 
 .reverse {
   display: flex;
-
   flex-direction: row-reverse;
 }
 
@@ -388,9 +385,6 @@ button {
 
 .welcomeText {
   width: 100%;
-
-  height: 27px;
-
   a {
     color: var(--dark-purple-text);
     font-size: 18px;
@@ -406,60 +400,6 @@ button {
       font-weight: 700;
     }
   }
-}
-
-.lists {
-  position: absolute;
-  left: 65px;
-  bottom: 160px;
-  border: solid;
-  width: 100%;
-  max-width: 350px;
-  height: 467px;
-  border-width: 1px;
-  border-color: var(--light-purple);
-  border-radius: 20px 20px 20px 0px;
-  box-sizing: border-box;
-  padding: 20px 21px;
-  display: none;
-  background-color: white;
-  overflow-y: scroll;
-}
-
-.listrow {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  gap: 15px;
-  box-sizing: border-box;
-  padding: 4px 20px;
-  cursor: pointer;
-
-  > span {
-    font-size: 18px;
-    font-weight: 400;
-  }
-
-  &:hover {
-    background-color: var(--bg-color);
-    border-radius: 30px;
-
-    > .tag {
-      content: url(./../../../public/img/tag-purple.svg) !important;
-    }
-  }
-}
-
-.channelStyle {
-  max-height: 33px !important;
-  min-height: 33px !important;
-}
-
-.tag {
-  border-radius: unset !important;
-  max-width: 16px !important;
-  max-height: 16px !important;
 }
 
 .show {

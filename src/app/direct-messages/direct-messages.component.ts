@@ -15,13 +15,23 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserProfileComponent } from '../header/user-profile/user-profile.component';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { DialogReciverComponent } from '../dialogs/dialog-reciver/dialog-reciver.component';
+import { MessageTemplateComponent } from '../shared/message/message-template.component';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-direct-messages',
-  imports: [FormsModule, CommonModule, RouterLink, MatIconModule, DividerTemplateComponent, TextareaTemplateComponent, MatDialogModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    RouterLink,
+    MatIconModule,
+    DividerTemplateComponent,
+    TextareaTemplateComponent,
+    MatDialogModule,
+    MessageTemplateComponent,
+  ],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
@@ -83,7 +93,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private loadMessages() {
     this.unsubMessages = this.messagesService.getConversationMessages(this.currentUserId, this.currentRecieverId, (messages) => {
       this.currentMessages = messages;
-      this.isMessagesEmpty();
     });
   }
 
@@ -114,14 +123,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   public hideList() {
     this.isClicked = false;
-  }
-
-  /**
-   * Checks if the current message list is empty.
-   * @returns True if the current messages array is empty.
-   */
-  public isMessagesEmpty(): boolean {
-    return this.currentMessages.length === 0;
   }
 
   /**
