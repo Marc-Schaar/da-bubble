@@ -8,6 +8,18 @@
     gap: 38px;
     display: flex;
     flex-direction: column;
+    @media (max-width: 1023px) {
+      width: 338px;;
+      height: 524px;
+    }
+    @media (max-width: 450px) {
+      width: 300px;
+      height: 524px;
+    }
+    @media (max-width: 400px) {
+      width: 230px;
+      height: 500px;
+    }
     .contact-cont {
       display: flex;
       flex-direction: column;
@@ -144,6 +156,9 @@
   }
   
   .btn-borders {
+    > .btn {
+      width: 100%;
+    }
     > div:nth-child(1) {
       display: flex;
       justify-content: center;
@@ -156,6 +171,9 @@
         font-size: 18px;
         font-weight: 700;
         color: #444df2;
+        @media (max-width: 400px) {
+          font-size: 14px;
+        }
         &:hover {
           color: #ffffff;
           background-color: #444df2;
