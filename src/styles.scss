@@ -88,6 +88,7 @@ app-footer {
 }
 
 .add-member-dialog.cdk-overlay-pane {
+  margin: unset !important;
   @media (max-width: 1023px) {
     margin-top: 0 !important;
     margin-right: 0 !important;
@@ -96,7 +97,13 @@ app-footer {
   }
 }
 
+.cdk-global-overlay-wrapper{
+  justify-content: center !important;
+  align-items: center !important;
+}
+
 .fullscreen.cdk-overlay-pane {
+  margin: unset !important;
   @media (max-width: 1023px) {
     width: 100% !important;
     max-width: 100% !important;
@@ -116,7 +123,6 @@ app-footer {
 }
 
 .cdk-overlay-pane {
-  top: 21px !important;
   position: absolute !important;
 }
 
