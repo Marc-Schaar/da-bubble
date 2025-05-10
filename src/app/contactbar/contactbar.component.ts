@@ -98,10 +98,14 @@ export class ContactbarComponent implements OnInit {
         this.channels = [];
         for (let i = 0; i < this.allChannels.length; i++) {
           const element = this.allChannels[i];
-          for (let y = 0; y < this.allChannels[i].member.length; y++) {
-            const userId = this.allChannels[i].member[y].id;
-            if (userId == this.userService.currentUser?.uid) {
-              this.channels.push(element);
+          if (this.userService.auth.currentUser?.isAnonymous) {
+            this.channels.push(element);
+          } else {
+            for (let y = 0; y < this.allChannels[i].member.length; y++) {
+              const userId = this.allChannels[i].member[y].id;
+              if (userId == this.userService.currentUser?.uid) {
+                this.channels.push(element);
+              }
             }
           }
         }
