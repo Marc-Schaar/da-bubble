@@ -39,7 +39,7 @@ export class MainChatComponent implements OnInit {
   private subscriptions: Subscription[] = [];
 
   public feedbackVisible: boolean = false;
-  public barOpen: boolean = false;
+  public barOpen: boolean = true;
   public isChatOverlayVisible: boolean = false;
 
   constructor() {}

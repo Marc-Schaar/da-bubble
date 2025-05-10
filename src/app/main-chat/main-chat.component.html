@@ -1,6 +1,6 @@
 <aside (click)="toogleContactbar()" class="navbar-toggle-container">
-  @if (barOpen) { <span>Workspacemenü schließen</span>} @else { <span>Workspacemenü öffnen</span>}
-  <span [ngStyle]="{ transform: !barOpen ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
+  @if (barOpen) { <span>Workspacemenü schließen</span> } @else { <span>Workspacemenü öffnen</span>}
+  <span [ngStyle]="{ transform: barOpen ? 'rotate(-90deg)' : 'rotate(90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
 </aside>
 
 <main>
