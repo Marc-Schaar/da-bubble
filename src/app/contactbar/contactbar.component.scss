@@ -447,19 +447,23 @@ button {
     color: var(--dark-purple);
     font-size: 17px;
   }
+}
 
-  .add-message-btn-mobile {
-    display: block;
-    position: absolute;
-    bottom: 40px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: var(--dark-purple);
-    padding: 8px;
-    border-radius: 50%;
-    color: white;
-    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+.add-message-btn-mobile {
+  display: block;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--dark-purple);
+  padding: 8px;
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+
+  @media screen and (min-width: 1024px) {
+    display: none;
   }
 }
 
