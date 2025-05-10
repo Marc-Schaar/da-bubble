@@ -65,7 +65,7 @@
         <div></div>
       </div>
     </div>
-    <input name="" id="user-search-bar" #userSearchInput (input)="openUserBar()" (keyup)="filterUsers()" />
+    <input name="" id="user-search-bar" #userSearchInput (input)="openUserBar()" (keyup)="filterUsers()" (click)="openUserBar()" />
   </div>
 
   <div class="btn-cont" *ngIf="addMemberWindow">

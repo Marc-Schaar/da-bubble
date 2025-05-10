@@ -134,7 +134,7 @@ export class AddMemberComponent implements OnInit {
   closeUserBar(event: Event) {
     const targetElement = event.target as Node;
 
-    if (this.showUserBar && !this.chooseUserBar.nativeElement.contains(targetElement)) {
+    if (this.showUserBar && this.chooseUserBar?.nativeElement && !this.chooseUserBar.nativeElement.contains(targetElement)) {
       this.showUserBar = false;
     }
   }
@@ -222,7 +222,7 @@ export class AddMemberComponent implements OnInit {
     }
     this.userService.showFeedback('User hinzugefügt');
   }
-  
+
   /**
    * Shows the profile of a given member.
    * @param member User object
