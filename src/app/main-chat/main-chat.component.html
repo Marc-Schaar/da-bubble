@@ -23,7 +23,9 @@
 
 <main>
   <section>
-    <app-header *ngIf="!this.navigationService.isMobile"></app-header>
+    @if (!this.navigationService.isMobile) {
+    <app-header></app-header>
+    }
 
     <div class="content-container">
       <mat-drawer-container class="chat-content">
