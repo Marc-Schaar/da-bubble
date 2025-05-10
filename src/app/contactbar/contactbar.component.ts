@@ -35,7 +35,7 @@ export class ContactbarComponent implements OnInit {
 
   public currentReceiver: any;
 
-  public userID: string = '';
+  public userID: string | undefined = '';
   public currentChannel: string | null = null;
   public input: string = '';
   public currentLink: string = '';
@@ -65,7 +65,7 @@ export class ContactbarComponent implements OnInit {
     await this.loadUsers();
     this.loadChannels();
     this.openDropdown();
-    this.userID = this.userService.currentUser.uid;
+    this.userID = this.userService.auth.currentUser?.uid;
     this.currentUser = this.userService.currentUser;
   }
 
@@ -277,8 +277,10 @@ export class ContactbarComponent implements OnInit {
    * @param index - The index of the selected user or channel
    */
   public getReciever(key: string): void {
+    console.log(key);
+
     if (this.isChannel) {
-      this.userService.setUrl('channel', key);
+      this.userService.setUrl('channel', key, this.userID);
       this.navigationService.showChannel();
     } else if (!this.isChannel) {
       this.userService.setUrl('direct', key, this.userID);
