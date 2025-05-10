@@ -33,7 +33,7 @@
       >
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
-            <img src="{{ parentMessageData?.avatar }}" alt="{{ parentMessageData?.name }}" />
+            <img src="{{ parentMessageData?.avatar || 'img/profilephoto.png' }}" alt="{{ parentMessageData?.name }}" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
