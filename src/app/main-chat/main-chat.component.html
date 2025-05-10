@@ -15,13 +15,15 @@
           <app-contactbar></app-contactbar>
         </mat-drawer>
 
+        <div class="component">
+          <ng-container *ngIf="navigationService.component$ | async as cmp">
+            <ng-container *ngComponentOutlet="cmp"></ng-container>
+          </ng-container>
+        </div>
+
         <mat-drawer mode="side" #drawer position="end" class="thread-container">
           <app-thread></app-thread>
         </mat-drawer>
-
-        <ng-container *ngIf="navigationService.component$ | async as cmp">
-          <ng-container *ngComponentOutlet="cmp"></ng-container>
-        </ng-container>
       </mat-drawer-container>
     </div>
   </section>
