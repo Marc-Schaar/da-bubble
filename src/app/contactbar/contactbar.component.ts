@@ -279,6 +279,8 @@ export class ContactbarComponent implements OnInit {
   public getReciever(key: string): void {
     console.log(key);
 
+    console.log(this.userID);
+
     if (this.isChannel) {
       this.userService.setUrl('channel', key, this.userID);
       this.navigationService.showChannel();
