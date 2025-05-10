@@ -1,19 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Firestore, onSnapshot, getDoc } from '@angular/fire/firestore';
 import { FireServiceService } from '../fire-service.service';
 import { UserService } from '../shared.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NavigationService } from '../service/navigation/navigation.service';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { HeaderComponent } from '../header/header.component';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
-import { NavigationService } from '../service/navigation/navigation.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Component({
   selector: 'app-contactbar',
   standalone: true,
