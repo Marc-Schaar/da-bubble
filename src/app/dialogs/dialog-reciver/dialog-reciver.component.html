@@ -10,12 +10,15 @@
   <section class="discription-cont">
     <p class="name">{{ reciverData.reciever.fullname }}</p>
 
-    @if(reciverData.reciever.online){
     <div class="status-cont">
-      <div class="circle"></div>
+      @if(reciverData.reciever.online){
+      <div class="circle online"></div>
       <div class="status">Aktiv</div>
+      } @else {
+      <div class="circle offline"></div>
+      <div class="status">Abwesend</div>
+      }
     </div>
-    }
   </section>
 
   <section class="contact-cont">

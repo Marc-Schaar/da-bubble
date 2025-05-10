@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+  @media screen and (max-width: 1023px) {
+    height: 90vh;
+    justify-content: space-between;
+  }
 
   .contact-cont {
     display: flex;
@@ -53,15 +57,21 @@
       display: flex;
       align-items: center;
       gap: 15px;
+      color: var(--text-grey);
+
       .circle {
         width: 16px;
         aspect-ratio: 1;
         border-radius: 50%;
-        background-color: rgba(146, 200, 62, 1);
       }
       .status {
-        color: rgba(146, 200, 62, 1);
         font-size: 1.25rem;
+      }
+      .online {
+        background-color: var(--online);
+      }
+      .offline {
+        background-color: var(--offline);
       }
     }
   }
