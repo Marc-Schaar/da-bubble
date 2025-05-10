@@ -22,31 +22,32 @@ import { NavigationService } from '../service/navigation/navigation.service';
   styleUrl: './contactbar.component.scss',
 })
 export class ContactbarComponent implements OnInit {
+  public userService = inject(UserService);
+  private firestoreService = inject(FireServiceService);
+  public router: Router = inject(Router);
+  public navigationService: NavigationService = inject(NavigationService);
+  private firestore = inject(Firestore);
+
   public channels: any = [];
   public allChannels: any = [];
   public users: any = [];
-  active: boolean = false;
-  message: boolean = false;
-  isMobile: boolean = false;
-  barOpen: boolean = true;
-  showBackground: boolean = false;
-  userService = inject(UserService);
-  firestore = inject(Firestore);
-  firestoreService = inject(FireServiceService);
-  router: Router = inject(Router);
-  currentUser: any = [];
-  currentlist: any[] = [];
-  searchList: any[] = [];
-  currentArray: any[] = [];
-  currentReceiver: any;
-  userID: string = '';
-  currentChannel: any;
-  addChannelWindow: boolean = false;
-  isClicked: boolean = false;
-  isChannel: boolean = false;
-  input: string = '';
-  currentLink: string = '';
-  navigationService: NavigationService = inject(NavigationService);
+  public currentUser: any = [];
+  public currentlist: any[] = [];
+  private searchList: any[] = [];
+  public currentArray: any[] = [];
+
+  public currentReceiver: any;
+
+  public userID: string = '';
+  public currentChannel: string | null = null;
+  public input: string = '';
+  public currentLink: string = '';
+
+  public addChannelWindow: boolean = false;
+  public active: boolean = false;
+  public message: boolean = false;
+  public isClicked: boolean = false;
+  public isChannel: boolean = false;
 
   /**
    * Constructor for SomeComponent. Initializes the component with the MatDialog service for dialog management.
@@ -66,16 +67,15 @@ export class ContactbarComponent implements OnInit {
     this.userService.login = false;
     await this.loadUsers();
     this.loadChannels();
+    this.openDropdown();
     this.userID = this.userService.currentUser.uid;
     this.currentUser = this.userService.currentUser;
-
-    this.openDropdown();
   }
 
   /**
    * Loads the list of users from the Firestore service.
    */
-  async loadUsers() {
+  private async loadUsers() {
     try {
       this.users = await this.firestoreService.getUsers();
     } catch (error) {
@@ -86,7 +86,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Loads the list of channels the current user is a member of.
    */
-  loadChannels() {
+  private loadChannels() {
     let channelRef = this.firestoreService.getCollectionRef('channels');
     this.allChannels = [];
     if (channelRef) {
@@ -116,14 +116,14 @@ export class ContactbarComponent implements OnInit {
   /**
    * Toggles the active state of the contact bar.
    */
-  toggleActive() {
+  public toggleActive() {
     this.active = !this.active;
   }
 
   /**
    * Toggles the message state of the contact bar.
    */
-  toggleMessage() {
+  public toggleMessage() {
     this.message = !this.message;
   }
 
@@ -131,7 +131,7 @@ export class ContactbarComponent implements OnInit {
    * Checks if the message bar is open.
    * @returns True if the message bar is open.
    */
-  isOpen() {
+  public isOpen() {
     return this.message === true;
   }
 
@@ -139,7 +139,7 @@ export class ContactbarComponent implements OnInit {
    * Checks if the contact bar is active.
    * @returns True if the contact bar is active.
    */
-  isActive() {
+  public isActive() {
     return this.active === true;
   }
 
@@ -148,7 +148,7 @@ export class ContactbarComponent implements OnInit {
    * @param window - The window type to open ('direct', 'channel', or 'newMessage')
    * @param linkName - Optional link name for the window
    */
-  openWindow(window: 'direct' | 'channel' | 'newMessage', linkName?: string) {
+  public openWindow(window: 'direct' | 'channel' | 'newMessage', linkName?: string) {
     window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.currentLink = linkName || '';
     this.userService.toggleThread('close');
@@ -157,7 +157,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Opens the dropdown for a channel or user, based on the current navigation state.
    */
-  async openDropdown() {
+  private async openDropdown() {
     this.active = false;
     this.message = false;
     const isChannel = this.navigationService.channelType === 'channel';
@@ -179,7 +179,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Opens the dialog to add a new channel.
    */
-  openAddChannel() {
+  public openAddChannel() {
     const dialogRef = this.dialog.open(AddChannelComponent, {
       width: '872px',
       maxWidth: '95vw',
@@ -192,7 +192,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Gets the list of users or channels based on the input search.
    */
-  getList() {
+  public getList() {
     if (this.input.includes('#')) {
       this.isChannel = true;
       this.currentlist = this.channels;
@@ -210,7 +210,7 @@ export class ContactbarComponent implements OnInit {
    * Initializes the search based on the input length and type.
    * @param searchlistType - The type of list to search ('user' or 'channel')
    */
-  searchInit(searchlistType: string) {
+  private searchInit(searchlistType: string) {
     this.input.length > 1 ? this.startSearch(searchlistType) : this.resetSearch();
   }
 
@@ -218,7 +218,7 @@ export class ContactbarComponent implements OnInit {
    * Starts the search for users or channels based on the modified input.
    * @param searchlistType - The type of list to search ('user' or 'channel')
    */
-  startSearch(searchlistType: string) {
+  private startSearch(searchlistType: string) {
     this.searchList = [];
     let modifyedInput = this.input.slice(1).trim();
     this.currentlist.forEach((object) => {
@@ -232,7 +232,7 @@ export class ContactbarComponent implements OnInit {
    * @param object - The user object to search
    * @param input - The input to search for
    */
-  searchInUsers(object: any, input: string) {
+  private searchInUsers(object: any, input: string) {
     this.isChannel = false;
     if (object.fullname.toLowerCase().includes(input) || object.email.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
@@ -248,7 +248,7 @@ export class ContactbarComponent implements OnInit {
    * @param object - The channel object to search
    * @param input - The input to search for
    */
-  searchInChannels(object: any, input: string) {
+  private searchInChannels(object: any, input: string) {
     this.isChannel = true;
     if (object.name.toLowerCase().includes(input)) {
       const duplette = this.searchList.find((search) => search.id === object.id);
@@ -262,7 +262,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Resets the search list and clears the current receiver and channel.
    */
-  resetSearch() {
+  public resetSearch() {
     this.searchList = [];
     this.currentReceiver = null;
     this.currentChannel = null;
@@ -271,7 +271,7 @@ export class ContactbarComponent implements OnInit {
   /**
    * Resets the input field to an empty string.
    */
-  resetInput() {
+  public resetInput() {
     this.input = '';
   }
 
@@ -279,7 +279,7 @@ export class ContactbarComponent implements OnInit {
    * Sets the current receiver based on the selected index and opens the corresponding chat.
    * @param index - The index of the selected user or channel
    */
-  getReciever(key: string): void {
+  public getReciever(key: string): void {
     if (this.isChannel) {
       this.userService.setUrl('channel', key);
       this.navigationService.showChannel();
