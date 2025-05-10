@@ -10,10 +10,7 @@ import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../shared.service';
 import { ThreadComponent } from '../thread/thread.component';
-import { FireServiceService } from '../fire-service.service';
 import { NavigationService } from '../service/navigation/navigation.service';
-import { Router } from '@angular/router';
-import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -38,8 +35,6 @@ export class MainChatComponent implements OnInit {
 
   public readonly navigationService: NavigationService = inject(NavigationService);
   private readonly userService = inject(UserService);
-  private readonly fireService: FireServiceService = inject(FireServiceService);
-  private readonly router: Router = inject(Router);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
 

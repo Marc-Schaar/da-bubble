@@ -306,45 +306,6 @@ textarea {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-.navbar-toggle-container {
-  width: 347px;
-  height: auto;
-  position: fixed;
-  bottom: 27%;
-  left: -138px;
-  box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
-  border-radius: 0px 0 30px 30px;
-  display: flex;
-  gap: 25px;
-  justify-content: center;
-  align-items: center;
-  rotate: -90deg;
-  background-color: white;
-  padding: 23px 14px 23px 14px;
-  cursor: pointer;
-  z-index: 2;
-  span {
-    font-size: 20px;
-    font-weight: 500;
-  }
-  svg {
-    rotate: 90deg;
-  }
-  &:hover {
-    span {
-      color: var(--dark-purple);
-    }
-    svg {
-      rect {
-        stroke: var(--dark-purple);
-      }
-      path {
-        stroke: var(--dark-purple);
-      }
-    }
-  }
-}
-
 @keyframes slide-in-r-l {
   0% {
     transform: translate(10px, 10px);

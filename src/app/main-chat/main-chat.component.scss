@@ -64,3 +64,24 @@ section {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 900;
 }
+
+.navbar-toggle-container {
+  position: fixed;
+  bottom: 27%;
+  left: -125px;
+  box-shadow: -4px 4px 7px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0 30px 30px;
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+  rotate: -90deg;
+  background-color: white;
+  padding: 0.875em 1.438em;
+  cursor: pointer;
+  z-index: 2;
+  span {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+}
