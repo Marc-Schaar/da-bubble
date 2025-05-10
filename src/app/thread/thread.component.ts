@@ -1,14 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../shared.service';
-import { FireServiceService } from '../fire-service.service';
-import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Message } from '../models/message/message';
+import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
+import { UserService } from '../shared.service';
 import { MessagesService } from '../service/messages/messages.service';
 import { NavigationService } from '../service/navigation/navigation.service';
+import { MatIconModule } from '@angular/material/icon';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../shared/message/message-template.component';
 
@@ -19,29 +17,28 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
   styleUrls: ['./thread.component.scss'],
 })
 export class ThreadComponent implements OnInit {
-  firestore: Firestore = inject(Firestore);
-  userService: UserService = inject(UserService);
-  fireService: FireServiceService = inject(FireServiceService);
-  route: ActivatedRoute = inject(ActivatedRoute);
-  router: Router = inject(Router);
-  messagesService: MessagesService = inject(MessagesService);
-  navigationService: NavigationService = inject(NavigationService);
+  private firestore: Firestore = inject(Firestore);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+  private messagesService: MessagesService = inject(MessagesService);
+  public userService: UserService = inject(UserService);
+  public navigationService: NavigationService = inject(NavigationService);
 
-  currentUser: any;
+  public currentUser: any;
 
-  userId: string = '';
-  currentChannel: any;
-  currentChannelId: string = '';
-  parentMessageId: string = '';
-  inputEdit: string = '';
-  parentMessageData: any = null;
-  editingMessageId: number | null = null;
+  public userId: string = '';
+  public currentChannel: any;
+  public currentChannelId: string = '';
+  public parentMessageId: string = '';
+  public inputEdit: string = '';
+  public parentMessageData: any = null;
+  public editingMessageId: number | null = null;
 
-  listOpen: boolean = false;
-  isEditing: boolean = false;
+  public listOpen: boolean = false;
+  public isEditing: boolean = false;
 
-  messages: any = [];
-  reactions: any = [];
+  public messages: any = [];
+  public reactions: any = [];
 
   /**
    * A function that will unsubscribe from the Firestore snapshot listener for messages.
@@ -68,7 +65,7 @@ export class ThreadComponent implements OnInit {
   /**
    * Fetches the current channel information from Firestore.
    */
-  async getCurrentChannel() {
+  private async getCurrentChannel() {
     if (this.currentChannelId) {
       let channelRef = doc(this.firestore, `channels/${this.currentChannelId}`);
       let channelRefDocSnap = await getDoc(channelRef);
@@ -79,7 +76,7 @@ export class ThreadComponent implements OnInit {
   /**
    * Fetches the parent message details for the thread.
    */
-  async getThreadParentMessage() {
+  private async getThreadParentMessage() {
     if (this.parentMessageId) {
       let parentMessageDocRef = doc(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}`);
       let parentMessageDocSnap = await getDoc(parentMessageDocRef);
@@ -95,7 +92,7 @@ export class ThreadComponent implements OnInit {
    * Sets the parent message data.
    * @param data - The parent message data from Firestore.
    */
-  setParentMessageData(data: any) {
+  private setParentMessageData(data: any) {
     let parentMessage = data;
     this.parentMessageData = {
       id: this.parentMessageId,
@@ -110,7 +107,7 @@ export class ThreadComponent implements OnInit {
   /**
    * Retrieves the messages in the current thread.
    */
-  getMessages() {
+  private getMessages() {
     if (this.parentMessageId) {
       let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
@@ -124,7 +121,7 @@ export class ThreadComponent implements OnInit {
   /**
    * Closes the current thread and redirects the user.
    */
-  closeThread() {
+  public closeThread() {
     if (this.navigationService.isMobile) {
       this.router.navigate(['/channel'], {
         queryParams: { channelType: 'channel', id: this.currentChannelId, currentUserId: this.userId },
