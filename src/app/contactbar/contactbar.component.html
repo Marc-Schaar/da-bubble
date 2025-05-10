@@ -1,5 +1,5 @@
 <main>
-  <section>
+  <section class="column align-center">
     <app-header *ngIf="this.navigationService.isMobile"></app-header>
     <div class="headline">
       <div>
@@ -7,7 +7,7 @@
         <h1>Devspace</h1>
       </div>
       <button (click)="this.navigationService.showNewMessage(); this.userService.setUrl('newMessage')">
-        <img src="/img/edit_square.svg" alt="" />
+        <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
       </button>
     </div>
 
@@ -55,15 +55,13 @@
     } @if (!isClicked) {
     <div class="contactbar">
       <div class="channels">
-        <div class="channelbar">
-          <div class="curser-pointer" (click)="toggleActive()">
-            <img [ngClass]="{ rotate: isActive() }" class="image-down" src="./img/arrow_drop_down-1.svg" alt="" />
-            <div>
-              <img src="./img/workspaces_black.svg" alt="" />
-              <span>Channels</span>
-            </div>
-          </div>
-          <button class="addButton" (click)="openAddChannel()">
+        <div class="drop-down-title">
+          <button class="d-flex align-center gap-10" (click)="toggleActive()">
+            <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isActive() }"> arrow_drop_down</mat-icon>
+            <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
+            Channels
+          </button>
+          <button class="align-center" (click)="openAddChannel()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -72,7 +70,7 @@
           @for (channel of channels; track $index; let index = $index) {
           <li
             [ngClass]="{ 'active-link': currentLink === channel.name }"
-            class="channelrow"
+            class="li"
             (click)="
               openWindow('channel', channel.name); this.userService.setUrl('channel', channel.id, this.userService.auth.currentUser?.uid)
             "
@@ -90,14 +88,12 @@
       </div>
 
       <div class="messages">
-        <div class="messagebar">
-          <div class="curser-pointer" (click)="toggleMessage()">
-            <img class="image-down" [ngClass]="{ rotate: isOpen() }" src="/img/arrow_drop_down-1.svg" alt="" />
-            <div>
-              <img src="/img/account_circle.svg" alt="" />
-              <span>Direktnachrichten</span>
-            </div>
-          </div>
+        <div class="drop-down-title">
+          <button class="d-flex align-center gap-10" (click)="toggleMessage()">
+            <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isOpen() }"> arrow_drop_down</mat-icon>
+            <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+            Direktnachrichten
+          </button>
         </div>
 
         <ul [ngClass]="{ show: isOpen() }" class="contacts">
@@ -107,7 +103,7 @@
             (click)="
               openWindow('direct', user.fullname); this.userService.setUrl('direct', user.id, this.userService.auth.currentUser?.uid)
             "
-            class="contactsrow"
+            class="li"
           >
             <div class="imageContainer">
               <img class="profile-image" [src]="user.profilephoto" alt="" />

@@ -7,25 +7,21 @@ main {
 }
 
 section {
-  background-color: #ffffff;
+  height: calc(100svh - var(--header-offset));
+  background-color: white;
   border-radius: 30px;
-  font-family: "Nunito";
-  padding: 32px 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 2em 1.875em;
   gap: 25px;
-  min-height: calc(100svh - var(--header-offset));
-  max-height: calc(100svh - var(--header-offset));
 }
 
 button {
+  cursor: pointer;
+  transition: all 0.125 ease-in-out;
+  background: unset;
   border: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
+  &:hover {
+    color: var(--dark-purple);
+  }
 }
 
 .headline {
@@ -48,27 +44,6 @@ button {
       height: 60px;
     }
   }
-
-  > button {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-
-    > img {
-      max-width: 40px;
-      height: 40px;
-    }
-
-    &:hover {
-      > img {
-        content: url(/img/edit_square_hover.svg);
-      }
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-  }
 }
 
 .contactbar {
@@ -88,66 +63,19 @@ button {
   gap: 25px;
 }
 
-.channelbar {
+.drop-down-title {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.125s ease-in-out;
 
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  button {
     gap: 15px;
-
-    > button {
-      width: 30px;
-      height: 30px;
-    }
-
-    > div {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      > span {
-        font-size: 20px;
-        font-weight: 700;
-      }
-    }
-
-    &:hover {
-      > div {
-        > span {
-          color: var(--dark-purple);
-        }
-
-        > img {
-          content: url(/img/workspaces_purple.svg);
-        }
-      }
-
-      > .image-down {
-        content: url(/img/arrow_drop_down-1-purple.svg);
-      }
-
-      > .image-right {
-        content: url(/img/arrow_drop_down-2-purple.svg);
-      }
-    }
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: "Nunito";
   }
-}
-
-.image-down {
-  width: 9px;
-  height: 6px;
-}
-
-.image-right {
-  width: 9px;
-  height: 6px;
-  display: none;
 }
 
 .addButton {
@@ -176,7 +104,7 @@ button {
   overflow: hidden;
 }
 
-.channelrow {
+.li {
   display: flex;
   align-items: center;
   width: fit-content;
@@ -186,10 +114,10 @@ button {
   cursor: pointer;
   transition: all 0.125s ease-in-out;
   border-radius: 20px;
-  font-size: 18px;
+  font-size: 1.125rem;
 
   &:hover {
-    background-color: #eceefe;
+    background-color: var(--bg-color);
     color: var(--dark-purple);
     font-weight: 700;
   }
@@ -200,7 +128,7 @@ button {
   align-items: center;
   gap: 10px;
   padding: 4px 10px;
-  font-size: 18px;
+  font-size: 1.125rem;
   cursor: pointer;
   transition: all 0.125s ease-in-out;
   @media (max-width: 1023px) {
@@ -224,57 +152,6 @@ button {
   gap: 25px;
 }
 
-.messagebar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-
-  > div {
-    width: 243px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-
-    &:hover {
-      img {
-        content: url(/img/arrow_drop_down-1-purple.svg);
-      }
-
-      > div > img {
-        content: url(/img/account_circle-purple.svg);
-      }
-
-      > div > span {
-        color: #535af1;
-      }
-    }
-
-    > button {
-      width: 30px;
-      height: 30px;
-
-      > img {
-        width: 9px;
-        height: 6px;
-      }
-    }
-
-    > div {
-      width: 199px;
-      height: 27px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      > span {
-        font-size: 20px;
-        font-weight: 700;
-      }
-    }
-  }
-}
-
 .contacts {
   width: 100%;
   max-height: 0;
@@ -283,26 +160,6 @@ button {
   transition: max-height 0.125s ease-in-out;
   gap: 13px;
   overflow: hidden;
-}
-
-.contactsrow {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-left: 25px;
-  cursor: pointer;
-  width: fit-content;
-  padding: 4px 20px;
-  border-radius: 35px;
-  gap: 15px;
-  margin-left: 8px;
-  font-size: 18px;
-
-  &:hover {
-    background-color: var(--bg-color);
-    color: var(--dark-purple);
-    font-weight: 700;
-  }
 }
 
 .profile-image {
@@ -322,16 +179,14 @@ button {
   bottom: 0;
   right: -2px;
   width: 12px;
-  height: 12px;
-  border: solid;
-  background-color: gray;
+  aspect-ratio: 1;
+  outline: 2px solid var(--bg-color);
+  background-color: var(--offline);
   border-radius: 50%;
-  border-color: var(--bg-color);
-  border-width: 2px;
 }
 
 .green {
-  background-color: #92c83e;
+  background-color: var(--online);
 }
 
 .pin-right-bottom-mobile {

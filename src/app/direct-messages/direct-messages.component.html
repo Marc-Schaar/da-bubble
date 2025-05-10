@@ -23,39 +23,37 @@
       </button>
     </div>
 
-    <div class="chat-content" #chat>
-      <ul>
-        @for (message of currentMessages; track $index;let i = $index) { @if (message.newDay) {
-        <li>
-          <app-divider-template [messageData]="message"></app-divider-template>
-        </li>
-        }
-        <li>
-          <app-message-template [message]="message" [channelType]="'direct'"></app-message-template>
-        </li>
-        } @empty {
-        <li class="startContainer">
-          <div class="userContainer">
-            <img [src]="currentReciever?.profilephoto" alt="" />
-            <span>{{ currentReciever?.fullname }}</span>
-          </div>
-          <div class="welcomeText">
-            @if (!isYou()) {
-            <p>
-              Diese Unterhaltung findet nur zwischen
-              <a>&commat;{{ currentReciever?.fullname }} </a>und dir statt.
-            </p>
-            } @else {
-            <p>
-              <span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien
-              griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
-            </p>
-            }
-          </div>
-        </li>
-        }
-      </ul>
-    </div>
+    <ul class="chat-content" #chat>
+      @for (message of currentMessages; track $index;let i = $index) { @if (message.newDay) {
+      <li>
+        <app-divider-template [messageData]="message"></app-divider-template>
+      </li>
+      }
+      <li>
+        <app-message-template [message]="message" [channelType]="'direct'"></app-message-template>
+      </li>
+      } @empty {
+      <li class="startContainer">
+        <div class="userContainer">
+          <img [src]="currentReciever?.profilephoto" alt="" />
+          <span>{{ currentReciever?.fullname }}</span>
+        </div>
+        <div class="welcomeText">
+          @if (!isYou()) {
+          <p>
+            Diese Unterhaltung findet nur zwischen
+            <a>&commat;{{ currentReciever?.fullname }} </a>und dir statt.
+          </p>
+          } @else {
+          <p>
+            <span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien
+            griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
+          </p>
+          }
+        </div>
+      </li>
+      }
+    </ul>
 
     <footer class="card-footer">
       <app-textarea-template
