@@ -1,25 +1,23 @@
-import { Component, inject, Injectable, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { UserService } from '../shared.service';
+import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FireServiceService } from '../fire-service.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+
+import { UserService } from '../shared.service';
+import { FireServiceService } from '../fire-service.service';
 import { NavigationService } from '../service/navigation/navigation.service';
 import { MessagesService } from '../service/messages/messages.service';
-import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
-import { Subscription } from 'rxjs';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { UserProfileComponent } from '../header/user-profile/user-profile.component';
-import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { DialogReciverComponent } from '../dialogs/dialog-reciver/dialog-reciver.component';
-import { MessageTemplateComponent } from '../shared/message/message-template.component';
 
-@Injectable({
-  providedIn: 'root',
-})
+import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
+import { MessageTemplateComponent } from '../shared/message/message-template.component';
+import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
+import { DialogReciverComponent } from '../dialogs/dialog-reciver/dialog-reciver.component';
+import { Subscription } from 'rxjs';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-direct-messages',
   imports: [
@@ -37,25 +35,26 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
-  channels: any[] = [];
-  users: any[] = [];
-  currentReciever: any = null;
-  currentUser: any = null;
-  currentMessages: any[] = [];
-  isClicked: boolean = false;
-  listKey: string = '';
-  isProfileCard: boolean = false;
-  //Cleancode Update
-  public userService = inject(UserService);
-  public navigationService = inject(NavigationService);
-  private firestoreService = inject(FireServiceService);
-  private route: ActivatedRoute = inject(ActivatedRoute);
+
+  public readonly userService = inject(UserService);
+  public readonly navigationService = inject(NavigationService);
+  private readonly firestoreService = inject(FireServiceService);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly dialog = inject(MatDialog);
   private messagesService = inject(MessagesService);
-  readonly dialog = inject(MatDialog);
-  private subscriptions = new Subscription();
-  private unsubMessages!: () => void;
+
+  public currentReciever: any = null;
+  private currentUser: any = null;
+
   public currentRecieverId: string = '';
   public currentUserId: string = '';
+
+  public currentMessages: any[] = [];
+
+  private isClicked: boolean = false;
+
+  private subscriptions = new Subscription();
+  private unsubMessages!: () => void;
 
   /**
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
@@ -71,15 +70,13 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentUser = this.userService.currentUser;
       this.getRecieverFromUrl();
       this.loadMessages();
-      this.loadUsers();
-      this.loadChannels();
     });
   }
 
   /**
    * Retrieves the receiver's data from Firestore using the receiver ID.
    */
-  async getRecieverFromUrl() {
+  private async getRecieverFromUrl() {
     if (this.currentRecieverId) {
       const docRef = this.firestoreService.getDocRef('users', this.currentRecieverId);
       if (docRef) {
@@ -96,28 +93,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
     this.unsubMessages = this.messagesService.getConversationMessages(this.currentUserId, this.currentRecieverId, (messages) => {
       this.currentMessages = messages;
     });
-  }
-
-  /**
-   * Loads the list of users from Firestore.
-   */
-  private async loadUsers() {
-    try {
-      this.users = await this.firestoreService.getUsers();
-    } catch (error) {
-      console.error('Error loading users in component:', error);
-    }
-  }
-
-  /**
-   * Loads the list of channels from Firestore.
-   */
-  private async loadChannels() {
-    try {
-      this.channels = await this.firestoreService.getChannels();
-    } catch (error) {
-      console.error('Error loading channels in component:', error);
-    }
   }
 
   /**
@@ -145,14 +120,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cleans up any subscriptions and unsubscriptions when the component is destroyed.
-   */
-  public ngOnDestroy() {
-    if (this.unsubMessages) this.unsubMessages();
-    this.subscriptions.unsubscribe();
-  }
-
-  /**
    * Displays the receiver's profile.
    */
   public showProfile() {
@@ -164,5 +131,13 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       width: '400px',
       position: { top: 'calc(50svh - 310px)' },
     });
+  }
+
+  /**
+   * Cleans up any subscriptions and unsubscriptions when the component is destroyed.
+   */
+  public ngOnDestroy() {
+    if (this.unsubMessages) this.unsubMessages();
+    this.subscriptions.unsubscribe();
   }
 }
