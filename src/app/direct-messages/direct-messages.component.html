@@ -23,7 +23,7 @@
       </button>
     </div>
 
-    <div id="chat" class="chat-content">
+    <div class="chat-content" #chat>
       <ul>
         @for (message of currentMessages; track $index;let i = $index) { @if (message.newDay) {
         <li>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,8 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
   styleUrls: ['./thread.component.scss'],
 })
 export class ThreadComponent implements OnInit {
+  @ViewChild('chat') chatContentRef!: ElementRef;
+
   private firestore: Firestore = inject(Firestore);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
@@ -114,6 +116,8 @@ export class ThreadComponent implements OnInit {
 
       onSnapshot(threadQuery, (snapshot) => {
         this.messages = this.messagesService.processData(snapshot);
+        this.userService.scrollToBottom(this.chatContentRef.nativeElement);
+        console.log('scrollen');
       });
     }
   }

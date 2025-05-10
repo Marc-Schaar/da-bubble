@@ -112,7 +112,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       this.messages = messages;
       this.messages.forEach((message: any) => {
         this.getThread(message.id);
-        this.scrollToBottom();
+        this.userService.scrollToBottom(this.chatContentRef?.nativeElement);
       });
     });
   }
@@ -132,18 +132,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
         if (msgIndex >= 0) this.messages[msgIndex].thread = updatedThreads;
       });
     }
-  }
-
-  /**
-   * Scrolls the chat content area to the bottom.
-   */
-  scrollToBottom() {
-    setTimeout(() => {
-      const chatContent = this.chatContentRef.nativeElement as HTMLElement;
-      if (chatContent) {
-        chatContent.scrollTop = chatContent.scrollHeight;
-      }
-    }, 0);
   }
 
   /**

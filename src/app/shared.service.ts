@@ -200,4 +200,14 @@ export class UserService {
   showFeedback(message: string) {
     this.showFeedbackSubject.next(message);
   }
+
+  /**
+   * Scrolls the chat content area to the bottom.
+   */
+  scrollToBottom(ref: HTMLElement | null): void {
+    if (!ref) return;
+    setTimeout(() => {
+      ref.scrollTop = ref.scrollHeight;
+    }, 0);
+  }
 }

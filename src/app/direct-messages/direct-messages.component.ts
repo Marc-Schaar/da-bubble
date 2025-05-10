@@ -44,7 +44,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private messagesService = inject(MessagesService);
 
   public currentReciever: any = null;
-  private currentUser: any = null;
+  private currentUser: any;
 
   public currentRecieverId: string = '';
   public currentUserId: string = '';
@@ -92,6 +92,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private loadMessages() {
     this.unsubMessages = this.messagesService.getConversationMessages(this.currentUserId, this.currentRecieverId, (messages) => {
       this.currentMessages = messages;
+      this.userService.scrollToBottom(this.chatContentRef.nativeElement);
     });
   }
 

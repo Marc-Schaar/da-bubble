@@ -26,7 +26,7 @@
       </button>
     </div>
 
-    <div class="chatbox-container">
+    <div class="chatbox-container" #chat>
       <li
         [ngClass]="{ reverse: parentMessageData?.name === this.userService.auth.currentUser?.displayName }"
         class="background-color-effect"
