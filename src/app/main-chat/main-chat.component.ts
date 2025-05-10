@@ -35,30 +35,19 @@ export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
-  shareddata = inject(UserService);
-  feedbackVisible: boolean = false;
-  showFiller = true;
-  isMobile: boolean = false;
-  isProfileCard: boolean = false;
-  barOpen: boolean = false;
-  isChatOverlayVisible = false;
-  currentReciever: any;
-  //Neue Logik ab hier:
-  channelType: string = 'default';
-  channelMessages: any = [];
-  //Cleancode Servives update
-  fireService: FireServiceService = inject(FireServiceService);
-  router: Router = inject(Router);
-  navigationService: NavigationService = inject(NavigationService);
-  authService = inject(AuthService);
+
+  public readonly navigationService: NavigationService = inject(NavigationService);
+  private readonly userService = inject(UserService);
+  private readonly fireService: FireServiceService = inject(FireServiceService);
+  private readonly router: Router = inject(Router);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
 
-  /**
-   * Constructor for SomeComponent. Initializes the component with the ChangeDetectorRef service to manually trigger change detection.
-   *
-   * @param cdr - ChangeDetectorRef service instance used to manually trigger change detection in the component.
-   */
-  constructor(private cdr: ChangeDetectorRef) {}
+  public feedbackVisible: boolean = false;
+  public barOpen: boolean = false;
+  public isChatOverlayVisible: boolean = false;
+
+  constructor() {}
 
   /**
    * Lifecycle hook that is called when the component is initialized.
@@ -69,19 +58,19 @@ export class MainChatComponent implements OnInit {
       this.navigationService.initialize();
     }
 
-    this.shareddata.dashboard = true;
-    this.shareddata.login = false;
+    this.userService.dashboard = true;
+    this.userService.login = false;
     this.subscriptions.push(
       this.navigationService.component$.subscribe(() => {
         if (this.navigationService.channelType === 'direct') {
-          this.shareddata.toggleThread('close');
+          this.userService.toggleThread('close');
         }
         this.cdr.detectChanges();
       })
     );
-    this.subscriptions.push(this.shareddata.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
-    this.subscriptions.push(this.shareddata.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close())));
-    this.subscriptions.push(this.shareddata.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
+    this.subscriptions.push(this.userService.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
+    this.subscriptions.push(this.userService.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close())));
+    this.subscriptions.push(this.userService.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
   /**
@@ -93,17 +82,10 @@ export class MainChatComponent implements OnInit {
   }
 
   /**
-   * Closes the profile card.
-   */
-  closeProfile() {
-    this.isProfileCard = false;
-  }
-
-  /**
    * Displays a feedback message for a brief period.
    * @param message - The message to display.
    */
-  showFeedback(message: string) {
+  public showFeedback(message: string) {
     this.feedbackVisible = true;
     setTimeout(() => {
       if (this.feedbackRef) {
@@ -118,14 +100,8 @@ export class MainChatComponent implements OnInit {
   /**
    * Toggles the visibility of the contact bar.
    */
-  toogleContactbar() {
+  public toogleContactbar() {
     this.drawerContactbar.toggle();
-  }
-
-  /**
-   * Toggles the workspace menu.
-   */
-  toggleWorkspaceMenu() {
     this.barOpen = !this.barOpen;
   }
 }
