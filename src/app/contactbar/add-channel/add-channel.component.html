@@ -105,7 +105,7 @@
                 >
                   <div class="img-status-cont">
                     <img src="{{ filteredUser.profilephoto }}" alt="" />
-                    <div class="satus-circle"></div>
+                    <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
                   </div>
                   <div>{{ filteredUser.fullname }}</div>
                 </div>
