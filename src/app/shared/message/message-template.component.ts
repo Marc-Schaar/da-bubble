@@ -110,18 +110,20 @@ export class MessageTemplateComponent implements OnInit {
    */
   public openThread(messageId: string, $event: Event) {
     if (this.navigationService.isMobile) {
-      this.router.navigate(['/thread'], {
-        queryParams: {
-          channelType: 'channel',
-          id: this.currentChannelId,
-          reciepentId: this.userService.currentUser.id,
-          messageId: messageId,
-        },
-      });
+      this.userService.setUrl('thread', this.currentChannelId, this.userId, messageId);
+      // this.navigationService.showThread();
     } else {
       this.userService.toggleThread('open');
     }
-    // $event.stopPropagation();
+
+    // this.router.navigate(['/thread'], {
+    //   queryParams: {
+    //     channelType: 'thread',
+    //     id: this.currentChannelId,
+    //     reciepentId: this.userService.currentUser.id,
+    //     messageId: messageId,
+    //   },
+    // });
   }
 
   /**

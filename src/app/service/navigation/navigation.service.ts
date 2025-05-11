@@ -29,7 +29,7 @@ export class NavigationService {
   public reciverId: string = '';
   public currentUserId: string = '';
   public messageId: string = '';
-  public channelType: 'direct' | 'channel' | 'newMessage' | 'default' = 'default';
+  public channelType: 'direct' | 'channel' | 'thread' | 'newMessage' | 'default' = 'default';
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -47,6 +47,7 @@ export class NavigationService {
         this.currentUserId = params['currentUserId'] || '';
         this.messageId = params['messageId'] || '';
         if (this.channelType === 'direct') this.showDirect();
+        else if (this.channelType === 'thread') this.showThread();
         else if (this.channelType === 'channel') this.showChannel();
         else if (this.channelType === 'newMessage') this.showNewMessage();
         else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
@@ -56,6 +57,7 @@ export class NavigationService {
         this.isMobile = mobile;
         if (mobile) {
           if (this.channelType === 'direct') this.showDirect();
+          if (this.channelType === 'thread') this.showThread();
           if (this.channelType === 'channel') this.showChannel();
           if (this.channelType === 'newMessage') this.showNewMessage();
           if (this.channelType === 'default') this.router.navigate(['/contactbar']);
@@ -80,6 +82,15 @@ export class NavigationService {
           },
         });
         break;
+      case 'thread':
+        this.router.navigate(['/chat'], {
+          queryParams: {
+            channelType: 'channel',
+            reciverId: this.reciverId,
+            currentUserId: this.currentUserId,
+          },
+        });
+        break;
       case 'channel':
         this.router.navigate(['/chat'], {
           queryParams: {
@@ -89,6 +100,7 @@ export class NavigationService {
           },
         });
         break;
+      case 'default':
       case 'newMessage':
         this.router.navigate(['/chat'], {
           queryParams: {
@@ -130,6 +142,19 @@ export class NavigationService {
         },
       });
     } else this.currentComponent.next(ChatContentComponent);
+  }
+
+  public showThread() {
+    if (this.isMobile) {
+      this.router.navigate(['/thread'], {
+        queryParams: {
+          channelType: 'thread',
+          reciverId: this.reciverId,
+          currentUserId: this.currentUserId,
+          messageId: this.messageId,
+        },
+      });
+    }
   }
 
   /**
