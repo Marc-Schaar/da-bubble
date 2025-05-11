@@ -115,15 +115,6 @@ export class MessageTemplateComponent implements OnInit {
     } else {
       this.userService.toggleThread('open');
     }
-
-    // this.router.navigate(['/thread'], {
-    //   queryParams: {
-    //     channelType: 'thread',
-    //     id: this.currentChannelId,
-    //     reciepentId: this.userService.currentUser.id,
-    //     messageId: messageId,
-    //   },
-    // });
   }
 
   /**

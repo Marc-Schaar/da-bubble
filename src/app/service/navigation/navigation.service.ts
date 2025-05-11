@@ -15,6 +15,7 @@ export class NavigationService {
   private route = inject(ActivatedRoute);
 
   private auth: Auth = inject(Auth);
+
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
@@ -90,6 +91,7 @@ export class NavigationService {
             currentUserId: this.currentUserId,
           },
         });
+
         break;
       case 'channel':
         this.router.navigate(['/chat'], {
