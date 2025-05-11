@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { UserService } from '../../shared.service';
 import { FireServiceService } from '../../fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 import { MatDialog } from '@angular/material/dialog';
 import { getDocs, query, where } from '@firebase/firestore';
+import { NavigationService } from '../../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-message-template',
@@ -16,16 +17,18 @@ import { getDocs, query, where } from '@firebase/firestore';
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
 })
-export class MessageTemplateComponent {
+export class MessageTemplateComponent implements OnInit {
   public userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
   private router: Router = inject(Router);
   private dialog = inject(MatDialog);
+  public navigationService: NavigationService = inject(NavigationService);
+
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
-  isMobile: boolean = false;
+  // isMobile: boolean = false;
   showAllReactions: boolean = false;
 
   userId: string | undefined = '';
@@ -46,6 +49,12 @@ export class MessageTemplateComponent {
 
   constructor() {
     this.userId = this.userService.auth.currentUser?.uid;
+  }
+
+  ngOnInit(): void {
+    if (!this.navigationService.isInitialize) {
+      this.navigationService.initialize();
+    }
   }
 
   /**
@@ -100,7 +109,7 @@ export class MessageTemplateComponent {
    * @param $event - The click event
    */
   public openThread(messageId: string, $event: Event) {
-    if (this.isMobile)
+    if (this.navigationService.isMobile) {
       this.router.navigate(['/thread'], {
         queryParams: {
           channelType: 'channel',
@@ -109,8 +118,10 @@ export class MessageTemplateComponent {
           messageId: messageId,
         },
       });
-    else this.userService.toggleThread('open');
-    $event.stopPropagation();
+    } else {
+      this.userService.toggleThread('open');
+    }
+    // $event.stopPropagation();
   }
 
   /**
@@ -214,7 +225,7 @@ export class MessageTemplateComponent {
       if (otherUsers.length === 0) return ['Du'];
       else otherUsers.push('und du');
     }
-    return otherUsers;
+    return otherUsers.length > 0 ? otherUsers : [];
   }
 
   /**
