@@ -73,7 +73,7 @@
       @if (message.thread?.length > 0) {
       <div class="d-flex gap-20 flex-wrap">
         <span
-          class="curser-pointer font_weight-700"
+          class="curser-pointer answer-btn"
           (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
           >{{ message?.thread?.length }} Antworten</span
         >
