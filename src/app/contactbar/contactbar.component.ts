@@ -95,7 +95,7 @@ export class ContactbarComponent implements OnInit {
         this.channels = [];
         for (let i = 0; i < this.allChannels.length; i++) {
           const element = this.allChannels[i];
-          if (this.userService.auth.currentUser?.isAnonymous) {
+          if (this.userService.auth.currentUser?.isAnonymous && element.id === 'KqvcY68R1jP2UsQkv6Nz') {
             this.channels.push(element);
           } else {
             for (let y = 0; y < this.allChannels[i].member.length; y++) {
