@@ -130,7 +130,12 @@ export class TextareaTemplateComponent {
     if (type) this.input = type;
     if (this.input.includes('#') || this.input.includes('@')) {
       if (this.input.includes('#')) {
-        this.currentList = this.userService.channels;
+        // this.currentList = this.userService.channels;
+        if (this.currentUserId) {
+          this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
+            channel.data?.member?.some((member: any) => member.id === this.currentUserId)
+          );
+        }
         this.isChannel = true;
         this.listOpen = true;
       }
