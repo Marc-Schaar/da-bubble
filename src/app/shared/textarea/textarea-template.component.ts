@@ -28,11 +28,11 @@ export class TextareaTemplateComponent {
   reactionMenuOpenInTextarea: boolean = false;
   isChannel: boolean = false;
 
-  public input: string = '';
-
   currentChannel: any;
 
   currentList: any[] = [];
+
+  public input: string = '';
   public emojis: any;
 
   @Input() currentUserId: string = '';
@@ -181,7 +181,7 @@ export class TextareaTemplateComponent {
    * Adds an emoji to the Message - Input.
    * @param emoji - The emoji to add
    */
-  addEmoji(emoji: string) {
+  public addEmoji(emoji: string) {
     this.input += emoji;
   }
 }
