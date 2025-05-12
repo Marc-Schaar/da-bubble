@@ -16,9 +16,13 @@ section {
 
 button {
   cursor: pointer;
-  transition: all 0.125 ease-in-out;
+  transition: all 0.125s ease-in-out;
   background: unset;
   border: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: "Nunito";
+  color: black;
   &:hover {
     color: var(--dark-purple);
   }
@@ -68,13 +72,9 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.125s ease-in-out;
 
-  button {
+  > button {
     gap: 15px;
-    font-size: 1.25rem;
-    font-weight: 700;
-    font-family: "Nunito";
   }
 }
 
@@ -133,6 +133,7 @@ button {
   transition: all 0.125s ease-in-out;
   @media (max-width: 1023px) {
     align-self: baseline;
+
     margin-left: 17px;
   }
   &:hover {
