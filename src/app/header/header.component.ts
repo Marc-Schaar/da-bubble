@@ -36,7 +36,7 @@ export class HeaderComponent {
   input: string = '';
   channelType: string = '';
   docId: string = '';
-  currentUserId: string = '';
+  currentUserId: string | undefined = '';
   currentRecieverId: string = '';
   currentChannelId: string = '';
   placeholderText: string = '';
@@ -87,7 +87,6 @@ export class HeaderComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.setCurrentUser();
-    console.log(this.currentUser);
   }
 
   /**
@@ -117,7 +116,7 @@ export class HeaderComponent {
    */
   setCurrentUser() {
     this.currentUser = this.auth.currentUser;
-    this.currentUserId = this.auth.currentUser!.uid;
+    this.currentUserId = this.auth.currentUser?.uid;
   }
 
   /**
