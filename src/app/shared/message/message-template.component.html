@@ -88,11 +88,10 @@
           [ngClass]="{ 'bg-purple': this.hasReacted(emoji.emoji, message.reaction) }"
           class="emoji-box"
         >
-          <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
+          <span>{{ emoji.emoji }}</span>
           <span>{{ countEmoji(emoji, message.reaction) }}</span>
           <div class="reaction-from-dialog">
-            <img [src]="'img/emojis/' + emoji.emoji + '.png'" alt="{{ emoji }}" />
-
+            <span>{{ emoji.emoji }}</span>
             @for (name of getReactionNamesForEmoji(emoji.emoji, message.reaction); track $index) {
             <h3 class="font-weight-700">{{ name }}</h3>
             } @if (getReactionNamesForEmoji(emoji.emoji, message.reaction).length > 1) { <span>haben</span>} @if (

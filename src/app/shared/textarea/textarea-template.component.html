@@ -15,53 +15,49 @@
   <div class="action-container justify-sb">
     <div class="gap-10">
       @if (isChannelComponent) {
-      <button
-        (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()"
-        class="hover-to-dark-purple"
-      >
+      <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()">
         <mat-icon>sentiment_satisfied</mat-icon>
       </button>
       }
 
-      <button (click)="getList('@'); $event.stopPropagation()" class="hover-to-dark-purple">
+      <button class="btn" (click)="getList('@'); $event.stopPropagation()">
         <mat-icon>alternate_email</mat-icon>
       </button>
-      <button (click)="getList('#'); $event.stopPropagation()" class="hover-to-dark-purple">
+      <button class="btn" (click)="getList('#'); $event.stopPropagation()">
         <mat-icon>tag</mat-icon>
       </button>
-
-      @if (reactions.length > 0) {
-      <img [src]="'img/emojis/' + reactions[0]?.emoji + '.png'" alt="{{ reactions[0]?.emoji }}" />
-
-      }
     </div>
-    <button [disabled]="input.trim() == ''" (click)="newMessage()">
-      <mat-icon class="hover-dark-purple-to-medium">send</mat-icon>
+    <button class="btn btn-send" [disabled]="input.trim() == ''" (click)="newMessage()">
+      <mat-icon>send</mat-icon>
     </button>
 
     @if (listOpen) {
-    <ul>
-      @for (elemnent of currentList; track $index;) {
-      <li (click)="openReciver(elemnent.key)">
-        @if (isChannel) {
-        <div><mat-icon>tag</mat-icon></div>
-        } @else {
-        <div class="userCircle">
-          <img class="profilephoto" src="{{ elemnent?.profilephoto }}" alt="" />
-          <div class="status-dot" [ngClass]="{ green: elemnent?.online }"></div>
-        </div>
+    <div class="tag-container">
+      <ul>
+        @for (elemnent of currentList; track $index;) {
+        <li (click)="openReciver(elemnent.key)">
+          @if (isChannel) {
+          <div><mat-icon>tag</mat-icon></div>
+          } @else {
+          <div class="userCircle">
+            <img class="profilephoto" src="{{ elemnent?.profilephoto }}" alt="" />
+            <div class="status-dot" [ngClass]="{ green: elemnent?.online }"></div>
+          </div>
+          }
+          {{ elemnent.fullname || elemnent.data.name }}
+        </li>
         }
-        {{ elemnent.fullname || elemnent.data.name }}
-      </li>
-      }
-    </ul>
+      </ul>
+    </div>
     } @if (reactionMenuOpenInTextarea) {
     <div class="reaction-menu">
-      @for (emoji of emojis; track $index) {
-      <div (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
-        <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
+      <div class="scroll-container">
+        @for (emoji of emojis; track $index) {
+        <span (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
+          {{ emoji }}
+        </span>
+        }
       </div>
-      }
     </div>
     }
   </div>
