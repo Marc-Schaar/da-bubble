@@ -9,6 +9,7 @@ import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
+import emojiData from 'unicode-emoji-json';
 
 @Component({
   selector: 'app-textarea-template',
@@ -33,12 +34,14 @@ export class TextareaTemplateComponent {
 
   reactions: any[] = [];
   currentList: any[] = [];
-  emojis: string[] = [
-    'emoji _nerd face_',
-    'emoji _person raising both hands in celebration_',
-    'emoji _rocket_',
-    'emoji _white heavy check mark_',
-  ];
+  emojis: any;
+
+  //   [
+  //   'emoji _nerd face_',
+  //   'emoji _person raising both hands in celebration_',
+  //   'emoji _rocket_',
+  //   'emoji _white heavy check mark_',
+  // ];
 
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
@@ -49,7 +52,9 @@ export class TextareaTemplateComponent {
   @Input() reciverCompontent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
   @Input() threadId: string = '';
 
-  constructor() {}
+  constructor() {
+    this.emojis = Object.keys(emojiData);
+  }
 
   /**
    * Sends a new message to the current channel.
@@ -87,6 +92,9 @@ export class TextareaTemplateComponent {
     }
   }
 
+  /**
+   * Sends a new direct Message.
+   */
   sendDirectMessage(): void {
     if (!this.input.trim()) return;
     const messageData = this.messagesService.buildDirectMessageObject(this.input, this.messages, this.currentUserId, this.reciverId);
@@ -98,6 +106,9 @@ export class TextareaTemplateComponent {
     this.input = '';
   }
 
+  /**
+   * Sends a new message in the current Channel.
+   */
   sendChannelMessage(): void {
     if (this.input.trim() !== '') {
       this.fireService.sendMessage(
@@ -182,9 +193,8 @@ export class TextareaTemplateComponent {
    * @param emoji - The emoji to add
    */
   addEmoji(emoji: string) {
-    this.reactions = [];
+    this.input += emoji;
     let newReaction = { emoji: emoji, from: this.userService.currentUser.id || 'n/a' };
     this.reactions.push(newReaction);
-    console.log(this.reactions);
   }
 }
