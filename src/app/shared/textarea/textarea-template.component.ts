@@ -32,7 +32,6 @@ export class TextareaTemplateComponent {
 
   currentChannel: any;
 
-  private reactions: any[] = [];
   currentList: any[] = [];
   public emojis: any;
 
@@ -78,7 +77,7 @@ export class TextareaTemplateComponent {
     if (this.input.trim() !== '') {
       this.fireService.sendThreadMessage(
         this.reciverId,
-        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions)),
+        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages)),
         this.threadId
       );
       this.input = '';
@@ -104,10 +103,7 @@ export class TextareaTemplateComponent {
    */
   sendChannelMessage(): void {
     if (this.input.trim() !== '') {
-      this.fireService.sendMessage(
-        this.reciverId,
-        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages, this.reactions))
-      );
+      this.fireService.sendMessage(this.reciverId, new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages)));
       this.input = '';
     }
   }
@@ -187,7 +183,5 @@ export class TextareaTemplateComponent {
    */
   addEmoji(emoji: string) {
     this.input += emoji;
-    let newReaction = { emoji: emoji, from: this.userService.currentUser.id || 'n/a' };
-    this.reactions.push(newReaction);
   }
 }
