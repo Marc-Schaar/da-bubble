@@ -178,7 +178,7 @@ export class TextareaTemplateComponent {
   }
 
   /**
-   * Adds an emoji to the local reactions array.
+   * Adds an emoji to the Message - Input.
    * @param emoji - The emoji to add
    */
   addEmoji(emoji: string) {
