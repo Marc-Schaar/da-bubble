@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 import { UserService } from '../shared.service';
@@ -12,7 +12,7 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink, TextareaTemplateComponent, MessageTemplateComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, TextareaTemplateComponent, MessageTemplateComponent],
   templateUrl: './thread.component.html',
   styleUrls: ['./thread.component.scss'],
 })
@@ -128,12 +128,7 @@ export class ThreadComponent implements OnInit {
    * Closes the current thread and redirects the user.
    */
   public closeThread() {
-    if (this.navigationService.isMobile) {
-      this.router.navigate(['/channel'], {
-        queryParams: { channelType: 'channel', reciverId: this.currentChannelId, currentUserId: this.userId },
-      });
-    }
-    this.navigationService.toggleThread('close');
+    this.navigationService.isMobile ? this.navigationService.showChannel() : this.navigationService.toggleThread('close');
   }
 
   ngOnDestroy(): void {

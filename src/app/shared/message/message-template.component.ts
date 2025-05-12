@@ -109,8 +109,7 @@ export class MessageTemplateComponent implements OnInit {
    * @param $event - The click event
    */
   public openThread(messageId: string) {
-    if (!this.navigationService.isMobile) this.navigationService.toggleThread('open');
-    this.userService.setUrl('thread', this.currentChannelId, this.userId, messageId);
+    this.navigationService.isMobile ? this.navigationService.showThread(messageId) : this.navigationService.toggleThread('open');
   }
 
   /**

@@ -172,14 +172,14 @@ export class NavigationService {
   /**
    * Displays the Thread view based on the screen size.
    */
-  public showThread() {
+  public showThread(messageId?: string) {
     if (this.isMobile) {
       this.router.navigate(['/thread'], {
         queryParams: {
           channelType: 'thread',
           reciverId: this.reciverId,
           currentUserId: this.currentUserId,
-          messageId: this.messageId,
+          messageId: this.messageId || messageId,
         },
       });
     } else this.toggleThread('open');

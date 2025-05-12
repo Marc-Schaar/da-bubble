@@ -1,9 +1,7 @@
 <header class="justify-sb full-width" *ngIf="this.navigationService.isMobile">
   <div class="align-center">
-    <button>
-      <a [routerLink]="['/contactbar']" routerLinkActive="router-link-active">
-        <mat-icon>arrow_back_ios</mat-icon>
-      </a>
+    <button (click)="navigationService.showChannel()">
+      <mat-icon>arrow_back_ios</mat-icon>
     </button>
     <img src="/img/workspace-logo.svg" alt="Logo" />
   </div>
@@ -21,9 +19,11 @@
         <!-- CHANNELNAME -->
         <div class="channel-name-container"># {{ currentChannel?.name }}</div>
       </div>
+      @if (!navigationService.isMobile) {
       <button (click)="closeThread()" class="close-button filter-hover-purple-3">
-        <img src="/img/close.png" alt="close" />
+        <mat-icon>close</mat-icon>
       </button>
+      }
     </div>
 
     <div class="chatbox-container" #chat>
