@@ -28,20 +28,13 @@ export class TextareaTemplateComponent {
   reactionMenuOpenInTextarea: boolean = false;
   isChannel: boolean = false;
 
-  input: string = '';
+  public input: string = '';
 
   currentChannel: any;
 
-  reactions: any[] = [];
+  private reactions: any[] = [];
   currentList: any[] = [];
-  emojis: any;
-
-  //   [
-  //   'emoji _nerd face_',
-  //   'emoji _person raising both hands in celebration_',
-  //   'emoji _rocket_',
-  //   'emoji _white heavy check mark_',
-  // ];
+  public emojis: any;
 
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
