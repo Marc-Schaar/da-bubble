@@ -4,7 +4,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { getAuth, User, updateProfile } from 'firebase/auth';
-import { UserService } from '../../shared.service';
+import { UserService } from '../../services/user/shared.service';
 
 @Component({
   selector: 'app-user-profile',

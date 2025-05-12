@@ -6,8 +6,8 @@ import { User } from '../models/user/user';
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from '@angular/fire/auth';
 import { arrayUnion, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../shared.service';
-import { AuthService } from '../service/auth/auth.service';
+import { UserService } from '../services/user/shared.service';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-avatarselection',

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Firestore, onSnapshot, getDoc } from '@angular/fire/firestore';
-import { FireServiceService } from '../fire-service.service';
-import { UserService } from '../shared.service';
-import { NavigationService } from '../service/navigation/navigation.service';
+import { FireServiceService } from '../services/firebase/fire-service.service';
+import { UserService } from '../services/user/shared.service';
+import { NavigationService } from '../services/navigation/navigation.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';

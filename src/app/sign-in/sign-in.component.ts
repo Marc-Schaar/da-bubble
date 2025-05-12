@@ -4,12 +4,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { GoogleAuthProvider, Auth } from '@angular/fire/auth';
 import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from '@firebase/auth';
 import { FormsModule, NgForm } from '@angular/forms';
-import { FireServiceService } from '../fire-service.service';
+import { FireServiceService } from '../services/firebase/fire-service.service';
 import { doc, Firestore, setDoc } from '@angular/fire/firestore';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 import { User } from '../models/user/user';
-import { AuthService } from '../service/auth/auth.service';
-import { NavigationService } from '../service/navigation/navigation.service';
+import { AuthService } from '../services/auth/auth.service';
+import { NavigationService } from '../services/navigation/navigation.service';
 import { getMatIconFailedToSanitizeLiteralError } from '@angular/material/icon';
 
 @Component({

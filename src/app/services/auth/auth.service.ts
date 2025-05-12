@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { UserService } from '../../shared.service';
+import { UserService } from '../user/shared.service';
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 import { NavigationService } from '../navigation/navigation.service';
 import { User } from '../../models/user/user';
 import { arrayUnion, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
-import { FireServiceService } from '../../fire-service.service';
+import { FireServiceService } from '../firebase/fire-service.service';
 
 @Injectable({
   providedIn: 'root',

@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, inject, ElementRef, ViewChild, Inject, HostListener } from '@angular/core';
 import { collection, doc, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { UserService } from '../../shared.service';
+import { UserService } from '../../services/user/shared.service';
 import { getAuth } from 'firebase/auth';
-import { NavigationService } from '../../service/navigation/navigation.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({

@@ -4,13 +4,13 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { FireServiceService } from '../fire-service.service';
+import { FireServiceService } from '../services/firebase/fire-service.service';
 import { FormsModule } from '@angular/forms';
-import { NavigationService } from '../service/navigation/navigation.service';
-import { AuthService } from '../service/auth/auth.service';
+import { NavigationService } from '../services/navigation/navigation.service';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',

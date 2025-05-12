@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
-import { UserService } from '../../shared.service';
+import { UserService } from '../user/shared.service';
 import { Auth } from '@angular/fire/auth';
 
 @Injectable({

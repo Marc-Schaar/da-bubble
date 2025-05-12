@@ -8,9 +8,9 @@ import { HeaderComponent } from '../header/header.component';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 import { ThreadComponent } from '../thread/thread.component';
-import { NavigationService } from '../service/navigation/navigation.service';
+import { NavigationService } from '../services/navigation/navigation.service';
 
 @Component({
   selector: 'app-main-chat',

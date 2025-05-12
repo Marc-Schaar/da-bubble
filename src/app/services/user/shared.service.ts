@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { FireServiceService } from './fire-service.service';
-import { NavigationService } from './service/navigation/navigation.service';
-import { User } from './models/user/user';
+import { FireServiceService } from '../firebase/fire-service.service';
+import { NavigationService } from '../navigation/navigation.service';
+import { User } from '../../models/user/user';
 
 @Injectable({
   providedIn: 'root',

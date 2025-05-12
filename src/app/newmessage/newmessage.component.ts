@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable } from '@angular/core';
-import { UserService } from '../shared.service';
-import { FireServiceService } from '../fire-service.service';
+import { UserService } from '../services/user/shared.service';
+import { FireServiceService } from '../services/firebase/fire-service.service';
 import { Firestore, arrayUnion, doc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Message } from '../models/message/message';
 import { DirectMessage } from '../models/direct-message/direct-message';
-import { NavigationService } from '../service/navigation/navigation.service';
-import { MessagesService } from '../service/messages/messages.service';
+import { NavigationService } from '../services/navigation/navigation.service';
+import { MessagesService } from '../services/messages/messages.service';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MatIconModule } from '@angular/material/icon';
 @Injectable({

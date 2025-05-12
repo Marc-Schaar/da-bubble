@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 import { RouterLink } from '@angular/router';
 
 @Component({

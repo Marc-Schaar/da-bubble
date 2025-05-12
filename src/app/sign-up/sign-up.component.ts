@@ -6,7 +6,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../models/user/user';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 
 @Component({
   selector: 'app-signup',

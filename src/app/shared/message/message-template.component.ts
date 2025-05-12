@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { UserService } from '../../shared.service';
-import { FireServiceService } from '../../fire-service.service';
+import { UserService } from '../../services/user/shared.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Message } from '../../models/message/message';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 import { MatDialog } from '@angular/material/dialog';
 import { getDocs, query, where } from '@firebase/firestore';
-import { NavigationService } from '../../service/navigation/navigation.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 
 @Component({
   selector: 'app-message-template',

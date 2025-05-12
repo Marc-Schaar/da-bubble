@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../models/user/user';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { RouterLink } from '@angular/router';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 
 @Component({
   selector: 'app-forgotpassword',

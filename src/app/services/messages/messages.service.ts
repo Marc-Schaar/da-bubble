@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
-import { FireServiceService } from '../../fire-service.service';
-import { UserService } from '../../shared.service';
+import { FireServiceService } from '../firebase/fire-service.service';
+import { UserService } from '../user/shared.service';
 
 @Injectable({
   providedIn: 'root',

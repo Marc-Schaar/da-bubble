@@ -3,11 +3,11 @@ import { CommonModule, isPlatformBrowser, NgClass, NgFor, NgIf } from '@angular/
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Firestore, collection, getDocs, addDoc, updateDoc, doc, getDoc, arrayUnion } from '@angular/fire/firestore';
-import { UserService } from '../../shared.service';
+import { UserService } from '../../services/user/shared.service';
 import { getAuth } from 'firebase/auth';
 import { User } from '../../models/user/user';
 import { Channel } from '../../models/channel/channel';
-import { FireServiceService } from '../../fire-service.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Inject, HostListener, inject, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FireServiceService } from '../../fire-service.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
-import { UserService } from '../../shared.service';
+import { UserService } from '../../services/user/shared.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 

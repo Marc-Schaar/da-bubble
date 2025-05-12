@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { UserService } from '../shared.service';
-import { FireServiceService } from '../fire-service.service';
-import { NavigationService } from '../service/navigation/navigation.service';
-import { MessagesService } from '../service/messages/messages.service';
+import { UserService } from '../services/user/shared.service';
+import { FireServiceService } from '../services/firebase/fire-service.service';
+import { NavigationService } from '../services/navigation/navigation.service';
+import { MessagesService } from '../services/messages/messages.service';
 
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { MessageTemplateComponent } from '../shared/message/message-template.component';

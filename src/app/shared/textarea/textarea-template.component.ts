@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { FireServiceService } from '../../fire-service.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { Message } from '../../models/message/message';
-import { MessagesService } from '../../service/messages/messages.service';
-import { UserService } from '../../shared.service';
-import { NavigationService } from '../../service/navigation/navigation.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 
@@ -133,8 +133,8 @@ export class TextareaTemplateComponent {
         this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
           channel.data?.member?.some((member: any) => member.id === this.currentUserId)
         );
-        if(this.userService.currentUser.email == null) {
-          this.currentList = this.userService.channels.filter((channel: { key: string}) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
+        if (this.userService.currentUser.email == null) {
+          this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
         }
         this.isChannel = true;
         this.listOpen = true;

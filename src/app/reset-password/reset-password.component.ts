@@ -7,7 +7,7 @@ import { User } from '../models/user/user';
 import { CommonModule } from '@angular/common';
 import { getAuth, confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { UserService } from '../shared.service';
+import { UserService } from '../services/user/shared.service';
 
 @Component({
   selector: 'app-resetpassword',
