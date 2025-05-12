@@ -50,24 +50,35 @@ export class NavigationService {
         this.reciverId = params['reciverId'] || '';
         this.currentUserId = params['currentUserId'] || '';
         this.messageId = params['messageId'] || '';
-        if (this.channelType === 'direct') this.showDirect();
-        else if (this.channelType === 'channel') this.showChannel();
-        else if (this.channelType === 'thread') this.showThread();
-        else if (this.channelType === 'newMessage') this.showNewMessage();
-        else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
+        this.handleComponents();
       });
 
       this.screenWidthSubscription = this.screenWidth$.subscribe((mobile) => {
         this.isMobile = mobile;
-        if (mobile) {
-          if (this.channelType === 'direct') this.showDirect();
-          if (this.channelType === 'channel') this.showChannel();
-          if (this.channelType === 'thread') this.showThread();
-          if (this.channelType === 'newMessage') this.showNewMessage();
-          if (this.channelType === 'default') this.router.navigate(['/contactbar']);
-        } else this.showChat();
+        mobile ? this.handleComponents() : this.showChat();
       });
     } else return;
+  }
+
+  handleComponents() {
+    switch (this.channelType) {
+      case 'direct':
+        this.showDirect();
+        break;
+      case 'channel':
+        this.showChannel();
+        break;
+      case 'thread':
+        this.showThread();
+        break;
+      case 'newMessage':
+        this.showNewMessage();
+        break;
+
+      default:
+        if (this.isMobile) this.router.navigate(['/contactbar']);
+        break;
+    }
   }
 
   /**
@@ -156,6 +167,9 @@ export class NavigationService {
     } else this.currentComponent.next(ChatContentComponent);
   }
 
+  /**
+   * Displays the Thread view based on the screen size.
+   */
   public showThread() {
     if (this.isMobile) {
       this.router.navigate(['/thread'], {
