@@ -108,6 +108,8 @@ export class NavigationService {
           })
           .then(() => {
             this.showChannel();
+          })
+          .then(() => {
             this.toggleThread('open');
           });
         break;

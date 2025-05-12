@@ -28,7 +28,7 @@
     </button>
     @if (!isThread) {
     <button
-      (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
+      (click)="this.userService.setUrl('thread', this.currentChannelId, userId, message.id); openThread(message.id)"
       class="hover-to-dark-purple"
     >
       <img src="/img/reaction-bar-icons/comment.png" alt="" /></button
@@ -72,17 +72,13 @@
     <div class="message-footer gap-20">
       @if (message.thread?.length > 0) {
       <div class="d-flex gap-20 flex-wrap">
-        <span
-          class="curser-pointer answer-btn"
-          (click)="this.userService.setUrl('channel', this.currentChannelId, userId, message.id); openThread(message.id, $event)"
-          >{{ message?.thread?.length }} Antworten</span
-        >
+        <span class="curser-pointer answer-btn" (click)="openThread(message.id)">{{ message?.thread?.length }} Antworten</span>
         <span class="font-size-14">Letzte Antwort {{ message.thread[message.thread.length - 1]?.time }} Uhr</span>
       </div>
       } @if (channelType!=='direct') {
       <div class="emoji-container">
-        @for (emoji of showAllReactions ? uniqueEmojis(message.reaction) : (uniqueEmojis(message.reaction) | slice : 0 : (navigationService.isMobile ? 2 :
-        20)); track $index) {
+        @for (emoji of showAllReactions ? uniqueEmojis(message.reaction) : (uniqueEmojis(message.reaction) | slice : 0 :
+        (navigationService.isMobile ? 2 : 20)); track $index) {
         <div
           (click)="addReaction(message, emoji.emoji)"
           [ngClass]="{ 'bg-purple': this.hasReacted(emoji.emoji, message.reaction) }"

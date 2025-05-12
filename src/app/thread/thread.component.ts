@@ -57,6 +57,8 @@ export class ThreadComponent implements OnInit {
       this.currentChannelId = params['reciverId'] || '';
       this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
+      console.log(this.currentChannelId);
+
       await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
@@ -128,7 +130,7 @@ export class ThreadComponent implements OnInit {
   public closeThread() {
     if (this.navigationService.isMobile) {
       this.router.navigate(['/channel'], {
-        queryParams: { channelType: 'channel', id: this.currentChannelId, currentUserId: this.userId },
+        queryParams: { channelType: 'channel', reciverId: this.currentChannelId, currentUserId: this.userId },
       });
     }
     this.navigationService.toggleThread('close');
