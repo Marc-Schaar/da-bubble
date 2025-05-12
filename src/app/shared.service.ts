@@ -22,8 +22,7 @@ export class UserService {
   currentIndex$ = this.indexSource.asObservable();
   private contactbarToggleSubject = new Subject<void>();
   contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
-  private threadToggleSubject = new Subject<string>();
-  threadToggle$ = this.threadToggleSubject.asObservable();
+
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
   private showFeedbackSubject = new Subject<string>();
@@ -169,14 +168,6 @@ export class UserService {
         messageId: messageId,
       },
     });
-  }
-
-  /**
-   * Toggles the thread view by emitting a value.
-   * @param value The value to emit for the thread toggle.
-   */
-  toggleThread(value: string) {
-    this.threadToggleSubject.next(value);
   }
 
   /**

@@ -148,7 +148,7 @@ export class ContactbarComponent implements OnInit {
   public openWindow(window: 'direct' | 'channel' | 'newMessage', linkName?: string) {
     window === 'direct' ? this.navigationService.showDirect() : this.navigationService.showChannel();
     this.currentLink = linkName || '';
-    this.userService.toggleThread('close');
+    this.navigationService.toggleThread('close');
   }
 
   /**

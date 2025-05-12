@@ -58,13 +58,16 @@ export class MainChatComponent implements OnInit {
     this.subscriptions.push(
       this.navigationService.component$.subscribe(() => {
         if (this.navigationService.channelType === 'direct') {
-          this.userService.toggleThread('close');
+          this.navigationService.toggleThread('close');
         }
+
         this.cdr.detectChanges();
       })
     );
     this.subscriptions.push(this.userService.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
-    this.subscriptions.push(this.userService.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close())));
+    this.subscriptions.push(
+      this.navigationService.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close()))
+    );
     this.subscriptions.push(this.userService.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 

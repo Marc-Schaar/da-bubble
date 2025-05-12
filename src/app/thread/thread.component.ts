@@ -131,7 +131,7 @@ export class ThreadComponent implements OnInit {
         queryParams: { channelType: 'channel', id: this.currentChannelId, currentUserId: this.userId },
       });
     }
-    this.userService.toggleThread('close');
+    this.navigationService.toggleThread('close');
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../newmessage/newmessage.component';
 import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
@@ -20,6 +20,9 @@ export class NavigationService {
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
+
+  private threadToggleSubject = new Subject<string>();
+  threadToggle$ = this.threadToggleSubject.asObservable();
 
   private queryParamsSubscription?: Subscription;
   private screenWidthSubscription?: Subscription;
@@ -48,8 +51,8 @@ export class NavigationService {
         this.currentUserId = params['currentUserId'] || '';
         this.messageId = params['messageId'] || '';
         if (this.channelType === 'direct') this.showDirect();
-        else if (this.channelType === 'thread') this.showThread();
         else if (this.channelType === 'channel') this.showChannel();
+        else if (this.channelType === 'thread') this.showThread();
         else if (this.channelType === 'newMessage') this.showNewMessage();
         else if (this.channelType === 'default' && this.isMobile) this.router.navigate(['/contactbar']);
       });
@@ -58,15 +61,13 @@ export class NavigationService {
         this.isMobile = mobile;
         if (mobile) {
           if (this.channelType === 'direct') this.showDirect();
-          if (this.channelType === 'thread') this.showThread();
           if (this.channelType === 'channel') this.showChannel();
+          if (this.channelType === 'thread') this.showThread();
           if (this.channelType === 'newMessage') this.showNewMessage();
           if (this.channelType === 'default') this.router.navigate(['/contactbar']);
         } else this.showChat();
       });
-    } else {
-      return;
-    }
+    } else return;
   }
 
   /**
@@ -83,16 +84,23 @@ export class NavigationService {
           },
         });
         break;
-      case 'thread':
-        this.router.navigate(['/chat'], {
-          queryParams: {
-            channelType: 'channel',
-            reciverId: this.reciverId,
-            currentUserId: this.currentUserId,
-          },
-        });
 
+      case 'thread':
+        this.router
+          .navigate(['/chat'], {
+            queryParams: {
+              channelType: 'thread',
+              reciverId: this.reciverId,
+              currentUserId: this.currentUserId,
+              messageId: this.messageId,
+            },
+          })
+          .then(() => {
+            this.showChannel();
+            this.toggleThread('open');
+          });
         break;
+
       case 'channel':
         this.router.navigate(['/chat'], {
           queryParams: {
@@ -102,7 +110,7 @@ export class NavigationService {
           },
         });
         break;
-      case 'default':
+
       case 'newMessage':
         this.router.navigate(['/chat'], {
           queryParams: {
@@ -110,6 +118,7 @@ export class NavigationService {
           },
         });
         break;
+
       default:
         this.router.navigate(['/chat']);
         break;
@@ -141,6 +150,7 @@ export class NavigationService {
           channelType: 'channel',
           reciverId: this.reciverId,
           currentUserId: this.currentUserId,
+          messageId: this.messageId,
         },
       });
     } else this.currentComponent.next(ChatContentComponent);
@@ -156,7 +166,7 @@ export class NavigationService {
           messageId: this.messageId,
         },
       });
-    }
+    } else this.toggleThread('open');
   }
 
   /**
@@ -198,5 +208,13 @@ export class NavigationService {
     this.queryParamsSubscription?.unsubscribe();
     this.screenWidthSubscription?.unsubscribe();
     this.resizeSubscription?.unsubscribe();
+  }
+
+  /**
+   * Toggles the thread view by emitting a value.
+   * @param value The value to emit for the thread toggle.
+   */
+  toggleThread(value: string) {
+    this.threadToggleSubject.next(value);
   }
 }
