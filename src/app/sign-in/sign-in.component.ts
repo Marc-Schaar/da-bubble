@@ -1,20 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
-import { GoogleAuthProvider, Auth } from '@angular/fire/auth';
-import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from '@firebase/auth';
+import { Auth } from '@angular/fire/auth';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FireServiceService } from '../services/firebase/fire-service.service';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../services/user/shared.service';
 import { User } from '../models/user/user';
 import { AuthService } from '../services/auth/auth.service';
 import { NavigationService } from '../services/navigation/navigation.service';
-import { getMatIconFailedToSanitizeLiteralError } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sign-in',
-  imports: [RouterLink, MatDividerModule, FormsModule],
+  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
 })

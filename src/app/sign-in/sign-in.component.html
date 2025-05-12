@@ -39,9 +39,9 @@
       <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
     </header>
     <div>
-      <div>
-        <div>
-          <div>
+      <div class="input-container">
+        <div class="full-width input-box">
+          <div class="full-width input-row">
             <input
               type="email"
               #email="ngModel"
@@ -51,15 +51,18 @@
               placeholder="beispielname@email.com"
               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
             />
+            <mat-icon class="material-symbols-outlined">email</mat-icon>
           </div>
+
           @if (!email.valid && email.touched || authService.error) {
           <span class="error d-none" id="wrongemail">*Diese E-Mail-Adresse ist leider ungültig.</span>
           }
         </div>
 
-        <div>
-          <div>
+        <div class="full-width input-box">
+          <div class="full-width input-row">
             <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
+            <mat-icon class="material-symbols-outlined">lock</mat-icon>
           </div>
           @if(!password.valid && password.touched || authService.error){
           <span class="error d-none" id="wrongpassword">Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
@@ -73,7 +76,8 @@
     </div>
     <div>
       <button class="btn btn-google" type="button" (click)="signinwithgoogle()">
-        <img src="/img/Google.png" alt="Google Logo" /> Anmelden mit Google
+        <img src="/img/Google.png" alt="Google Logo" />
+        Anmelden mit Google
       </button>
       <div>
         <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
