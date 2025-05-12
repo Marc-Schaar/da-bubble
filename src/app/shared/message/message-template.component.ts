@@ -10,7 +10,7 @@ import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reci
 import { MatDialog } from '@angular/material/dialog';
 import { getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import emojiData from 'unicode-emoji-json';
+import  emojiData  from 'unicode-emoji-json';
 
 @Component({
   selector: 'app-message-template',

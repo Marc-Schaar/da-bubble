@@ -314,6 +314,15 @@ textarea {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
+.guest-btn {
+  color: rgba(0, 0, 0, 0.1) !important;
+  
+  &:hover {
+    color: rgba(0, 0, 0, 0.1);
+  }
+  cursor: no-drop !important;
+}
+
 @keyframes slide-in-r-l {
   0% {
     transform: translate(10px, 10px);

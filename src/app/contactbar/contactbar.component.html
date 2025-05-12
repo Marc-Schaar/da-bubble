@@ -61,7 +61,7 @@
             <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
             Channels
           </button>
-          <button class="align-center" (click)="openAddChannel()">
+          <button title="Zugang für Gäste gespeert" class="align-center" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" [disabled]="currentUser.isAnonymous" (click)="openAddChannel()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -82,7 +82,7 @@
         </ul>
       </div>
 
-      <button class="addChannel" (click)="openAddChannel()">
+      <button title="Zugang für Gäste gespeert" [disabled]="currentUser.isAnonymous" class="addChannel" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" (click)="openAddChannel()">
         <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
         Channel hinzufügen
       </button>
