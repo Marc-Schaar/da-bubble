@@ -45,7 +45,7 @@
         <img src="/img/Google.png" alt="Google Logo" />
         Anmelden mit Google
       </button>
-      <div class="full-width justify-sb flex-wrap">
+      <div class="full-width justify-center gap-20 flex-wrap">
         <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
         ><button type="button" class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
       </div>
