@@ -21,7 +21,6 @@ export class ThreadComponent implements OnInit {
 
   private firestore: Firestore = inject(Firestore);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private router: Router = inject(Router);
   private messagesService: MessagesService = inject(MessagesService);
   public userService: UserService = inject(UserService);
   public navigationService: NavigationService = inject(NavigationService);
