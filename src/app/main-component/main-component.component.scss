@@ -51,14 +51,13 @@ app-intro {
   }
   > p:nth-child(1) {
     font-family: "Nunito";
-    font-size: 18px;
+    font-size: 1rem;
     color: #000000;
     text-decoration: none;
   }
   > a:nth-child(2) {
     font-family: "Figtree";
-    font-weight: 400;
-    font-size: 18px;
+    font-size: 1rem;
     color: #797ef3;
     text-decoration: none;
     padding: 10px 15px;
@@ -67,7 +66,7 @@ app-intro {
       border-radius: 25px;
       color: var(--dark-purple);
       width: 165px;
-      height: 39px;
+
       display: flex;
       justify-content: center;
       align-items: center;
