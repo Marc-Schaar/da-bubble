@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, OnInit, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, ChangeDetectorRef, ElementRef, AfterViewInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -28,7 +28,7 @@ import { NavigationService } from '../service/navigation/navigation.service';
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
 })
-export class MainChatComponent implements OnInit {
+export class MainChatComponent implements OnInit, AfterViewInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
@@ -57,9 +57,7 @@ export class MainChatComponent implements OnInit {
     this.userService.login = false;
     this.subscriptions.push(
       this.navigationService.component$.subscribe(() => {
-        if (this.navigationService.channelType === 'direct') {
-          this.navigationService.toggleThread('close');
-        }
+        if (this.navigationService.channelType === 'direct') this.navigationService.toggleThread('close');
 
         this.cdr.detectChanges();
       })
@@ -69,6 +67,10 @@ export class MainChatComponent implements OnInit {
       this.navigationService.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close()))
     );
     this.subscriptions.push(this.userService.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
+  }
+
+  ngAfterViewInit(): void {
+    if (this.navigationService.channelType === 'thread') this.navigationService.toggleThread('open');
   }
 
   /**

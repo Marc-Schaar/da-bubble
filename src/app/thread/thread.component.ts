@@ -127,7 +127,8 @@ export class ThreadComponent implements OnInit {
    * Closes the current thread and redirects the user.
    */
   public closeThread() {
-    this.navigationService.isMobile ? this.navigationService.showChannel() : this.navigationService.toggleThread('close');
+    if (!this.navigationService.isMobile) this.navigationService.toggleThread('close');
+    this.userService.setUrl('channel', this.currentChannelId, this.userId);
   }
 
   ngOnDestroy(): void {
