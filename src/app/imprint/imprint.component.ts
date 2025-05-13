@@ -1,16 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { UserService } from '../services/user/shared.service';
-import { RouterLink } from '@angular/router';
+import { NavigationService } from '../services/navigation/navigation.service';
 
 @Component({
   selector: 'app-imprint',
-  imports: [HeaderComponent, RouterLink],
+  imports: [HeaderComponent],
   templateUrl: './imprint.component.html',
   styleUrl: './imprint.component.scss',
 })
 export class ImprintComponent implements OnInit {
   shared = inject(UserService);
+  navigate = inject(NavigationService);
 
   /**
    * Lifecycle hook that is called when the component is initialized.

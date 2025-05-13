@@ -6,6 +6,7 @@ import { DirectmessagesComponent } from '../../direct-messages/direct-messages.c
 import { ChatContentComponent } from '../../chat-content/chat-content.component';
 import { UserService } from '../user/shared.service';
 import { Auth } from '@angular/fire/auth';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,7 @@ export class NavigationService {
   public currentUserId: string = '';
   public messageId: string = '';
   public channelType: 'direct' | 'channel' | 'thread' | 'newMessage' | 'default' = 'default';
+  location = inject(Location);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -231,5 +233,12 @@ export class NavigationService {
    */
   toggleThread(value: string) {
     this.threadToggleSubject.next(value);
+  }
+
+  /**
+   * Navigates to the previous location in the browser history.
+   */
+  back() {
+    this.location.back();
   }
 }
