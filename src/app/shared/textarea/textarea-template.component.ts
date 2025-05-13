@@ -184,4 +184,8 @@ export class TextareaTemplateComponent {
   public addEmoji(emoji: string) {
     this.input += emoji;
   }
+
+  public tagSearchInit() {
+    console.log(this.input);
+  }
 }
