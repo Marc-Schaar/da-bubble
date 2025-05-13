@@ -44,14 +44,18 @@
     ul {
       max-height: 250px;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     li {
       list-style: none;
-      border-radius: 20px;
+      border-radius: 1.5em;
       display: flex;
       align-items: center;
       gap: 20px;
+      padding: 4px 20px;
       &:hover {
         background-color: var(--bg-color);
       }

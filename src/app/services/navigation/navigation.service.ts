@@ -90,8 +90,8 @@ export class NavigationService {
         this.router.navigate(['/chat'], {
           queryParams: {
             channelType: 'direct',
-            reciverId: this.reciverId,
-            currentUserId: this.currentUserId,
+            reciverId: this.reciverId || '',
+            currentUserId: this.currentUserId || '',
           },
         });
         break;
@@ -102,8 +102,8 @@ export class NavigationService {
             queryParams: {
               channelType: 'thread',
               reciverId: this.reciverId,
-              currentUserId: this.currentUserId,
-              messageId: this.messageId,
+              currentUserId: this.currentUserId || '',
+              messageId: this.messageId || '',
             },
           })
           .then(() => {
@@ -117,8 +117,8 @@ export class NavigationService {
         this.router.navigate(['/chat'], {
           queryParams: {
             channelType: 'channel',
-            reciverId: this.reciverId,
-            currentUserId: this.currentUserId,
+            reciverId: this.reciverId || '',
+            currentUserId: this.currentUserId || '',
           },
         });
         break;
@@ -145,8 +145,8 @@ export class NavigationService {
       this.router.navigate(['/direct'], {
         queryParams: {
           channelType: 'direct',
-          reciverId: this.reciverId,
-          currentUserId: this.currentUserId,
+          reciverId: this.reciverId || '',
+          currentUserId: this.currentUserId || '',
         },
       });
     } else this.currentComponent.next(DirectmessagesComponent);
@@ -160,9 +160,9 @@ export class NavigationService {
       this.router.navigate(['/channel'], {
         queryParams: {
           channelType: 'channel',
-          reciverId: this.reciverId,
-          currentUserId: this.currentUserId,
-          messageId: this.messageId,
+          reciverId: this.reciverId || '',
+          currentUserId: this.currentUserId || '',
+          messageId: this.messageId || '',
         },
       });
     } else this.currentComponent.next(ChatContentComponent);
@@ -176,9 +176,9 @@ export class NavigationService {
       this.router.navigate(['/thread'], {
         queryParams: {
           channelType: 'thread',
-          reciverId: this.reciverId,
-          currentUserId: this.currentUserId,
-          messageId: this.messageId,
+          reciverId: this.reciverId || '',
+          currentUserId: this.currentUserId || '',
+          messageId: this.messageId || '',
         },
       });
     } else this.toggleThread('open');

@@ -5,7 +5,7 @@
 >
   <textarea
     (keyup.enter)="newMessage()"
-    (input)="tagSearchInit()"
+    (input)="observeInput()"
     [(ngModel)]="input"
     rows="3"
     [name]="input"
@@ -34,17 +34,17 @@
     @if (listOpen) {
     <div class="tag-container">
       <ul>
-        @for (elemnent of currentList; track $index;) {
-        <li (click)="openReciver(elemnent.key)">
+        @for (element of currentList; track $index;) {
+        <li (click)="tagReciver(element, isChannel ? '#' : '@')">
           @if (isChannel) {
           <div><mat-icon>tag</mat-icon></div>
           } @else {
           <div class="userCircle">
-            <img class="profilephoto" src="{{ elemnent?.profilephoto }}" alt="" />
-            <div class="status-dot" [ngClass]="{ green: elemnent?.online }"></div>
+            <img class="profilephoto" src="{{ element?.profilephoto }}" alt="" />
+            <div class="status-dot" [ngClass]="{ green: element?.online }"></div>
           </div>
           }
-          {{ elemnent.fullname || elemnent.data.name }}
+          {{ element.fullname || element.data.name }}
         </li>
         }
       </ul>
