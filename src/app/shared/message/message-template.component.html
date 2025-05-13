@@ -1,5 +1,5 @@
 <div
-  (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = true"
+  (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"
   class="message"
   [ngClass]="{
     reverse: message.name == this.userService.auth.currentUser?.displayName
