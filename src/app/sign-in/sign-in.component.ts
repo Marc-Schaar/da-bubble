@@ -18,7 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './sign-in.component.scss',
 })
 export class SignInComponent implements OnInit {
-  error = false;
   disabled = true;
   shared = inject(UserService);
   auth = inject(Auth);
@@ -40,7 +39,7 @@ export class SignInComponent implements OnInit {
     try {
       this.authService.logInWithEmailAndPassword(this.user.email, this.user.password);
     } catch (error) {
-      this.error = true;
+      this.authService.error = true;
       form.reset();
     }
   }

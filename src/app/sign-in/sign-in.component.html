@@ -20,7 +20,7 @@
           <mat-icon class="material-symbols-outlined">email</mat-icon>
         </div>
 
-        @if (!email.valid && email.touched || authService.error) {
+        @if (((!email.valid && email.value !== '') || authService.error)) {
         <span class="error d-none" id="wrongemail">*Diese E-Mail-Adresse ist leider ungültig.</span>
         }
       </div>
@@ -30,7 +30,7 @@
           <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
           <mat-icon class="material-symbols-outlined">lock</mat-icon>
         </div>
-        @if(!password.valid && password.touched || authService.error){
+        @if((!password.valid && password.value != "") || authService.error){
         <span class="error d-none" id="wrongpassword">Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
         }
       </div>
