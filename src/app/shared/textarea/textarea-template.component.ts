@@ -136,7 +136,7 @@ export class TextareaTemplateComponent {
         this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
           channel.data?.member?.some((member: any) => member.id === this.currentUserId)
         );
-        if (this.userService.currentUser.email == null) {
+        if (this.userService.currentUser.isAnonymous) {
           this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
         }
         this.isChannel = true;

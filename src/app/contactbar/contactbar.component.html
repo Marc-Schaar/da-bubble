@@ -61,9 +61,16 @@
             <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
             Channels
           </button>
-          <button title="Zugang für Gäste gespeert" class="align-center" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" [disabled]="currentUser.isAnonymous" (click)="openAddChannel()">
-            <mat-icon>add</mat-icon>
-          </button>
+
+          <div class="tooltip-cont">
+            <button class="align-center" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" [disabled]="currentUser.isAnonymous" (click)="openAddChannel()">
+              <mat-icon>add</mat-icon>
+            </button>
+
+            <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
+          </div>
+
+
         </div>
 
         <ul [ngClass]="{ show: isActive() }" class="channellist">
@@ -82,10 +89,23 @@
         </ul>
       </div>
 
-      <button title="Zugang für Gäste gespeert" [disabled]="currentUser.isAnonymous" class="addChannel" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" (click)="openAddChannel()">
+      <!-- <button title="Zugang für Gäste gespeert" [disabled]="currentUser.isAnonymous" class="addChannel" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" (click)="openAddChannel()">
         <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
         Channel hinzufügen
-      </button>
+      </button> -->
+
+      <div class="tooltip-cont">
+        <button
+          [disabled]="currentUser?.isAnonymous"
+          class="addChannel"
+          [ngClass]="{ 'guest-btn': currentUser?.isAnonymous }"
+          (click)="openAddChannel()">
+          <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
+          Channel hinzufügen
+        </button>
+        <span class="tooltip">Zugang für Gäste gesperrt</span>
+      </div>
+
 
       <div class="messages">
         <div class="drop-down-title">

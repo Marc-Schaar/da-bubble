@@ -1,45 +1,51 @@
 <div class="profile-main-cont" (click)="handleClick($event)">
-    <div class="profile-header">
-      <div>Profil</div>
-      <div class="close" (click)="closeMenu()">
-        <img src="img/close.png" alt="" />
+  <div class="profile-header">
+    <div>Profil</div>
+    <div class="close" (click)="closeMenu()">
+      <img src="img/close.png" alt="" />
+    </div>
+  </div>
+  <div class="picture-cont"><img src="{{ photoURL }}" alt="" /></div>
+  <div class="discription-cont" *ngIf="!modifyinfos">
+    <div class="info-edit">
+      <div class="name">{{ displayName }}</div>
+      <div class="tooltip-cont">
+        <button
+          class="edit-btn"
+          [disabled]="userService.currentUser.isAnonymous"
+          [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }"
+          (click)="modify()"
+        >
+          Bearbeiten
+        </button>
+        <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
       </div>
     </div>
-    <div class="picture-cont"><img src="{{ photoURL }}" alt="" /></div>
-    <div class="discription-cont" *ngIf="!modifyinfos">
-      <div class="info-edit">
-        <div class="name">{{ displayName }}</div>
-        <button class="edit-btn" title="Zugang für Gäste gespeert" [disabled]="userService.currentUser.isAnonymous" [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }" (click)="modify()">Bearbeiten</button>
-      </div>
-      <div class="status-cont">
-        <div class="circle" ></div>
-        <div class="status">Aktiv</div>
-      </div>
+    <div class="status-cont">
+      <div class="circle"></div>
+      <div class="status">Aktiv</div>
     </div>
-    <div class="contact-cont" *ngIf="!modifyinfos">
-      <div>
-        <div class="envelope"><img src="img/mail.png" alt="" /></div>
-        <div class="contact">
-          <p class="email">Email-Adresse</p>
-          <div class="email-route">{{ email }}</div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="modifyinfos" class="section">
-      <div>
-        <div>
-          <div><img src="/img/account_circle.png" alt="" /></div>
-          <div><span>Vollständiger Name</span></div>
-        </div>
-  
-        <div><input #name="ngModel" [(ngModel)]="newname" type="text" /></div>
-      </div>
-      <div class="btn-borders">
-        <div class="btn">
-          <button (click)="cancel()">Abbrechen</button
-          ><button (click)="saveChanges()">Speichern</button>
-        </div>
+  </div>
+  <div class="contact-cont" *ngIf="!modifyinfos">
+    <div>
+      <div class="envelope"><img src="img/mail.png" alt="" /></div>
+      <div class="contact">
+        <p class="email">Email-Adresse</p>
+        <div class="email-route">{{ email }}</div>
       </div>
     </div>
   </div>
-  
+  <div *ngIf="modifyinfos" class="section">
+    <div>
+      <div>
+        <div><img src="/img/account_circle.png" alt="" /></div>
+        <div><span>Vollständiger Name</span></div>
+      </div>
+
+      <div><input #name="ngModel" [(ngModel)]="newname" type="text" /></div>
+    </div>
+    <div class="btn-borders">
+      <div class="btn"><button (click)="cancel()">Abbrechen</button><button (click)="saveChanges()">Speichern</button></div>
+    </div>
+  </div>
+</div>

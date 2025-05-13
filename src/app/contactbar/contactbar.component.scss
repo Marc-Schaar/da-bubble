@@ -343,3 +343,36 @@ button {
   background-color: #72727258;
   z-index: 3;
 }
+
+.tooltip-cont {
+  position: relative;
+  align-self: baseline;
+  .tooltip {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    background-color: var(--dark-purple);
+    color: white; 
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    white-space: nowrap;
+    font-size: 0.8rem; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  &:has(button:disabled):hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.guest-msg-pos {
+  bottom: -30px !important;
+  left: -280% !important;
+}
