@@ -211,7 +211,7 @@ textarea {
 }
 
 .bg-purple {
-  background-color: var(--bg-color);
+  background-color: var(--bg-color) !important;
 }
 
 .hover-bg {
@@ -316,7 +316,7 @@ textarea {
 
 .guest-btn {
   color: rgba(0, 0, 0, 0.1) !important;
-  
+
   &:hover {
     color: rgba(0, 0, 0, 0.1);
   }

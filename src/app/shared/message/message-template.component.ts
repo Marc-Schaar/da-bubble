@@ -10,7 +10,7 @@ import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reci
 import { MatDialog } from '@angular/material/dialog';
 import { getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import  emojiData  from 'unicode-emoji-json';
+import emojiData from 'unicode-emoji-json';
 
 @Component({
   selector: 'app-message-template',
@@ -41,6 +41,13 @@ export class MessageTemplateComponent implements OnInit {
     'emoji _white heavy check mark_',
   ];
   public emojiDataBase: any;
+  public preSelectedEmojis: Record<string, string> = {
+    thumbsUp: '\u{1F44D}',
+    checkMark: '\u{2705}',
+    rocket: '\u{1F680}',
+    nerd: '\u{1F913}',
+  };
+  public preSelectedEmojiList = Object.values(this.preSelectedEmojis);
 
   @Input() message: any;
   @Input() currentChannelId: string = '';
@@ -51,7 +58,6 @@ export class MessageTemplateComponent implements OnInit {
   constructor() {
     this.userId = this.userService.auth.currentUser?.uid;
     this.emojiDataBase = emojiData;
-    console.log(this.emojiDataBase);
   }
 
   ngOnInit(): void {

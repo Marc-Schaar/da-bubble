@@ -1,5 +1,5 @@
 <div
-  (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"
+  (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = true"
   class="message"
   [ngClass]="{
     reverse: message.name == this.userService.auth.currentUser?.displayName
@@ -8,30 +8,27 @@
   @if (!isEditing && channelType!=='direct') {
   <div class="reaction-bar">
     <button
-      class="medium-purple-hover"
-      [ngClass]="{ 'bg-purple': this.hasReacted('emoji _white heavy check mark_', message.reaction) }"
-      (click)="addReaction(message, 'emoji _white heavy check mark_')"
+      class="btn-secundary"
+      [ngClass]="{ 'bg-purple': this.hasReacted(preSelectedEmojis['checkMark'], message.reaction) }"
+      (click)="addReaction(message, preSelectedEmojis['checkMark'])"
     >
-      <img src="img/emojis/emoji _white heavy check mark_.png" alt="emoji _white heavy check mark" />
+      {{ preSelectedEmojis["checkMark"] }}
     </button>
     <button
-      class="medium-purple-hover"
+      class="btn-secundary"
       [ngClass]="{
-        'bg-purple': this.hasReacted('emoji _person raising both hands in celebration_', message.reaction)
+        'bg-purple': this.hasReacted(preSelectedEmojis['thumbsUp'], message.reaction)
       }"
-      (click)="addReaction(message, 'emoji _person raising both hands in celebration_')"
+      (click)="addReaction(message, preSelectedEmojis['thumbsUp'])"
     >
-      <img src="img/emojis/emoji _person raising both hands in celebration_.png" alt="emoji _person raising both hands in celebration_" />
+      {{ preSelectedEmojis["thumbsUp"] }}
     </button>
-    <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="hover-to-dark-purple">
-      <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
+    <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="btn-secundary">
+      <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
     </button>
     @if (!isThread) {
-    <button
-      (click)="this.userService.setUrl('thread', this.currentChannelId, userId, message.id); openThread(message.id)"
-      class="hover-to-dark-purple"
-    >
-      <img src="/img/reaction-bar-icons/comment.png" alt="" /></button
+    <button class="btn-secundary" (click)="openThread(message.id)">
+      <mat-icon class="material-symbols-outlined"> comment </mat-icon></button
     >}
 
     <button
@@ -47,10 +44,14 @@
     </div>
     } @if (reactionMenuOpen) {
     <div class="reaction-menu">
-      @for (emoji of emojis; track $index) {
-      <div class="emoji" [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }" (click)="addReaction(message, emoji)">
-        <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
-      </div>
+      @for (emoji of preSelectedEmojiList; track $index) {
+      <button
+        class="btn-secundary circle"
+        [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }"
+        (click)="addReaction(message, emoji)"
+      >
+        {{ emoji }}
+      </button>
       }
     </div>
     }
@@ -60,16 +61,17 @@
   <img [src]="message.avatar || 'img/profilephoto.png'" alt=" Avatar" />
 
   @if (!isEditing) {
-  <div class="content-container">
-    <div class="message-header gap-20">
+  <section class="content-container">
+    <header class="message-header gap-20">
       <b (click)="showProfile()" class="font-size-18 curser-pointer">{{ message.name }}</b>
       <span class="font-size-14">{{ message.time }} Uhr</span>
-    </div>
-    <div class="message-main">
-      {{ message.message }}
-    </div>
+    </header>
 
-    <div class="message-footer gap-20">
+    <p class="message-main">
+      {{ message.message }}
+    </p>
+
+    <footer class="message-footer gap-20">
       @if (message.thread?.length > 0) {
       <div class="d-flex gap-20 flex-wrap">
         <span
@@ -122,22 +124,26 @@
           (click)="this.reactionMenuOpenInFooter = !this.reactionMenuOpenInFooter"
           class="hover-to-dark-purple"
         >
-          <img src="/img/reaction-bar-icons/add_reaction.png" alt="" />
+          <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
         </button>
 
         @if (reactionMenuOpenInFooter) {
         <div class="reaction-menu">
-          @for (emoji of emojis; track $index) {
-          <div class="emoji" [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }" (click)="addReaction(message, emoji)">
-            <img [src]="'img/emojis/' + emoji + '.png'" alt="{{ emoji }}" />
-          </div>
+          @for (emoji of preSelectedEmojiList; track $index) {
+          <button
+            class="btn-secundary circle"
+            [ngClass]="{ 'bg-purple': this.hasReacted(emoji, message.reaction) }"
+            (click)="addReaction(message, emoji)"
+          >
+            {{ emoji }}
+          </button>
           }
         </div>
         }
       </div>
       }
-    </div>
-  </div>
+    </footer>
+  </section>
   } @if (isEditing) {
   <div class="input-container edit-input full-width">
     <textarea [(ngModel)]="inputEdit" rows="3"></textarea>
