@@ -9,7 +9,7 @@
     <div class="discription-cont" *ngIf="!modifyinfos">
       <div class="info-edit">
         <div class="name">{{ displayName }}</div>
-        <button class="edit-btn" title="Zugang für Gäste gespeert" [disabled]="userService.currentUser.isAnonymous" class="addChannel" [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }" (click)="modify()">Bearbeiten</button>
+        <button class="edit-btn" title="Zugang für Gäste gespeert" [disabled]="userService.currentUser.isAnonymous" [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }" (click)="modify()">Bearbeiten</button>
       </div>
       <div class="status-cont">
         <div class="circle" ></div>
