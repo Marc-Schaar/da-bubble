@@ -50,13 +50,18 @@ button {
 .tag-container {
   position: absolute;
   left: 20%;
-  transform: translateX(-50%);
+  transform: translateX(-20%);
   bottom: 30px;
   border: 1px solid var(--light-purple);
   border-radius: 25px 25px 25px 0;
   background-color: white;
   padding: 8px;
   box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
+
+  @media screen and (width< 1024px) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .reaction-menu {

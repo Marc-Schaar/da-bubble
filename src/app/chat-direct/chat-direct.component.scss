@@ -137,6 +137,10 @@ button {
 }
 
 @media (max-width: 1023px) {
+  main {
+    margin: 0;
+  }
+
   header {
     background-color: var(--bg-color);
     padding: 15px;
