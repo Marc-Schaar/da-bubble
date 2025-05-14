@@ -3,7 +3,6 @@ import { SearchService } from '../../services/search/search.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { A11yModule } from '@angular/cdk/a11y';
 import { Auth } from '@angular/fire/auth';
 
 @Component({
@@ -33,18 +32,15 @@ export class SearchResultComponent {
   }
 
   public openReceiver(element: any) {
-    console.log(element);
-
     this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
   }
 
   private openUser(element: any) {
-    console.log(element);
-
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.setUrl('direct', element.id, currentUserId);
     this.navigationService.showDirect();
   }
+
   private openChannel(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.setUrl('channel', element.key, currentUserId);
