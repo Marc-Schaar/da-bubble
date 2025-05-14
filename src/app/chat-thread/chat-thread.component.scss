@@ -206,6 +206,9 @@ header {
 }
 
 @media (max-width: 1023px) {
+  main {
+    margin: 0;
+  }
   section {
     max-height: calc(100svh - 110px);
     border-radius: 0;

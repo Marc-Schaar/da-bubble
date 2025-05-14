@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ThreadComponent } from './thread.component';
+import { ThreadComponent } from './chat-thread.component';
 
 describe('ThreadComponent', () => {
   let component: ThreadComponent;
@@ -8,9 +8,8 @@ describe('ThreadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ThreadComponent]
-    })
-    .compileComponents();
+      imports: [ThreadComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ThreadComponent);
     component = fixture.componentInstance;
