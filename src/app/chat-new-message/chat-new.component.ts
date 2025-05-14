@@ -17,8 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-newmessage',
   imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, RouterLink],
-  templateUrl: './newmessage.component.html',
-  styleUrl: './newmessage.component.scss',
+  templateUrl: './chat-new.component.html',
+  styleUrl: './chat-new.component.scss',
 })
 export class NewmessageComponent {
   userService = inject(UserService);

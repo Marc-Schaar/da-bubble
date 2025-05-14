@@ -30,8 +30,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     MatDialogModule,
     MessageTemplateComponent,
   ],
-  templateUrl: './direct-messages.component.html',
-  styleUrl: './direct-messages.component.scss',
+  templateUrl: './chat-direct.component.html',
+  styleUrl: './chat-direct.component.scss',
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
