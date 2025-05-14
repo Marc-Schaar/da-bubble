@@ -30,61 +30,6 @@
     align-items: center;
     justify-content: flex-start;
   }
-
-  .tag-container {
-    position: absolute;
-    bottom: 44px;
-    left: 53px;
-    border: 1px solid var(--light-purple);
-    border-radius: 25px 25px 25px 0;
-    background-color: white;
-    padding: 8px;
-    box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
-
-    ul {
-      max-height: 250px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    li {
-      list-style: none;
-      border-radius: 1.5em;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 4px 20px;
-      &:hover {
-        background-color: var(--bg-color);
-      }
-    }
-  }
-
-  .userCircle {
-    position: relative;
-
-    .profilephoto {
-      width: 40px;
-      border-radius: 50%;
-    }
-
-    .status-dot {
-      position: absolute;
-      bottom: 0;
-      right: -2px;
-      width: 12px;
-      height: 12px;
-      outline: 2px solid white;
-      background-color: var(--offline);
-      border-radius: 50%;
-    }
-
-    .green {
-      background-color: var(--online);
-    }
-  }
 }
 
 button {
@@ -100,6 +45,17 @@ button {
       color: var(--light-purple);
     }
   }
+}
+
+.tag-container {
+  position: absolute;
+  bottom: 44px;
+  left: 53px;
+  border: 1px solid var(--light-purple);
+  border-radius: 25px 25px 25px 0;
+  background-color: white;
+  padding: 8px;
+  box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
 }
 
 .reaction-menu {

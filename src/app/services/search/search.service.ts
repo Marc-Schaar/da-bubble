@@ -11,25 +11,31 @@ export class SearchService {
   private userService: UserService = inject(UserService);
   private tagType: 'channel' | 'user' | null = null;
 
-  private listOpen: boolean = false;
+  private textareaListOpen: boolean = false;
+  private headerListOpen: boolean = false;
   private isChannel: boolean = false;
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
 
   public getListBoolean(): boolean {
-    return this.listOpen;
+    return this.textareaListOpen;
+  }
+
+  public getHeaderListBoolean(): boolean {
+    return this.headerListOpen;
   }
 
   public getChannelBoolean(): boolean {
     return this.isChannel;
   }
 
-  public getCurrentList(): string[] {
+  public getCurrentList(): any[] {
     return this.currentList;
   }
 
-  public closeList(): void {
-    this.listOpen = false;
+  public closeList(searchInComponent: 'header' | 'textarea'): void {
+    searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
+    // this.listOpen = false;
   }
 
   public stopObserveInput(): void {
@@ -44,17 +50,18 @@ export class SearchService {
     return this.authService.currentUser?.uid;
   }
 
-  public observeInput(input: string): void {
+  public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
     let searchInput: string | null = null;
     this.getTagType(input);
-    if (this.isResultTrue) return;
+    // if (this.isResultTrue) return;
 
     switch (this.tagType) {
       case 'channel':
         searchInput = input.split('#')[1];
         this.currentList = this.startSearch(searchInput, this.tagType);
         this.isChannel = true;
-        this.listOpen = true;
+
+        searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
         if (!searchInput) this.tagType = null;
 
         break;
@@ -63,7 +70,9 @@ export class SearchService {
         searchInput = input.split('@')[1];
         this.currentList = this.startSearch(searchInput, this.tagType);
         this.isChannel = false;
-        this.listOpen = true;
+        console.log(this.currentList);
+
+        searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
         if (!searchInput) this.tagType = null;
 
         break;
@@ -71,7 +80,8 @@ export class SearchService {
       default:
         this.currentList = [];
         this.isChannel = false;
-        this.listOpen = false;
+        this.textareaListOpen = false;
+        this.headerListOpen = false;
 
         break;
     }
@@ -113,10 +123,10 @@ export class SearchService {
         );
     if (searchCollection === 'channel') {
       result = this.searchChannel(searchInput, channelsToSearch);
-      this.isResultTrue = true;
+      // this.isResultTrue = true;
     } else if (searchCollection === 'user') {
       result = this.searchChannelMembersByName(searchInput, channelsToSearch);
-      this.isResultTrue = true;
+      //  this.isResultTrue = true;
     }
 
     return result;
@@ -127,9 +137,9 @@ export class SearchService {
    * @param type - Optional preset string to insert
    */
   public getList(type?: string): void {
-    this.listOpen = true;
+    this.textareaListOpen = true;
 
-    if ((type = '#')) {
+    if (type === '#') {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
         channel.data?.member?.some((member: any) => member.id === this.userId())
       );
@@ -137,8 +147,7 @@ export class SearchService {
         this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
       }
       this.isChannel = true;
-    }
-    if ((type = '@')) {
+    } else if (type === '@') {
       this.currentList = this.userService.users;
       this.isChannel = false;
     }

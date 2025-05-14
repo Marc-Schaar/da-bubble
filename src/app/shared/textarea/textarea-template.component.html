@@ -1,8 +1,8 @@
 <div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
     (keyup.enter)="newMessage()"
-    (click)="searchService.closeList()"
-    (input)="searchService.observeInput(input)"
+    (click)="searchService.closeList('textarea')"
+    (input)="searchService.observeInput(input, 'textarea')"
     [(ngModel)]="input"
     rows="3"
     [name]="input"
@@ -29,23 +29,11 @@
     </button>
 
     @if (searchService.getListBoolean()) {
+
     <div class="tag-container">
-      <ul>
-        @for (element of searchService.getCurrentList(); track $index;) {
-        <li (click)="tagReciver(element, searchService.getChannelBoolean() ? '#' : '@')">
-          @if ( searchService.getChannelBoolean()) {
-          <div><mat-icon>tag</mat-icon></div>
-          } @else {
-          <div class="userCircle">
-            <img class="profilephoto" src="{{ element?.profilephoto }}" alt="" />
-            <div class="status-dot" [ngClass]="{ green: element?.online }"></div>
-          </div>
-          }
-          {{ element.fullname || element.data.name }}
-        </li>
-        } @empty {Kein @if ( searchService.getChannelBoolean()) {Channel} @else {Nutzer} gefunden}
-      </ul>
+      <app-search-result [(input)]="input"></app-search-result>
     </div>
+
     } @if (reactionMenuOpenInTextarea) {
     <div class="reaction-menu">
       <div class="scroll-container">

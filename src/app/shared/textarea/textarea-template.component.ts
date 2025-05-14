@@ -11,10 +11,11 @@ import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
 import { SearchService } from '../../services/search/search.service';
+import { SearchResultComponent } from '../search-result/search-result.component';
 
 @Component({
   selector: 'app-textarea-template',
-  imports: [CommonModule, FormsModule, MatIcon],
+  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent],
   templateUrl: './textarea-template.component.html',
   styleUrl: './textarea-template.component.scss',
 })
@@ -32,7 +33,6 @@ export class TextareaTemplateComponent {
 
   public input: string = '';
   public emojis: any;
-  private tagType: 'channel' | 'user' | null = null;
 
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
@@ -127,16 +127,5 @@ export class TextareaTemplateComponent {
    */
   public addEmoji(emoji: string) {
     this.input += emoji;
-  }
-
-  /**
-   *Tags a User or Channel to the Message.
-   */
-  public tagReciver(receiverData: any, tagType: any) {
-    let tagName = receiverData.fullname || receiverData.data.name;
-    this.input = this.input.split(tagType)[0];
-    this.input += tagType + tagName + ' ';
-    this.searchService.closeList();
-    this.searchService.stopObserveInput();
   }
 }
