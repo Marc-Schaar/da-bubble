@@ -11,7 +11,6 @@ import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
 import { SearchService } from '../../services/search/search.service';
-import { debugErrorMap } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-textarea-template',
@@ -25,15 +24,11 @@ export class TextareaTemplateComponent {
   userService: UserService = inject(UserService);
   navigationService: NavigationService = inject(NavigationService);
   firestore: Firestore = inject(Firestore);
-  private searchService: SearchService = inject(SearchService);
+  public searchService: SearchService = inject(SearchService);
 
-  listOpen: boolean = false;
   reactionMenuOpenInTextarea: boolean = false;
-  isChannel: boolean = false;
 
   currentChannel: any;
-
-  currentList: any[] = [];
 
   public input: string = '';
   public emojis: any;
@@ -127,63 +122,6 @@ export class TextareaTemplateComponent {
   }
 
   /**
-   * Handles autocomplete logic for mentions and channels in the input.
-   * @param type - Optional preset string to insert
-   */
-  public getList(type?: string): void {
-    if (type) this.input = type;
-    if (this.input.includes('#') || this.input.includes('@')) {
-      if (this.input.includes('#')) {
-        this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
-          channel.data?.member?.some((member: any) => member.id === this.currentUserId)
-        );
-        if (this.userService.currentUser.isAnonymous) {
-          this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
-        }
-        this.isChannel = true;
-        this.listOpen = true;
-      }
-
-      if (this.input.includes('@')) {
-        this.currentList = this.userService.users;
-        this.isChannel = false;
-        this.listOpen = true;
-      }
-    } else if (this.input === '') {
-      this.currentList = [];
-      this.listOpen = false;
-    }
-    this.reactionMenuOpenInTextarea = false;
-  }
-
-  /**
-   * Opens a receiver (either a channel or a direct message) based on the input conditions.
-   * @param i - The index of the message or item to open
-   * @param key - The key identifier for the receiver (channel or direct message)
-   */
-  public openReciver(key: string): void {
-    if (this.isChannel) {
-      this.userService.setUrl('channel', key);
-      this.navigationService.showChannel();
-    } else if (!this.isChannel) {
-      this.userService.setUrl('direct', key, this.userService.currentUser.id);
-      this.navigationService.showDirect();
-    }
-    this.resetList();
-  }
-
-  /**
-   * Resets the list of items, clears the input, and closes the list.
-   */
-  resetList() {
-    this.currentList = [];
-    this.listOpen = false;
-    this.tagType = null;
-    this.isChannel = false;
-    this.input = '';
-  }
-
-  /**
    * Adds an emoji to the Message - Input.
    * @param emoji - The emoji to add
    */
@@ -191,46 +129,14 @@ export class TextareaTemplateComponent {
     this.input += emoji;
   }
 
-  public observeInput() {
-    let searchInput: string | null = null;
-    this.getTagType();
-
-    switch (this.tagType) {
-      case 'channel':
-        searchInput = this.input.split('#')[1];
-        this.currentList = this.searchService.startSearch(searchInput, this.tagType);
-        this.isChannel = true;
-        this.listOpen = true;
-        if (!searchInput) this.tagType = null;
-
-        break;
-
-      case 'user':
-        searchInput = this.input.split('@')[1];
-        this.currentList = this.searchService.startSearch(searchInput, this.tagType);
-        this.isChannel = false;
-        this.listOpen = true;
-        if (!searchInput) this.tagType = null;
-
-        break;
-
-      default:
-        this.currentList = [];
-        this.isChannel = false;
-        this.listOpen = false;
-
-        break;
-    }
-  }
-
-  private getTagType() {
-    if (this.input.includes('@')) this.tagType = 'user';
-    if (this.input.includes('#')) this.tagType = 'channel';
-  }
-
+  /**
+   *Tags a User or Channel to the Message.
+   */
   public tagReciver(receiverData: any, tagType: any) {
     let tagName = receiverData.fullname || receiverData.data.name;
     this.input = this.input.split(tagType)[0];
-    this.input += tagType + tagName;
+    this.input += tagType + tagName + ' ';
+    this.searchService.closeList();
+    this.searchService.stopObserveInput();
   }
 }

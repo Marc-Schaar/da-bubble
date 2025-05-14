@@ -1,11 +1,8 @@
-<div
-  (mouseleave)="reactionMenuOpenInTextarea = false; listOpen = false"
-  (click)="listOpen = false; reactionMenuOpenInTextarea = false"
-  class="input-container"
->
+<div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
     (keyup.enter)="newMessage()"
-    (input)="observeInput()"
+    (click)="searchService.closeList()"
+    (input)="searchService.observeInput(input)"
     [(ngModel)]="input"
     rows="3"
     [name]="input"
@@ -15,15 +12,15 @@
   <div class="action-container justify-sb">
     <div class="gap-10">
       @if (isChannelComponent) {
-      <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; listOpen = false; $event.stopPropagation()">
+      <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()">
         <mat-icon>sentiment_satisfied</mat-icon>
       </button>
       }
 
-      <button class="btn" (click)="getList('@'); $event.stopPropagation()">
+      <button class="btn" (click)="searchService.getList('@'); $event.stopPropagation()">
         <mat-icon>alternate_email</mat-icon>
       </button>
-      <button class="btn" (click)="getList('#'); $event.stopPropagation()">
+      <button class="btn" (click)="searchService.getList('#'); $event.stopPropagation()">
         <mat-icon>tag</mat-icon>
       </button>
     </div>
@@ -31,12 +28,12 @@
       <mat-icon>send</mat-icon>
     </button>
 
-    @if (listOpen) {
+    @if (searchService.getListBoolean()) {
     <div class="tag-container">
       <ul>
-        @for (element of currentList; track $index;) {
-        <li (click)="tagReciver(element, isChannel ? '#' : '@')">
-          @if (isChannel) {
+        @for (element of searchService.getCurrentList(); track $index;) {
+        <li (click)="tagReciver(element, searchService.getChannelBoolean() ? '#' : '@')">
+          @if ( searchService.getChannelBoolean()) {
           <div><mat-icon>tag</mat-icon></div>
           } @else {
           <div class="userCircle">
@@ -46,7 +43,7 @@
           }
           {{ element.fullname || element.data.name }}
         </li>
-        } @empty {Kein @if (isChannel) {Channel} @else {Nutzer} gefunden}
+        } @empty {Kein @if ( searchService.getChannelBoolean()) {Channel} @else {Nutzer} gefunden}
       </ul>
     </div>
     } @if (reactionMenuOpenInTextarea) {
