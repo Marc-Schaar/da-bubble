@@ -51,10 +51,23 @@ export class SearchService {
   }
 
   public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
-    let searchInput: string | null = null;
     this.getTagType(input);
     // if (this.isResultTrue) return;
 
+    if (searchInComponent === 'header' && this.tagType == null && input.length > 0) {
+      let userResults = this.startSearch(input, 'user');
+      let channelResults = this.startSearch(input, 'channel');
+      this.currentList = [...userResults, ...channelResults];
+      this.textareaListOpen = false;
+      this.headerListOpen = true;
+      this.isChannel = false;
+      return;
+    }
+    this.searchWithTag(input, searchInComponent);
+  }
+
+  private searchWithTag(input: string, searchInComponent: 'textarea' | 'header') {
+    let searchInput: string | null = null;
     switch (this.tagType) {
       case 'channel':
         searchInput = input.split('#')[1];
