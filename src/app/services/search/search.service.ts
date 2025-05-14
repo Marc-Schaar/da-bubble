@@ -13,26 +13,26 @@ export class SearchService {
 
   private listOpen: boolean = false;
   private isChannel: boolean = false;
-  private currentList: any[] = [];
   private isResultTrue: boolean = false;
+  private currentList: string[] = [];
 
-  public getListBoolean() {
+  public getListBoolean(): boolean {
     return this.listOpen;
   }
 
-  public getChannelBoolean() {
+  public getChannelBoolean(): boolean {
     return this.isChannel;
   }
 
-  public getCurrentList() {
+  public getCurrentList(): string[] {
     return this.currentList;
   }
 
-  public closeList() {
+  public closeList(): void {
     this.listOpen = false;
   }
 
-  public stopObserveInput() {
+  public stopObserveInput(): void {
     this.isResultTrue = true;
   }
 
@@ -44,7 +44,7 @@ export class SearchService {
     return this.authService.currentUser?.uid;
   }
 
-  public observeInput(input: string) {
+  public observeInput(input: string): void {
     let searchInput: string | null = null;
     this.getTagType(input);
     if (this.isResultTrue) return;
@@ -77,12 +77,12 @@ export class SearchService {
     }
   }
 
-  private getTagType(input: string) {
+  private getTagType(input: string): void {
     if (input.includes('@')) this.tagType = 'user';
     if (input.includes('#')) this.tagType = 'channel';
   }
 
-  private searchChannelMembersByName(searchInput: string, channelsToSearch: any) {
+  private searchChannelMembersByName(searchInput: string, channelsToSearch: any): string[] {
     let foundMembers: any[] = [];
     channelsToSearch.forEach((channel: { data?: { member?: any[] } }) => {
       let members = channel.data?.member || [];
@@ -103,7 +103,7 @@ export class SearchService {
     return foundChannels;
   }
 
-  public startSearch(input?: string, searchCollection?: 'channel' | 'user') {
+  public startSearch(input?: string, searchCollection?: 'channel' | 'user'): string[] {
     let searchInput = input?.trim().toLowerCase() || '';
     let result: any[] = [];
     let channelsToSearch = this.isAnonymous()
