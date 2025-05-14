@@ -13,9 +13,16 @@ export class SearchService {
 
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
-  private isChannel: boolean = false;
+  private isChannel: boolean | null = false;
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
+  private redirectToResult: boolean = false;
+
+  private input: string = '';
+
+  public getRedirectToResultBoolean() {
+    return this.redirectToResult;
+  }
 
   public getListBoolean(): boolean {
     return this.textareaListOpen;
@@ -25,7 +32,7 @@ export class SearchService {
     return this.headerListOpen;
   }
 
-  public getChannelBoolean(): boolean {
+  public getChannelBoolean(): boolean | null {
     return this.isChannel;
   }
 
@@ -51,53 +58,69 @@ export class SearchService {
   }
 
   public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
+    this.input = input;
     this.getTagType(input);
     // if (this.isResultTrue) return;
 
-    if (searchInComponent === 'header' && this.tagType == null && input.length > 0) {
-      let userResults = this.startSearch(input, 'user');
-      let channelResults = this.startSearch(input, 'channel');
-      this.currentList = [...userResults, ...channelResults];
-      this.textareaListOpen = false;
-      this.headerListOpen = true;
-      this.isChannel = false;
-      return;
-    }
-    this.searchWithTag(input, searchInComponent);
+    this.isNoTagSearch(searchInComponent) ? this.searchWithoutTag() : this.searchWithTag(searchInComponent);
   }
 
-  private searchWithTag(input: string, searchInComponent: 'textarea' | 'header') {
-    let searchInput: string | null = null;
+  private isNoTagSearch(searchInComponent: string) {
+    return searchInComponent === 'header' && this.tagType == null && this.input.length > 0;
+  }
+
+  private searchWithoutTag() {
+    let userResults = this.startSearch(this.input, 'user');
+    let channelResults = this.startSearch(this.input, 'channel');
+    this.currentList = [...userResults, ...channelResults];
+    this.textareaListOpen = false;
+    this.headerListOpen = true;
+    this.isChannel = null;
+    this.redirectToResult = true;
+    return;
+  }
+
+  private searchWithTag(searchInComponent: 'textarea' | 'header') {
     switch (this.tagType) {
       case 'channel':
-        searchInput = input.split('#')[1];
-        this.currentList = this.startSearch(searchInput, this.tagType);
-        this.isChannel = true;
-
-        searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
-        if (!searchInput) this.tagType = null;
-
+        this.caseChannel(searchInComponent);
         break;
 
       case 'user':
-        searchInput = input.split('@')[1];
-        this.currentList = this.startSearch(searchInput, this.tagType);
-        this.isChannel = false;
-        console.log(this.currentList);
-
-        searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
-        if (!searchInput) this.tagType = null;
-
+        this.caseUser(searchInComponent);
         break;
 
       default:
-        this.currentList = [];
-        this.isChannel = false;
-        this.textareaListOpen = false;
-        this.headerListOpen = false;
-
+        this.resetList;
         break;
     }
+  }
+
+  private caseChannel(searchInComponent: 'textarea' | 'header') {
+    let searchInput: string | null = null;
+    searchInput = this.input.split('#')[1];
+    this.currentList = this.startSearch(searchInput, 'channel');
+    this.isChannel = true;
+
+    searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    if (!searchInput) this.tagType = null;
+  }
+
+  private caseUser(searchInComponent: 'textarea' | 'header') {
+    let searchInput: string | null = null;
+    searchInput = this.input.split('@')[1];
+    this.currentList = this.startSearch(searchInput, 'user');
+    this.isChannel = false;
+
+    searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    if (!searchInput) this.tagType = null;
+  }
+
+  private resetList() {
+    this.currentList = [];
+    this.isChannel = false;
+    this.textareaListOpen = false;
+    this.headerListOpen = false;
   }
 
   private getTagType(input: string): void {
