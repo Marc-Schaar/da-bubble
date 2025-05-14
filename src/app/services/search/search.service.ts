@@ -17,6 +17,7 @@ export class SearchService {
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
   private redirectToResult: boolean = false;
+  private searchInComponent: 'header' | 'textarea' | null = null;
 
   private input: string = '';
 
@@ -40,8 +41,8 @@ export class SearchService {
     return this.currentList;
   }
 
-  public closeList(searchInComponent: 'header' | 'textarea'): void {
-    searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
+  public closeList(): void {
+    this.searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
     // this.listOpen = false;
   }
 
@@ -59,14 +60,14 @@ export class SearchService {
 
   public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
     this.input = input;
+    this.searchInComponent = searchInComponent;
     this.getTagType(input);
-    // if (this.isResultTrue) return;
-
-    this.isNoTagSearch(searchInComponent) ? this.searchWithoutTag() : this.searchWithTag(searchInComponent);
+    if (!input.trim()) this.closeList();
+    else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
   }
 
-  private isNoTagSearch(searchInComponent: string) {
-    return searchInComponent === 'header' && this.tagType == null && this.input.length > 0;
+  private isNoTagSearch() {
+    return this.searchInComponent === 'header' && this.tagType == null && this.input.length > 0;
   }
 
   private searchWithoutTag() {
@@ -79,14 +80,14 @@ export class SearchService {
     this.redirectToResult = true;
   }
 
-  private searchWithTag(searchInComponent: 'textarea' | 'header') {
+  private searchWithTag() {
     switch (this.tagType) {
       case 'channel':
-        this.caseChannel(searchInComponent);
+        this.caseChannel();
         break;
 
       case 'user':
-        this.caseUser(searchInComponent);
+        this.caseUser();
         break;
 
       default:
@@ -95,23 +96,23 @@ export class SearchService {
     }
   }
 
-  private caseChannel(searchInComponent: 'textarea' | 'header') {
+  private caseChannel() {
     let searchInput: string | null = null;
     searchInput = this.input.split('#')[1];
     this.currentList = this.startSearch(searchInput, 'channel');
     this.isChannel = true;
 
-    searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
     if (!searchInput) this.tagType = null;
   }
 
-  private caseUser(searchInComponent: 'textarea' | 'header') {
+  private caseUser() {
     let searchInput: string | null = null;
     searchInput = this.input.split('@')[1];
     this.currentList = this.startSearch(searchInput, 'user');
     this.isChannel = false;
 
-    searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
     if (!searchInput) this.tagType = null;
   }
 

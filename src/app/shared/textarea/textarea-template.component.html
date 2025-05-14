@@ -1,7 +1,7 @@
 <div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
     (keyup.enter)="newMessage()"
-    (click)="searchService.closeList('textarea')"
+    (click)="searchService.closeList()"
     (input)="searchService.observeInput(input, 'textarea')"
     [(ngModel)]="input"
     rows="3"

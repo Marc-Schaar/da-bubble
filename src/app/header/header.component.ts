@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user/shared.service';
 import { Auth } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { FireServiceService } from '../services/firebase/fire-service.service';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../services/navigation/navigation.service';
 import { AuthService } from '../services/auth/auth.service';
@@ -32,9 +31,6 @@ export class HeaderComponent {
   isProfileCard: boolean = false;
 
   public input: string = '';
-  channels: any[] = [];
-  users: any[] = [];
-  currentUser: any = null;
 
   /**
    * Increments the `opened` counter and sets `showmodifycontent` to true to display the modification content.

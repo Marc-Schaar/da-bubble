@@ -23,7 +23,7 @@ export class SearchResultComponent {
     this.input = this.input.split(tagType)[0];
     this.input += tagType + tagName + ' ';
     this.inputChange.emit(this.input);
-    this.searchService.closeList('textarea');
+    this.searchService.closeList();
     this.searchService.stopObserveInput();
   }
 }
