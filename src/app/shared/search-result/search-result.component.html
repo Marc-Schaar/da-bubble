@@ -1,19 +1,6 @@
 <ul>
   @for (element of searchService.getCurrentList(); track $index;) {
-  <li
-    (click)="
-      tagReciver(
-        element,
-        searchService.getChannelBoolean() === true
-          ? '#'
-          : searchService.getChannelBoolean() === false
-          ? '@'
-          : element.data?.name
-          ? '#'
-          : '@'
-      )
-    "
-  >
+  <li (click)="handleClick(element)">
     @if (searchService.getChannelBoolean() === true) {
     <div><mat-icon>tag</mat-icon></div>
     } @else if (searchService.getChannelBoolean() === false) {

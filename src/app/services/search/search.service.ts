@@ -16,14 +16,9 @@ export class SearchService {
   private isChannel: boolean | null = false;
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
-  private redirectToResult: boolean = false;
   private searchInComponent: 'header' | 'textarea' | null = null;
 
   private input: string = '';
-
-  public getRedirectToResultBoolean() {
-    return this.redirectToResult;
-  }
 
   public getListBoolean(): boolean {
     return this.textareaListOpen;
@@ -72,13 +67,14 @@ export class SearchService {
   }
 
   private searchWithoutTag() {
+    console.log('ohne tag suche');
+
     let userResults = this.startSearch(this.input, 'user');
     let channelResults = this.startSearch(this.input, 'channel');
     this.currentList = [...userResults, ...channelResults];
     this.textareaListOpen = false;
     this.headerListOpen = true;
     this.isChannel = null;
-    this.redirectToResult = true;
   }
 
   private searchWithTag() {

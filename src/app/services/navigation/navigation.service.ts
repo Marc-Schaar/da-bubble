@@ -241,4 +241,22 @@ export class NavigationService {
   back() {
     this.location.back();
   }
+
+  /**
+   * Sets the URL with the provided parameters.
+   * @param channelType The type of the channel.
+   * @param id The channel id.
+   * @param reciepentId The recipient id.
+   * @param messageId The message id.
+   */
+  setUrl(channelType: string, reciverId?: string, currentUserId?: string, messageId?: string) {
+    this.router.navigate(['/chat'], {
+      queryParams: {
+        channelType: channelType,
+        reciverId: reciverId,
+        currentUserId: currentUserId,
+        messageId: messageId,
+      },
+    });
+  }
 }
