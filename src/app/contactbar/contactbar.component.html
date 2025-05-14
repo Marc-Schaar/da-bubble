@@ -32,9 +32,11 @@
         <mat-icon>search</mat-icon>
       </div>
 
+      @if (searchService.getHeaderListBoolean()) {
       <div class="tag-container">
         <app-search-result [(input)]="input"></app-search-result>
       </div>
+      }
     </div>
 
     } @if (!isClicked) {
