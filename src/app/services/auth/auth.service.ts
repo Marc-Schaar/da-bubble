@@ -73,6 +73,7 @@ export class AuthService {
         email: null,
         profilephoto: 'img/profilephoto.png',
         online: true,
+        isAnonymous: true,
       });
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();

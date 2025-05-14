@@ -63,7 +63,7 @@ export class AddChannelComponent implements OnInit {
     this.loadUsers();
     this.loadChannel();
     console.log(this.channel);
-    console.log(this.auth.currentUser);
+    console.log(this.auth.currentUser);    
   }
 
   /**
@@ -72,12 +72,14 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   filterUsers() {
+    console.log(this.users);
+
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
+        .filter((user) => !user.isAnonymous)
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
