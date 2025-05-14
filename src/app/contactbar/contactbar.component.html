@@ -32,7 +32,7 @@
         <mat-icon>search</mat-icon>
       </div>
 
-      @if (searchService.getHeaderListBoolean()) {
+      @if (searchService.getHeaderListBoolean()&& isClicked) {
       <div class="tag-container">
         <app-search-result [(input)]="input"></app-search-result>
       </div>

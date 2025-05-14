@@ -37,14 +37,14 @@ export class SearchResultComponent {
 
   private openUser(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.setUrl('direct', element.id, currentUserId);
     this.navigationService.showDirect();
+    this.navigationService.setUrl('direct', element.id, currentUserId);
   }
 
   private openChannel(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.setUrl('channel', element.key, currentUserId);
     this.navigationService.showChannel();
+    this.navigationService.setUrl('channel', element.key, currentUserId);
   }
 
   public handleClick(element: any) {
