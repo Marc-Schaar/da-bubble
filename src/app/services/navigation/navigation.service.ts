@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NewmessageComponent } from '../../newmessage/newmessage.component';
-import { DirectmessagesComponent } from '../../direct-messages/direct-messages.component';
-import { ChatContentComponent } from '../../chat-content/chat-content.component';
+import { NewmessageComponent } from '../../chat-new-message/newmessage.component';
+import { DirectmessagesComponent } from '../../chat-direct/direct-messages.component';
+import { ChatContentComponent } from '../../chat-channel/chat-content.component';
 import { UserService } from '../user/shared.service';
 import { Auth } from '@angular/fire/auth';
 import { Location } from '@angular/common';

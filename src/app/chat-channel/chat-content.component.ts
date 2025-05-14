@@ -9,7 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user/shared.service';
-import { ChannelEditComponent } from '../chat-content/channel-edit/channel-edit.component';
+import { ChannelEditComponent } from './channel-edit/channel-edit.component';
 import { AddMemberComponent } from './add-member/add-member.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
