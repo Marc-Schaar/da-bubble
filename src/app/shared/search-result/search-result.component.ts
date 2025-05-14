@@ -39,12 +39,14 @@ export class SearchResultComponent {
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.showDirect();
     this.navigationService.setUrl('direct', element.id, currentUserId);
+    this.searchService.resetList();
   }
 
   private openChannel(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.showChannel();
     this.navigationService.setUrl('channel', element.key, currentUserId);
+    this.searchService.resetList();
   }
 
   public handleClick(element: any) {

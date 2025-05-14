@@ -113,7 +113,7 @@ export class SearchService {
     if (!searchInput) this.tagType = null;
   }
 
-  private resetList() {
+  public resetList() {
     this.currentList = [];
     this.isChannel = false;
     this.textareaListOpen = false;
