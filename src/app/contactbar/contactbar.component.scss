@@ -325,19 +325,11 @@ button {
 
 .tag-container {
   position: absolute;
-  left: 43px;
-  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 49px;
   outline: 1px solid var(--light-purple);
-  border-radius: 0 20px 20px 20px;
   padding: 20px 21px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-  background-color: white;
-  overflow-y: scroll;
-  z-index: 99;
-  box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
 }
 @media (max-width: 1023px) {
   main {

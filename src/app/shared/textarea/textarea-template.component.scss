@@ -49,8 +49,9 @@ button {
 
 .tag-container {
   position: absolute;
-  bottom: 44px;
-  left: 53px;
+  left: 20%;
+  transform: translateX(-50%);
+  bottom: 30px;
   border: 1px solid var(--light-purple);
   border-radius: 25px 25px 25px 0;
   background-color: white;
