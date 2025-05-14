@@ -77,7 +77,6 @@ export class SearchService {
     this.headerListOpen = true;
     this.isChannel = null;
     this.redirectToResult = true;
-    return;
   }
 
   private searchWithTag(searchInComponent: 'textarea' | 'header') {
