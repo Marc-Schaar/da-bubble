@@ -13,8 +13,8 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
 @Component({
   selector: 'app-thread',
   imports: [CommonModule, FormsModule, MatIconModule, TextareaTemplateComponent, MessageTemplateComponent],
-  templateUrl: './thread.component.html',
-  styleUrls: ['./thread.component.scss'],
+  templateUrl: './chat-thread.component.html',
+  styleUrls: ['./chat-thread.component.scss'],
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;

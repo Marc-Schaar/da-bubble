@@ -9,8 +9,9 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user/shared.service';
-import { ThreadComponent } from '../thread/thread.component';
+
 import { NavigationService } from '../services/navigation/navigation.service';
+import { ThreadComponent } from '../chat-thread/chat-thread.component';
 
 @Component({
   selector: 'app-main-chat',

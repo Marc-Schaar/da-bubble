@@ -6,12 +6,12 @@ import { ForgotpasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetpasswordComponent } from './reset-password/reset-password.component';
 import { AvatarselectionComponent } from './avatar-selection/avatar-selection.component';
 import { ContactbarComponent } from './contactbar/contactbar.component';
-import { ThreadComponent } from './thread/thread.component';
-import { DirectmessagesComponent } from './chat-direct/chat-direct.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatContentComponent } from './chat-channel/chat-channel.component';
+import { ThreadComponent } from './chat-thread/chat-thread.component';
+import { DirectmessagesComponent } from './chat-direct/chat-direct.component';
 import { NewmessageComponent } from './chat-new-message/chat-new.component';
 
 export const routes: Routes = [
