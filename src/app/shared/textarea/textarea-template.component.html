@@ -46,7 +46,7 @@
           }
           {{ element.fullname || element.data.name }}
         </li>
-        }
+        } @empty {Kein @if (isChannel) {Channel} @else {Nutzer} gefunden}
       </ul>
     </div>
     } @if (reactionMenuOpenInTextarea) {

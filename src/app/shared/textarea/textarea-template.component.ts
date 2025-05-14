@@ -11,6 +11,7 @@ import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
 import { SearchService } from '../../services/search/search.service';
+import { debugErrorMap } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-textarea-template',
@@ -177,6 +178,8 @@ export class TextareaTemplateComponent {
   resetList() {
     this.currentList = [];
     this.listOpen = false;
+    this.tagType = null;
+    this.isChannel = false;
     this.input = '';
   }
 
@@ -189,15 +192,17 @@ export class TextareaTemplateComponent {
   }
 
   public observeInput() {
-    let searchInput: string = '';
+    let searchInput: string | null = null;
     this.getTagType();
-    this.listOpen = false;
+
     switch (this.tagType) {
       case 'channel':
         searchInput = this.input.split('#')[1];
         this.currentList = this.searchService.startSearch(searchInput, this.tagType);
         this.isChannel = true;
         this.listOpen = true;
+        if (!searchInput) this.tagType = null;
+
         break;
 
       case 'user':
@@ -205,6 +210,8 @@ export class TextareaTemplateComponent {
         this.currentList = this.searchService.startSearch(searchInput, this.tagType);
         this.isChannel = false;
         this.listOpen = true;
+        if (!searchInput) this.tagType = null;
+
         break;
 
       default:
