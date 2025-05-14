@@ -146,8 +146,8 @@ export class SearchService {
     return foundChannels;
   }
 
-  public startSearch(input?: string, searchCollection?: 'channel' | 'user'): string[] {
-    let searchInput = input?.trim().toLowerCase() || '';
+  public startSearch(input: string, searchCollection?: 'channel' | 'user'): string[] {
+    let searchInput = input.trim().toLowerCase() || '';
     let result: any[] = [];
     let channelsToSearch = this.isAnonymous()
       ? this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz')

@@ -14,7 +14,7 @@
     @if (isClicked) {
     <div class="justify-sb full-width p-lr-16">
       <h2>Search</h2>
-      <button (click)="isClicked = false; resetSearch(); resetInput()">
+      <button (click)="isClicked = false">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -22,9 +22,9 @@
     <div class="searchbar">
       <div class="input" *ngIf="!userService.login && userService.dashboard">
         <input
-          (click)="isClicked = true; input = '@'"
+          (click)="isClicked = true"
           [(ngModel)]="input"
-          (input)="getList()"
+          (input)="searchService.observeInput(input, 'header')"
           type="text"
           placeholder="Gehe zu ..."
           class="full-width"
@@ -32,24 +32,9 @@
         <mat-icon>search</mat-icon>
       </div>
 
-      @if (currentlist.length>0 && input.trim().length >0 && (input[0]== "#" || input[0] =="@")) {
-      <ul class="lists">
-        @for (object of currentlist; track $index;) {
-        <li (click)="getReciever(object.id)" [ngClass]="{ channelStyle: isChannel }" class="listrow">
-          @if (!isChannel) {
-          <div class="imageContainer">
-            <img [src]="object?.profilephoto" alt="" />
-            <div class="status-dot" [ngClass]="{ green: object?.online }"></div>
-          </div>
-          }@else { <img class="tag" src="./img/tag.svg" alt="" />}
-          <span>{{ object?.fullname || object?.name }}</span>
-          @if (object?.fullname === currentUser?.displayName) {
-          <span>(Du)</span>
-          }
-        </li>
-        }
-      </ul>
-      }
+      <div class="tag-container">
+        <app-search-result [(input)]="input"></app-search-result>
+      </div>
     </div>
 
     } @if (!isClicked) {
@@ -63,14 +48,17 @@
           </button>
 
           <div class="tooltip-cont">
-            <button class="align-center" [ngClass]="{ 'guest-btn': currentUser.isAnonymous }" [disabled]="currentUser.isAnonymous" (click)="openAddChannel()">
+            <button
+              class="align-center"
+              [ngClass]="{ 'guest-btn': currentUser.isAnonymous }"
+              [disabled]="currentUser.isAnonymous"
+              (click)="openAddChannel()"
+            >
               <mat-icon>add</mat-icon>
             </button>
 
             <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
           </div>
-
-
         </div>
 
         <ul [ngClass]="{ show: isActive() }" class="channellist">
@@ -99,13 +87,13 @@
           [disabled]="currentUser?.isAnonymous"
           class="addChannel"
           [ngClass]="{ 'guest-btn': currentUser?.isAnonymous }"
-          (click)="openAddChannel()">
+          (click)="openAddChannel()"
+        >
           <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
           Channel hinzufügen
         </button>
         <span class="tooltip">Zugang für Gäste gesperrt</span>
       </div>
-
 
       <div class="messages">
         <div class="drop-down-title">
