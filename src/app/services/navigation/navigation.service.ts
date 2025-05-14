@@ -3,7 +3,7 @@ import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subje
 import { Router, ActivatedRoute } from '@angular/router';
 import { NewmessageComponent } from '../../chat-new-message/newmessage.component';
 import { DirectmessagesComponent } from '../../chat-direct/direct-messages.component';
-import { ChatContentComponent } from '../../chat-channel/chat-content.component';
+import { ChatContentComponent } from '../../chat-channel/chat-channel.component';
 import { UserService } from '../user/shared.service';
 import { Auth } from '@angular/fire/auth';
 import { Location } from '@angular/common';

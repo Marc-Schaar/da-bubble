@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, query, orderBy, collection, doc } from '@angular/fire/firestore';
 import { FireServiceService } from '../services/firebase/fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user/shared.service';
 import { ChannelEditComponent } from './channel-edit/channel-edit.component';
@@ -35,8 +35,8 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
     TextareaTemplateComponent,
     MessageTemplateComponent,
   ],
-  templateUrl: './chat-content.component.html',
-  styleUrl: './chat-content.component.scss',
+  templateUrl: './chat-channel.component.html',
+  styleUrl: './chat-channel.component.scss',
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;

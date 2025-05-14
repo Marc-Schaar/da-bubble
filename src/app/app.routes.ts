@@ -11,7 +11,7 @@ import { DirectmessagesComponent } from './chat-direct/direct-messages.component
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
-import { ChatContentComponent } from './chat-channel/chat-content.component';
+import { ChatContentComponent } from './chat-channel/chat-channel.component';
 import { NewmessageComponent } from './chat-new-message/newmessage.component';
 
 export const routes: Routes = [
