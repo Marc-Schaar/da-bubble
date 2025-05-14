@@ -43,7 +43,6 @@ export class SearchService {
 
   public closeList(): void {
     this.searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
-    // this.listOpen = false;
   }
 
   public stopObserveInput(): void {
@@ -59,6 +58,8 @@ export class SearchService {
   }
 
   public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
+    this.headerListOpen = false;
+    this.textareaListOpen = false;
     this.input = input;
     this.searchInComponent = searchInComponent;
     this.getTagType(input);
@@ -174,6 +175,7 @@ export class SearchService {
    */
   public getList(type?: string): void {
     this.textareaListOpen = true;
+    this.headerListOpen = false;
 
     if (type === '#') {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
