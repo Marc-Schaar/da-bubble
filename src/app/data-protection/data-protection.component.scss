@@ -21,10 +21,13 @@
       height: unset;
       width: 80%;
     }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      height: 92%;
+    }
     @media (max-width: 400px) {
       padding: 25px 25px;
     }
-    @media (max-width: 320px) {
+    @media (max-width: 370px) {
       padding: 25px 8px;
     }
     > div:nth-child(1) {
@@ -35,7 +38,7 @@
       height: 100%;
       overflow-y: scroll;
       padding-right: 25px;
-      @media (max-width: 320px) {
+      @media (max-width: 370px) {
         padding-right: unset;
       }
       > button:nth-child(1) {
