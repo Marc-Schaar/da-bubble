@@ -5,7 +5,12 @@
   <section>
     <div class="textField">
       <span class="newText">Neue Nachricht</span>
-      <input [(ngModel)]="input" (input)="getCurrentChat()" type="text" placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse" />
+      <input
+        [(ngModel)]="input"
+        (input)="searchService.observeInput(input, 'textarea')"
+        type="text"
+        placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse"
+      />
     </div>
 
     <div class="card-footer">

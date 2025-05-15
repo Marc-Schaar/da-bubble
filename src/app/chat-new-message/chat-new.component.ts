@@ -12,6 +12,7 @@ import { MessagesService } from '../services/messages/messages.service';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
+import { SearchService } from '../services/search/search.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +28,7 @@ export class NewmessageComponent {
   router: Router = inject(Router);
   navigationService: NavigationService = inject(NavigationService);
   messageService: MessagesService = inject(MessagesService);
+  public searchService: SearchService = inject(SearchService);
   public channels: any[] = [];
   public users: any[] = [];
   public currentReciever: any = null;
