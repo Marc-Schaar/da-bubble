@@ -15,12 +15,15 @@ export class SearchResultComponent {
   searchService: SearchService = inject(SearchService);
   navigationService: NavigationService = inject(NavigationService);
   auth: Auth = inject(Auth);
-
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
 
   /**
-   *Tags a User or Channel to the Message.
+   * Tags a receiver (user or channel) in the input field by inserting their name with the tagType.
+   * Emits the updated input, then closes and stops observing the search list.
+   *
+   * @param receiverData - The data object of the receiver (user or channel).
+   * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
   public tagReceiver(receiverData: any, tagType: any) {
     let tagName = receiverData.fullname || receiverData.data.name;
@@ -31,10 +34,20 @@ export class SearchResultComponent {
     this.searchService.stopObserveInput();
   }
 
+  /**
+   * Opens the receiver view depending on whether it's a channel or a user.
+   *
+   * @param element - The selected receiver element (channel or user).
+   */
   public openReceiver(element: any) {
     this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
   }
 
+  /**
+   * Opens a direct user chat view and resets the search list.
+   *
+   * @param element - The user element to open.
+   */
   private openUser(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.showDirect();
@@ -42,6 +55,11 @@ export class SearchResultComponent {
     this.searchService.resetList();
   }
 
+  /**
+   * Opens a channel view and resets the search list.
+   *
+   * @param element - The channel element to open.
+   */
   private openChannel(element: any) {
     let currentUserId = this.auth.currentUser?.uid;
     this.navigationService.showChannel();
@@ -49,6 +67,13 @@ export class SearchResultComponent {
     this.searchService.resetList();
   }
 
+  /**
+   * Handles the click event on an element.
+   * If the header list is open, opens the receiver view;
+   * otherwise tags the receiver in the input field.
+   *
+   * @param element - The clicked element (user or channel).
+   */
   public handleClick(element: any) {
     this.searchService.getHeaderListBoolean()
       ? this.openReceiver(element)
