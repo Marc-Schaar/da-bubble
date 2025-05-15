@@ -37,24 +37,18 @@ import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
-
   public readonly userService = inject(UserService);
   public readonly navigationService = inject(NavigationService);
   private readonly firestoreService = inject(FireServiceService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
   private messagesService = inject(MessagesService);
-
   public currentReciever: any = null;
   private currentUser: any;
-
   public currentRecieverId: string = '';
   public currentUserId: string = '';
-
   public currentMessages: any[] = [];
-
   private isClicked: boolean = false;
-
   private subscriptions = new Subscription();
   private unsubMessages!: () => void;
 
