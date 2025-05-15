@@ -110,7 +110,6 @@ export class ChannelEditComponent {
         this.currentChannel.description = newChannelDescription.value;
       }
     } catch (error) {
-      console.error('Input Elemente nicht gefunden');
     }
   }
 
