@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy } from '@an
 import { getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../services/user/shared.service';
 import { FireServiceService } from '../services/firebase/fire-service.service';
@@ -24,7 +24,7 @@ import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component
   imports: [
     FormsModule,
     CommonModule,
-    RouterLink,
+
     MatIconModule,
     DividerTemplateComponent,
     TextareaTemplateComponent,
