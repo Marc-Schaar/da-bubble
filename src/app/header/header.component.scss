@@ -2,6 +2,8 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: var(--contactbar-width) 1fr auto;
+  padding: 20px;
+  width: 100%;
 }
 
 .logo-container {
@@ -17,11 +19,6 @@
 .user-menu {
   grid-row: 1;
   grid-column: 3;
-}
-
-.header {
-  padding: 20px;
-  width: 100%;
 }
 
 .header-login {
