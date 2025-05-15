@@ -26,14 +26,10 @@ export class TextareaTemplateComponent {
   navigationService: NavigationService = inject(NavigationService);
   firestore: Firestore = inject(Firestore);
   public searchService: SearchService = inject(SearchService);
-
   reactionMenuOpenInTextarea: boolean = false;
-
   currentChannel: any;
-
   public input: string = '';
   public emojis: any;
-
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
   @Input() reciverName: string = '';
@@ -43,12 +39,17 @@ export class TextareaTemplateComponent {
   @Input() reciverCompontent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
   @Input() threadId: string = '';
 
+  /**
+   * Initializes the component by setting the emojis array
+   * from the keys of the imported emojiData object.
+   */
   constructor() {
     this.emojis = Object.keys(emojiData);
   }
 
   /**
-   * Sends a new message to the current channel.
+   * Sends a new message based on the current receiver component type.
+   * Calls the appropriate send method for 'direct', 'channel', or 'thread'.
    */
   newMessage(): void {
     switch (this.reciverCompontent) {
