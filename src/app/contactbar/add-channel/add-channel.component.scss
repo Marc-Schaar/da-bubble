@@ -333,7 +333,6 @@
     font-size: 18px;
     font-weight: 700;
     font-family: "Nunito";
-    place-self: end;
     z-index: 2;
   }
 }
@@ -365,4 +364,30 @@
 
 .visible-select-menu {
   transform: translateY(0%) !important;
+}
+
+.tooltip-cont {
+  position: relative;
+  place-self: end;
+  .tooltip {
+    pointer-events: none;
+    background-color: var(--dark-purple);
+    color: white; 
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 8px;
+    left: -69%;
+    transform: translateX(-50%);
+    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    white-space: nowrap;
+    font-size: 0.8rem; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    @media (max-width: 450px) {
+      bottom: -45px;
+      left: 38%;
+    }
+  }
 }

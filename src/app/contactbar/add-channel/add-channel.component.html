@@ -1,8 +1,5 @@
 <div #mainDialog class="main">
-  <div
-    class="add-channel-cont"
-    id="add-channel-cont"
-    [ngClass]="{ 'change-size': !selectChannelMember}">
+  <div class="add-channel-cont" id="add-channel-cont" [ngClass]="{ 'change-size': !selectChannelMember }">
     <div *ngIf="selectChannelMember && isMobile" class="background"></div>
     <div *ngIf="!selectChannelMember || isMobile" class="add-channel-create">
       <div class="add-channel-header">
@@ -12,8 +9,7 @@
         </div>
       </div>
       <div class="description">
-        Channels dienen deinem Team zur Kommunikation. Am besten sollten sie
-        themenbezogen sein #marketing zum Beispiel.
+        Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.
       </div>
       <form (ngSubmit)="onSubmit()" #channelForm="ngForm">
         <div class="headline">Channel-Name</div>
@@ -24,6 +20,7 @@
             placeholder="z.B. Kooperationsprojekte"
             [(ngModel)]="channelName"
             name="channelName"
+            (click)="isNameTaken = false"
             required
           />
         </div>
@@ -40,10 +37,17 @@
           (blur)="shrinkTextarea($event)"
           (focus)="expandTextarea($event)"
         ></textarea>
-        <button [disabled]="!channelForm.valid">Erstellen</button> 
+        <div class="tooltip-cont">
+          <button [disabled]="!channelForm.valid">Erstellen</button>
+          <span *ngIf="isNameTaken" class="tooltip">Channelname vergeben</span>
+        </div>
       </form>
     </div>
-    <div  class="select-member-cont" [ngClass]="{ 'visible-select-menu': selectChannelMember}" [style.height]="showUserBar ? '460px' : 'auto'">
+    <div
+      class="select-member-cont"
+      [ngClass]="{ 'visible-select-menu': selectChannelMember }"
+      [style.height]="showUserBar ? '460px' : 'auto'"
+    >
       <div (click)="closeScreen()" *ngIf="isMobile" class="mobile-btn-cont"><div class="mobile-btn"></div></div>
       <div class="add-channel-user-header">
         <div class="headline-channel-add-user">Leute hinzufügen</div>
@@ -54,48 +58,21 @@
       <form>
         <div class="decision">
           <div>
-            <input
-              type="radio"
-              id="allMembers"
-              name="channelMember"
-              value="false"
-              (change)="setChannelMember(false, '279px')"
-              checked
-            />
-            <label for="allMembers"
-              >Alle Mitglieder von DABubble hinzufügen</label
-            >
+            <input type="radio" id="allMembers" name="channelMember" value="false" (change)="setChannelMember(false, '279px')" checked />
+            <label for="allMembers">Alle Mitglieder von DABubble hinzufügen</label>
           </div>
           <div>
-            <input
-              type="radio"
-              id="specificMembers"
-              name="channelMember"
-              value="true"
-              (change)="setChannelMember(true, '354px')"
-            />
+            <input type="radio" id="specificMembers" name="channelMember" value="true" (change)="setChannelMember(true, '354px')" />
             <label for="specificMembers">Bestimmte Leute hinzufügen</label>
           </div>
           <div class="input-cont" *ngIf="chooseMember">
             <div class="input-help-cont">
-              <div
-                class="mini-profile-cont"
-                *ngFor="let selectedUser of selectedUsers; let index = index"
-              >
-                <img
-                  class="user-img-mini"
-                  src="{{ selectedUsers[index]?.profilephoto }}"
-                  alt=""
-                />
+              <div class="mini-profile-cont" *ngFor="let selectedUser of selectedUsers; let index = index">
+                <img class="user-img-mini" src="{{ selectedUsers[index]?.profilephoto }}" alt="" />
                 <div class="username-mini">
                   {{ selectedUsers[index]?.fullname }}
                 </div>
-                <img
-                  (click)="removeSelectedUser(index)"
-                  src="img/close.svg"
-                  alt=""
-                  class="cross-mini"
-                />
+                <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
               </div>
               <div class="choose-user-bar" #chooseUserBar *ngIf="showUserBar">
                 <div
@@ -112,14 +89,7 @@
                 <div></div>
               </div>
             </div>
-            <input
-              name=""
-              id="user-search-bar"
-              (input)="openUserBar()"
-              (click)="openUserBar()"
-              (keyup)="filterUsers()"
-              #userSearchInput
-            />
+            <input name="" id="user-search-bar" (input)="openUserBar()" (click)="openUserBar()" (keyup)="filterUsers()" #userSearchInput />
           </div>
         </div>
         <div class="btn-cont">
@@ -128,6 +98,4 @@
       </form>
     </div>
   </div>
-
-
 </div>

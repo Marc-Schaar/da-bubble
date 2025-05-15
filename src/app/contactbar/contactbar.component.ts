@@ -183,6 +183,7 @@ export class ContactbarComponent implements OnInit {
       height: 'auto',
       position: { top: '150px', left: '140px' },
       panelClass: 'fullscreen',
+      data: { channels: this.channels }
     });
   }
 }

@@ -36,6 +36,7 @@ export class AddChannelComponent implements OnInit {
   channelRef: string = '';
   addMemberInfoWindow: boolean = false;
   isMobile: boolean = false;
+  isNameTaken: boolean = false;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
@@ -51,8 +52,13 @@ export class AddChannelComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     public firestore: Firestore,
-    public dialogRef: MatDialogRef<AddChannelComponent>
-  ) {}
+    public dialogRef: MatDialogRef<AddChannelComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { channels: any[] }
+  ) {
+    if (data && data.channels) {
+      this.channels = data.channels;
+    }
+  }
 
   /**
    * Initializes the component by loading users and channel data.
@@ -61,9 +67,7 @@ export class AddChannelComponent implements OnInit {
    */
   ngOnInit() {
     this.loadUsers();
-    this.loadChannel();
-    console.log(this.channel);
-    console.log(this.auth.currentUser);    
+    // this.loadChannel();
   }
 
   /**
@@ -72,8 +76,6 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   filterUsers() {
-    console.log(this.users);
-
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
@@ -108,9 +110,9 @@ export class AddChannelComponent implements OnInit {
    *
    * @returns {void}
    */
-  async loadChannel() {
-    this.channels = this.channelmodule.getChannels();
-  }
+  // async loadChannel() {
+  //   this.channels = this.channelmodule.getChannels();    
+  // }
 
   /**
    * Adds a user to the selection list from the filtered users.
@@ -162,8 +164,6 @@ export class AddChannelComponent implements OnInit {
     this.users.push(this.selectedUsers[index]);
     this.selectedUsers.splice(index, 1);
     this.filterUsers();
-    console.log(this.users);
-    console.log(this.filteredUsers);
   }
 
   /**
@@ -174,7 +174,6 @@ export class AddChannelComponent implements OnInit {
   refreshBar() {
     const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
-      console.log('refresh');
       refresh.value = '';
     }
   }
@@ -192,14 +191,20 @@ export class AddChannelComponent implements OnInit {
 
   /**
    * Handles form submission to create a new channel.
-   *
+   * check if the channel name already exists
    * @returns {void}
    */
   onSubmit() {
     if (!this.selectChannelMember) {
-      this.addChannel();
-      this.channelmodule.showFeedback('Channel erstellt');
-      this.selectChannelMember = true;
+      const channelNameExists = this.channels.some((channel: { name: string }) => channel.name === this.channelName);
+      if (channelNameExists) {
+        this.isNameTaken = true;
+      }
+      else {
+        this.addChannel();
+        this.channelmodule.showFeedback('Channel erstellt');
+        this.selectChannelMember = true;
+      }
       if (isPlatformBrowser(this.platformId)) {
         if (window.innerWidth <= 1023) {
           this.isMobile = true;
