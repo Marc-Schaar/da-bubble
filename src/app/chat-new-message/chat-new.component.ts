@@ -102,11 +102,6 @@ export class NewmessageComponent {
   createMessageData(message: DirectMessage) {
     return {
       name: message.name,
-      // photo: message.photo,
-      // content: message.content,
-      // time: message.time.toISOString(),
-      // from: message.from,
-      // to: message.to,
     };
   }
 
