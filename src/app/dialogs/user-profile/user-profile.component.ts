@@ -83,9 +83,7 @@ export class UserProfileComponent implements OnInit {
     if (this.menuTrigger) {
       this.menuTrigger.closeMenu();
       this.showmodifycontentChange.emit(false);
-    } else {
-      console.error('menuTrigger ist nicht definiert.');
-    }
+    } else this.dialogRef.close();
   }
 
   /**
