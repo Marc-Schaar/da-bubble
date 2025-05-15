@@ -366,3 +366,14 @@ textarea {
     --header-offset: 80px;
   }
 }
+
+.user-profile-dialog-bottom-left {
+  position: fixed !important;
+  top: 75px !important;
+  right: 20px !important;
+  margin: 0 !important;
+  width: 300px;
+  height: auto;
+  border-radius: 12px;
+  z-index: 1000;
+}

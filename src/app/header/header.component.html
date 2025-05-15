@@ -34,13 +34,14 @@
         <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
-        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-          <ng-container *ngIf="showmenu">
-            <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
-            <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
-          </ng-container>
-        </mat-menu>
       </div>
+
+      <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
+        <ng-container *ngIf="showmenu">
+          <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
+          <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
+        </ng-container>
+      </mat-menu>
     </div>
   </div>
 </main>

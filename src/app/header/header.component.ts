@@ -37,7 +37,12 @@ export class HeaderComponent {
    * Opens the User Profile Dialog.
    */
   openUserProfile() {
-    this.matDialog.open(UserProfileComponent);
+    if (!this.navigationService.isMobile) {
+      this.matDialog.open(UserProfileComponent, {
+        panelClass: 'user-profile-dialog-bottom-left',
+        hasBackdrop: false,
+      });
+    }
   }
 
   /**
