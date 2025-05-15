@@ -63,7 +63,6 @@ export class UserProfileComponent implements OnInit {
       return;
     }
     event.stopPropagation();
-    console.log('handleClick');
   }
 
   /**

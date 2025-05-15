@@ -57,7 +57,6 @@ export class ThreadComponent implements OnInit {
       this.currentChannelId = params['reciverId'] || '';
       this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
-      console.log(this.currentChannelId);
 
       await this.getCurrentChannel();
       this.getThreadParentMessage();
@@ -119,7 +118,6 @@ export class ThreadComponent implements OnInit {
       onSnapshot(threadQuery, (snapshot) => {
         this.messages = this.messagesService.processData(snapshot);
         this.userService.scrollToBottom(this.chatContentRef.nativeElement);
-        console.log('scrollen');
       });
     }
   }

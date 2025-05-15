@@ -83,7 +83,7 @@ export class AddMemberComponent implements OnInit {
         .filter((user) => !this.members.some((member) => member.uid === user.id))
         .filter((user) => !this.members.some((member) => member.id === user.id))
         .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
-        .filter((user) => !user.isAnonymous)
+        .filter((user) => !user.isAnonymous);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
     }
@@ -172,8 +172,6 @@ export class AddMemberComponent implements OnInit {
    */
   removeUserFromBar(index: number) {
     this.filteredUsers.splice(index, 1);
-    console.log(this.users);
-    console.log(this.filteredUsers);
   }
 
   /**
@@ -182,7 +180,6 @@ export class AddMemberComponent implements OnInit {
   refreshBar() {
     const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (refresh) {
-      console.log('refresh');
       refresh.value = '';
     }
   }
@@ -204,8 +201,6 @@ export class AddMemberComponent implements OnInit {
   addUserToBar(index: number) {
     this.users.push(this.selectedUsers[index]);
     this.filterUsers();
-    console.log(this.users);
-    console.log(this.filteredUsers);
   }
 
   /**
@@ -217,7 +212,6 @@ export class AddMemberComponent implements OnInit {
       await updateDoc(channelRef, {
         member: arrayUnion(...this.selectedUsers),
       });
-      console.log('Benutzer erfolgreich hinzugefügt:', this.selectedUsers);
       this.selectedUsers = [];
     } catch (error) {
       console.error('Fehler beim Hinzufügen:', error);

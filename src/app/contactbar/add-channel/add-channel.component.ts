@@ -81,7 +81,7 @@ export class AddChannelComponent implements OnInit {
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-        .filter((user) => !user.isAnonymous)
+        .filter((user) => !user.isAnonymous);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
@@ -111,7 +111,7 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   // async loadChannel() {
-  //   this.channels = this.channelmodule.getChannels();    
+  //   this.channels = this.channelmodule.getChannels();
   // }
 
   /**
@@ -199,8 +199,7 @@ export class AddChannelComponent implements OnInit {
       const channelNameExists = this.channels.some((channel: { name: string }) => channel.name === this.channelName);
       if (channelNameExists) {
         this.isNameTaken = true;
-      }
-      else {
+      } else {
         this.addChannel();
         this.channelmodule.showFeedback('Channel erstellt');
         this.selectChannelMember = true;
@@ -268,7 +267,6 @@ export class AddChannelComponent implements OnInit {
         await updateDoc(targetChannelRef, {
           member: mainChannelData['member'],
         });
-        console.log('Alle Mitglieder erfolgreich hinzugefügt.');
       } else {
         console.error('Fehler: Ein oder beide Channel existieren nicht.');
       }
