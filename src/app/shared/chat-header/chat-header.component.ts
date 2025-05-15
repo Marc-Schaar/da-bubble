@@ -15,6 +15,9 @@ export class ChatHeaderComponent {
   public userService: UserService = inject(UserService);
   private bottomSheet = inject(MatBottomSheet);
 
+  /**
+   * Opens the user menu as a bottom sheet.
+   */
   openUserMenu() {
     this.bottomSheet.open(UserMenuComponent);
   }
