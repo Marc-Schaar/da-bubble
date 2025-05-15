@@ -8,7 +8,6 @@ import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { MatIcon } from '@angular/material/icon';
 import { DialogRef } from '@angular/cdk/dialog';
-import { Optional } from '@angular/core';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,7 +21,7 @@ export class UserProfileComponent implements OnInit {
   userService = inject(UserService);
   navigationService = inject(NavigationService);
   auth = getAuth();
-  private dialogRef = inject(DialogRef, { optional: true });
+  private dialogRef = inject(DialogRef);
   user: User | null = null;
   displayName: string | null = null;
   email: string | null = null;
@@ -79,7 +78,7 @@ export class UserProfileComponent implements OnInit {
    * Closes the Profile Dialog.
    */
   closeMenu() {
-    this.dialogRef?.close();
+    this.dialogRef.close();
   }
 
   /**
