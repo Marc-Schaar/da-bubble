@@ -10,48 +10,77 @@ export class SearchService {
   private authService: Auth = inject(Auth);
   private userService: UserService = inject(UserService);
   private tagType: 'channel' | 'user' | null = null;
-
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
   private isChannel: boolean | null = false;
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
   private searchInComponent: 'header' | 'textarea' | null = null;
-
   private input: string = '';
 
+  /**
+   * Returns whether the textarea suggestion list is open.
+   */
   public getListBoolean(): boolean {
     return this.textareaListOpen;
   }
 
+  /**
+   * Returns whether the header suggestion list is open.
+   */
   public getHeaderListBoolean(): boolean {
     return this.headerListOpen;
   }
 
+  /**
+   * Returns whether the current tagType is a channel.
+   */
   public getChannelBoolean(): boolean | null {
     return this.isChannel;
   }
 
+  /**
+   * Returns the current autocomplete result list.
+   */
   public getCurrentList(): any[] {
     return this.currentList;
   }
 
+  /**
+   * Closes the currently active suggestion list.
+   */
   public closeList(): void {
     this.searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
   }
 
+  /**
+   * Stops observing input to prevent triggering further search actions.
+   */
   public stopObserveInput(): void {
     this.isResultTrue = true;
   }
 
+  /**
+   * Checks if the current user is anonymous.
+   * @returns {boolean | undefined} True if anonymous, false if not, or undefined if no user is signed in.
+   */
   private isAnonymous(): boolean | undefined {
     return this.authService.currentUser?.isAnonymous;
   }
 
+  /**
+   * Retrieves the UID of the current user.
+   * @returns {string | undefined} The user ID, or undefined if no user is signed in.
+   */
   private userId(): string | undefined {
     return this.authService.currentUser?.uid;
   }
 
+  /**
+   * Observes user input and determines whether to search for users or channels.
+   * @param input - The input string entered by the user.
+   * @param searchInComponent - The context where the input comes from: 'textarea' or 'header'.
+   */
   public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
     this.headerListOpen = false;
     this.textareaListOpen = false;
@@ -62,10 +91,17 @@ export class SearchService {
     else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
   }
 
+  /**
+   * Determines if the current input is a tagless search in the header.
+   * @returns {boolean} True if it's a no-tag header search, otherwise false.
+   */
   private isNoTagSearch() {
     return this.searchInComponent === 'header' && this.tagType == null && this.input.length > 0;
   }
 
+  /**
+   * Handles search when no tag is used, searching for both users and channels.
+   */
   private searchWithoutTag() {
     let userResults = this.startSearch(this.input, 'user');
     let channelResults = this.startSearch(this.input, 'channel');
@@ -75,6 +111,9 @@ export class SearchService {
     this.isChannel = null;
   }
 
+  /**
+   * Handles search when a tag is detected (either '@' for users or '#' for channels).
+   */
   private searchWithTag() {
     switch (this.tagType) {
       case 'channel':
@@ -91,6 +130,9 @@ export class SearchService {
     }
   }
 
+  /**
+   * Handles channel tag search logic.
+   */
   private caseChannel() {
     let searchInput: string | null = null;
     searchInput = this.input.split('#')[1];
@@ -101,6 +143,9 @@ export class SearchService {
     if (!searchInput) this.tagType = null;
   }
 
+  /**
+   * Handles user tag search logic.
+   */
   private caseUser() {
     let searchInput: string | null = null;
     searchInput = this.input.split('@')[1];
@@ -111,6 +156,9 @@ export class SearchService {
     if (!searchInput) this.tagType = null;
   }
 
+  /**
+   * Resets the current suggestion list and UI flags.
+   */
   public resetList() {
     this.currentList = [];
     this.isChannel = false;
@@ -118,11 +166,21 @@ export class SearchService {
     this.headerListOpen = false;
   }
 
+  /**
+   * Determines the tag type in the input string (user or channel).
+   * @param input - The input string to analyze.
+   */
   private getTagType(input: string): void {
     if (input.includes('@')) this.tagType = 'user';
     if (input.includes('#')) this.tagType = 'channel';
   }
 
+  /**
+   * Searches channel members by name.
+   * @param searchInput - The lowercase input string to search for.
+   * @param channelsToSearch - The list of channels to search within.
+   * @returns {string[]} A list of matching members.
+   */
   private searchChannelMembersByName(searchInput: string, channelsToSearch: any): string[] {
     let foundMembers: any[] = [];
     channelsToSearch.forEach((channel: { data?: { member?: any[] } }) => {
@@ -131,10 +189,15 @@ export class SearchService {
 
       foundMembers = [...foundMembers, ...matchingMembers];
     });
-
     return foundMembers;
   }
 
+  /**
+   * Searches channels by name.
+   * @param searchInput - The lowercase input string to search for.
+   * @param channelsToSearch - The list of channels to search within.
+   * @returns {string[]} A list of matching channels.
+   */
   private searchChannel(searchInput: string, channelsToSearch: any) {
     let foundChannels: any = [];
     foundChannels = channelsToSearch.filter((channel: { data?: { name?: string } }) =>
@@ -144,6 +207,12 @@ export class SearchService {
     return foundChannels;
   }
 
+  /**
+   * Starts a search based on the given input and search type (channel or user).
+   * @param input - The input string to search for.
+   * @param searchCollection - The type of entity to search for ('channel' or 'user').
+   * @returns {string[]} A list of matched results.
+   */
   public startSearch(input: string, searchCollection?: 'channel' | 'user'): string[] {
     let searchInput = input.trim().toLowerCase() || '';
     let result: any[] = [];
@@ -154,18 +223,16 @@ export class SearchService {
         );
     if (searchCollection === 'channel') {
       result = this.searchChannel(searchInput, channelsToSearch);
-      // this.isResultTrue = true;
     } else if (searchCollection === 'user') {
       result = this.searchChannelMembersByName(searchInput, channelsToSearch);
-      //  this.isResultTrue = true;
     }
 
     return result;
   }
 
   /**
-   * Handles autocomplete logic for mentions and channels in the input.
-   * @param type - Optional preset string to insert
+   * Opens the appropriate autocomplete list based on the tag type ('@' or '#').
+   * @param type - Optional preset string to determine the tag context.
    */
   public getList(type?: string): void {
     this.textareaListOpen = true;

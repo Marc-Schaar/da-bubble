@@ -22,7 +22,6 @@ export class UserService {
   currentIndex$ = this.indexSource.asObservable();
   private contactbarToggleSubject = new Subject<void>();
   contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
-
   private openProfile = new Subject<void>();
   openProfile$ = this.openProfile.asObservable();
   private showFeedbackSubject = new Subject<string>();
@@ -32,10 +31,13 @@ export class UserService {
   channels: any = [];
   messages: any = [];
   currentChannel: any;
-  //Neu ab hier
-
   public currentUser: any;
 
+  /**
+   * Creates an instance of the class.
+   * Initializes by setting the current user and loading channels and users.
+   * @param route - ActivatedRoute to access route parameters and data.
+   */
   constructor(private route: ActivatedRoute) {
     this.setCurrentUser();
     this.getChannels();
