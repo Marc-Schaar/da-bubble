@@ -73,7 +73,6 @@ export class ContactbarComponent implements OnInit {
     try {
       this.users = await this.firestoreService.getUsers();
     } catch (error) {
-      console.error('Error loading users in component:', error);
     }
   }
 

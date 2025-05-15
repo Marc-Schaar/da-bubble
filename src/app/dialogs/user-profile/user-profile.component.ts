@@ -97,7 +97,6 @@ export class UserProfileComponent implements OnInit {
         this.displayName = this.newname;
         this.modifyinfos = false;
       } catch (error) {
-        console.error('Error updating profile:', error);
       }
     }
   }

@@ -36,7 +36,6 @@ export class ForgotpasswordComponent implements OnInit {
     this.isOverlayActive = true;
     await sendPasswordResetEmail(this.auth, this.user.email)
       .then(() => {
-        console.info('send');
       })
       .catch((error) => {
         const errorCode = error.code;

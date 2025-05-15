@@ -65,7 +65,6 @@ export class NewmessageComponent {
     this.currentUserId = this.userService.currentUser.uid;
 
     if (!this.currentUser) {
-      console.error('currentUser ist nicht definiert!');
       return;
     }
   }
