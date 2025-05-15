@@ -31,11 +31,9 @@ export class AddMemberComponent implements OnInit {
   filteredMembers: any[] = [];
   addMemberWindow: boolean = false;
   readonly dialog = inject(MatDialog);
-
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
-  // reciepentId: string | null = null;
 
   /**
    * Constructor for AddMemberComponent. Initializes the component with data passed
