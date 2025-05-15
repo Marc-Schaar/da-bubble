@@ -190,8 +190,8 @@ button {
     position: absolute;
     z-index: 10;
     bottom: 110%;
-    left: 0;
-    transform: translateX(-50%);
+    right: 0;
+    // transform: translateX(-50%);
     transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
     white-space: nowrap;
     font-size: 0.8rem;
