@@ -106,15 +106,6 @@ export class AddChannelComponent implements OnInit {
   }
 
   /**
-   * Loads the channels from the user service.
-   *
-   * @returns {void}
-   */
-  // async loadChannel() {
-  //   this.channels = this.channelmodule.getChannels();
-  // }
-
-  /**
    * Adds a user to the selection list from the filtered users.
    *
    * @param {number} index - The index of the user to add to the selection.

@@ -1,5 +1,3 @@
-/* Angular Material Radio Button Custom Styles */
-
 :root {
   --md-sys-color-primary: #006a6a;
   --md-radio-icon-size: 16px;
@@ -7,13 +5,13 @@
 ::ng-deep .custom-radio .mat-radio-outer-circle {
   border-color: var(
     --md-sys-color-primary
-  ) !important; /* Ändert den äußeren Kreis */
+  ) !important; 
 }
 
 ::ng-deep .custom-radio .mat-radio-inner-circle {
   background-color: var(
     --md-sys-color-primary
-  ) !important; /* Ändert den inneren Punkt */
+  ) !important; 
 }
 
 .main {
@@ -324,7 +322,6 @@
   button {
     width: 125px;
     height: 49px;
-    // padding: 12px 25px 12px 25px;
     background-color: var(--dark-purple);
     border-radius: 25px;
     color: white;

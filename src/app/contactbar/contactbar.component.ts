@@ -27,7 +27,6 @@ export class ContactbarComponent implements OnInit {
   public navigationService: NavigationService = inject(NavigationService);
   private firestore = inject(Firestore);
   public searchService: SearchService = inject(SearchService);
-
   public channels: any = [];
   public allChannels: any = [];
   public users: any = [];
@@ -36,12 +35,10 @@ export class ContactbarComponent implements OnInit {
   public currentArray: any[] = [];
   isClicked = false;
   public currentReceiver: any;
-
   public userID: string | undefined = '';
   public currentChannel: string | null = null;
   public input: string = '';
   public currentLink: string = '';
-
   public addChannelWindow: boolean = false;
   public active: boolean = false;
   public message: boolean = false;
