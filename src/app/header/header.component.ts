@@ -30,10 +30,8 @@ export class HeaderComponent {
   public searchService: SearchService = inject(SearchService);
   private matDialog: MatDialog = inject(MatDialog);
   private bottomSheet = inject(MatBottomSheet);
-
   showBackground: boolean = false;
   isProfileCard: boolean = false;
-
   public input: string = '';
 
   /**
