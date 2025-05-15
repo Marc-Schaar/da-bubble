@@ -67,8 +67,6 @@ export class SearchService {
   }
 
   private searchWithoutTag() {
-    console.log('ohne tag suche');
-
     let userResults = this.startSearch(this.input, 'user');
     let channelResults = this.startSearch(this.input, 'channel');
     this.currentList = [...userResults, ...channelResults];
