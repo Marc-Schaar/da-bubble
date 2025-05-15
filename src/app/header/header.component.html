@@ -45,4 +45,7 @@
   </div>
 </main>
 
-<div *ngIf="showBackground" class="background"></div>
+@if (showBackground) {
+<div (click)="onMenuClosed()" class="background"></div>
+
+}

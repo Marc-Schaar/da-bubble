@@ -50,6 +50,7 @@ export class HeaderComponent {
    * Handles the menu closure and sets the background visibility to false.
    */
   public onMenuClosed() {
+    this.matDialog.closeAll();
     this.showBackground = false;
   }
 
