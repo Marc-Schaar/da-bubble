@@ -24,16 +24,13 @@ export class MessageTemplateComponent implements OnInit {
   private router: Router = inject(Router);
   private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
-
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
   showAllReactions: boolean = false;
-
   userId: string | undefined = '';
   inputEdit: string = '';
-
   emojis: string[] = [
     'emoji _nerd face_',
     'emoji _person raising both hands in celebration_',
@@ -48,18 +45,25 @@ export class MessageTemplateComponent implements OnInit {
     nerd: '\u{1F913}',
   };
   public preSelectedEmojiList = Object.values(this.preSelectedEmojis);
-
   @Input() message: any;
   @Input() currentChannelId: string = '';
   @Input() parentMessageId: string = '';
   @Input() isThread: boolean = false;
   @Input() channelType: 'direct' | 'channel' | 'thread' | null = null;
 
+  /**
+   * Initializes the component by setting the current user ID
+   * and loading the emoji database.
+   */
   constructor() {
     this.userId = this.userService.auth.currentUser?.uid;
     this.emojiDataBase = emojiData;
   }
 
+  /**
+   * Lifecycle hook called after component initialization.
+   * Ensures the navigation service is initialized.
+   */
   ngOnInit(): void {
     if (!this.navigationService.isInitialize) {
       this.navigationService.initialize();
@@ -249,6 +253,13 @@ export class MessageTemplateComponent implements OnInit {
     });
   }
 
+  /**
+   * Retrieves a user document from Firestore by matching the full name.
+   * Queries the 'users' collection where 'fullname' equals the provided message name.
+   *
+   * @returns A promise that resolves to the user data object including the document ID,
+   *          or null if no matching user is found.
+   */
   private async getReceiverIdByName() {
     const usersCollection = this.fireService.getCollectionRef('users');
     const q = query(usersCollection!, where('fullname', '==', this.message.name));
