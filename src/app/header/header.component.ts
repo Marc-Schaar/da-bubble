@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user/shared.service';
 import { Auth } from '@angular/fire/auth';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from '../dialogs/user-profile/user-profile.component';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../services/navigation/navigation.service';
 import { AuthService } from '../services/auth/auth.service';

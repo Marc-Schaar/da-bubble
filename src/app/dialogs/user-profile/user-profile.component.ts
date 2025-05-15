@@ -5,10 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { getAuth, User, updateProfile } from 'firebase/auth';
 import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { MatIcon } from '@angular/material/icon';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIcon],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
@@ -18,7 +21,9 @@ export class UserProfileComponent implements OnInit {
   @Input() showmodifycontent: boolean = false;
   @Output() showmodifycontentChange = new EventEmitter<boolean>();
   userService = inject(UserService);
+  navigationService = inject(NavigationService);
   auth = getAuth();
+  private dialogRef: DialogRef = inject(DialogRef);
   user: User | null = null;
   displayName: string | null = null;
   email: string | null = null;

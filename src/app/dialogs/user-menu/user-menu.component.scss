@@ -1,0 +1,27 @@
+div {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px 21px;
+  gap: 20px;
+
+  > span {
+    align-self: center;
+    width: 62px;
+    height: 6px;
+    border-radius: 23px;
+    background: rgba(217, 217, 217, 1);
+  }
+}
+
+button {
+  background: unset;
+  border: unset;
+  display: flex;
+  align-items: center;
+  max-width: fit-content;
+  gap: 15px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: "Nunito";
+}

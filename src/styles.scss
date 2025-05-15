@@ -100,10 +100,10 @@ app-footer {
   }
 }
 
-.cdk-global-overlay-wrapper {
-  justify-content: center !important;
-  align-items: center !important;
-}
+// .cdk-global-overlay-wrapper {
+//   justify-content: center !important;
+//   align-items: center !important;
+// }
 
 .fullscreen.cdk-overlay-pane {
   margin: unset !important;
@@ -316,6 +316,12 @@ textarea {
 
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.mat-bottom-sheet-container {
+  border-radius: 20px 20px 0 0;
+  background-color: white;
+  padding: 0 !important ;
 }
 
 .guest-btn {

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, query, orderBy, collection, doc } from '@angular/fire/firestore';
 import { FireServiceService } from '../services/firebase/fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user/shared.service';
 import { ChannelEditComponent } from './channel-edit/channel-edit.component';
@@ -19,6 +19,7 @@ import { NavigationService } from '../services/navigation/navigation.service';
 import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../shared/message/message-template.component';
+import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
 
 @Component({
   selector: 'app-chat-content',
@@ -28,12 +29,12 @@ import { MessageTemplateComponent } from '../shared/message/message-template.com
     CommonModule,
     FormsModule,
     MatSidenavModule,
-    RouterLink,
     MatMenuModule,
     MatDialogModule,
     DividerTemplateComponent,
     TextareaTemplateComponent,
     MessageTemplateComponent,
+    ChatHeaderComponent,
   ],
   templateUrl: './chat-channel.component.html',
   styleUrl: './chat-channel.component.scss',

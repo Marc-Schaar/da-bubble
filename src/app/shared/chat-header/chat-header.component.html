@@ -1,0 +1,14 @@
+<header class="justify-sb full-width">
+  <div class="align-center">
+    <button>
+      <a [routerLink]="['/contactbar']" routerLinkActive="router-link-active">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </a>
+    </button>
+    <img src="/img/workspace-logo.svg" alt="Logo" />
+  </div>
+
+  <button (click)="openUserMenu()">
+    <img [src]="this.userService.auth.currentUser?.photoURL" alt="this.userService.auth.currentUser?.displayName" />
+  </button>
+</header>

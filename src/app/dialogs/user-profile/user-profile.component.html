@@ -16,7 +16,9 @@
           [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }"
           (click)="modify()"
         >
-          Bearbeiten
+          @if (navigationService.isMobile) {
+          <mat-icon>edit</mat-icon>
+          } @else { Bearbeiten}
         </button>
         <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
       </div>
