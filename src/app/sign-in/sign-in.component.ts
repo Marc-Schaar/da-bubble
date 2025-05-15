@@ -27,6 +27,10 @@ export class SignInComponent implements OnInit {
   navigationService: NavigationService = inject(NavigationService);
   user: User = new User();
 
+  /**
+   * Lifecycle hook that runs on component initialization.
+   * Resets the navigation service's initialization status to false.
+   */
   ngOnInit() {
     this.navigationService.isInitialize = false;
   }
