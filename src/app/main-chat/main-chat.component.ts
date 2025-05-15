@@ -33,17 +33,13 @@ export class MainChatComponent implements OnInit, AfterViewInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
-
   public readonly navigationService: NavigationService = inject(NavigationService);
   private readonly userService = inject(UserService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
-
   public feedbackVisible: boolean = false;
   public barOpen: boolean = true;
   public isChatOverlayVisible: boolean = false;
-
-  constructor() {}
 
   /**
    * Lifecycle hook that is called when the component is initialized.
@@ -70,6 +66,11 @@ export class MainChatComponent implements OnInit, AfterViewInit {
     this.subscriptions.push(this.userService.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
+  /**
+   * Angular lifecycle hook that is called after the component's view has been fully initialized.
+   *
+   * If the current channel type is 'thread', it triggers the thread view to open.
+   */
   ngAfterViewInit(): void {
     if (this.navigationService.channelType === 'thread') this.navigationService.toggleThread('open');
   }
