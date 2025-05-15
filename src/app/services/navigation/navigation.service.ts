@@ -14,21 +14,16 @@ import { Location } from '@angular/common';
 export class NavigationService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-
   private auth: Auth = inject(Auth);
-
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
   screenWidth$ = this.screenWidthSubject.asObservable();
-
   private threadToggleSubject = new Subject<string>();
   threadToggle$ = this.threadToggleSubject.asObservable();
-
   private queryParamsSubscription?: Subscription;
   private screenWidthSubscription?: Subscription;
   private resizeSubscription?: Subscription;
-
   public isMobile: boolean = this.checkScreenWidth();
   public isInitialize: boolean = false;
   public reciverId: string = '';
@@ -62,6 +57,10 @@ export class NavigationService {
     } else return;
   }
 
+  /**
+   * Handles the display logic for different channel types.
+   * Navigates to the contact bar on mobile if the channel type is unrecognized.
+   */
   handleComponents() {
     switch (this.channelType) {
       case 'direct':

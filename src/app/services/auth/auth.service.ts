@@ -22,6 +22,14 @@ export class AuthService {
   error = false;
   isLoading = false;
 
+  /**
+   * Logs in a user using email and password.
+   * Sets the user online and redirects to the dashboard on success.
+   * Sets an error flag on failure.
+   *
+   * @param email - User's email address
+   * @param password - User's password
+   */
   public async logInWithEmailAndPassword(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
@@ -34,6 +42,12 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs in a user with Google authentication.
+   * Updates user profile and sets online status.
+   * Creates a user document in Firestore if needed.
+   * Sets an error flag on failure.
+   */
   public async logInWithGoogle() {
     try {
       const result = await signInWithPopup(this.auth, this.googleAuthProvider);
@@ -58,6 +72,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs in the user anonymously as a guest.
+   * Creates a guest profile in Firestore and redirects to the dashboard.
+   * Sets loading state and logs errors if any occur.
+   */
   public async loginAsGuest() {
     this.isLoading = true;
     try {
@@ -84,6 +103,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * Registers a new user with email and password.
+   * Updates user profile and creates the user document in Firestore.
+   * Adds the user to a default channel.
+   *
+   * @param user - The user data for registration
+   */
   public async register(user: User): Promise<void> {
     const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.password);
     const firebaseUser = userCredential.user;
@@ -111,6 +137,10 @@ export class AuthService {
     });
   }
 
+  /**
+   * Logs out the currently authenticated user.
+   * Updates online status, deletes anonymous user data, and redirects to the login page.
+   */
   public async logOut() {
     this.navigationService.isInitialize = false;
     const currentUser = this.userService.getUser();

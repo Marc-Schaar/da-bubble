@@ -40,6 +40,11 @@ export class MainComponentComponent implements OnInit {
     this.shareddata.login = true;
   }
 
+  /**
+   * Disables the introductory view by setting a flag in local storage.
+   *
+   * Sets 'showIntro' to 'false' in localStorage to prevent the intro from showing again.
+   */
   turnOffIntro() {
     localStorage.setItem('showIntro', 'false');
   }
