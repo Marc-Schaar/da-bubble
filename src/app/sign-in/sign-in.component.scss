@@ -26,6 +26,7 @@
   color: var(--text-grey);
 
   input {
+    border-radius: 100px;
     font-size: 1rem;
     width: 100%;
     padding: 1.125em 0 1.125em 3.75em;
@@ -91,8 +92,7 @@
     line-height: 19.1px;
     color: #ed1e79;
     width: 100%;
-    display: flex
-;
+    display: flex;
   }
 
   > div:nth-child(2) {
