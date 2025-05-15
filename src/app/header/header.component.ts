@@ -12,6 +12,8 @@ import { AuthService } from '../services/auth/auth.service';
 import { SearchService } from '../services/search/search.service';
 import { SearchResultComponent } from '../shared/search-result/search-result.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UserMenuComponent } from '../dialogs/user-menu/user-menu.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +29,7 @@ export class HeaderComponent {
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
   private matDialog: MatDialog = inject(MatDialog);
+  private bottomSheet = inject(MatBottomSheet);
 
   showBackground: boolean = false;
   isProfileCard: boolean = false;
@@ -36,33 +39,38 @@ export class HeaderComponent {
   /**
    * Opens the User Profile Dialog.
    */
-  openUserProfile() {
-    if (!this.navigationService.isMobile) {
-      this.matDialog.open(UserProfileComponent, {
-        panelClass: 'user-profile-dialog-bottom-left',
-        hasBackdrop: false,
-      });
-    }
+  public openUserProfile() {
+    this.matDialog.open(UserProfileComponent, {
+      panelClass: 'user-profile-dialog-bottom-left',
+      hasBackdrop: false,
+    });
   }
 
   /**
    * Handles the menu closure and sets the background visibility to false.
    */
-  onMenuClosed() {
+  public onMenuClosed() {
     this.showBackground = false;
   }
 
   /**
    * Displays the menu and sets the background visibility to true.
    */
-  showmenu() {
+  public showmenu() {
     this.showBackground = true;
+  }
+
+  /**
+   * Displays the mobile menu as Bottomsheet.
+   */
+  public showMenuMobile() {
+    this.bottomSheet.open(UserMenuComponent);
   }
 
   /**
    * Signs out the current user, updates the online status, and redirects to the login page.
    */
-  signOut() {
+  public signOut() {
     this.authService.logOut();
   }
 }

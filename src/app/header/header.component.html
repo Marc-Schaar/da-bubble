@@ -27,20 +27,19 @@
     <a routerLink="/signup">Konto erstellen</a>
   </div>
   <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
-    <div (click)="navigationService.isMobile ? showmenu() : null" [matMenuTriggerFor]="navigationService.isMobile ? beforeMenu : null">
+    <div
+      (click)="navigationService.isMobile ? showMenuMobile() : showmenu()"
+      [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"
+    >
       <span>{{ auth.currentUser?.displayName }}</span>
       <img [src]="auth.currentUser?.photoURL || 'img/profilephoto.png'" alt="" />
-      <div>
-        <button class="menu-button" (click)="showmenu()" mat-icon-button [matMenuTriggerFor]="beforeMenu">
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </button>
-      </div>
+      @if (!navigationService.isMobile) {
+      <mat-icon>keyboard_arrow_down</mat-icon>
+      }
 
       <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-        <ng-container *ngIf="showmenu">
-          <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
-          <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
-        </ng-container>
+        <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
+        <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
       </mat-menu>
     </div>
   </div>
