@@ -19,8 +19,6 @@ import { Optional } from '@angular/core';
 export class UserProfileComponent implements OnInit {
   newname: string = '';
   @Input() menuTrigger!: MatMenuTrigger;
-  @Input() showmodifycontent: boolean = false;
-  @Output() showmodifycontentChange = new EventEmitter<boolean>();
   userService = inject(UserService);
   navigationService = inject(NavigationService);
   auth = getAuth();
@@ -78,13 +76,10 @@ export class UserProfileComponent implements OnInit {
   }
 
   /**
-   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
+   * Closes the Profile Dialog.
    */
   closeMenu() {
-    if (this.menuTrigger) {
-      this.menuTrigger.closeMenu();
-      this.showmodifycontentChange.emit(false);
-    } else this.dialogRef?.close();
+    this.dialogRef?.close();
   }
 
   /**
