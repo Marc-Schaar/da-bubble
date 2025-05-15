@@ -36,17 +36,9 @@
         </button>
         <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
           <ng-container *ngIf="showmenu">
-            <button *ngIf="!showmodifycontent" (click)="show()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
-              Profil
-            </button>
-            <button *ngIf="!showmodifycontent" class="menu-box-btn" mat-menu-item (click)="signOut()">Log out</button>
+            <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
+            <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
           </ng-container>
-
-          <app-user-profile
-            [menuTrigger]="menuTriggerRef"
-            [(showmodifycontent)]="showmodifycontent"
-            *ngIf="showmodifycontent"
-          ></app-user-profile>
         </mat-menu>
       </div>
     </div>

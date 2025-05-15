@@ -11,10 +11,11 @@ import { NavigationService } from '../services/navigation/navigation.service';
 import { AuthService } from '../services/auth/auth.service';
 import { SearchService } from '../services/search/search.service';
 import { SearchResultComponent } from '../shared/search-result/search-result.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-header',
-  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, UserProfileComponent, FormsModule, SearchResultComponent],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -25,18 +26,18 @@ export class HeaderComponent {
   public userService = inject(UserService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
+  private matDialog: MatDialog = inject(MatDialog);
 
   showBackground: boolean = false;
-  showmodifycontent: boolean = false;
   isProfileCard: boolean = false;
 
   public input: string = '';
 
   /**
-   * Increments the `opened` counter and sets `showmodifycontent` to true to display the modification content.
+   * Opens the User Profile Dialog.
    */
-  show() {
-    this.showmodifycontent = true;
+  openUserProfile() {
+    this.matDialog.open(UserProfileComponent);
   }
 
   /**
@@ -50,7 +51,6 @@ export class HeaderComponent {
    * Displays the menu and sets the background visibility to true.
    */
   showmenu() {
-    this.showmodifycontent = false;
     this.showBackground = true;
   }
 
