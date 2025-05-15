@@ -66,45 +66,4 @@ export class AvatarselectionComponent implements OnInit {
       this.isOverlayActive = false;
     }
   }
-  //   this.isOverlayActive = true;
-  //   await createUserWithEmailAndPassword(this.auth, this.user.email, this.user.password)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-  //       return updateProfile(user, {
-  //         displayName: this.user.fullname,
-  //         photoURL: this.user.profilephoto,
-  //       })
-  //         .then(() => {
-  //           const userDocRef = doc(this.firestore, `users/${this.user.fullname}`);
-  //           return setDoc(userDocRef, {
-  //             fullname: this.user.fullname,
-  //             email: this.user.email,
-  //             profilephoto: this.user.profilephoto,
-  //             online: false,
-  //           });
-  //         })
-  //         .then(() => {
-  //           const userDocRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz/`);
-  //           return updateDoc(userDocRef, {
-  //             member: arrayUnion({
-  //               fullname: this.user.fullname,
-  //               email: this.user.email,
-  //               profilephoto: this.user.profilephoto,
-  //               online: false,
-  //             }),
-  //           });
-  //         });
-  //     })
-  //     .then(() => {
-  //       setTimeout(() => {
-  //         this.shareddata.redirectiontologinpage();
-  //       }, 2000);
-  //     })
-  //     .catch((error) => {
-  //       console.log('Error:', error);
-  //       console.log('Email:', this.user.email);
-  //       console.log('Password:', this.user.password);
-  //       this.isOverlayActive = false;
-  //     });
-  // }
 }
