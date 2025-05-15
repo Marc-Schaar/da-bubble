@@ -19,15 +19,12 @@ import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
-
   private firestore: Firestore = inject(Firestore);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private messagesService: MessagesService = inject(MessagesService);
   public userService: UserService = inject(UserService);
   public navigationService: NavigationService = inject(NavigationService);
-
   public currentUser: any;
-
   public userId: string = '';
   public currentChannel: any;
   public currentChannelId: string = '';
@@ -35,10 +32,8 @@ export class ThreadComponent implements OnInit {
   public inputEdit: string = '';
   public parentMessageData: any = null;
   public editingMessageId: number | null = null;
-
   public listOpen: boolean = false;
   public isEditing: boolean = false;
-
   public messages: any = [];
   public reactions: any = [];
 
