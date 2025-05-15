@@ -97,7 +97,6 @@ export class MessageTemplateComponent implements OnInit {
         this.fireService.updateMessage(messageRef, this.inputEdit);
         this.inputEdit = '';
       } catch (error) {
-        console.error('Fehler beim Aktualisieren der Nachricht:', error);
       }
     }
   }

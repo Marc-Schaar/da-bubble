@@ -37,7 +37,6 @@ export class FireServiceService {
         ...doc.data(),
       }));
     } catch (error) {
-      console.error('Error loading users:', error);
       throw error;
     }
   }
@@ -57,7 +56,6 @@ export class FireServiceService {
         ...doc.data(),
       }));
     } catch (error) {
-      console.error('Error loading channels:', error);
       throw error;
     }
   }

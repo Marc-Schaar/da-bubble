@@ -100,7 +100,6 @@ export class AddChannelComponent implements OnInit {
         return { ...doc.data(), uid: doc.id };
       });
     } catch (error) {
-      console.error('Error loading users:', error);
       this.users = [];
     }
   }
@@ -232,10 +231,8 @@ export class AddChannelComponent implements OnInit {
         await updateDoc(targetChannelRef, { member: arrayUnion(...this.selectedUsers) });
         this.selectedUsers = [];
       } else {
-        console.error('Fehler: Der Channel existiert nicht.');
       }
     } catch (error) {
-      console.error('Fehler beim Hinzufügen der ausgewählten Benutzer:', error);
     }
     this.dialogRef.close();
   }
@@ -259,10 +256,8 @@ export class AddChannelComponent implements OnInit {
           member: mainChannelData['member'],
         });
       } else {
-        console.error('Fehler: Ein oder beide Channel existieren nicht.');
       }
     } catch (error) {
-      console.error('Fehler beim Hinzufügen der Benutzer:', error);
     }
     this.dialogRef.close();
   }
@@ -277,7 +272,6 @@ export class AddChannelComponent implements OnInit {
     const descriptionValue = channelDescriptionElement ? channelDescriptionElement.value : '';
     const currentUserAuth = this.auth.currentUser;
     if (!currentUserAuth) {
-      console.error('Fehler: Kein Benutzer eingeloggt.');
       this.channelmodule.showFeedback('Fehler: Sie müssen eingeloggt sein.');
       return;
     }
@@ -305,7 +299,6 @@ export class AddChannelComponent implements OnInit {
       this.channelRef = channelRef.id;
       this.channelmodule.showFeedback('Channel erstellt');
     } catch (error) {
-      console.error('Fehler beim Erstellen des Channels:', error);
       this.channelmodule.showFeedback('Fehler beim Erstellen des Channels.');
     }
   }

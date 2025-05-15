@@ -97,7 +97,6 @@ export class AuthService {
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
-      console.error('Fehler beim Update des Profils:', error);
     } finally {
       this.isLoading = false;
     }
