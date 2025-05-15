@@ -16,10 +16,16 @@ export class UserMenuComponent {
   private dialogRef: DialogRef = inject(DialogRef);
   private dialog = inject(MatDialog);
 
+  /**
+   * Opens the user profile in a modal dialog.
+   */
   showProfile() {
     this.dialog.open(UserProfileComponent);
   }
 
+  /**
+   * Logs out the user and closes the current dialog.
+   */
   logOut() {
     this.authService.logOut();
     this.dialogRef.close();

@@ -23,6 +23,12 @@ export class DialogReciverComponent {
     this.dialogRef.close();
   }
 
+  /**
+   * Opens a direct chat with the selected receiver.
+   *
+   * Sets the URL for a direct conversation between the current user and the receiver,
+   * shows the direct message view, and closes the user menu.
+   */
   public openReciver() {
     this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
     this.navigationService.showDirect();
