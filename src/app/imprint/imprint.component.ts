@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { UserService } from '../services/user/shared.service';
 import { NavigationService } from '../services/navigation/navigation.service';
+import { MessagesService } from '../services/messages/messages.service';
 
 @Component({
   selector: 'app-imprint',
@@ -12,6 +13,7 @@ import { NavigationService } from '../services/navigation/navigation.service';
 export class ImprintComponent implements OnInit {
   shared = inject(UserService);
   navigate = inject(NavigationService);
+  message = inject(MessagesService)
 
   /**
    * Lifecycle hook that is called when the component is initialized.

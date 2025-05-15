@@ -9,6 +9,7 @@ import { UserService } from '../user/shared.service';
 export class MessagesService {
   private fireService = inject(FireServiceService);
   private userService = inject(UserService);
+  email = 'gianniskarakasidhs@hotmail.com'
 
   /**
    * @description - Retrieves messages from a specific channel and listens for updates.
