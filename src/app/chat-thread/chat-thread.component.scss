@@ -192,19 +192,6 @@ h3 {
   position: relative;
 }
 
-header {
-  background-color: var(--bg-color);
-  padding: 15px;
-
-  img {
-    width: 50px;
-    height: 50px;
-    &:last-child {
-      border-radius: 50%;
-    }
-  }
-}
-
 @media (max-width: 1023px) {
   main {
     margin: 0;

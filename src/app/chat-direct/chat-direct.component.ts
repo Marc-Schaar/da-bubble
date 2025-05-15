@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -29,6 +30,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     TextareaTemplateComponent,
     MatDialogModule,
     MessageTemplateComponent,
+    ChatHeaderComponent,
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',

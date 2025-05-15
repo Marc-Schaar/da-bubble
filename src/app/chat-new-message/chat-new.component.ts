@@ -11,12 +11,13 @@ import { NavigationService } from '../services/navigation/navigation.service';
 import { MessagesService } from '../services/messages/messages.service';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-newmessage',
-  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, RouterLink],
+  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, RouterLink, ChatHeaderComponent],
   templateUrl: './chat-new.component.html',
   styleUrl: './chat-new.component.scss',
 })

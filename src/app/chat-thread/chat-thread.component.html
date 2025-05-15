@@ -1,14 +1,6 @@
-<header class="justify-sb full-width" *ngIf="this.navigationService.isMobile">
-  <div class="align-center">
-    <button (click)="navigationService.showChannel()">
-      <mat-icon>arrow_back_ios</mat-icon>
-    </button>
-    <img src="/img/workspace-logo.svg" alt="Logo" />
-  </div>
-
-  <img [src]="this.userService.auth.currentUser?.photoURL" alt="this.userService.auth.currentUser?.displayName" />
-</header>
-
+@if (this.navigationService.isMobile) {
+<app-chat-header></app-chat-header>
+}
 <main>
   <section>
     <div class="thread-channel-close-button-container">

@@ -9,10 +9,11 @@ import { NavigationService } from '../services/navigation/navigation.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../shared/message/message-template.component';
+import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MatIconModule, TextareaTemplateComponent, MessageTemplateComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, TextareaTemplateComponent, MessageTemplateComponent, ChatHeaderComponent],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
 })
