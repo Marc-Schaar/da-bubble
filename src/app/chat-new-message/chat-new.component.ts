@@ -34,20 +34,16 @@ export class NewmessageComponent {
   public currentReciever: any = null;
   public currentUser: any = null;
   public currentChannel: any = null;
-
   message: string = '';
   input: string = '';
   userID: string = '';
-
   whichMessage: string = '';
   channelType: string = '';
   currentRecieverId: string = '';
   currentUserId: string = '';
   currentChannelId: string = '';
   currentMessages: any[] = [];
-
   isChannel: boolean = false;
-
   isFound: boolean = false;
 
   /**
