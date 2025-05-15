@@ -58,8 +58,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
-
-  //Neu für cleancode
   unsubMessages!: () => void;
   currentUser: User = new User(null);
   public userId: string = '';
@@ -172,8 +170,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh',
       height: '413px',
-
-      // height: 'auto',
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
       position: { top: '200px', right: '150px' },
     });
