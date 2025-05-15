@@ -62,7 +62,6 @@ export class AvatarselectionComponent implements OnInit {
         this.shareddata.redirectiontologinpage();
       }, 2000);
     } catch (error) {
-      console.error('Fehler beim Registrieren:', error);
       this.isOverlayActive = false;
     }
   }

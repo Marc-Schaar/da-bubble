@@ -94,7 +94,6 @@ export class AddMemberComponent implements OnInit {
     try {
       this.users = await this.fireService.getUsers();
     } catch (error) {
-      console.error('Error loading users in component:', error);
     }
   }
 
@@ -212,7 +211,6 @@ export class AddMemberComponent implements OnInit {
       });
       this.selectedUsers = [];
     } catch (error) {
-      console.error('Fehler beim Hinzufügen:', error);
     }
     this.userService.showFeedback('User hinzugefügt');
   }
