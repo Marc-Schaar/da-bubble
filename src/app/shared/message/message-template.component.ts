@@ -247,7 +247,7 @@ export class MessageTemplateComponent implements OnInit {
         recieverId: reciverData?.id,
       },
       width: '400px',
-      panelClass: ['fullscreen'],
+      panelClass: ['center-dialog'],
     });
   }
 

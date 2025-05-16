@@ -110,6 +110,15 @@ app-footer {
 }
 
 .fullscreen {
+  @media (min-width: 1024px) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.center-dialog {
   position: fixed;
   top: 50%;
   left: 50%;
