@@ -126,7 +126,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
         recieverId: this.currentRecieverId,
       },
       width: '400px',
-      position: { top: 'calc(50svh - 310px)' },
+      panelClass: ['fullscreen'],
     });
   }
 

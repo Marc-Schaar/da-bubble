@@ -94,6 +94,11 @@ app-footer {
     align-items: center !important;
   }
 }
+.add-member-dialog {
+  position: absolute;
+  top: 15%;
+  right: 6%;
+}
 
 .add-member-dialog.cdk-overlay-pane {
   margin: unset !important;
@@ -104,10 +109,6 @@ app-footer {
   }
 }
 
-// .cdk-global-overlay-wrapper {
-//   justify-content: center !important;
-//   align-items: center !important;
-// }
 .fullscreen {
   position: fixed;
   top: 50%;

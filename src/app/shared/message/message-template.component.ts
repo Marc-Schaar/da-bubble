@@ -96,8 +96,7 @@ export class MessageTemplateComponent implements OnInit {
       try {
         this.fireService.updateMessage(messageRef, this.inputEdit);
         this.inputEdit = '';
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   }
 
@@ -248,7 +247,7 @@ export class MessageTemplateComponent implements OnInit {
         recieverId: reciverData?.id,
       },
       width: '400px',
-      position: { top: 'calc(50svh - 310px)' },
+      panelClass: ['fullscreen'],
     });
   }
 
