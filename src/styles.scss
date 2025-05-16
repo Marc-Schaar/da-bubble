@@ -108,6 +108,12 @@ app-footer {
 //   justify-content: center !important;
 //   align-items: center !important;
 // }
+.fullscreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .fullscreen.cdk-overlay-pane {
   margin: unset !important;

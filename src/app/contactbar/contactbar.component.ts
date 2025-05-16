@@ -72,8 +72,7 @@ export class ContactbarComponent implements OnInit {
   private async loadUsers() {
     try {
       this.users = await this.firestoreService.getUsers();
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -177,9 +176,9 @@ export class ContactbarComponent implements OnInit {
       width: '872px',
       maxWidth: '95vw',
       height: 'auto',
-      position: { top: '150px', left: '140px' },
+      position: { top: '50%', left: '50%' },
       panelClass: 'fullscreen',
-      data: { channels: this.channels }
+      data: { channels: this.channels },
     });
   }
 }
