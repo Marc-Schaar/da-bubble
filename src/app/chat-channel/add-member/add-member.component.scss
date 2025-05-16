@@ -181,6 +181,7 @@
     width: 290px;
   }
   @media (max-width: 380px) {
+    overflow-x: hidden;
     width: 215px;
   }
   .user-select-cont {

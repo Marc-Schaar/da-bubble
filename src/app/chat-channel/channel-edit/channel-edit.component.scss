@@ -32,6 +32,12 @@
       flex-direction: column;
       padding-left: 15px;
       .member-cont {
+        padding: 4px 20px 4px 20px;
+        cursor: pointer;
+        &:hover {
+          background-color: var(--bg-color);
+          border-radius: 35px;
+        }
         .member {
           display: flex;
           align-items: center;
@@ -258,4 +264,49 @@ textarea {
 
 .green {
   background-color: rgba(146, 200, 62, 1) !important;
+}
+
+
+.add-member-mobile-btn {
+  height: 63.5px;
+  display: flex;
+  align-items: center;
+  .margin-left {
+    margin-left: 8px;
+  }
+}
+
+.select-user {
+  display: none;
+ height: 290px;
+box-shadow: 0px -3px 10px 0px rgba(0, 0, 0, 0.2);
+ flex-direction: column;
+border-top-left-radius: 30px;
+border-top-right-radius: 30px;
+padding: 30px 16px 100px 16px;
+ .close-line {
+    width: 62px;
+    height: 6px;
+    border-radius: 23px;
+    place-self: center;
+    background-color: rgba(217, 217, 217, 1)
+ }
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  span {
+    font-size: 24px;
+    font-weight: 700;
+  }
+}
+  @media (max-width: 1023px) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 3;
+    // transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+  }
 }
