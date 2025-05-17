@@ -278,19 +278,22 @@ textarea {
 .select-user {
   display: none;
   height: 398px;
-  transform: translateY(100%);
   box-shadow: 0px -3px 10px 0px rgba(0, 0, 0, 0.2);
   flex-direction: column;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   padding: 30px 16px 100px 16px;
-  position: absolute;
   bottom: 0px;
   right: 0px;
-  left: 0;
+  left: 0px;
   background: white;
-  transition: transform 0.3s ease-in-out;
   gap: 20px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  position: fixed;
+  @media (max-width: 1023px) {
+  display: flex;
+  }
   .input-cont {
     display: flex;
     flex-direction: column;
@@ -350,14 +353,18 @@ textarea {
     z-index: 3;
   }
 }
+
 .menu-toggle-open {
   display: flex;
-  transform: translateY(0);
+  transform: translateY(0%);
 }
+
 .menu-toggle-close {
-  display: flex;
   transform: translateY(100%);
+  display: flex;
+
 }
+
 .choose-user-bar {
   top: 165px;
   width: 335px;
@@ -410,6 +417,7 @@ textarea {
     }
   }
 }
+
 .mini-profile-cont {
   display: flex;
   gap: 15px;

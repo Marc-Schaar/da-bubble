@@ -34,9 +34,10 @@ export class ChannelEditComponent {
   filteredMembers: any[] = [];
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
   fireService: FireServiceService = inject(FireServiceService);
-
+  @ViewChild('slectUserBar') slectUserBar!: ElementRef;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
+  @ViewChild('addMemberMobileButton') addMemberMobileButton!: ElementRef; // Zugriff auf den Öffnen-Button
 
   /**
    * Constructor for ChannelEditComponent. Initializes the component with data passed
@@ -211,7 +212,7 @@ export class ChannelEditComponent {
     }
   }
 
-    /**
+  /**
    * Adds a user to the selection list for the channel.
    * @param index Index of the user in the filtered list
    */
@@ -225,7 +226,7 @@ export class ChannelEditComponent {
     this.checkButton();
   }
 
-    /**
+  /**
    * Loads current channel members into local state.
    */
   loadMember() {
@@ -252,7 +253,7 @@ export class ChannelEditComponent {
     }
   }
 
-    /**
+  /**
    * Clears the input in the user search bar.
    */
   refreshBar() {
@@ -270,8 +271,11 @@ export class ChannelEditComponent {
     this.filteredUsers.splice(index, 1);
   }
 
+ /**
+  * Opens the add member bar for mobile view.
+  */
   openAddMember() {
-    this.isAddMemberOpen = !this.isAddMemberOpen;
+    this.isAddMemberOpen = true;
   }
 
   /**
@@ -281,6 +285,9 @@ export class ChannelEditComponent {
     this.showUserBar = true;
   }
 
+ /**
+  * Closes the user bar.
+  */
   closeAddMember() {
     this.isAddMemberOpen = false;
   }
@@ -294,7 +301,7 @@ export class ChannelEditComponent {
     );
   }
 
-    /**
+  /**
    * Closes the user bar when clicking outside of it.
    * @param event DOM click event
    */
@@ -307,18 +314,32 @@ export class ChannelEditComponent {
     }
   }
 
-   /**
-     * Adds all selected users to the current channel in Firestore.
-     */
-    async addUserToChannel() {
-      const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
-      try {
-        await updateDoc(channelRef, {
-          member: arrayUnion(...this.selectedUsers),
-        });
-        this.selectedUsers = [];
-      } catch (error) {
-      }
-      this.userService.showFeedback('User hinzugefügt');
+  /**
+   * Closes the add member bar when clicking outside of it.
+   * @param event DOM click event
+   */
+  @HostListener('document:click', ['$event'])
+  closeSelectUser(event: Event) {
+    const targetElement = event.target as Node;
+    if (this.addMemberMobileButton && this.addMemberMobileButton.nativeElement.contains(targetElement)) {
+      return;
     }
+    if (this.isAddMemberOpen && this.slectUserBar?.nativeElement && !this.slectUserBar.nativeElement.contains(targetElement)) {
+      this.isAddMemberOpen = false;
+    }
+  }
+
+  /**
+   * Adds all selected users to the current channel in Firestore.
+   */
+  async addUserToChannel() {
+    const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
+    try {
+      await updateDoc(channelRef, {
+        member: arrayUnion(...this.selectedUsers),
+      });
+      this.selectedUsers = [];
+    } catch (error) {}
+    this.userService.showFeedback('User hinzugefügt');
+  }
 }

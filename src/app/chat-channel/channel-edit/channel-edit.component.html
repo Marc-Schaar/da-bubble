@@ -60,7 +60,7 @@
           <div class="member-name">{{ member.fullname }}</div>
         </div>
       </div>
-      <div (click)="openAddMember()" class="member-cont add-member-mobile-btn">
+      <div (click)="openAddMember()" #addMemberMobileButton class="member-cont add-member-mobile-btn">
         <div class="member margin-left">
           <div class="member-img">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <div class="select-user" [ngClass]="{ 'menu-toggle-open': isAddMemberOpen, 'menu-toggle-close': !isAddMemberOpen }">
+  <div class="select-user" [ngClass]="{ 'menu-toggle-open': isAddMemberOpen, 'menu-toggle-close': !isAddMemberOpen, }" #slectUserBar>
     <div class="close-line" (click)="closeAddMember()"></div>
     <div class="menu-header">
       <span>Leute hinzufügen</span>
