@@ -291,7 +291,6 @@ textarea {
   background: white;
   transition: transform 0.3s ease-in-out;
   gap: 20px;
-  animation: slide-in 0.3s ease-in-out;
   .input-cont {
     display: flex;
     flex-direction: column;
@@ -351,7 +350,6 @@ textarea {
     z-index: 3;
   }
 }
-
 .menu-toggle-open {
   display: flex;
   transform: translateY(0);
@@ -360,15 +358,6 @@ textarea {
   display: flex;
   transform: translateY(100%);
 }
-@keyframes slide-in {
-  0% {
-    transform: translateY(100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
 .choose-user-bar {
   top: 165px;
   width: 335px;
@@ -421,7 +410,6 @@ textarea {
     }
   }
 }
-
 .mini-profile-cont {
   display: flex;
   gap: 15px;
