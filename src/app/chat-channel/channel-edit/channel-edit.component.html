@@ -60,7 +60,7 @@
           <div class="member-name">{{ member.fullname }}</div>
         </div>
       </div>
-      <div class="member-cont add-member-mobile-btn">
+      <div (click)="openAddMember()" class="member-cont add-member-mobile-btn">
         <div class="member margin-left">
           <div class="member-img">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,19 +76,47 @@
     </div>
   </div>
 
-  <div class="select-user">
-    <div class="close-line"></div>
+  <div class="select-user" [ngClass]="{ 'menu-toggle-open': isAddMemberOpen, 'menu-toggle-close': !isAddMemberOpen }">
+    <div class="close-line" (click)="closeAddMember()"></div>
     <div class="menu-header">
       <span>Leute hinzufügen</span>
-      <div><img class="close-btn" src="img/close.svg" alt="" /></div>
+      <div (click)="closeAddMember()"><img class="close-btn" src="img/close.svg" alt="" /></div>
     </div>
     <div class="input-cont">
-      <input type="text" />
-      <button>Hinzufügen</button>
+      <div class="input-help-cont">
+        <div class="mini-profile-cont" *ngFor="let selectedUser of selectedUsers; let index = index">
+          <img class="user-img-mini" src="{{ selectedUsers[index]?.profilephoto }}" alt="" />
+          <div class="username-mini">
+            {{ selectedUsers[index]?.fullname }}
+          </div>
+          <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
+        </div>
+        <div class="choose-user-bar" *ngIf="showUserBar" #chooseUserBar>
+          <div class="user-select-cont" (click)="addUserToSelection(index)" *ngFor="let filteredUser of filteredUsers; let index = index">
+            <div class="img-status-cont">
+              <img src="{{ filteredUser.profilephoto }}" alt="" />
+              <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
+            </div>
+            <div>{{ filteredUser.fullname }}</div>
+          </div>
+          <div></div>
+        </div>
+        <input
+          name=""
+          class="user-search-bar"
+          id="user-search-bar"
+          #userSearchInput
+          (input)="openUserBar()"
+          (keyup)="filterUsers()"
+          (click)="openUserBar()"
+        />
+      </div>
+      <button [disabled]="disabled" [ngClass]="{ 'disabled-btn': disabled }" (click)="addUserToChannel()">Hinzufügen</button>
     </div>
   </div>
 
   <div class="exit-channel-cont" (click)="exitChannel()">
     <div class="exit-btn">Channel verlassen</div>
   </div>
+  <div *ngIf="isAddMemberOpen" class="dark-background"></div>
 </div>

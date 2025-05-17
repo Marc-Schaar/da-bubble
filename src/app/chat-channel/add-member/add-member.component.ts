@@ -23,6 +23,7 @@ export class AddMemberComponent implements OnInit {
   members: any[] = [];
   currentRecieverId: string | null = null;
   users: any[] = [];
+
   showUserBar: boolean = false;
   chooseMember: boolean = false;
   disabled: boolean = true;
@@ -82,6 +83,7 @@ export class AddMemberComponent implements OnInit {
         .filter((user) => !this.members.some((member) => member.id === user.id))
         .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
         .filter((user) => !user.isAnonymous);
+        console.log(this.filteredUsers);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
     }
@@ -230,5 +232,8 @@ export class AddMemberComponent implements OnInit {
       width: '400px',
       position: { top: 'calc(50svh - 310px)' },
     });
+  }
+  openAddMember() {
+    this.addMemberWindow = true;
   }
 }
