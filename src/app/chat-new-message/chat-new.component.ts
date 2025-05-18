@@ -24,14 +24,15 @@ import { SearchResultComponent } from '../shared/search-result/search-result.com
   styleUrl: './chat-new.component.scss',
 })
 export class NewmessageComponent {
-  private userService = inject(UserService);
+  public userService = inject(UserService);
   private firestoreService = inject(FireServiceService);
   private messageService: MessagesService = inject(MessagesService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
 
   public currentReceiver: any = '';
-
+  private receiverType: 'channel' | 'direct' | null = null;
+  private receiverId: string = 'null';
   public input: string = '';
 
   /**
@@ -45,8 +46,32 @@ export class NewmessageComponent {
 
   setReceiver(element: any) {
     this.currentReceiver = element;
-    this.input = ''; // optional
+    this.receiverId = element.key || element.id;
+
+    this.isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
-    console.log('Receiver im NewmessageComponent empfangen:', element);
+    console.log(this.currentReceiver);
+    console.log('receiverId gesetzt auf:', this.receiverId);
+  }
+
+  public isChannel(element: any) {
+    return element.data?.member;
+  }
+
+  public setReceiverType(type: 'channel' | 'direct') {
+    this.receiverType = type;
+  }
+
+  public getReceiverName() {
+    let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.fullname || '';
+    return receiverName;
+  }
+
+  public getReceiverType() {
+    return this.receiverType;
+  }
+
+  public getReceiverId() {
+    return this.receiverId;
   }
 }

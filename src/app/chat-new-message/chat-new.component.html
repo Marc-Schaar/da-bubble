@@ -3,11 +3,8 @@
 }
 <main>
   <section>
-    <div class="textField">
-      <div class="align-center gap-10">
-        <h1 class="newText">Neue Nachricht</h1>
-        <span>{{ currentReceiver?.fullname || currentReceiver?.data?.name || currentReceiver }}</span>
-      </div>
+    <div class="header gap-20">
+      <h1 class="newText">Neue Nachricht</h1>
 
       <input
         [(ngModel)]="input"
@@ -24,7 +21,12 @@
     }
 
     <div class="card-footer">
-      <app-textarea-template></app-textarea-template>
+      <app-textarea-template
+        [placeholderText]="'Starte eine Nachricht an: ' + (currentReceiver.data?.name || currentReceiver.fullname || '...')"
+        [reciverId]="getReceiverId()"
+        [currentUserId]="userService.auth.currentUser?.uid!"
+        [reciverCompontent]="isChannel(currentReceiver) ? 'channel' : 'direct'"
+      ></app-textarea-template>
     </div>
   </section>
 </main>
