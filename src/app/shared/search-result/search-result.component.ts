@@ -16,7 +16,7 @@ export class SearchResultComponent {
   navigationService: NavigationService = inject(NavigationService);
   auth: Auth = inject(Auth);
   @Input() input: string = '';
-  @Output() inputChange = new EventEmitter<string>();
+  @Output() tagInserted = new EventEmitter<string>();
 
   /**
    * Tags a receiver (user or channel) in the input field by inserting their name with the tagType.
@@ -25,11 +25,10 @@ export class SearchResultComponent {
    * @param receiverData - The data object of the receiver (user or channel).
    * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
-  public tagReceiver(receiverData: any, tagType: any) {
-    let tagName = receiverData.fullname || receiverData.data.name;
-    this.input = this.input.split(tagType)[0];
-    this.input += tagType + tagName + ' ';
-    this.inputChange.emit(this.input);
+  public tagReceiver(receiverData: any, tagType: '@' | '#') {
+    const tagName = receiverData.fullname || receiverData.data.name;
+    this.tagInserted.emit(tagName);
+
     this.searchService.closeList();
     this.searchService.stopObserveInput();
   }

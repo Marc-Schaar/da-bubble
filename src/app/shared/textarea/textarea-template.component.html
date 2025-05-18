@@ -31,7 +31,7 @@
     @if (searchService.getListBoolean()) {
 
     <div class="tag-container">
-      <app-search-result [(input)]="input"></app-search-result>
+      <app-search-result [input]="input" (tagInserted)="onTagInserted($event)"></app-search-result>
     </div>
 
     } @if (reactionMenuOpenInTextarea) {

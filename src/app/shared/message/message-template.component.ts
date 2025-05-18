@@ -11,10 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import emojiData from 'unicode-emoji-json';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
 })

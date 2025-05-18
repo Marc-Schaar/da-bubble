@@ -5,8 +5,6 @@ import { MatIcon } from '@angular/material/icon';
 import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { Message } from '../../models/message/message';
 import { MessagesService } from '../../services/messages/messages.service';
-import { UserService } from '../../services/user/shared.service';
-import { NavigationService } from '../../services/navigation/navigation.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
@@ -20,15 +18,14 @@ import { SearchResultComponent } from '../search-result/search-result.component'
   styleUrl: './textarea-template.component.scss',
 })
 export class TextareaTemplateComponent {
-  fireService: FireServiceService = inject(FireServiceService);
-  messagesService: MessagesService = inject(MessagesService);
-  userService: UserService = inject(UserService);
-  navigationService: NavigationService = inject(NavigationService);
-  firestore: Firestore = inject(Firestore);
+  private fireService: FireServiceService = inject(FireServiceService);
+  private messagesService: MessagesService = inject(MessagesService);
+  private firestore: Firestore = inject(Firestore);
   public searchService: SearchService = inject(SearchService);
-  reactionMenuOpenInTextarea: boolean = false;
-  currentChannel: any;
+  public reactionMenuOpenInTextarea: boolean = false;
   public input: string = '';
+  private taggedNames: string[] = [];
+
   public emojis: any;
   @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
@@ -47,65 +44,79 @@ export class TextareaTemplateComponent {
     this.emojis = Object.keys(emojiData);
   }
 
+  onTagInserted(tagName: string) {
+    this.input += ` @${tagName} `;
+    this.taggedNames.push(tagName);
+  }
+
   /**
    * Sends a new message based on the current receiver component type.
    * Calls the appropriate send method for 'direct', 'channel', or 'thread'.
    */
   newMessage(): void {
+    if (!this.input.trim()) return;
+    const messageToSend = this.addMarkerSlashes(this.input);
     switch (this.reciverCompontent) {
       case 'direct':
-        this.sendDirectMessage();
+        this.sendDirectMessage(messageToSend);
         break;
 
       case 'channel':
-        this.sendChannelMessage();
+        this.sendChannelMessage(messageToSend);
         break;
 
       case 'thread':
-        this.sendThreadMessage();
+        this.sendThreadMessage(messageToSend);
         break;
 
       default:
         break;
     }
+    this.input = '';
+    this.taggedNames = [];
+  }
+
+  /**
+   * Appends "//" to each mention stored in `taggedNames`,
+   * but only for the first occurrence (if it doesn’t already end with "//").
+   */
+  private addMarkerSlashes(text: string): string {
+    let result = text;
+    for (const name of this.taggedNames) {
+      const re = new RegExp(`@${name}(?!//)`);
+      result = result.replace(re, `@${name}//`);
+    }
+    return result;
   }
 
   /**
    * Sends a new message in the current thread.
    */
-  sendThreadMessage() {
-    if (this.input.trim() !== '') {
-      this.fireService.sendThreadMessage(
-        this.reciverId,
-        new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages)),
-        this.threadId
-      );
-      this.input = '';
-    }
+  sendThreadMessage(messageToSend: string) {
+    this.fireService.sendThreadMessage(
+      this.reciverId,
+      new Message(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)),
+      this.threadId
+    );
   }
 
   /**
    * Sends a new direct Message.
    */
-  sendDirectMessage(): void {
-    if (!this.input.trim()) return;
-    const messageData = this.messagesService.buildDirectMessageObject(this.input, this.messages, this.currentUserId, this.reciverId);
+  sendDirectMessage(messageToSend: string): void {
+    const messageData = this.messagesService.buildDirectMessageObject(messageToSend, this.messages, this.currentUserId, this.reciverId);
     const [uid1, uid2] = [this.currentUserId, this.reciverId].sort();
     const conversationId = `${uid1}_${uid2}`;
     const senderConversationRef = collection(this.firestore, `users/${this.currentUserId}/conversations/${conversationId}/messages`);
     const receiverConversationRef = collection(this.firestore, `users/${this.reciverId}/conversations/${conversationId}/messages`);
     this.postData(senderConversationRef, receiverConversationRef, messageData);
-    this.input = '';
   }
 
   /**
    * Sends a new message in the current Channel.
    */
-  sendChannelMessage(): void {
-    if (this.input.trim() !== '') {
-      this.fireService.sendMessage(this.reciverId, new Message(this.messagesService.buildChannelMessageObject(this.input, this.messages)));
-      this.input = '';
-    }
+  sendChannelMessage(messageToSend: string): void {
+    this.fireService.sendMessage(this.reciverId, new Message(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)));
   }
 
   /**

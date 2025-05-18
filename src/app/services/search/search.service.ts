@@ -86,9 +86,12 @@ export class SearchService {
     this.textareaListOpen = false;
     this.input = input;
     this.searchInComponent = searchInComponent;
+
     this.getTagType(input);
     if (!input.trim()) this.closeList();
-    else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
+    if (this.isResultTrue) {
+      return;
+    } else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
   }
 
   /**

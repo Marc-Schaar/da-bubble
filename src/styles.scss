@@ -353,6 +353,13 @@ textarea {
   cursor: no-drop !important;
 }
 
+.tag-btn {
+  color: var(--dark-purple) !important;
+  background: unset;
+  border: unset;
+  text-decoration: underline;
+}
+
 @keyframes slide-in-r-l {
   0% {
     transform: translate(10px, 10px);
