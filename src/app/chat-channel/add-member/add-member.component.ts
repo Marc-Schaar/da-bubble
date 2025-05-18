@@ -83,7 +83,6 @@ export class AddMemberComponent implements OnInit {
         .filter((user) => !this.members.some((member) => member.id === user.id))
         .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
         .filter((user) => !user.isAnonymous);
-        console.log(this.filteredUsers);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
     }

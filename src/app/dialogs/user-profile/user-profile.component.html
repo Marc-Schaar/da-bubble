@@ -12,8 +12,6 @@
       <div class="tooltip-cont">
         <button
           class="edit-btn"
-          [disabled]="userService.currentUser.isAnonymous"
-          [ngClass]="{ 'guest-btn': userService.currentUser.isAnonymous }"
           (click)="modify()"
         >
           @if (navigationService.isMobile) {
