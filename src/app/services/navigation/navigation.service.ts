@@ -77,9 +77,16 @@ export class NavigationService {
         break;
 
       default:
-        if (this.isMobile) this.router.navigate(['/contactbar']);
+        if (this.isMobile) this.showContactbar();
         break;
     }
+  }
+
+  /**
+   * Navigates to the Contactbar.
+   */
+  public showContactbar() {
+    this.router.navigate(['/contactbar']);
   }
 
   /**
