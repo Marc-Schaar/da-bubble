@@ -16,6 +16,7 @@ export class SearchResultComponent {
   navigationService: NavigationService = inject(NavigationService);
   auth: Auth = inject(Auth);
   @Input() input: string = '';
+  @Output() inputChange = new EventEmitter<string>();
   @Output() tagInserted = new EventEmitter<string>();
 
   /**

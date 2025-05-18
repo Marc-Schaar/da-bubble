@@ -269,4 +269,25 @@ export class MessageTemplateComponent implements OnInit {
       return { ...doc.data(), id: doc.id };
     } else return null;
   }
+
+  public handleClick(event: any) {
+    console.log(event);
+
+    // 1) Schaue, ob Klick auf den Button (oder ein Kind davon) war:
+    const btn = (event.target as HTMLElement).closest('.tag-btn');
+    if (!btn) {
+      // Klick war außerhalb eines Mentions-Buttons → ignorieren
+      return;
+    }
+
+    // 2) Im Button-Text steht z.B. "@Marc Schaar"
+    const fullTag = btn.textContent?.trim();
+    if (!fullTag) return;
+
+    // 3) Entferne das führende "@"/"#"
+    const symbol = fullTag.charAt(0); // "@" oder "#"
+    const name = fullTag.slice(1).trim(); // "Marc Schaar"
+
+    // 4) Hier deine Logik:
+  }
 }

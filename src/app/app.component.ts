@@ -28,4 +28,8 @@ export class AppComponent implements OnInit {
       AOS.init();
     }
   }
+
+  openTag() {
+    console.log('juhu');
+  }
 }

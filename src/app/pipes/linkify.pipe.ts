@@ -12,7 +12,7 @@ export class LinkifyPipe implements PipeTransform {
     const mentionRegex = /@([\w ._-]+)\/\/?/g;
 
     const replaced = value.replace(mentionRegex, (match, username) => {
-      return `<button class="tag-btn" onclick="console.log('klick')">@${username.trim()}</button>`;
+      return `<button class="tag-btn" onclick="openTag()">@${username.trim()}</button>`;
     });
 
     return this.sanitizer.bypassSecurityTrustHtml(replaced);
