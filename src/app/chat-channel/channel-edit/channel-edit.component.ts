@@ -5,8 +5,9 @@ import { Firestore } from '@angular/fire/firestore';
 import { UserService } from '../../services/user/shared.service';
 import { getAuth } from 'firebase/auth';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 
 @Component({
   selector: 'app-channel-edit',
@@ -32,6 +33,9 @@ export class ChannelEditComponent {
   disabled: boolean = true;
   members: any[] = [];
   filteredMembers: any[] = [];
+  currentRecieverId: string | null = null;
+  readonly dialog = inject(MatDialog);
+
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
   fireService: FireServiceService = inject(FireServiceService);
   @ViewChild('slectUserBar') slectUserBar!: ElementRef;
@@ -271,9 +275,9 @@ export class ChannelEditComponent {
     this.filteredUsers.splice(index, 1);
   }
 
- /**
-  * Opens the add member bar for mobile view.
-  */
+  /**
+   * Opens the add member bar for mobile view.
+   */
   openAddMember() {
     this.isAddMemberOpen = true;
   }
@@ -285,9 +289,9 @@ export class ChannelEditComponent {
     this.showUserBar = true;
   }
 
- /**
-  * Closes the user bar.
-  */
+  /**
+   * Closes the user bar.
+   */
   closeAddMember() {
     this.isAddMemberOpen = false;
   }
@@ -342,4 +346,23 @@ export class ChannelEditComponent {
     } catch (error) {}
     this.userService.showFeedback('User hinzugefügt');
   }
+
+  /**
+   * Shows the profile of a given member.
+   * @param member User object
+   */
+  public showProfile(member: any) {
+    this.userService.currentReciever = member;
+    this.userService.showRecieverProfile();
+    this.dialog.open(DialogReciverComponent, {
+      data: {
+        reciever: this.userService.currentReciever,
+        recieverId: this.currentRecieverId,
+      },
+      width: '400px',
+      position: { top: 'calc(50svh - 310px)' },
+    });
+  }
+
+
 }
