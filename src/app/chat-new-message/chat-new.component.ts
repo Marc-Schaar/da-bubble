@@ -62,69 +62,9 @@ export class NewmessageComponent {
    */
   setCurrentUser() {
     this.currentUser = this.userService.currentUser;
-    this.currentUserId = this.userService.currentUser.uid;
 
     if (!this.currentUser) {
       return;
     }
-  }
-
-  /**
-   * Sends a direct message to a recipient.
-   */
-  async sendDirectMessage() {
-    const message = new DirectMessage({
-      name: this.userService.currentUser?.displayName || '',
-      photo: this.userService.currentUser?.photoURL || '',
-      content: this.input,
-      from: this.currentUserId,
-      to: this.currentRecieverId,
-    });
-    const messageData = this.createMessageData(message);
-    const currentUserRef = doc(this.firestore, `users/${this.currentUserId}`);
-    const currentReceiverRef = doc(this.firestore, `users/${this.currentRecieverId}`);
-    if (this.currentRecieverId !== this.currentUserId) {
-      await updateDoc(currentReceiverRef, {
-        messages: arrayUnion(messageData),
-      });
-    }
-    await updateDoc(currentUserRef, { messages: arrayUnion(messageData) });
-    this.message = '';
-    this.input = '';
-  }
-
-  /**
-   * Creates message data from the DirectMessage object.
-   * @param message The DirectMessage object.
-   * @returns A plain object containing message data.
-   */
-  createMessageData(message: DirectMessage) {
-    return {
-      name: message.name,
-    };
-  }
-
-  /**
-   * Sends a message to a channel.
-   */
-  sendChannelMessage() {
-    this.firestoreService.sendMessage(this.currentChannelId, new Message(this.messageService.buildChannelMessageObject(this.input)));
-  }
-
-  /**
-   * Sends a message to the selected receiver or channel.
-   */
-  async sendMessage() {
-    if (this.message === '' || !this.currentRecieverId || !this.currentUserId) {
-      return;
-    } else if (this.whichMessage === 'user') {
-      await this.sendDirectMessage();
-      this.userService.setUrl('direct', this.currentRecieverId, this.currentUserId);
-    } else if (this.whichMessage === 'channel') {
-      this.sendChannelMessage();
-      this.userService.setUrl('channel', this.currentChannelId);
-    }
-    this.currentReciever = null;
-    this.currentChannel = null;
   }
 }
