@@ -14,7 +14,8 @@ import { Location } from '@angular/common';
 export class NavigationService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private auth: Auth = inject(Auth);
+  private location = inject(Location);
+
   private currentComponent = new BehaviorSubject<any>(NewmessageComponent);
   component$ = this.currentComponent.asObservable();
   private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
@@ -30,7 +31,6 @@ export class NavigationService {
   public currentUserId: string = '';
   public messageId: string = '';
   public channelType: 'direct' | 'channel' | 'thread' | 'newMessage' | 'default' = 'default';
-  location = inject(Location);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
