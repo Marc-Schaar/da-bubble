@@ -14,10 +14,11 @@ import { SearchResultComponent } from '../shared/search-result/search-result.com
 import { MatDialog } from '@angular/material/dialog';
 import { UserMenuComponent } from '../dialogs/user-menu/user-menu.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
