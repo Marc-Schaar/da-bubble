@@ -67,7 +67,7 @@
       <span class="font-size-14">{{ message.time }} Uhr</span>
     </header>
 
-    <p class="message-main" [innerHTML]="message.message | linkify"></p>
+    <p class="message-main" [innerHTML]="message.message | linkify" (click)="onMentionClick($event)"></p>
 
     <footer class="message-footer gap-20">
       @if (message.thread?.length > 0) {

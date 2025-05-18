@@ -8,10 +8,11 @@ import { Message } from '../../models/message/message';
 import { FormsModule } from '@angular/forms';
 import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 import { MatDialog } from '@angular/material/dialog';
-import { getDocs, query, where } from '@firebase/firestore';
+import { collection, getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import emojiData from 'unicode-emoji-json';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-message-template',
@@ -25,6 +26,7 @@ export class MessageTemplateComponent implements OnInit {
   private router: Router = inject(Router);
   private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
+  private firestore: Firestore = inject(Firestore);
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
@@ -270,24 +272,75 @@ export class MessageTemplateComponent implements OnInit {
     } else return null;
   }
 
-  public handleClick(event: any) {
-    console.log(event);
-
-    // 1) Schaue, ob Klick auf den Button (oder ein Kind davon) war:
+  /**
+   * Handles click events on mention buttons within a message.
+   * Determines whether a mention button was clicked and, if so,
+   * extracts its symbol (@ or #) and the associated name,
+   * then delegates to navigation logic.
+   *
+   * @param event - The MouseEvent triggered by the click.
+   */
+  onMentionClick(event: MouseEvent) {
     const btn = (event.target as HTMLElement).closest('.tag-btn');
-    if (!btn) {
-      // Klick war außerhalb eines Mentions-Buttons → ignorieren
-      return;
-    }
+    if (!btn) return;
 
-    // 2) Im Button-Text steht z.B. "@Marc Schaar"
     const fullTag = btn.textContent?.trim();
     if (!fullTag) return;
 
-    // 3) Entferne das führende "@"/"#"
-    const symbol = fullTag.charAt(0); // "@" oder "#"
-    const name = fullTag.slice(1).trim(); // "Marc Schaar"
+    const symbol = fullTag.charAt(0);
+    const name = fullTag.slice(1).trim();
+    this.showProfileOrChannel(symbol, name);
+  }
 
-    // 4) Hier deine Logik:
+  /**
+   * Routes the click on a mention based on its symbol.
+   * If the symbol is '@', performs a user lookup;
+   * if '#', performs a channel lookup.
+   *
+   * @param symbol - The mention symbol, either '@' or '#'.
+   * @param name - The username or channel name to lookup.
+   */
+  async showProfileOrChannel(symbol: string, name: string) {
+    switch (symbol) {
+      case '@':
+        await this.caseUser(name);
+        break;
+
+      case '#':
+        await this.caseChannel(name);
+        break;
+    }
+  }
+
+  /**
+   * Looks up a user in Firestore by their full name,
+   * sets the navigation service’s receiver ID to the found user’s document ID,
+   * and switches the UI to a direct chat view.
+   *
+   * @param name - The user’s full name to query.
+   */
+  async caseUser(name: string) {
+    const usersRef = collection(this.firestore, 'users');
+    const q = query(usersRef, where('fullname', '==', name));
+    const snapshot = await getDocs(q);
+    const userDoc = snapshot.docs[0];
+    this.navigationService.reciverId = userDoc.id;
+    this.navigationService.showDirect();
+  }
+
+  /**
+   * Looks up a channel in Firestore by its name,
+   * sets the navigation service’s receiver ID to the found channel’s document ID,
+   * and switches the UI to the channel view.
+   *
+   * @param name - The channel’s name to query.
+   */
+  async caseChannel(name: string) {
+    const channelsRef = collection(this.firestore, 'channels');
+    const q = query(channelsRef, where('name', '==', name));
+    const snapshot = await getDocs(q);
+    const channelDoc = snapshot.docs[0];
+    this.navigationService.reciverId = channelDoc.id;
+    this.navigationService.showChannel();
   }
 }

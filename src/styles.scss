@@ -354,10 +354,18 @@ textarea {
 }
 
 .tag-btn {
-  color: var(--dark-purple) !important;
   background: unset;
   border: unset;
-  text-decoration: underline;
+  cursor: pointer;
+  font-family: "Nunito";
+  font-size: inherit;
+  transition: all 0.125s ease-in-out;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--dark-purple);
+  }
 }
 
 @keyframes slide-in-r-l {

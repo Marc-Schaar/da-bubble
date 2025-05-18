@@ -9,12 +9,12 @@ export class LinkifyPipe implements PipeTransform {
 
   transform(value: unknown): SafeHtml {
     if (typeof value !== 'string') return '';
-    const mentionRegex = /@([\w ._-]+)\/\/?/g;
+    const mentionRegex = /([@#])([\w ._-]+)(\/\/?)/g;
 
-    const replaced = value.replace(mentionRegex, (match, username) => {
-      return `<button class="tag-btn" onclick="openTag()">@${username.trim()}</button>`;
-    });
-
+    const replaced = value.replace(
+      mentionRegex,
+      (_match, symbol, username) => `<button class="tag-btn">${symbol}${username.trim()}</button>`
+    );
     return this.sanitizer.bypassSecurityTrustHtml(replaced);
   }
 }
