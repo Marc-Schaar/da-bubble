@@ -12,11 +12,19 @@ export class SearchService {
   private tagType: 'channel' | 'user' | null = null;
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
+  private newMessageListOpen: boolean = false;
   private isChannel: boolean | null = false;
   private isResultTrue: boolean = false;
   private currentList: string[] = [];
-  private searchInComponent: 'header' | 'textarea' | null = null;
+  private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   private input: string = '';
+
+  /**
+   * Returns the current Search Component.
+   */
+  public getSearchComponent() {
+    return this.searchInComponent;
+  }
 
   /**
    * Returns whether the textarea suggestion list is open.
@@ -30,6 +38,13 @@ export class SearchService {
    */
   public getHeaderListBoolean(): boolean {
     return this.headerListOpen;
+  }
+
+  /**
+   * Returns whether the New Message Component suggestion list is open.
+   */
+  public getNewListBoolean(): boolean {
+    return this.newMessageListOpen;
   }
 
   /**
@@ -81,7 +96,7 @@ export class SearchService {
    * @param input - The input string entered by the user.
    * @param searchInComponent - The context where the input comes from: 'textarea' or 'header'.
    */
-  public observeInput(input: string, searchInComponent: 'textarea' | 'header'): void {
+  public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage'): void {
     this.headerListOpen = false;
     this.textareaListOpen = false;
     this.input = input;
@@ -95,11 +110,13 @@ export class SearchService {
   }
 
   /**
-   * Determines if the current input is a tagless search in the header.
+   * Determines if the current input is a tagless search in the header or new message.
    * @returns {boolean} True if it's a no-tag header search, otherwise false.
    */
   private isNoTagSearch() {
-    return this.searchInComponent === 'header' && this.tagType == null && this.input.length > 0;
+    return (
+      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') && this.tagType == null && this.input.length > 0
+    );
   }
 
   /**
@@ -110,7 +127,8 @@ export class SearchService {
     let channelResults = this.startSearch(this.input, 'channel');
     this.currentList = [...userResults, ...channelResults];
     this.textareaListOpen = false;
-    this.headerListOpen = true;
+    this.searchInComponent === 'header' ? (this.headerListOpen = true) : (this.headerListOpen = false);
+    this.searchInComponent === 'newMessage' ? (this.newMessageListOpen = true) : (this.newMessageListOpen = false);
     this.isChannel = null;
   }
 
@@ -167,6 +185,7 @@ export class SearchService {
     this.isChannel = false;
     this.textareaListOpen = false;
     this.headerListOpen = false;
+    this.newMessageListOpen = false;
   }
 
   /**

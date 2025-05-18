@@ -15,6 +15,8 @@ export class SearchResultComponent {
   searchService: SearchService = inject(SearchService);
   navigationService: NavigationService = inject(NavigationService);
   auth: Auth = inject(Auth);
+
+  private currentReceiver: any = '';
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
   @Output() tagInserted = new EventEmitter<string>();
@@ -68,6 +70,23 @@ export class SearchResultComponent {
   }
 
   /**
+   * Returns the current receiver.
+   */
+  public getCurrentReceiver() {
+    return this.currentReceiver;
+  }
+
+  /**
+   * Sets the current receiver.
+   */
+  setReceiver(element: string) {
+    this.currentReceiver = element;
+    this.searchService.resetList();
+    this.input = '';
+    console.log('Reveiver gesetzt', element);
+  }
+
+  /**
    * Handles the click event on an element.
    * If the header list is open, opens the receiver view;
    * otherwise tags the receiver in the input field.
@@ -75,8 +94,20 @@ export class SearchResultComponent {
    * @param element - The clicked element (user or channel).
    */
   public handleClick(element: any) {
-    this.searchService.getHeaderListBoolean()
-      ? this.openReceiver(element)
-      : this.tagReceiver(element, this.searchService.getChannelBoolean() === true ? '#' : '@');
+    switch (this.searchService.getSearchComponent()) {
+      case 'header':
+        this.openReceiver(element);
+        break;
+      case 'newMessage':
+        this.setReceiver(element);
+        break;
+
+      case 'textarea':
+        this.tagReceiver(element, this.searchService.getChannelBoolean() === true ? '#' : '@');
+        break;
+
+      default:
+        break;
+    }
   }
 }

@@ -61,6 +61,13 @@ button {
   border: unset;
 }
 
+.tag-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 149px;
+  padding: 20px 21px;
+}
 @media screen and (max-width: 1023px) {
   main {
     margin: 0;

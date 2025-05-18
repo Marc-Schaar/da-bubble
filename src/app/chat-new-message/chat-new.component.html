@@ -7,11 +7,17 @@
       <span class="newText">Neue Nachricht</span>
       <input
         [(ngModel)]="input"
-        (input)="searchService.observeInput(input, 'textarea')"
+        (input)="searchService.observeInput(input, 'newMessage')"
         type="text"
         placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse"
       />
     </div>
+
+    @if (searchService.getNewListBoolean()) {
+    <div class="tag-container">
+      <app-search-result [(input)]="input"></app-search-result>
+    </div>
+    }
 
     <div class="card-footer">
       <app-textarea-template></app-textarea-template>

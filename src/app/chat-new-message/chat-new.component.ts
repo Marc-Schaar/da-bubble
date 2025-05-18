@@ -13,38 +13,24 @@ import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
 import { SearchService } from '../services/search/search.service';
+import { SearchResultComponent } from '../shared/search-result/search-result.component';
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-newmessage',
-  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent],
+  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent, SearchResultComponent],
   templateUrl: './chat-new.component.html',
   styleUrl: './chat-new.component.scss',
 })
 export class NewmessageComponent {
   private userService = inject(UserService);
   private firestoreService = inject(FireServiceService);
-  public navigationService: NavigationService = inject(NavigationService);
   private messageService: MessagesService = inject(MessagesService);
+  public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
-  private firestore = inject(Firestore);
-  public channels: any[] = [];
-  public users: any[] = [];
-  public currentReciever: any = null;
-  public currentUser: any = null;
-  public currentChannel: any = null;
-  message: string = '';
-  input: string = '';
-  userID: string = '';
-  whichMessage: string = '';
-  channelType: string = '';
-  currentRecieverId: string = '';
-  currentUserId: string = '';
-  currentChannelId: string = '';
-  currentMessages: any[] = [];
-  isChannel: boolean = false;
-  isFound: boolean = false;
+
+  public input: string = '';
 
   /**
    * ngOnInit lifecycle hook to load channels, users and set the current user.
@@ -52,19 +38,6 @@ export class NewmessageComponent {
   async ngOnInit() {
     if (!this.navigationService.isInitialize) {
       this.navigationService.initialize();
-    }
-
-    this.setCurrentUser();
-  }
-
-  /**
-   * Sets the current user based on the UserService.
-   */
-  setCurrentUser() {
-    this.currentUser = this.userService.currentUser;
-
-    if (!this.currentUser) {
-      return;
     }
   }
 }
