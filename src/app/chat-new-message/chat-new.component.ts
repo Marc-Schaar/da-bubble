@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable, Input } from '@angular/core';
 import { UserService } from '../services/user/shared.service';
 import { FireServiceService } from '../services/firebase/fire-service.service';
 import { Firestore, arrayUnion, doc, updateDoc } from '@angular/fire/firestore';
@@ -30,6 +30,8 @@ export class NewmessageComponent {
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
 
+  public currentReceiver: any = '';
+
   public input: string = '';
 
   /**
@@ -39,5 +41,12 @@ export class NewmessageComponent {
     if (!this.navigationService.isInitialize) {
       this.navigationService.initialize();
     }
+  }
+
+  setReceiver(element: any) {
+    this.currentReceiver = element;
+    this.input = ''; // optional
+    this.searchService.resetList();
+    console.log('Receiver im NewmessageComponent empfangen:', element);
   }
 }

@@ -16,10 +16,10 @@ export class SearchResultComponent {
   navigationService: NavigationService = inject(NavigationService);
   auth: Auth = inject(Auth);
 
-  private currentReceiver: any = '';
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
   @Output() tagInserted = new EventEmitter<string>();
+  @Output() currentReceiver = new EventEmitter<any>();
 
   /**
    * Tags a receiver (user or channel) in the input field by inserting their name with the tagType.
@@ -70,20 +70,13 @@ export class SearchResultComponent {
   }
 
   /**
-   * Returns the current receiver.
-   */
-  public getCurrentReceiver() {
-    return this.currentReceiver;
-  }
-
-  /**
    * Sets the current receiver.
    */
-  setReceiver(element: string) {
-    this.currentReceiver = element;
+  setReceiver(element: any) {
+    this.currentReceiver.emit(element);
+    this.inputChange.emit('');
     this.searchService.resetList();
-    this.input = '';
-    console.log('Reveiver gesetzt', element);
+    console.log('Receiver gesendet aus search-result:', element);
   }
 
   /**

@@ -4,7 +4,11 @@
 <main>
   <section>
     <div class="textField">
-      <span class="newText">Neue Nachricht</span>
+      <div class="align-center gap-10">
+        <h1 class="newText">Neue Nachricht</h1>
+        <span>{{ currentReceiver?.fullname || currentReceiver?.data?.name || currentReceiver }}</span>
+      </div>
+
       <input
         [(ngModel)]="input"
         (input)="searchService.observeInput(input, 'newMessage')"
@@ -15,7 +19,7 @@
 
     @if (searchService.getNewListBoolean()) {
     <div class="tag-container">
-      <app-search-result [(input)]="input"></app-search-result>
+      <app-search-result [(input)]="input" (currentReceiver)="setReceiver($event)">></app-search-result>
     </div>
     }
 
