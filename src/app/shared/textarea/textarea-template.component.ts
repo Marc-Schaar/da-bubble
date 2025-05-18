@@ -45,7 +45,7 @@ export class TextareaTemplateComponent {
   }
 
   onTagInserted(tagName: string) {
-    this.input += ` @${tagName} `;
+    this.input += ` ${tagName} `;
     this.taggedNames.push(tagName);
   }
 
@@ -83,8 +83,8 @@ export class TextareaTemplateComponent {
   private addMarkerSlashes(text: string): string {
     let result = text;
     for (const name of this.taggedNames) {
-      const re = new RegExp(`@${name}(?!//)`);
-      result = result.replace(re, `@${name}//`);
+      const re = new RegExp(`${name}(?!//)`);
+      result = result.replace(re, `${name}//`);
     }
     return result;
   }

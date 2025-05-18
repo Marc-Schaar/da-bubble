@@ -27,7 +27,7 @@ export class SearchResultComponent {
    */
   public tagReceiver(receiverData: any, tagType: '@' | '#') {
     const tagName = receiverData.fullname || receiverData.data.name;
-    this.tagInserted.emit(tagName);
+    this.tagInserted.emit(tagType + tagName);
 
     this.searchService.closeList();
     this.searchService.stopObserveInput();
