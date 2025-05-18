@@ -51,7 +51,7 @@
   <div class="mobile-member-list">
     <div class="member-headline">Mitglieder</div>
     <div class="member-list">
-      <div class="member-cont" *ngFor="let member of currentChannel.member; let i = index">
+      <div (click)="showProfile(member)" class="member-cont" *ngFor="let member of currentChannel.member; let i = index">
         <div class="member">
           <div class="member-img">
             <img [src]="member.profilephoto" alt="" />

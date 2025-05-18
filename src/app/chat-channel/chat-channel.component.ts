@@ -64,6 +64,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   public currentChannelId: string = '';
 
   /**
+  /**
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
