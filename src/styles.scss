@@ -58,7 +58,6 @@ body {
 
 .mdc-dialog__surface {
   background-color: rgba(0, 0, 0, 0) !important;
-  // box-shadow: none !important;
 }
 
 .mat-mdc-dialog-surface {
@@ -67,11 +66,6 @@ body {
     overflow: hidden !important;
   }
 }
-
-// .cdk-global-overlay-wrapper {
-//   justify-content: center !important;
-//   align-items: center !important;
-// }
 
 app-footer {
   width: 100%;

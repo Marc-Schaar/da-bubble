@@ -67,7 +67,6 @@ export class AddChannelComponent implements OnInit {
    */
   ngOnInit() {
     this.loadUsers();
-    // this.loadChannel();
   }
 
   /**
@@ -232,8 +231,7 @@ export class AddChannelComponent implements OnInit {
         this.selectedUsers = [];
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
     this.dialogRef.close();
   }
 
@@ -257,8 +255,7 @@ export class AddChannelComponent implements OnInit {
         });
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
     this.dialogRef.close();
   }
 
