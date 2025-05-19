@@ -42,6 +42,7 @@ export class SearchResultComponent {
    * @param element - The selected receiver element (channel or user).
    */
   public openReceiver(element: any) {
+    debugger;
     this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
   }
 
@@ -87,6 +88,7 @@ export class SearchResultComponent {
    * @param element - The clicked element (user or channel).
    */
   public handleClick(element: any) {
+    debugger;
     switch (this.searchService.getSearchComponent()) {
       case 'header':
         this.openReceiver(element);

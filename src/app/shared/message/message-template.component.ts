@@ -280,7 +280,7 @@ export class MessageTemplateComponent implements OnInit {
    *
    * @param event - The MouseEvent triggered by the click.
    */
-  onMentionClick(event: MouseEvent) {
+  onMentionClick(event: MouseEvent | TouchEvent) {
     const btn = (event.target as HTMLElement).closest('.tag-btn');
     if (!btn) return;
 

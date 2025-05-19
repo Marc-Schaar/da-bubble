@@ -18,7 +18,6 @@
     width: max-content;
 
     > button {
-      color: black;
       padding: 10px;
       border-radius: 50%;
       position: relative;
@@ -254,6 +253,7 @@ button {
   white-space: nowrap;
   transition: all, 0.125s ease-in-out;
   cursor: pointer;
+  color: black;
 
   &:disabled {
     mat-icon {

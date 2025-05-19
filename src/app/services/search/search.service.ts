@@ -259,7 +259,7 @@ export class SearchService {
   public getList(type?: string): void {
     this.textareaListOpen = true;
     this.headerListOpen = false;
-
+    this.searchInComponent = 'textarea';
     if (type === '#') {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
         channel.data?.member?.some((member: any) => member.id === this.userId())
