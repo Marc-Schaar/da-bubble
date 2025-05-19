@@ -44,34 +44,64 @@ export class NewmessageComponent {
     }
   }
 
-  setReceiver(element: any) {
+  /**
+   * Sets the current receiver of the message, determines the receiver type (channel or direct),
+   * resets the search list, and logs relevant information.
+   *
+   * @param element - The receiver element, either a channel or a user.
+   */
+  setReceiver(element: any): void {
     this.currentReceiver = element;
     this.receiverId = element.key || element.id;
 
     this.isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
-    console.log(this.currentReceiver);
-    console.log('receiverId gesetzt auf:', this.receiverId);
   }
 
-  public isChannel(element: any) {
+  /**
+   * Determines whether the provided element is a channel based on its data structure.
+   *
+   * @param element - The element to check.
+   * @returns True if the element is a channel, false otherwise.
+   */
+  public isChannel(element: any): boolean {
     return element.data?.member;
   }
 
-  public setReceiverType(type: 'channel' | 'direct') {
+  /**
+   * Sets the receiver type to either 'channel' or 'direct'.
+   *
+   * @param type - The type of the receiver.
+   */
+  public setReceiverType(type: 'channel' | 'direct'): void {
     this.receiverType = type;
   }
 
-  public getReceiverName() {
+  /**
+   * Retrieves the name of the current receiver.
+   *
+   * @returns The name of the current receiver, or an empty string if not available.
+   */
+  public getReceiverName(): string {
     let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.fullname || '';
     return receiverName;
   }
 
-  public getReceiverType() {
+  /**
+   * Retrieves the type of the current receiver.
+   *
+   * @returns The receiver type: 'channel' or 'direct'.
+   */
+  public getReceiverType(): 'channel' | 'direct' | null {
     return this.receiverType;
   }
 
-  public getReceiverId() {
+  /**
+   * Retrieves the ID of the current receiver.
+   *
+   * @returns The receiver ID.
+   */
+  public getReceiverId(): string {
     return this.receiverId;
   }
 }
