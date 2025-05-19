@@ -19,6 +19,7 @@ export class AvatarselectionComponent implements OnInit {
   shareddata = inject(UserService);
   auth = getAuth();
   user: User;
+  error = false;
   isOverlayActive = false;
   profilephoto = 'img/profilephoto.png';
   currentUser = this.auth.currentUser;
@@ -54,14 +55,15 @@ export class AvatarselectionComponent implements OnInit {
   /**
    * Registers the user, updates their profile and Firestore, and redirects to the login page.
    */
-  async login() {
-    this.isOverlayActive = true;
+  async completeregistration() {
     try {
       await this.authService.register(this.user);
+      this.isOverlayActive = true;
       setTimeout(() => {
         this.shareddata.redirectiontologinpage();
       }, 2000);
     } catch (error) {
+      this.error = true;
       this.isOverlayActive = false;
     }
   }

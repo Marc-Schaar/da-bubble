@@ -24,6 +24,17 @@
   transition: transform 0.35s ease;
 }
 
+.error {
+  font-family: "Nunito";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19.1px;
+  color: #ed1e79;
+  display: flex;
+  max-width: 465px;
+  text-align: center;
+}
+
 .overlay.active {
   transform: translateX(0);
 }

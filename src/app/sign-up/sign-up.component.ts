@@ -3,10 +3,10 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../models/user/user';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { UserService } from '../services/user/shared.service';
+import { User } from '../models/user/user';
 
 @Component({
   selector: 'app-signup',
@@ -43,9 +43,6 @@ export class SignupComponent implements OnInit {
       this.sharedservice.setUser(this.user);
       this.sharedservice.redirectiontoavatarselection();
       this.checked = false;
-      setTimeout(() => {
-        useraccount.reset();
-      }, 1000);
     }
   }
 }
