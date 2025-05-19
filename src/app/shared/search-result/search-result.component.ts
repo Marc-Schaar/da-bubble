@@ -75,9 +75,7 @@ export class SearchResultComponent {
    */
   setReceiver(element: any) {
     this.currentReceiver.emit(element);
-    // this.inputChange.emit('An: ' + (element.data?.name || element.fullname));
     this.searchService.resetList();
-    console.log('Receiver gesendet aus search-result:', element);
   }
 
   /**
