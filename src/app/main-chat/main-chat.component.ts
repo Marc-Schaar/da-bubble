@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../services/user/shared.service';
 import { NavigationService } from '../services/navigation/navigation.service';
 import { ThreadComponent } from '../chat-thread/chat-thread.component';
+import { SearchService } from '../services/search/search.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -36,6 +37,7 @@ export class MainChatComponent implements OnInit, AfterViewInit {
   private readonly userService = inject(UserService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
+  private searchService: SearchService = inject(SearchService);
   public feedbackVisible: boolean = false;
   public barOpen: boolean = true;
   public isChatOverlayVisible: boolean = false;
@@ -104,5 +106,9 @@ export class MainChatComponent implements OnInit, AfterViewInit {
   public toogleContactbar() {
     this.drawerContactbar.toggle();
     this.barOpen = !this.barOpen;
+  }
+
+  public closeAll() {
+    this.searchService.resetList();
   }
 }

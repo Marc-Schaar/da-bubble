@@ -3,7 +3,7 @@
   <span [ngStyle]="{ transform: barOpen ? 'rotate(-90deg)' : 'rotate(90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
 </aside>
 
-<main>
+<main (click)="closeAll()">
   <section>
     @if (!this.navigationService.isMobile) {
     <app-header></app-header>
