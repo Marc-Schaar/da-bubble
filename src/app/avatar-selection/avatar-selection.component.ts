@@ -31,6 +31,7 @@ export class AvatarselectionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.shareddata.login = false;
+    console.log(this.user);
   }
 
   /**

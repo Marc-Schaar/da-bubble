@@ -9,7 +9,7 @@ import { UserService } from '../user/shared.service';
 export class MessagesService {
   private fireService = inject(FireServiceService);
   private userService = inject(UserService);
-  email = 'gianniskarakasidhs@hotmail.com'
+  email = 'gianniskarakasidhs@hotmail.com';
 
   /**
    * @description - Retrieves messages from a specific channel and listens for updates.
@@ -118,11 +118,13 @@ export class MessagesService {
    * @returns An object representing the channel message.
    */
   public buildChannelMessageObject(input: string, messages?: any, reactions?: any): {} {
+    console.log(this.userService.currentUser);
+
     return {
       message: input || '',
-      avatar: this.userService.currentUser?.photoURL || '',
+      avatar: this.userService.auth.currentUser?.photoURL || '',
       date: new Date().toISOString().split('T')[0],
-      name: this.userService.currentUser?.displayName || 'Gast',
+      name: this.userService.auth.currentUser?.displayName,
       newDay: this.isNewDay(messages),
       timestamp: serverTimestamp(),
       reaction: reactions || [],
@@ -139,8 +141,8 @@ export class MessagesService {
    */
   public buildDirectMessageObject(input: string, messages: any, from: string, to: string) {
     return {
-      name: this.userService.currentUser?.displayName || 'Gast',
-      avatar: this.userService.currentUser?.photoURL || '',
+      name: this.userService.auth.currentUser?.displayName,
+      avatar: this.userService.auth.currentUser?.photoURL || '',
       message: input,
       date: new Date().toISOString().split('T')[0],
       timestamp: serverTimestamp(),
