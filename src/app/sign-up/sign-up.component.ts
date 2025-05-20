@@ -7,10 +7,11 @@ import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { UserService } from '../services/user/shared.service';
 import { User } from '../models/user/user';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-signup',
-  imports: [HeaderComponent, FooterComponent, RouterLink, FormsModule],
+  imports: [HeaderComponent, FooterComponent, RouterLink, FormsModule, MatIcon],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })

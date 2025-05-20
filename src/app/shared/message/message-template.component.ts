@@ -301,7 +301,6 @@ export class MessageTemplateComponent implements OnInit {
    * @param name - The username or channel name to lookup.
    */
   async showProfileOrChannel(symbol: string, name: string) {
-    debugger;
     switch (symbol) {
       case '@':
         await this.caseUser(name);
