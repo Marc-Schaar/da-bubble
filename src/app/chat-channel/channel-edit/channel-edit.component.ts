@@ -306,20 +306,10 @@ export class ChannelEditComponent {
   }
 
   /**
+   * Closes the add member bar when clicking outside of it.
    * Closes the user bar when clicking outside of it.
    * @param event DOM click event
-   */
-  @HostListener('document:click', ['$event'])
-  closeUserBar(event: Event) {
-    const targetElement = event.target as Node;
-    if (this.showUserBar && this.chooseUserBar?.nativeElement && !this.chooseUserBar.nativeElement.contains(targetElement)) {
-      this.showUserBar = false;
-    }
-  }
-
-  /**
-   * Closes the add member bar when clicking outside of it.
-   * @param event DOM click event
+   *
    */
   @HostListener('document:click', ['$event'])
   closeSelectUser(event: Event) {
@@ -329,6 +319,9 @@ export class ChannelEditComponent {
     }
     if (this.isAddMemberOpen && this.slectUserBar?.nativeElement && !this.slectUserBar.nativeElement.contains(targetElement)) {
       this.isAddMemberOpen = false;
+    }
+    if (this.showUserBar && this.chooseUserBar?.nativeElement && !this.chooseUserBar.nativeElement.contains(targetElement)) {
+      this.showUserBar = false;
     }
   }
 
