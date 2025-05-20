@@ -94,8 +94,7 @@ export class AddMemberComponent implements OnInit {
   async loadUsers() {
     try {
       this.users = await this.fireService.getUsers();
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -211,8 +210,7 @@ export class AddMemberComponent implements OnInit {
         member: arrayUnion(...this.selectedUsers),
       });
       this.selectedUsers = [];
-    } catch (error) {
-    }
+    } catch (error) {}
     this.userService.showFeedback('User hinzugefügt');
   }
 
@@ -230,6 +228,7 @@ export class AddMemberComponent implements OnInit {
       },
       width: '400px',
       position: { top: 'calc(50svh - 310px)' },
+      panelClass: ['fullscreen'],
     });
   }
   openAddMember() {
