@@ -9,16 +9,17 @@ export class SearchService {
   constructor() {}
   private authService: Auth = inject(Auth);
   private userService: UserService = inject(UserService);
-  private tagType: 'channel' | 'user' | null = null;
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
   private newMessageListOpen: boolean = false;
   private isChannel: boolean | null = false;
   private isResultTrue: boolean = false;
+  private directTag: boolean = false;
+
   private currentList: string[] = [];
+  private tagType: 'channel' | 'user' | null = null;
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   private input: string = '';
-  private directTag: boolean = false;
 
   /**
    * Returns the current Search Component.
@@ -62,10 +63,20 @@ export class SearchService {
     return this.currentList;
   }
 
-  public isDirectTag() {
+  /**
+   * Returns whether this tag is a direct message tag.
+   *
+   * @returns {boolean} True if it is a direct message tag, false otherwise.
+   */
+  public isDirectTag(): boolean {
     return this.directTag;
   }
 
+  /**
+   * Sets whether this tag is a direct message tag.
+   *
+   * @param {boolean} isDirect - True if it should be marked as a direct message tag, false otherwise.
+   */
   public setIsDirectTag(boolean: boolean) {
     this.directTag = boolean;
   }
