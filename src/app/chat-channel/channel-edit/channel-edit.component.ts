@@ -41,8 +41,8 @@ export class ChannelEditComponent {
   @ViewChild('slectUserBar') slectUserBar!: ElementRef;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
-  @ViewChild('addMemberMobileButton') addMemberMobileButton!: ElementRef; // Zugriff auf den Öffnen-Button
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef; // Reference to the user search input field
+  @ViewChild('addMemberMobileButton') addMemberMobileButton!: ElementRef;
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
 
   /**
    * Constructor for ChannelEditComponent. Initializes the component with data passed
@@ -324,10 +324,7 @@ export class ChannelEditComponent {
   @HostListener('document:click', ['$event'])
   closeSelectUser(event: Event) {
     const targetElement = event.target as Node;
-    if (this.addMemberMobileButton && this.addMemberMobileButton.nativeElement.contains(targetElement)) {
-      return;
-    }
-    if (this.isAddMemberOpen && this.slectUserBar?.nativeElement && !this.slectUserBar.nativeElement.contains(targetElement)) {
+    if (!this.isAddMemberOpen && this.slectUserBar?.nativeElement && !this.slectUserBar.nativeElement.contains(targetElement)) {
       this.isAddMemberOpen = false;
     }
   }
