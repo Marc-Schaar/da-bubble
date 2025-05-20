@@ -74,18 +74,16 @@ export class AddMemberComponent implements OnInit {
    * Filters available users for display in the search bar.
    */
   filterUsers() {
-    let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
+    const filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
+    let filterValue = '';
     if (filter) {
-      const filterValue = filter.value.toLowerCase();
-      this.filteredUsers = this.users
-        .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-        .filter((user) => !this.members.some((member) => member.uid === user.id))
-        .filter((user) => !this.members.some((member) => member.id === user.id))
-        .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
-        .filter((user) => !user.isAnonymous);
-    } else {
-      this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
+      filterValue = filter.value.toLowerCase();
     }
+    this.filteredUsers = this.users
+      .filter((user) => !this.members.some((member) => member.id === user.id))
+      .filter((user) => user.fullname.toLowerCase().includes(filterValue))
+      .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
+      .filter((user) => !user.isAnonymous);
   }
 
   /**

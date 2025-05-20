@@ -203,16 +203,16 @@ export class ChannelEditComponent {
    */
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
-    if (filter) {
+    if (filter) { 
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-        .filter((user) => !this.members.some((member) => member.uid === user.id))
         .filter((user) => !this.members.some((member) => member.id === user.id))
         .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
-        .filter((user) => user.email !== null);
+        .filter((user) => user.email !== null)
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
+
     }
   }
 
