@@ -30,8 +30,8 @@ export class DialogReciverComponent {
    * shows the direct message view, and closes the user menu.
    */
   public openReciver() {
-    this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
     this.navigationService.showDirect();
+    this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
     this.closeMenu();
   }
 }
