@@ -17,7 +17,7 @@
     <div (click)="showProfile(filteredMember)" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
       <div class="img-status">
         <img src="{{ filteredMember.profilephoto }}" alt="" />
-        <div class="dot" [ngClass]="{'green-circle': filteredMember.online}"></div>
+        <div class="dot" [ngClass]="{ 'green-circle': filteredMember.online }"></div>
       </div>
       <div>{{ filteredMember.fullname }}</div>
     </div>
@@ -54,6 +54,7 @@
         </div>
         <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
       </div>
+
       <div class="choose-user-bar" *ngIf="showUserBar" #chooseUserBar>
         <div class="user-select-cont" (click)="addUserToSelection(index)" *ngFor="let filteredUser of filteredUsers; let index = index">
           <div class="img-status-cont">

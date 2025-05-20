@@ -79,6 +79,7 @@ export class AddMemberComponent implements OnInit {
     if (filter) {
       filterValue = filter.value.toLowerCase();
     }
+
     this.filteredUsers = this.users
       .filter((user) => !this.members.some((member) => member.id === user.id))
       .filter((user) => user.fullname.toLowerCase().includes(filterValue))
@@ -225,8 +226,7 @@ export class AddMemberComponent implements OnInit {
         recieverId: this.currentRecieverId,
       },
       width: '400px',
-      position: { top: 'calc(50svh - 310px)' },
-      panelClass: ['fullscreen'],
+      panelClass: ['center-dialog'],
     });
   }
   openAddMember() {
