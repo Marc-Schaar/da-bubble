@@ -301,6 +301,7 @@ export class MessageTemplateComponent implements OnInit {
    * @param name - The username or channel name to lookup.
    */
   async showProfileOrChannel(symbol: string, name: string) {
+    debugger;
     switch (symbol) {
       case '@':
         await this.caseUser(name);
@@ -324,7 +325,7 @@ export class MessageTemplateComponent implements OnInit {
     const q = query(usersRef, where('fullname', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
-    this.navigationService.reciverId = userDoc.id;
+    this.navigationService.setUrl('direct', userDoc.id);
     this.navigationService.showDirect();
   }
 
@@ -340,7 +341,7 @@ export class MessageTemplateComponent implements OnInit {
     const q = query(channelsRef, where('name', '==', name));
     const snapshot = await getDocs(q);
     const channelDoc = snapshot.docs[0];
-    this.navigationService.reciverId = channelDoc.id;
+    this.navigationService.setUrl('channel', channelDoc.id);
     this.navigationService.showChannel();
   }
 }
