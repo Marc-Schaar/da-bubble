@@ -18,6 +18,7 @@ export class SearchService {
   private currentList: string[] = [];
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   private input: string = '';
+  private directTag: boolean = false;
 
   /**
    * Returns the current Search Component.
@@ -59,6 +60,14 @@ export class SearchService {
    */
   public getCurrentList(): any[] {
     return this.currentList;
+  }
+
+  public isDirectTag() {
+    return this.directTag;
+  }
+
+  public setIsDirectTag(boolean: boolean) {
+    this.directTag = boolean;
   }
 
   /**
@@ -186,6 +195,7 @@ export class SearchService {
     this.textareaListOpen = false;
     this.headerListOpen = false;
     this.newMessageListOpen = false;
+    this.directTag = false;
   }
 
   /**
@@ -260,6 +270,7 @@ export class SearchService {
     this.textareaListOpen = true;
     this.headerListOpen = false;
     this.searchInComponent = 'textarea';
+    this.directTag = true;
     if (type === '#') {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
         channel.data?.member?.some((member: any) => member.id === this.userId())

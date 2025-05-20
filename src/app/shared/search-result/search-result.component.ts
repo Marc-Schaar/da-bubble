@@ -30,7 +30,7 @@ export class SearchResultComponent {
    */
   public tagReceiver(receiverData: any, tagType: '@' | '#') {
     const tagName = receiverData.fullname || receiverData.data.name;
-    this.tagInserted.emit(tagType + tagName);
+    this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
 
     this.searchService.closeList();
     this.searchService.stopObserveInput();
