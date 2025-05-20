@@ -80,7 +80,8 @@ export class AddChannelComponent implements OnInit {
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-        .filter((user) => !user.isAnonymous);
+        .filter((user) => !user.isAnonymous)
+        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid))
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
