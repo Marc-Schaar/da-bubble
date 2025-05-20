@@ -42,6 +42,7 @@ export class ChannelEditComponent {
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
   @ViewChild('addMemberMobileButton') addMemberMobileButton!: ElementRef; // Zugriff auf den Öffnen-Button
+  @ViewChild('userSearchInput') userSearchInput!: ElementRef; // Reference to the user search input field
 
   /**
    * Constructor for ChannelEditComponent. Initializes the component with data passed
@@ -203,16 +204,15 @@ export class ChannelEditComponent {
    */
   filterUsers() {
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
-    if (filter) { 
+    if (filter) {
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !this.members.some((member) => member.id === user.id))
         .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
-        .filter((user) => user.email !== null)
+        .filter((user) => user.email !== null);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
-
     }
   }
 
@@ -312,7 +312,6 @@ export class ChannelEditComponent {
   @HostListener('document:click', ['$event'])
   closeUserBar(event: Event) {
     const targetElement = event.target as Node;
-
     if (this.showUserBar && this.chooseUserBar?.nativeElement && !this.chooseUserBar.nativeElement.contains(targetElement)) {
       this.showUserBar = false;
     }
@@ -363,6 +362,4 @@ export class ChannelEditComponent {
       position: { top: 'calc(50svh - 310px)' },
     });
   }
-
-
 }
