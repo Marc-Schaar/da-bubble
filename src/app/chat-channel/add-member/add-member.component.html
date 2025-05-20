@@ -56,13 +56,18 @@
       </div>
 
       <div class="choose-user-bar" *ngIf="showUserBar" #chooseUserBar>
-        <div class="user-select-cont" (click)="addUserToSelection(index)" *ngFor="let filteredUser of filteredUsers; let index = index">
+        @for (filteredUser of filteredUsers; track $index; let index = $index) {
+        <div class="user-select-cont" (click)="addUserToSelection(index)">
           <div class="img-status-cont">
             <img src="{{ filteredUser.profilephoto }}" alt="" />
             <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
           </div>
           <div>{{ filteredUser.fullname }}</div>
         </div>
+        }@empty {
+        <p>Kein User hinzufügbar oder bereits alle Hinzugefügt</p>
+        }
+
         <div></div>
       </div>
     </div>
