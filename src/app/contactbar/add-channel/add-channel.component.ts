@@ -37,6 +37,8 @@ export class AddChannelComponent implements OnInit {
   addMemberInfoWindow: boolean = false;
   isMobile: boolean = false;
   isNameTaken: boolean = false;
+  showFeedback: boolean = false;
+  disabled: boolean = false;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
   @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
@@ -67,6 +69,7 @@ export class AddChannelComponent implements OnInit {
    */
   ngOnInit() {
     this.loadUsers();
+    this.checkButton();
   }
 
   /**
@@ -75,13 +78,14 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   filterUsers() {
+    this.checkButton();
     let filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
     if (filter) {
       const filterValue = filter.value.toLowerCase();
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !user.isAnonymous)
-        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid))
+        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
@@ -120,7 +124,7 @@ export class AddChannelComponent implements OnInit {
 
   /**
    * Removes a user from the selection bar by index.
-   *
+   * check if the user is already in the users list
    * @param {number} index - The index of the user to remove.
    * @returns {void}
    */
@@ -191,8 +195,12 @@ export class AddChannelComponent implements OnInit {
         this.isNameTaken = true;
       } else {
         this.addChannel();
-        this.channelmodule.showFeedback('Channel erstellt');
-        this.selectChannelMember = true;
+        // this.channelmodule.showFeedback('Channel erstellt');
+        this.showFeedback = true;
+        setTimeout(() => {
+          this.showFeedback = false;
+          this.selectChannelMember = true;
+        }, 1500);
       }
       if (isPlatformBrowser(this.platformId)) {
         if (window.innerWidth <= 1023) {
@@ -214,6 +222,13 @@ export class AddChannelComponent implements OnInit {
     } else {
       this.pushSelectedUser();
       this.channelmodule.showFeedback('User zum Channel hinzugefügt');
+    }
+    if (this.isMobile) {
+      const feedbackMessageElement = document.getElementById('feedbackMessage') as HTMLInputElement | null;
+      if (feedbackMessageElement) {
+        feedbackMessageElement.value = 'User wurden hinzugefügt';
+      }
+      this.showFeedback = true;
     }
   }
 
@@ -309,6 +324,7 @@ export class AddChannelComponent implements OnInit {
    * @returns {void}
    */
   setChannelMember(value: boolean, setHeight: string) {
+    this.checkButton();
     if (!this.isMobile) {
       const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
       this.chooseMember = value;
@@ -318,6 +334,7 @@ export class AddChannelComponent implements OnInit {
     }
     const heightElement = document.getElementById('add-channel-cont') as HTMLElement;
     this.chooseMember = value;
+    this.checkButton();
   }
 
   /**
@@ -369,6 +386,17 @@ export class AddChannelComponent implements OnInit {
   openUserBar() {
     this.showUserBar = true;
     this.filterUsers();
+  }
+
+  /**
+   * Checks if the "Add" button should be enabled.
+   */
+  checkButton() {
+    if (!this.chooseMember || this.selectedUsers.length > 0) {
+      this.disabled = false;
+    } else {
+      this.disabled = true;
+    }
   }
 
   /**
