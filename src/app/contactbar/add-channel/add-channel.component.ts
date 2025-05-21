@@ -38,6 +38,7 @@ export class AddChannelComponent implements OnInit {
   isMobile: boolean = false;
   isNameTaken: boolean = false;
   showFeedback: boolean = false;
+  showUserFeedback: boolean = false;
   disabled: boolean = false;
   @ViewChild('mainDialog') mainDialog!: ElementRef;
   @ViewChild('userSearchInput') userSearchInput!: ElementRef;
@@ -85,7 +86,8 @@ export class AddChannelComponent implements OnInit {
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !user.isAnonymous)
-        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
+        .filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid))
+        .filter((user) => user.uid !== this.auth.currentUser?.uid)
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.uid));
     }
@@ -195,7 +197,7 @@ export class AddChannelComponent implements OnInit {
         this.isNameTaken = true;
       } else {
         this.addChannel();
-        // this.channelmodule.showFeedback('Channel erstellt');
+        this.channelmodule.showFeedback('Channel erstellt');
         this.showFeedback = true;
         setTimeout(() => {
           this.showFeedback = false;
@@ -224,11 +226,10 @@ export class AddChannelComponent implements OnInit {
       this.channelmodule.showFeedback('User zum Channel hinzugefügt');
     }
     if (this.isMobile) {
-      const feedbackMessageElement = document.getElementById('feedbackMessage') as HTMLInputElement | null;
-      if (feedbackMessageElement) {
-        feedbackMessageElement.value = 'User wurden hinzugefügt';
-      }
-      this.showFeedback = true;
+      this.showUserFeedback = true;
+      setTimeout(() => {
+        this.showUserFeedback = false;
+      }, 1500);
     }
   }
 
