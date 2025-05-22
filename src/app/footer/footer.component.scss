@@ -1,20 +1,23 @@
 .footer {
-    max-width: 500px;
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    > a {
-      font-family: "Figtree";
-      font-weight: 400;
-      font-size: 18px;
-      color: #797ef3;
-      text-decoration: none;
-      padding: 10px 15px;
-      &:hover {
-        border: 1px solid #adb0d9;
-        padding: 9px 14px;
-        border-radius: 30px;
-      }
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  > a {
+    font-family: "Figtree";
+    font-weight: 400;
+    font-size: 18px;
+    color: #797ef3;
+    text-decoration: none;
+    padding: 10px 15px;
+    &:hover {
+      border: 1px solid #adb0d9;
+      padding: 9px 14px;
+      border-radius: 30px;
+    }
+
+    @media screen and (height < 745px) {
+      padding: 5px;
     }
   }
-  
+}

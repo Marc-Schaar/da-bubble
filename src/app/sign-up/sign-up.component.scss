@@ -32,7 +32,7 @@ app-header {
 
   .headline {
     font-family: "Nunito";
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #000000;
 
     h1 {
@@ -42,6 +42,10 @@ app-header {
       @media (max-width: 500px) {
         font-size: 2rem;
       }
+    }
+
+    @media screen and (width < 1023px) {
+      font-size: 1rem;
     }
   }
   .box {
