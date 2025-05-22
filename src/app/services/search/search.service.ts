@@ -57,6 +57,15 @@ export class SearchService {
   }
 
   /**
+   * Sets the tagType to a channel.
+   *
+   * @param {boolean} isChannel - True if it should be marked as a channel, false otherwise.
+   */
+  public setChannelBoolean(boolean: boolean) {
+    this.isChannel = boolean;
+  }
+
+  /**
    * Returns the current autocomplete result list.
    */
   public getCurrentList(): any[] {
@@ -82,6 +91,13 @@ export class SearchService {
   }
 
   /**
+   * Returns whether the result is true.
+   */
+  public setResult(boolean: boolean) {
+    this.isResultTrue = boolean;
+  }
+
+  /**
    * Closes the currently active suggestion list.
    */
   public closeList(): void {
@@ -92,7 +108,7 @@ export class SearchService {
    * Stops observing input to prevent triggering further search actions.
    */
   public stopObserveInput(): void {
-    this.isResultTrue = true;
+    this.setResult(true);
   }
 
   /**
@@ -176,9 +192,9 @@ export class SearchService {
    */
   private caseChannel() {
     let searchInput: string | null = null;
+    this.isChannel = true;
     searchInput = this.input.split('#')[1];
     this.currentList = this.startSearch(searchInput, 'channel');
-    this.isChannel = true;
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
     if (!searchInput) this.tagType = null;
@@ -189,9 +205,9 @@ export class SearchService {
    */
   private caseUser() {
     let searchInput: string | null = null;
+    this.isChannel = false;
     searchInput = this.input.split('@')[1];
     this.currentList = this.startSearch(searchInput, 'user');
-    this.isChannel = false;
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
     if (!searchInput) this.tagType = null;
@@ -257,7 +273,7 @@ export class SearchService {
    * @returns {string[]} A list of matched results.
    */
   public startSearch(input: string, searchCollection?: 'channel' | 'user'): string[] {
-    let searchInput = input.trim().toLowerCase() || '';
+    let searchInput = input.trim()?.toLowerCase() || '';
     let result: any[] = [];
     let channelsToSearch = this.isAnonymous()
       ? this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz')

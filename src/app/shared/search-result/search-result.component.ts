@@ -42,7 +42,10 @@ export class SearchResultComponent {
    * @param element - The selected receiver element (channel or user).
    */
   public openReceiver(element: any) {
-    debugger;
+    element.online === false || element.online === true
+      ? this.searchService.setChannelBoolean(false)
+      : this.searchService.setChannelBoolean(true);
+
     this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
   }
 
