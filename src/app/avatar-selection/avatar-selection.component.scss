@@ -25,7 +25,6 @@
 }
 
 .error {
-  font-family: "Nunito";
   font-weight: 400;
   font-size: 14px;
   line-height: 19.1px;
@@ -92,7 +91,6 @@
         flex-direction: column;
         align-items: center;
         > h1:nth-child(1) {
-          font-family: "Nunito";
           font-weight: 700;
           font-size: 46px;
           color: #444df2;
@@ -107,8 +105,6 @@
           display: flex;
           max-width: 441px;
           width: 100%;
-          font-family: "Nunito";
-          font-weight: 400;
           font-size: 20px;
           color: #000000;
           line-height: 24px;
@@ -126,7 +122,6 @@
         padding: 12px 25px;
         border-radius: 25px;
         background-color: #444df2;
-        font-family: "Nunito";
         font-weight: 700;
         font-size: 18px;
         line-height: 24.55px;
@@ -183,7 +178,6 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: "Nunito";
       font-weight: 700;
       font-size: 32px;
       line-height: 43.65px;
@@ -194,8 +188,6 @@
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      font-family: "Nunito";
-      font-weight: 400;
       font-size: 20px;
       line-height: 27.28px;
       color: #000000;

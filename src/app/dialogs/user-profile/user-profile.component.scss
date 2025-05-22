@@ -2,7 +2,6 @@
   width: clamp(200px, 100%, 460px);
   height: fit-content;
   border-radius: 30px 0 30px 30px;
-  font-family: "Nunito";
   background-color: rgba(255, 255, 255, 1);
   gap: 38px;
   display: flex;
@@ -121,7 +120,6 @@ button {
       }
       > div:nth-child(2) {
         > span {
-          font-family: "Nunito";
           font-weight: 700;
           font-size: 20px;
           line-height: 27.28px;
@@ -159,7 +157,6 @@ button {
       border-radius: 50px;
       border: 1px solid #797ef3;
       padding: 12px 25px;
-      font-family: "Nunitor";
       font-size: 18px;
       font-weight: 700;
       color: #444df2;

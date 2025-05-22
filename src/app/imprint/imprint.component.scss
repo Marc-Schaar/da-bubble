@@ -1,75 +1,71 @@
 .borderbox {
-    background-color: #eceefe;
-    height: 87%;
+  background-color: #eceefe;
+  height: 87%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .box {
+    max-width: 698px;
     width: 100%;
+    height: 469px;
+    border-radius: 30px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    .box {
-      max-width: 698px;
-      width: 100%;
-      height: 469px;
-      border-radius: 30px;
+    align-items: flex-start;
+    background-color: #ffffff;
+    flex-direction: column;
+    padding: 48px 50px;
+    @media (max-width: 743px) {
+      height: unset;
+      width: 80%;
+    }
+    @media (max-width: 400px) {
+      padding: 25px 25px;
+    }
+    > div:nth-child(1) {
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      background-color: #ffffff;
       flex-direction: column;
-      padding: 48px 50px;
-      @media (max-width: 743px) {
-        height: unset;
-        width: 80%;
+      align-items: flex-start;
+      gap: 32px;
+      > button:nth-child(1) {
+        background: none;
+        border: none;
+        cursor: pointer;
       }
-      @media (max-width: 400px) {
-        padding: 25px 25px;
-      }
-      > div:nth-child(1) {
+      > div:nth-child(2) {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 32px;
-        > button:nth-child(1) {
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        > div:nth-child(2) {
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-          > h1:nth-child(1) {
-            font-family: "Nunito";
-            font-weight: 700;
-            font-size: 46px;
-            line-height: 55.2px;
-            color: #444df2;
-            @media (max-width: 600px) {
-              font-size: 1.5rem;
-            }
+        gap: 18px;
+        > h1:nth-child(1) {
+          font-weight: 700;
+          font-size: 46px;
+          line-height: 55.2px;
+          color: #444df2;
+          @media (max-width: 600px) {
+            font-size: 1.5rem;
           }
         }
-        > div:nth-child(3) {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          > h2:nth-child(1) {
-            font-family: "Nunito";
-            font-weight: 700;
-            font-size: 46px;
-            line-height: 55.2px;
-            color: #444df2;
-            @media (max-width: 600px) {
-              font-size: 1.5rem;
-            }
+      }
+      > div:nth-child(3) {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        > h2:nth-child(1) {
+          font-weight: 700;
+          font-size: 46px;
+          line-height: 55.2px;
+          color: #444df2;
+          @media (max-width: 600px) {
+            font-size: 1.5rem;
           }
-          > span {
-            font-family: "Nunito";
-            font-weight: 400;
-            font-size: 2rem;
-            color: black;
-          }
+        }
+        > span {
+          font-weight: 400;
+          font-size: 2rem;
+          color: black;
         }
       }
     }
   }
-  
+}

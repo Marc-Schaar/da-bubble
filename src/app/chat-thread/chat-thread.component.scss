@@ -41,7 +41,6 @@ section {
 
     .channel-name-container {
       margin-left: 8px;
-      font-family: Nunito;
       font-size: 14px;
       color: var(--medium-purple);
     }
@@ -49,7 +48,6 @@ section {
 
   .thread-container {
     p {
-      font-family: Nunito;
       font-weight: 700;
       font-size: 24px;
     }
@@ -61,7 +59,6 @@ section {
   transition: background-color 0.125s ease-in-out;
 
   .user-message-container {
-    font-family: Nunito;
     font-size: 18px;
     display: flex;
     gap: 20px;
@@ -94,7 +91,6 @@ section {
         }
 
         .time-container {
-          font-family: Nunito;
           font-size: 14px;
           color: var(--text-grey);
         }
@@ -139,7 +135,6 @@ section {
   align-items: center;
   justify-content: space-between;
   margin-left: 24px;
-  font-family: Nunito;
   font-size: 18px;
   color: var(--light-purple);
 
@@ -157,7 +152,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 10px;
-    li {
+  li {
     list-style: none;
     margin-top: 20px;
   }

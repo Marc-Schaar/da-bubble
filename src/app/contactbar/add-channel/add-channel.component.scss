@@ -3,15 +3,11 @@
   --md-radio-icon-size: 16px;
 }
 ::ng-deep .custom-radio .mat-radio-outer-circle {
-  border-color: var(
-    --md-sys-color-primary
-  ) !important; 
+  border-color: var(--md-sys-color-primary) !important;
 }
 
 ::ng-deep .custom-radio .mat-radio-inner-circle {
-  background-color: var(
-    --md-sys-color-primary
-  ) !important; 
+  background-color: var(--md-sys-color-primary) !important;
 }
 
 .main {
@@ -39,17 +35,15 @@
     border-radius: 30px;
     padding: 0px 30px 0px 30px;
     color: white;
-    z-index: 5 ;
+    z-index: 5;
   }
   .add-channel-cont {
     width: 710px;
     height: 279px;
     padding: 40px;
-    font-family: "Nunito";
     box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
     border-radius: 30px;
-    transition: width 0.3s ease-in-out, height 0.3s ease-in-out,
-    transform 1s ease-in-out;
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out, transform 1s ease-in-out;
     transform-origin: center center;
     background: white;
     overflow: visible;
@@ -210,7 +204,6 @@
           padding: 7.5px 20px 7.5px 20px;
           gap: 5px;
           overflow-x: auto;
-          font-family: "Nunito";
           font-size: 18px;
           font-weight: 400;
           position: static;
@@ -329,7 +322,6 @@
     cursor: pointer;
     font-size: 18px;
     font-weight: 700;
-    font-family: "Nunito";
     z-index: 2;
   }
 }
@@ -369,7 +361,7 @@
   .tooltip {
     pointer-events: none;
     background-color: var(--dark-purple);
-    color: white; 
+    color: white;
     text-align: center;
     border-radius: 6px;
     padding: 6px 10px;
@@ -380,8 +372,8 @@
     transform: translateX(-50%);
     transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
     white-space: nowrap;
-    font-size: 0.8rem; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    font-size: 0.8rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     @media (max-width: 450px) {
       bottom: -45px;
       left: 38%;

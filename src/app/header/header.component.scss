@@ -39,14 +39,12 @@
   }
 
   > p:nth-child(1) {
-    font-family: "Nunito";
     font-weight: 400;
     font-size: 18px;
     color: #000000;
     text-decoration: none;
   }
   > a:nth-child(2) {
-    font-family: "Figtree";
     font-weight: 400;
     font-size: 18px;
     color: #797ef3;
@@ -103,7 +101,6 @@
     }
 
     > span:nth-child(1) {
-      font-family: "Nunito";
       font-weight: 700;
       font-size: 32px;
       color: #000000;
@@ -126,7 +123,6 @@
     outline: none;
     font-size: 26px;
     font-weight: 700;
-    font-family: "Nunito";
 
     &::placeholder {
       font-size: 18px;

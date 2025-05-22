@@ -6,7 +6,6 @@
   padding: 40px;
   z-index: 1050;
   background-color: white;
-  font-family: "Nunito";
   gap: 20px;
   display: flex;
   flex-direction: column;
@@ -60,7 +59,6 @@
           border-radius: 100%;
         }
       }
-
     }
   }
   .add-member-btn-cont {
@@ -78,7 +76,7 @@
       .img-cont {
         svg {
           path {
-            fill: var(--dark-purple-text)
+            fill: var(--dark-purple-text);
           }
           width: 23px;
           height: 17px;
@@ -109,7 +107,6 @@
       color: var(--medium-purple);
       @media (max-width: 1023px) {
         display: none;
-        
       }
     }
   }
@@ -126,7 +123,6 @@
     padding: 7.5px 20px 7.5px 20px;
     gap: 5px;
     overflow-x: auto;
-    font-family: "Nunito";
     font-size: 18px;
     font-weight: 400;
     position: static;
@@ -142,9 +138,7 @@
     .input-help-cont {
       display: flex;
       gap: 10px;
-      
     }
-    
   }
 }
 
@@ -270,7 +264,7 @@
   border: 2px solid rgba(255, 255, 255, 1);
   width: 14px;
   height: 14px;
-  border-radius: 100%;  
+  border-radius: 100%;
   bottom: 5px;
   right: 0px;
 }
