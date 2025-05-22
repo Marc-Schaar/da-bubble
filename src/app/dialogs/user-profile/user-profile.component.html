@@ -10,10 +10,7 @@
     <div class="info-edit">
       <div class="name">{{ displayName }}</div>
       <div class="tooltip-cont">
-        <button
-          class="edit-btn"
-          (click)="modify()"
-        >
+        <button class="edit-btn" (click)="modify()">
           @if (navigationService.isMobile) {
           <mat-icon>edit</mat-icon>
           } @else { Bearbeiten}
@@ -38,7 +35,7 @@
   <div *ngIf="modifyinfos" class="section">
     <div>
       <div>
-        <div><img src="/img/account_circle.png" alt="" /></div>
+        <div><img src="img/account_circle.png" alt="" /></div>
         <div><span>Vollständiger Name</span></div>
       </div>
 

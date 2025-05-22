@@ -3,7 +3,7 @@
     <app-header *ngIf="this.navigationService.isMobile"></app-header>
     <div class="headline">
       <div>
-        <img src="/img/workspace-logo.svg" alt="" />
+        <img src="img/workspace-logo.svg" alt="" />
         <h1>Devspace</h1>
       </div>
       <button (click)="this.navigationService.showNewMessage(); this.userService.setUrl('newMessage')">
@@ -50,11 +50,7 @@
           </button>
 
           <div class="tooltip-cont">
-            <button
-              class="align-center"
-
-              (click)="openAddChannel()"
-            >
+            <button class="align-center" (click)="openAddChannel()">
               <mat-icon>add</mat-icon>
             </button>
 
@@ -78,10 +74,7 @@
         </ul>
       </div>
       <div class="tooltip-cont">
-        <button
-          class="addChannel"
-          (click)="openAddChannel()"
-        >
+        <button class="addChannel" (click)="openAddChannel()">
           <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
           Channel hinzufügen
         </button>
