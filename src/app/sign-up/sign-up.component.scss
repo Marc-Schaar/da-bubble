@@ -13,6 +13,10 @@ app-header {
   flex: 1;
   width: clamp(200px, 100%, 606px);
   align-content: center;
+
+  @media screen and (height < 800px) {
+    overflow: scroll;
+  }
 }
 
 .content {
