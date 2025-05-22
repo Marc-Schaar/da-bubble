@@ -12,53 +12,56 @@
         <span>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</span>
       </div>
 
-      <section class="box">
-        <mat-icon class="material-symbols-outlined">person</mat-icon>
-        <input
-          #fullname="ngModel"
-          [(ngModel)]="user.fullname"
-          name="firstname"
-          type="text"
-          minlength="5"
-          placeholder="Name und Nachname"
-          required
-        />
-
+      <section>
+        <div class="box">
+          <mat-icon class="material-symbols-outlined">person</mat-icon>
+          <input
+            #fullname="ngModel"
+            [(ngModel)]="user.fullname"
+            name="firstname"
+            type="text"
+            minlength="5"
+            placeholder="Name und Nachname"
+            required
+          />
+        </div>
         @if(fullname.touched && fullname.value.length < 5){
         <span class="error">Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span>
         }
       </section>
 
-      <section class="box">
-        <mat-icon class="material-symbols-outlined">mail</mat-icon>
-        <input
-          #email="ngModel"
-          name="email"
-          [(ngModel)]="user.email"
-          type="email"
-          placeholder="beispielname@email.com"
-          pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-          required
-        />
-
+      <section>
+        <div class="box">
+          <mat-icon class="material-symbols-outlined">mail</mat-icon>
+          <input
+            #email="ngModel"
+            name="email"
+            [(ngModel)]="user.email"
+            type="email"
+            placeholder="beispielname@email.com"
+            pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+            required
+          />
+        </div>
         @if(!email.valid && email.touched){
         <span class="error">*Diese E-Mail-Adresse ist leider ungültig.</span>
         }
       </section>
 
-      <section class="box">
-        <mat-icon class="material-symbols-outlined">lock</mat-icon>
-        <input
-          #password="ngModel"
-          [(ngModel)]="user.password"
-          name="password"
-          minlength="5"
-          type="password"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-          placeholder="Passwort"
-          required
-        />
-
+      <section>
+        <div class="box">
+          <mat-icon class="material-symbols-outlined">lock</mat-icon>
+          <input
+            #password="ngModel"
+            [(ngModel)]="user.password"
+            name="password"
+            minlength="5"
+            type="password"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            placeholder="Passwort"
+            required
+          />
+        </div>
         @if(!password.valid && password.touched){
         <span class="error"
           >Bitte geben Sie ein Passwort ein. Es muss mindestens 8 Zeichen lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine
