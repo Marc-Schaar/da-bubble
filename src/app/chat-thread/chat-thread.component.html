@@ -8,7 +8,6 @@
         <div class="thread-container">
           <p>Thread</p>
         </div>
-        <!-- CHANNELNAME -->
         <div class="channel-name-container"># {{ currentChannel?.name }}</div>
       </div>
       @if (!navigationService.isMobile) {
@@ -32,7 +31,9 @@
               <div class="name-container">{{ parentMessageData?.name }}</div>
               <div class="time-container">{{ parentMessageData?.time }}</div>
             </div>
-            <div class="message-container">{{ parentMessageData?.message }}</div>
+            <div class="message-container" [innerHTML]="parentMessageData?.message | linkify" (click)="onMentionClick($event)">
+              {{ parentMessageData?.message }}
+            </div>
           </div>
         </div>
       </li>

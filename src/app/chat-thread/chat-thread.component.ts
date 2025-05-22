@@ -2,7 +2,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Firestore, collection, doc, getDoc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { UserService } from '../services/user/shared.service';
 import { MessagesService } from '../services/messages/messages.service';
 import { NavigationService } from '../services/navigation/navigation.service';
@@ -10,10 +10,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../shared/message/message-template.component';
 import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
+import { LinkifyPipe } from '../pipes/linkify.pipe';
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MatIconModule, TextareaTemplateComponent, MessageTemplateComponent, ChatHeaderComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    TextareaTemplateComponent,
+    MessageTemplateComponent,
+    ChatHeaderComponent,
+    LinkifyPipe,
+  ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
 })
@@ -123,6 +132,78 @@ export class ThreadComponent implements OnInit {
   public closeThread() {
     if (!this.navigationService.isMobile) this.navigationService.toggleThread('close');
     this.userService.setUrl('channel', this.currentChannelId, this.userId);
+  }
+
+  /**
+   * Handles click events on mention buttons within a message.
+   * Determines whether a mention button was clicked and, if so,
+   * extracts its symbol (@ or #) and the associated name,
+   * then delegates to navigation logic.
+   *
+   * @param event - The MouseEvent triggered by the click.
+   */
+  onMentionClick(event: MouseEvent | TouchEvent) {
+    const btn = (event.target as HTMLElement).closest('.tag-btn');
+    if (!btn) return;
+
+    const fullTag = btn.textContent?.trim();
+    if (!fullTag) return;
+
+    const symbol = fullTag.charAt(0);
+    const name = fullTag.slice(1).trim();
+    this.showProfileOrChannel(symbol, name);
+  }
+
+  /**
+   * Routes the click on a mention based on its symbol.
+   * If the symbol is '@', performs a user lookup;
+   * if '#', performs a channel lookup.
+   *
+   * @param symbol - The mention symbol, either '@' or '#'.
+   * @param name - The username or channel name to lookup.
+   */
+  async showProfileOrChannel(symbol: string, name: string) {
+    switch (symbol) {
+      case '@':
+        await this.caseUser(name);
+        break;
+
+      case '#':
+        await this.caseChannel(name);
+        break;
+    }
+  }
+
+  /**
+   * Looks up a user in Firestore by their full name,
+   * sets the navigation service’s receiver ID to the found user’s document ID,
+   * and switches the UI to a direct chat view.
+   *
+   * @param name - The user’s full name to query.
+   */
+  async caseUser(name: string) {
+    const usersRef = collection(this.firestore, 'users');
+    const q = query(usersRef, where('fullname', '==', name));
+    const snapshot = await getDocs(q);
+    const userDoc = snapshot.docs[0];
+    this.navigationService.setUrl('direct', userDoc.id);
+    this.navigationService.showDirect();
+  }
+
+  /**
+   * Looks up a channel in Firestore by its name,
+   * sets the navigation service’s receiver ID to the found channel’s document ID,
+   * and switches the UI to the channel view.
+   *
+   * @param name - The channel’s name to query.
+   */
+  async caseChannel(name: string) {
+    const channelsRef = collection(this.firestore, 'channels');
+    const q = query(channelsRef, where('name', '==', name));
+    const snapshot = await getDocs(q);
+    const channelDoc = snapshot.docs[0];
+    this.navigationService.setUrl('channel', channelDoc.id);
+    this.navigationService.showChannel();
   }
 
   ngOnDestroy(): void {
