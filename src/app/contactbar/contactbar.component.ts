@@ -88,12 +88,13 @@ export class ContactbarComponent implements OnInit {
           ...colSnap.data(),
         }));
         this.channels = [];
+        debugger;
         for (let i = 0; i < this.allChannels.length; i++) {
           const element = this.allChannels[i];
           if (this.userService.auth.currentUser?.isAnonymous && element.id === 'KqvcY68R1jP2UsQkv6Nz') {
             this.channels.push(element);
           } else {
-            for (let y = 0; y < this.allChannels[i].member.length; y++) {
+            for (let y = 0; y < this.allChannels[i].member?.length; y++) {
               const userId = this.allChannels[i].member[y].id;
               if (userId == this.userService.currentUser?.uid) {
                 this.channels.push(element);
