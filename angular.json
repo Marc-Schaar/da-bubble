@@ -34,7 +34,6 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/angular-projects/DABubble/",
               "budgets": [
                 {
                   "type": "initial",
