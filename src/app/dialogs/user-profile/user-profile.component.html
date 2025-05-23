@@ -5,7 +5,7 @@
       <img src="img/close.png" alt="" />
     </div>
   </div>
-  <div class="picture-cont"><img src="{{ photoURL }}" alt="" /></div>
+  <div (click)="modifyinfos ? openAvatarSelection() : null" class="picture-cont"><img src="{{ photoURL }}" alt="" /></div>
   <div class="discription-cont" *ngIf="!modifyinfos">
     <div class="info-edit">
       <div class="name">{{ displayName }}</div>

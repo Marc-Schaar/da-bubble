@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -8,6 +8,8 @@ import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { MatIcon } from '@angular/material/icon';
 import { DialogRef } from '@angular/cdk/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { AvatarSelectionComponent } from '../avatar-selection/avatar-selection/avatar-selection.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,6 +24,8 @@ export class UserProfileComponent implements OnInit {
   navigationService = inject(NavigationService);
   auth = getAuth();
   private dialogRef = inject(DialogRef);
+  private dialog = inject(MatDialog);
+
   user: User | null = null;
   displayName: string | null = null;
   email: string | null = null;
@@ -93,11 +97,29 @@ export class UserProfileComponent implements OnInit {
   async saveChanges() {
     if (this.user && this.newname) {
       try {
-        await updateProfile(this.user, { displayName: this.newname });
+        await updateProfile(this.user, { displayName: this.newname, photoURL: this.photoURL });
         this.displayName = this.newname;
+        this.photoURL = this.photoURL;
         this.modifyinfos = false;
-      } catch (error) {
-      }
+      } catch (error) {}
     }
+  }
+
+  /**
+   * Opens the Avatar Selection dialog.
+   * Passes the current user data to the dialog as input.
+   * After the dialog is closed, updates the user's photoURL if a new avatar was selected.
+   */
+  openAvatarSelection() {
+    const dialogRef = this.dialog.open(AvatarSelectionComponent, {
+      data: { user: this.user },
+      hasBackdrop: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.photoURL = result;
+      }
+    });
   }
 }
