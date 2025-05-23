@@ -352,7 +352,7 @@ export class ChannelEditComponent {
         recieverId: this.currentRecieverId,
       },
       width: '400px',
-      position: { top: 'calc(50svh - 310px)' },
+      panelClass: ['center-dialog'],
     });
   }
 }
