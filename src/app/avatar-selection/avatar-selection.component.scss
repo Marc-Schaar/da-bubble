@@ -17,11 +17,18 @@
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  background-image: url("/angular-projects/DABubble/public/img/Kontoerstellung.png");
-  background-repeat: no-repeat;
-  background-position: 96% 90%;
+  padding: 50px;
   transform: translateX(100%);
-  transition: transform 0.35s ease;
+  transition: transform 0.125s ease-in-out;
+
+  span {
+    background-color: var(--dark-purple);
+    padding: 25px 50px;
+    border-radius: 25px 0 25px 25px;
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+  }
 }
 
 .error {
