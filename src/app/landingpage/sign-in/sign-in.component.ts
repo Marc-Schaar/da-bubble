@@ -3,13 +3,13 @@ import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule, NgForm } from '@angular/forms';
-import { FireServiceService } from '../services/firebase/fire-service.service';
 import { Firestore } from '@angular/fire/firestore';
-import { UserService } from '../services/user/shared.service';
-import { User } from '../models/user/user';
-import { AuthService } from '../services/auth/auth.service';
-import { NavigationService } from '../services/navigation/navigation.service';
 import { MatIconModule } from '@angular/material/icon';
+import { UserService } from '../../services/user/shared.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-sign-in',

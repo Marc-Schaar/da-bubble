@@ -1,13 +1,13 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 import { CommonModule } from '@angular/common';
-import { User } from '../models/user/user';
+import { User } from '../../models/user/user';
 import { getAuth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../services/user/shared.service';
-import { AuthService } from '../services/auth/auth.service';
+import { UserService } from '../../services/user/shared.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-avatarselection',

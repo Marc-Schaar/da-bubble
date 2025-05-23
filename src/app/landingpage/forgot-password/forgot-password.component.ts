@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { User } from '../models/user/user';
+import { User } from '../../models/user/user';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { RouterLink } from '@angular/router';
-import { UserService } from '../services/user/shared.service';
+import { UserService } from '../../services/user/shared.service';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-forgotpassword',
@@ -35,8 +35,7 @@ export class ForgotpasswordComponent implements OnInit {
   async onSubmit(emailform: NgForm) {
     this.isOverlayActive = true;
     await sendPasswordResetEmail(this.auth, this.user.email)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;

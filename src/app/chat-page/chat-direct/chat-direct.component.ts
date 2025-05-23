@@ -4,20 +4,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../services/user/shared.service';
-import { FireServiceService } from '../services/firebase/fire-service.service';
-import { NavigationService } from '../services/navigation/navigation.service';
-import { MessagesService } from '../services/messages/messages.service';
+import { UserService } from '../../services/user/shared.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { MessagesService } from '../../services/messages/messages.service';
 
-import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
-import { MessageTemplateComponent } from '../shared/message/message-template.component';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
-import { DialogReciverComponent } from '../dialogs/dialog-reciver/dialog-reciver.component';
+import { DividerTemplateComponent } from '../../shared/divider/divider-template.component';
+import { MessageTemplateComponent } from '../../shared/message/message-template.component';
+import { TextareaTemplateComponent } from '../../shared/textarea/textarea-template.component';
+import { DialogReciverComponent } from '../../dialogs/dialog-reciver/dialog-reciver.component';
 import { Subscription } from 'rxjs';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
+import { ChatHeaderComponent } from '../../shared/chat-header/chat-header.component';
 
 @Component({
   selector: 'app-direct-messages',

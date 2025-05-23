@@ -3,18 +3,18 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../services/user/shared.service';
 import { Auth } from '@angular/fire/auth';
-import { UserProfileComponent } from '../dialogs/user-profile/user-profile.component';
 import { FormsModule } from '@angular/forms';
-import { NavigationService } from '../services/navigation/navigation.service';
-import { AuthService } from '../services/auth/auth.service';
-import { SearchService } from '../services/search/search.service';
-import { SearchResultComponent } from '../shared/search-result/search-result.component';
 import { MatDialog } from '@angular/material/dialog';
-import { UserMenuComponent } from '../dialogs/user-menu/user-menu.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { RouterModule } from '@angular/router';
+import { SearchResultComponent } from '../search-result/search-result.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { SearchService } from '../../services/search/search.service';
+import { UserProfileComponent } from '../../dialogs/user-profile/user-profile.component';
+import { UserMenuComponent } from '../../dialogs/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-header',

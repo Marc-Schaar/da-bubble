@@ -2,12 +2,12 @@
 
 @font-face {
   font-family: "Figtree";
-  src: url("/angular-projects/DABubble/fonts/Figtree-VariableFont_wght.ttf") format("truetype");
+  src: url("/fonts/Figtree-VariableFont_wght.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Nunito";
-  src: url("/angular-projects/DABubble/public/fonts/Nunito-VariableFont_wght.ttf") format("truetype");
+  src: url("/public/fonts/Nunito-VariableFont_wght.ttf") format("truetype");
 }
 
 :root {
@@ -23,17 +23,9 @@
   --online: rgba(146, 200, 62, 1);
   --offline: rgba(128, 128, 128, 1);
 
-  --dark-purple-filter: brightness(0) saturate(100%) invert(37%) sepia(80%) saturate(5262%) hue-rotate(231deg) brightness(94%)
-    contrast(102%);
-
   --contactbar-width: 366px;
   --header-offset: 130px;
   --mat-sys-label-large-size: 24px;
-}
-
-app-header {
-  display: flex;
-  justify-content: center;
 }
 
 * {
@@ -60,11 +52,9 @@ body {
   background-color: rgba(0, 0, 0, 0) !important;
 }
 
-.mat-mdc-dialog-surface {
-  border-radius: 0 !important;
-  @media (max-width: 440px) {
-    overflow: hidden !important;
-  }
+app-header {
+  display: flex;
+  justify-content: center;
 }
 
 app-footer {
@@ -118,6 +108,27 @@ app-footer {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.mat-mdc-dialog-surface {
+  border-radius: 0 !important;
+  @media (max-width: 440px) {
+    overflow: hidden !important;
+  }
+}
+
+.mat-drawer.mat-drawer-side {
+  z-index: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.mat-bottom-sheet-container {
+  border-radius: 20px 20px 0 0;
+  background-color: white;
+  padding: 0 !important ;
 }
 
 .fullscreen.cdk-overlay-pane {
@@ -187,40 +198,15 @@ textarea {
   }
 }
 
-.hover-dark-purple-to-medium {
-  transition: all 0.125s ease-in-out;
-
-  color: var(--dark-purple);
-  &:hover {
-    color: var(--medium-purple);
-  }
-}
-
 .hover-to-dark-purple {
   transition: all 0.125s ease-in-out;
   padding: 8px;
   border-radius: 50%;
 
-  img {
-    transition: all 0.125s ease-in-out;
-  }
   &:hover {
     background-color: var(--bg-color);
     mat-icon {
       color: var(--dark-purple);
-    }
-    img {
-      filter: var(--dark-purple-filter);
-    }
-  }
-}
-
-.filter-hover-purple-3 {
-  transition: all 0.125s ease-in-out;
-  &:hover {
-    transition: all 0.125s ease-in-out;
-    img {
-      filter: brightness(0) saturate(100%) invert(31%) sepia(35%) saturate(6836%) hue-rotate(231deg) brightness(101%) contrast(89%);
     }
   }
 }
@@ -323,20 +309,6 @@ textarea {
     color: black;
     background-color: white;
   }
-}
-
-.mat-drawer.mat-drawer-side {
-  z-index: 0;
-}
-
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-}
-
-.mat-bottom-sheet-container {
-  border-radius: 20px 20px 0 0;
-  background-color: white;
-  padding: 0 !important ;
 }
 
 .guest-btn {

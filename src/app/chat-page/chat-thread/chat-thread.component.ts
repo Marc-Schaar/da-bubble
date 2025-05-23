@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
-import { UserService } from '../services/user/shared.service';
-import { MessagesService } from '../services/messages/messages.service';
-import { NavigationService } from '../services/navigation/navigation.service';
 import { MatIconModule } from '@angular/material/icon';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../shared/message/message-template.component';
-import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
-import { LinkifyPipe } from '../pipes/linkify.pipe';
+import { TextareaTemplateComponent } from '../../shared/textarea/textarea-template.component';
+import { MessageTemplateComponent } from '../../shared/message/message-template.component';
+import { ChatHeaderComponent } from '../../shared/chat-header/chat-header.component';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { MessagesService } from '../../services/messages/messages.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 
 @Component({
   selector: 'app-thread',

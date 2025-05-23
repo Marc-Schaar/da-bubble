@@ -1,12 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NewmessageComponent } from '../../chat-new-message/chat-new.component';
-import { DirectmessagesComponent } from '../../chat-direct/chat-direct.component';
-import { ChatContentComponent } from '../../chat-channel/chat-channel.component';
-import { UserService } from '../user/shared.service';
-import { Auth } from '@angular/fire/auth';
 import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NewmessageComponent } from '../../chat-page/chat-new-message/chat-new.component';
+import { DirectmessagesComponent } from '../../chat-page/chat-direct/chat-direct.component';
+import { ChatContentComponent } from '../../chat-page/chat-channel/chat-channel.component';
 
 @Injectable({
   providedIn: 'root',

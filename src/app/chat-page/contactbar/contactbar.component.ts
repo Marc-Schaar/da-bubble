@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Firestore, onSnapshot, getDoc } from '@angular/fire/firestore';
-import { FireServiceService } from '../services/firebase/fire-service.service';
-import { UserService } from '../services/user/shared.service';
-import { NavigationService } from '../services/navigation/navigation.service';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { AddChannelComponent } from './add-channel/add-channel.component';
-import { HeaderComponent } from '../header/header.component';
-import { SearchResultComponent } from '../shared/search-result/search-result.component';
-import { SearchService } from '../services/search/search.service';
+import { AddChannelComponent } from '../../dialogs/add-channel/add-channel.component';
+import { SearchResultComponent } from '../../shared/search-result/search-result.component';
+import { SearchService } from '../../services/search/search.service';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-contactbar',

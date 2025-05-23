@@ -4,22 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, query, orderBy, collection, doc } from '@angular/fire/firestore';
-import { FireServiceService } from '../services/firebase/fire-service.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserService } from '../services/user/shared.service';
-import { ChannelEditComponent } from './channel-edit/channel-edit.component';
-import { AddMemberComponent } from './add-member/add-member.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MessagesService } from '../services/messages/messages.service';
-import { User } from '../models/user/user';
-import { NavigationService } from '../services/navigation/navigation.service';
-import { DividerTemplateComponent } from '../shared/divider/divider-template.component';
-import { TextareaTemplateComponent } from '../shared/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../shared/message/message-template.component';
-import { ChatHeaderComponent } from '../shared/chat-header/chat-header.component';
+import { DividerTemplateComponent } from '../../shared/divider/divider-template.component';
+import { TextareaTemplateComponent } from '../../shared/textarea/textarea-template.component';
+import { MessageTemplateComponent } from '../../shared/message/message-template.component';
+import { ChatHeaderComponent } from '../../shared/chat-header/chat-header.component';
+import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { User } from '../../models/user/user';
+import { ChannelEditComponent } from '../../dialogs/channel-edit/channel-edit.component';
+import { AddMemberComponent } from '../../dialogs/add-member/add-member.component';
 
 @Component({
   selector: 'app-chat-content',

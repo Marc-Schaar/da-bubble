@@ -4,14 +4,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HeaderComponent } from '../header/header.component';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
 import { Subscription } from 'rxjs';
-import { UserService } from '../services/user/shared.service';
-import { NavigationService } from '../services/navigation/navigation.service';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
+import { SearchService } from '../../services/search/search.service';
+import { HeaderComponent } from '../../shared/header/header.component';
 import { ThreadComponent } from '../chat-thread/chat-thread.component';
-import { SearchService } from '../services/search/search.service';
 
 @Component({
   selector: 'app-main-chat',

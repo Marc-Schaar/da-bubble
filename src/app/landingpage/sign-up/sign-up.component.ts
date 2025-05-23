@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 import { RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Firestore, setDoc, doc } from '@angular/fire/firestore';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { UserService } from '../services/user/shared.service';
-import { User } from '../models/user/user';
+import { Firestore } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { UserService } from '../../services/user/shared.service';
+import { User } from '../../models/user/user';
 import { MatIcon } from '@angular/material/icon';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-signup',
