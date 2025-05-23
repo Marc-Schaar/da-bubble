@@ -7,12 +7,12 @@ import { AvatarselectionComponent } from './landingpage/avatar-selection/avatar-
 import { ContactbarComponent } from './chat-page/contactbar/contactbar.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
-import { MainChatComponent } from './chat-page/main-chat/main-chat.component';
 import { DirectmessagesComponent } from './chat-page/chat-direct/chat-direct.component';
 import { SignInComponent } from './landingpage/sign-in/sign-in.component';
 import { ChatContentComponent } from './chat-page/chat-channel/chat-channel.component';
 import { ThreadComponent } from './chat-page/chat-thread/chat-thread.component';
 import { NewmessageComponent } from './chat-page/chat-new-message/chat-new.component';
+import { MainChatComponent } from './chat-page/main-chat/main-chat.component';
 
 export const routes: Routes = [
   { path: '', component: MainComponentComponent },

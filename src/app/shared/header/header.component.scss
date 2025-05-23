@@ -155,35 +155,6 @@
   box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
 }
 
-.listrow {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  gap: 15px;
-  border-radius: 30px;
-  padding: 4px 20px 4px 25px;
-  cursor: pointer;
-  transition: all 0.125s ease-in-out;
-
-  > span {
-    font-size: 18px;
-    font-weight: 400;
-  }
-
-  &:hover {
-    background-color: var(--bg-color);
-    color: var(--dark-purple);
-    > span {
-      font-weight: 700;
-    }
-
-    > .tag {
-      content: url(./../../../public/img/tag-purple.svg) !important;
-    }
-  }
-}
-
 .status-dot {
   position: absolute;
   bottom: 0;
