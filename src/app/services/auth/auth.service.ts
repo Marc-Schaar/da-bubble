@@ -56,13 +56,8 @@ export class AuthService {
         photoURL: 'img/profilephoto.png',
       });
 
-      const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-      await setDoc(userDocRef, {
-        fullname: firebaseUser.displayName,
-        email: firebaseUser.email,
-        profilephoto: 'img/profilephoto.png',
-        online: true,
-      });
+      await this.addInUserCollection(firebaseUser);
+      await this.addInDefaultChannel(firebaseUser);
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
@@ -86,14 +81,7 @@ export class AuthService {
         photoURL: 'img/profilephoto.png',
       });
 
-      const userDocRef = doc(this.firestore, `users/${result.user.uid}`);
-      await setDoc(userDocRef, {
-        fullname: 'Gast',
-        email: null,
-        profilephoto: 'img/profilephoto.png',
-        online: true,
-        isAnonymous: true,
-      });
+      await this.addInUserCollection(result.user);
       await this.shared.setOnlineStatus();
       this.shared.redirectiontodashboard();
     } catch (error) {
@@ -116,24 +104,62 @@ export class AuthService {
       displayName: user.fullname,
       photoURL: user.profilephoto,
     });
-    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+    await this.addInUserCollection(firebaseUser);
+    await this.addInDefaultChannel(firebaseUser);
+  }
+
+  /**
+   * Adds a user to the user collection in Firestore.
+   * This method is used when a user registers or logs in.
+   *
+   * @param user - The user to be added to the user collection
+   */
+  private async addInUserCollection(user: any) {
+    const userDocRef = doc(this.firestore, `users/${user.uid}`);
     await setDoc(userDocRef, {
-      fullname: user.fullname,
+      fullname: user.displayName,
       email: user.email,
-      profilephoto: user.profilephoto,
+      profilephoto: user.photoURL,
       online: false,
-      id: firebaseUser.uid,
+      id: user.uid,
     });
+  }
+
+  /**
+   * Adds a user to the default channel.
+   * This method is used when a user registers or logs in.
+   *
+   * @param user - The user to be added to the default channel
+   */
+  private async addInDefaultChannel(user: any) {
     const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
-    await updateDoc(defaultChannelRef, {
-      member: arrayUnion({
-        fullname: user.fullname,
-        email: user.email,
-        profilephoto: user.profilephoto,
-        online: false,
-        id: firebaseUser.uid,
-      }),
-    });
+    try {
+      await updateDoc(defaultChannelRef, {
+        member: arrayUnion({
+          fullname: user.displayName,
+          email: user.email,
+          profilephoto: user.photoURL,
+          online: false,
+          id: user.uid,
+        }),
+      });
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen zum Standardkanal:', error);
+    }
+  }
+
+  /**
+   * Updates the online status of the current user in Firestore.
+   *
+   * @param currentUser The user object containing the UID and online status.
+   */
+  async updateOnlineStatus(currentUser: any) {
+    if (currentUser.uid) {
+      const userRef = doc(this.firestore, 'users', currentUser.uid);
+      await updateDoc(userRef, {
+        online: currentUser.online,
+      });
+    }
   }
 
   /**
