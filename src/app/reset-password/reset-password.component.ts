@@ -1,13 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FooterComponent } from '../footer/footer.component';
-import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../shared/footer/footer.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../models/user/user';
 import { CommonModule } from '@angular/common';
 import { getAuth, confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { UserService } from '../services/user/shared.service';
+import { HeaderComponent } from '../shared/header/header.component';
 
 @Component({
   selector: 'app-resetpassword',

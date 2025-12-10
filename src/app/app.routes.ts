@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { MainComponentComponent } from './main-component/main-component.component';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { SignupComponent } from './sign-up/sign-up.component';
-import { ForgotpasswordComponent } from './forgot-password/forgot-password.component';
+import { MainComponentComponent } from './landingpage/main-component/main-component.component';
+import { SignupComponent } from './landingpage/sign-up/sign-up.component';
+import { ForgotpasswordComponent } from './landingpage/forgot-password/forgot-password.component';
 import { ResetpasswordComponent } from './reset-password/reset-password.component';
-import { AvatarselectionComponent } from './avatar-selection/avatar-selection.component';
-import { ContactbarComponent } from './contactbar/contactbar.component';
+import { AvatarselectionComponent } from './landingpage/avatar-selection/avatar-selection.component';
+import { ContactbarComponent } from './chat-page/contactbar/contactbar.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { DataprotectionComponent } from './data-protection/data-protection.component';
-import { MainChatComponent } from './main-chat/main-chat.component';
-import { ChatContentComponent } from './chat-channel/chat-channel.component';
-import { ThreadComponent } from './chat-thread/chat-thread.component';
-import { DirectmessagesComponent } from './chat-direct/chat-direct.component';
-import { NewmessageComponent } from './chat-new-message/chat-new.component';
+import { DirectmessagesComponent } from './chat-page/chat-direct/chat-direct.component';
+import { SignInComponent } from './landingpage/sign-in/sign-in.component';
+import { ChatContentComponent } from './chat-page/chat-channel/chat-channel.component';
+import { ThreadComponent } from './chat-page/chat-thread/chat-thread.component';
+import { NewmessageComponent } from './chat-page/chat-new-message/chat-new.component';
+import { MainChatComponent } from './chat-page/main-chat/main-chat.component';
 
 export const routes: Routes = [
   { path: '', component: MainComponentComponent },
@@ -25,8 +25,8 @@ export const routes: Routes = [
   { path: 'chat', component: MainChatComponent },
   { path: 'channel', component: ChatContentComponent },
   { path: 'direct', component: DirectmessagesComponent },
+  { path: 'new-message', component: NewmessageComponent },
   { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
-  { path: 'new-message', component: NewmessageComponent },
 ];
