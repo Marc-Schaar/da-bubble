@@ -1,9 +1,9 @@
 <main>
   <app-header></app-header>
-  <app-sign-in></app-sign-in>
+   <router-outlet />
   <div class="signup">
     <p>Neu bei DABubble?</p>
-    <a routerLink="/signup">Konto erstellen</a>
+    <a routerLink="/register">Konto erstellen</a>
   </div>
   <app-footer></app-footer>
   <app-intro *ngIf="showIntro" id="intro"></app-intro>

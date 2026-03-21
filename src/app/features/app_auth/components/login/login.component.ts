@@ -14,12 +14,13 @@ import { User } from '../../models/user/user';
 
 
 @Component({
-  selector: 'app-sign-in',
+  selector: 'app-login',
   imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule],
-  templateUrl: './sign-in.component.html',
-  styleUrl: './sign-in.component.scss',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
 })
-export class SignInComponent implements OnInit {
+
+export class LoginComponent implements OnInit {
   disabled = true;
   shared = inject(UserService);
   auth = inject(Auth);

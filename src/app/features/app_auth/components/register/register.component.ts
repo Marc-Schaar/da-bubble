@@ -1,25 +1,23 @@
 import { Component, inject, OnInit } from '@angular/core';
 
-import { RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Firestore } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 
-import { MatIcon } from '@angular/material/icon';
-import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { FooterComponent } from '../../../../shared/components/footer/footer.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
+
 import { User } from '../../models/user/user';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { MatIcon } from '@angular/material/icon';
 
 
 
 @Component({
-  selector: 'app-signup',
-  imports: [HeaderComponent, FooterComponent, RouterLink, FormsModule, MatIcon],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss',
+  selector: 'app-register',
+  imports: [FormsModule, MatIcon],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
 })
-export class SignupComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   sharedservice = inject(UserService);
   Auth = inject(Auth);
   user = new User();

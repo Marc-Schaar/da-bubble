@@ -1,19 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-
-
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { IntroComponent } from '../intro/intro.component';
-import { SignInComponent } from '../sign-in/sign-in.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
+
 
 
 
 @Component({
   selector: 'app-main-component',
-  imports: [CommonModule, HeaderComponent, FooterComponent, SignInComponent, IntroComponent, RouterModule],
+  imports: [CommonModule, HeaderComponent, FooterComponent,  IntroComponent, RouterModule],
   templateUrl: './main-component.component.html',
   styleUrl: './main-component.component.scss',
 })

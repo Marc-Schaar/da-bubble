@@ -1,12 +1,7 @@
 import { Routes } from '@angular/router';
-
-
-
 import { ImprintComponent } from '../app/features/legal/imprint/imprint.component';
 import { DataprotectionComponent } from '../app/features/legal/data-protection/data-protection.component';
 import { MainComponentComponent } from '../app/features/app_auth/components/main-component/main-component.component';
-import { SignInComponent } from '../app/features/app_auth/components/sign-in/sign-in.component';
-import { SignupComponent } from '../app/features/app_auth/components/sign-up/sign-up.component';
 import { ForgotpasswordComponent } from '../app/features/app_auth/components/forgot-password/forgot-password.component';
 import { ResetpasswordComponent } from '../app/features/app_auth/components/reset-password/reset-password.component';
 import { AvatarselectionComponent } from '../app/features/app_auth/components/avatar-selection/avatar-selection.component';
@@ -16,11 +11,19 @@ import { ChatContentComponent } from '../app/features/app_chat/chat-channel/chat
 import { DirectmessagesComponent } from '../app/features/app_chat/chat-direct/chat-direct.component';
 import { NewmessageComponent } from '../app/features/app_chat/chat-new-message/chat-new.component';
 import { ThreadComponent } from '../app/features/app_chat/chat-thread/chat-thread.component';
+import { LoginComponent } from '../app/features/app_auth/components/login/login.component';
+import { RegisterComponent } from '../app/features/app_auth/components/register/register.component';
 
 export const routes: Routes = [
-  { path: '', component: MainComponentComponent },
-  { path: 'signin', component: SignInComponent },
-  { path: 'signup', component: SignupComponent },
+  { path: '', 
+    component: MainComponentComponent, 
+     children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+    ], 
+},
+ 
   { path: 'forgotpassword', component: ForgotpasswordComponent},
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'avatarselection', component: AvatarselectionComponent },
