@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,7 @@ import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SearchResultComponent } from '../search-result/search-result.component';
 
 import { UserService } from '../../services/user/shared.service';
@@ -16,6 +16,7 @@ import { SearchService } from '../../services/search/search.service';
 import { UserProfileComponent } from '../../../features/dialogs/user-profile/user-profile.component';
 import { UserMenuComponent } from '../../../features/dialogs/user-menu/user-menu.component';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { filter } from 'rxjs';
 
 
 @Component({
@@ -24,7 +25,7 @@ import { AuthService } from '../../../features/app_auth/services/auth/auth.servi
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
   public auth = inject(Auth);
   private authService: AuthService = inject(AuthService);
@@ -36,6 +37,21 @@ export class HeaderComponent {
   showBackground: boolean = false;
   isProfileCard: boolean = false;
   public input: string = '';
+
+  private router = inject(Router)
+  public isAuthPage=signal<boolean>(true)
+
+    ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      const url = event.urlAfterRedirects;
+      this.isAuthPage.set( url.includes('login') || url.includes('register')) 
+      
+      console.log('Ist Auth-Seite:', this.isAuthPage());
+    });
+  }
+  
 
   /**
    * Opens the User Profile Dialog.

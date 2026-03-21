@@ -1,10 +1,4 @@
-.main {
-  width: clamp(200px, 100%, 606px);
 
-  form {
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
-  }
-}
 .input-container {
   display: flex;
   flex-direction: column;
@@ -45,15 +39,14 @@
   }
 }
 
-.signinbox {
+.form {
   text-align: center;
   display: flex;
+  flex-direction: column;
   padding: 30px;
   gap: 45px;
   align-items: center;
-  flex-direction: column;
-  border-radius: 30px;
-  background-color: #ffffff;
+  
   @media only screen and (max-width: 1023px) {
     gap: 10px;
     padding: 20px 20px;

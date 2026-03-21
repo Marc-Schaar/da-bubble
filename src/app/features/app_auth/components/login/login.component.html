@@ -1,54 +1,52 @@
-<div class="main">
-  <form class="signinbox" #userauth="ngForm" (ngSubmit)="signin(userauth)">
-    <header>
-      <h1>Anmeldung</h1>
-      <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-    </header>
+<form class="form" #userauth="ngForm" (ngSubmit)="signin(userauth)">
+  <header>
+    <h1>Anmeldung</h1>
+    <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+  </header>
 
-    <section class="input-container">
-      <div class="full-width input-box">
-        <div class="full-width input-row">
-          <input
-            type="email"
-            #email="ngModel"
-            required
-            name="email"
-            [(ngModel)]="user.email"
-            placeholder="beispielname@email.com"
-            pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-          />
-          <mat-icon class="material-symbols-outlined">email</mat-icon>
-        </div>
+  <section class="input-container">
+    <div class="full-width input-box">
+      <div class="full-width input-row">
+        <input
+          type="email"
+          #email="ngModel"
+          required
+          name="email"
+          [(ngModel)]="user.email"
+          placeholder="beispielname@email.com"
+          pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+        />
+        <mat-icon class="material-symbols-outlined">email</mat-icon>
+      </div>
 
-        @if (((!email.valid && email.value >= 7) || authService.error)) {
+      @if ((!email.valid && email.value >= 7) || authService.error) {
         <span class="error d-none" id="wrongemail">*Diese E-Mail-Adresse ist leider ungültig.</span>
-        }
-      </div>
+      }
+    </div>
 
-      <div class="full-width input-box">
-        <div class="full-width input-row">
-          <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
-          <mat-icon class="material-symbols-outlined">lock</mat-icon>
-        </div>
-        @if((!password.valid && password.value !== '') || authService.error){
+    <div class="full-width input-box">
+      <div class="full-width input-row">
+        <input #password="ngModel" required name="password" [(ngModel)]="user.password" type="password" placeholder="Passwort" />
+        <mat-icon class="material-symbols-outlined">lock</mat-icon>
+      </div>
+      @if ((!password.valid && password.value !== "") || authService.error) {
         <span class="error d-none" id="wrongpassword">Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
-        }
-      </div>
-    </section>
+      }
+    </div>
+  </section>
 
-    <a class="link" routerLink="/forgotpassword">Passwort vergessen?</a>
+  <a class="link" routerLink="/forgotpassword">Passwort vergessen?</a>
 
-    <div class="divider">ODER</div>
+  <div class="divider">ODER</div>
 
-    <section class="btn-container">
-      <button class="btn btn-google" type="button" (click)="signinwithgoogle()">
-        <img src="img/Google.png" alt="Google Logo" />
-        Anmelden mit Google
-      </button>
-      <div class="full-width justify-center gap-20 flex-wrap">
-        <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
-        ><button type="button" class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
-      </div>
-    </section>
-  </form>
-</div>
+  <section class="btn-container">
+    <button class="btn btn-google" type="button" (click)="signinwithgoogle()">
+      <img src="img/Google.png" alt="Google Logo" />
+      Anmelden mit Google
+    </button>
+    <div class="full-width justify-center gap-20 flex-wrap">
+      <button class="btn" [disabled]="userauth.invalid || this.authService.isLoading">Anmelden</button
+      ><button type="button" class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
+    </div>
+  </section>
+</form>

@@ -1,19 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-
 import { FormsModule, NgForm } from '@angular/forms';
 import { Firestore } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
-
-
 import { User } from '../../models/user/user';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, MatIcon],
+  imports: [FormsModule, MatIcon, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

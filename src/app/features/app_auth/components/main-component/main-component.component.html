@@ -1,10 +1,16 @@
 <main>
   <app-header></app-header>
-   <router-outlet />
-  <div class="signup">
+
+  <section class="auth-card"> 
+     <router-outlet />
+  </section>
+ 
+  <section class="signup">
     <p>Neu bei DABubble?</p>
     <a routerLink="/register">Konto erstellen</a>
-  </div>
+  </section>
+
   <app-footer></app-footer>
+  
   <app-intro *ngIf="showIntro" id="intro"></app-intro>
 </main>
