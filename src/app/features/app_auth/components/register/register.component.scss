@@ -1,9 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.headline {
+  h1 {
+    font-weight: 700;
+    font-size: clamp(1.75rem, 5vw, 2.875rem);
+    color: var(--dark-purple);
+  }
+}
+
 .form {
   display: flex;
   flex-direction: column;
   @media only screen and (max-width: 1023px) {
     gap: 10px;
-    padding: 20px 20px;
   }
   @media (max-width: 743px) {
   }
@@ -20,25 +33,6 @@
     gap: 5px;
   }
 
-
-
-  .headline {
-    font-size: 1.25rem;
-    color: #000000;
-
-    h1 {
-      font-weight: 700;
-      font-size: 2.875rem;
-      color: var(--dark-purple);
-      @media (max-width: 500px) {
-        font-size: 2rem;
-      }
-    }
-
-    @media screen and (width < 1023px) {
-      font-size: 1rem;
-    }
-  }
   .box {
     border-radius: 100px;
     display: flex;

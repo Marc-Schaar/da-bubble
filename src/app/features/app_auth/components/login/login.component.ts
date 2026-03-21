@@ -2,24 +2,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { Auth } from '@angular/fire/auth';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Firestore } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { User } from '../../models/user/user';
-
-
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule],
+  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-
 export class LoginComponent implements OnInit {
   disabled = true;
   shared = inject(UserService);
@@ -28,7 +24,8 @@ export class LoginComponent implements OnInit {
   fireService = inject(FireServiceService);
   authService: AuthService = inject(AuthService);
   navigationService: NavigationService = inject(NavigationService);
-  user: User = new User();
+
+  public loginForm = this.authService.createLoginForm();
 
   /**
    * Lifecycle hook that runs on component initialization.
@@ -40,15 +37,11 @@ export class LoginComponent implements OnInit {
 
   /**
    * Signs in the user with email and password.
-   * @param form - The form containing the sign-in credentials.
    */
-  public signin(form: NgForm) {
-    try {
-      this.authService.logInWithEmailAndPassword(this.user.email, this.user.password);
-    } catch (error) {
-      this.authService.error = true;
-      form.reset();
-    }
+  public async onSubmit() {
+    if (this.loginForm.invalid) this.loginForm.markAllAsTouched();
+    const payload = this.loginForm.getRawValue();
+    await this.authService.logInWithEmailAndPassword(payload.email, payload.password);
   }
 
   /**

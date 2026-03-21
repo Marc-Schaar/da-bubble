@@ -16,11 +16,15 @@ main {
 
 .auth-card{
   width: clamp(200px, 100%, 606px);
-  padding: 30px;
+  padding: 20px;
   border-radius: 30px;
   background-color: #ffffff;
   position: relative;
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+
+  @media (width > 500px){
+  padding: 30px;
+  }
 }
 
 app-header {

@@ -5,6 +5,8 @@ import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPop
 import { arrayUnion, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
@@ -16,13 +18,30 @@ import { User } from '../../models/user/user';
 export class AuthService {
   private userService: UserService = inject(UserService);
   private auth: Auth = inject(Auth);
-  private navigationService: NavigationService= inject(NavigationService);
+  private navigationService: NavigationService = inject(NavigationService);
   private firestore: Firestore = inject(Firestore);
   private shared: UserService = inject(UserService);
   private fireService = inject(FireServiceService);
   googleAuthProvider = new GoogleAuthProvider();
   error = false;
   isLoading = false;
+
+  private formBuilder = inject(FormBuilder);
+
+  /**
+   * Initializes and configures the FormGroup for the login process.
+   * * @description
+   * Defines a form group containing 'email' and 'password' fields with the following rules:
+   * - **email**: Required, must follow a valid email format.
+   * - **password**: Required field.
+   * * @returns {FormGroup} A configured FormGroup instance ready for template binding.
+   */
+  public createLoginForm(): FormGroup {
+    return this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+    });
+  }
 
   /**
    * Logs in a user using email and password.
@@ -33,6 +52,7 @@ export class AuthService {
    * @param password - User's password
    */
   public async logInWithEmailAndPassword(email: string, password: string) {
+    this.isLoading = true;
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
       await this.shared.setOnlineStatus();
