@@ -7,13 +7,7 @@
   <form class="input-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="loginForm">
     <div class="full-width input-box">
       <div class="full-width input-row">
-        <input
-          type="email"
-          name="email"
-          formControlName="email"
-          placeholder="beispielname@email.com"
-          pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-        />
+        <input type="email" name="email" formControlName="email" placeholder="beispielname@email.com" />
         <mat-icon class="material-symbols-outlined">email</mat-icon>
       </div>
 

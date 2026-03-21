@@ -27,6 +27,17 @@ export class AuthService {
   isLoading = false;
 
   private formBuilder = inject(FormBuilder);
+  private readonly passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$';
+
+  /**
+   * Gemeinsame Basis-Konfiguration für Login und Register
+   */
+  private get basicAuthFields() {
+    return {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(this.passwordPattern)]],
+    };
+  }
 
   /**
    * Initializes and configures the FormGroup for the login process.
@@ -37,9 +48,27 @@ export class AuthService {
    * * @returns {FormGroup} A configured FormGroup instance ready for template binding.
    */
   public createLoginForm(): FormGroup {
+    return this.formBuilder.group(this.basicAuthFields);
+  }
+
+  /**
+   * Initializes and configures the FormGroup for the user registration process.
+   * * @description
+   * This method extends the basic authentication fields (email and password)
+   * with additional fields required for creating a new user account:
+   * - **email**: Inherited from basicAuthFields (Required, Email format).
+   * - **password**: Inherited from basicAuthFields (Required, Min length 6).
+   * - **fullname**: Required field, minimum of 2 characters.
+   * - **profilephoto**: Optional, defaults to a standard placeholder path.
+   * - **acceptTerms**: Required to be 'true' (checkbox must be checked).
+   * * @returns {FormGroup} A fully configured FormGroup for the registration template.
+   */
+  public createRegisterForm(): FormGroup {
     return this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      ...this.basicAuthFields,
+      fullname: ['', [Validators.required, Validators.minLength(5)]],
+      profilephoto: ['img/profilephoto.png'],
+      acceptTerms: [false, [Validators.requiredTrue]],
     });
   }
 

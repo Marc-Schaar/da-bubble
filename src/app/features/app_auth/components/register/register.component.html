@@ -1,4 +1,4 @@
-<form class="form" #useraccount="ngForm" (ngSubmit)="onSubmit(useraccount)">
+<main>
   <header class="header">
     <a routerLink="/login">
       <img src="img/arrow_back.png" alt="" />
@@ -9,71 +9,49 @@
       <span>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</span>
     </div>
   </header>
+  <form class="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <section>
+      <div class="box">
+        <mat-icon class="material-symbols-outlined">person</mat-icon>
+        <input name="fullname" type="text" formControlName="fullname" placeholder="Name und Nachname" />
+      </div>
+      @if (registerForm.get("fullname")?.invalid && (registerForm.get("fullname")?.touched || registerForm.get("fullname")?.dirty)) {
+        <span class="error">Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span>
+      }
+    </section>
 
-  <section>
-    <div class="box">
-      <mat-icon class="material-symbols-outlined">person</mat-icon>
-      <input
-        #fullname="ngModel"
-        [(ngModel)]="user.fullname"
-        name="firstname"
-        type="text"
-        minlength="5"
-        placeholder="Name und Nachname"
-        required
-      />
-    </div>
-    @if (fullname.touched && fullname.value.length < 5) {
-      <span class="error">Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span>
+    <section>
+      <div class="box">
+        <mat-icon class="material-symbols-outlined">mail</mat-icon>
+        <input name="email" type="email" formControlName="email" placeholder="beispielname@email.com" />
+      </div>
+      @if (registerForm.get("email")?.invalid && (registerForm.get("email")?.touched || registerForm.get("email")?.dirty)) {
+        <span class="error">*Diese E-Mail-Adresse ist leider ungültig.</span>
+      }
+    </section>
+
+    <section>
+      <div class="box">
+        <mat-icon class="material-symbols-outlined">lock</mat-icon>
+        <input name="password" type="password" formControlName="password" placeholder="Passwort" />
+      </div>
+      @if (registerForm.get("password")?.invalid && (registerForm.get("password")?.touched || registerForm.get("password")?.dirty)) {
+        <span class="error"
+          >Bitte geben Sie ein Passwort ein. Es muss mindestens 8 Zeichen lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine
+          Zahl enthalten.</span
+        >
+      }
+    </section>
+
+    <section class="legal-text">
+      <label class="checkbox">
+        <input formControlName="acceptTerms" type="checkbox" />
+      </label>
+      <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
+    </section>
+    @if (registerForm.get("acceptTerms")?.invalid && (registerForm.get("acceptTerms")?.touched || registerForm.get("acceptTerms")?.dirty)) {
+      <span class="error"> agbs zustimmer.</span>
     }
-  </section>
-
-  <section>
-    <div class="box">
-      <mat-icon class="material-symbols-outlined">mail</mat-icon>
-      <input
-        #email="ngModel"
-        name="email"
-        [(ngModel)]="user.email"
-        type="email"
-        placeholder="beispielname@email.com"
-        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-        required
-      />
-    </div>
-    @if (!email.valid && email.touched) {
-      <span class="error">*Diese E-Mail-Adresse ist leider ungültig.</span>
-    }
-  </section>
-
-  <section>
-    <div class="box">
-      <mat-icon class="material-symbols-outlined">lock</mat-icon>
-      <input
-        #password="ngModel"
-        [(ngModel)]="user.password"
-        name="password"
-        minlength="5"
-        type="password"
-        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-        placeholder="Passwort"
-        required
-      />
-    </div>
-    @if (!password.valid && password.touched) {
-      <span class="error"
-        >Bitte geben Sie ein Passwort ein. Es muss mindestens 8 Zeichen lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl
-        enthalten.</span
-      >
-    }
-  </section>
-
-  <div class="legal-text">
-    <label class="checkbox">
-      <input (click)="checked = !checked" required [checked]="checked" type="checkbox" />
-    </label>
-    <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
-  </div>
-
-  <button [disabled]="!checked || useraccount.invalid" type="submit">Weiter</button>
-</form>
+    <button type="submit">Weiter</button>
+  </form>
+</main>
