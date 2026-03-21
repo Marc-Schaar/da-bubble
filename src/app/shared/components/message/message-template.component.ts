@@ -14,8 +14,9 @@ import emojiData from 'unicode-emoji-json';
 
 import { Firestore } from '@angular/fire/firestore';
 import { LinkifyPipe } from '../../../features/pipes/linkify.pipe';
-import { Message } from '../../../features/models/message/message';
+
 import { DialogReciverComponent } from '../../../features/dialogs/dialog-reciver/dialog-reciver.component';
+import { Message } from '../../../features/app_chat/models/message/message';
 
 @Component({
   selector: 'app-message-template',

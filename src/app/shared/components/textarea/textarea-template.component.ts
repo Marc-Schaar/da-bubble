@@ -10,7 +10,8 @@ import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
 import { SearchService } from '../../services/search/search.service';
 import { SearchResultComponent } from '../search-result/search-result.component';
-import { Message } from '../../../features/models/message/message';
+import { Message } from '../../../features/app_chat/models/message/message';
+
 
 @Component({
   selector: 'app-textarea-template',

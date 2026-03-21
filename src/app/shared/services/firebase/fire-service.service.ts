@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDocs, updateDoc } from '@angular/fire/firestore';
-import { Message } from '../../../features/models/message/message';
+import { Message } from '../../../features/app_chat/models/message/message';
+
 
 
 @Injectable({

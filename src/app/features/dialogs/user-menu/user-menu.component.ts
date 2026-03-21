@@ -4,7 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
-import { AuthService } from '../../../shared/services/auth/auth.service';
+import { AuthService } from '../../app_auth/services/auth/auth.service';
+
 
 @Component({
   selector: 'app-user-menu',

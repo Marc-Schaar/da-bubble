@@ -5,7 +5,7 @@ import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FireServiceService } from '../firebase/fire-service.service';
 import { NavigationService } from '../navigation/navigation.service';
-import { User } from '../../../features/models/user/user';
+import { User } from '../../../features/app_auth/models/user/user';
 
 
 @Injectable({
