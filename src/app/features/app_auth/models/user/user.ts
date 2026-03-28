@@ -1,10 +1,10 @@
 export class User {
-  fullname: string;
-  email: string;
-  password: string;
-  profilephoto: string;
-  online: boolean;
-  id: string;
+  // fullname: string;
+  // email: string;
+  // password: string;
+  // profilephoto: string;
+  // online: boolean;
+  // id: string;
 
   /**
    * @constructor
@@ -12,11 +12,23 @@ export class User {
    * @param obj Optional object to initialize the User properties.
    */
   constructor(obj?: any) {
-    this.fullname = obj ? obj.fullname : '';
-    this.email = obj ? obj.email : '';
-    this.password = obj ? obj.password : '';
-    this.profilephoto = obj ? obj.profilephoto : '';
-    this.online = obj ? obj.online : false;
-    this.id = obj ? obj.id : '';
+    // this.id = obj ? obj.id : '';
+    // this.fullname = obj ? obj.fullname : '';
+    // this.email = obj ? obj.email : '';
+    // this.password = obj ? obj.password : '';
+    // this.profilephoto = obj ? obj.profilephoto : '';
+    // this.online = obj ? obj.online : false;
   }
+}
+
+export interface User {
+  id: string;
+  email: string;
+  displayName: string;
+  avatarUrl?: string;
+  online: boolean;
+}
+
+export interface RegisterData extends Omit<User, 'id'> {
+  password: string;
 }

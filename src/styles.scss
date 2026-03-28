@@ -48,6 +48,14 @@ body {
   background-color: var(--bg-color);
 }
 
+h1 {
+  font-size: clamp(1.75rem, 5vw, 2.875rem);
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2vw + 1rem, 2rem);
+}
+
 .mdc-dialog__surface {
   background-color: rgba(0, 0, 0, 0) !important;
 }
@@ -122,7 +130,11 @@ app-footer {
 }
 
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 .mat-bottom-sheet-container {

@@ -7,7 +7,6 @@ import { FireServiceService } from '../firebase/fire-service.service';
 import { NavigationService } from '../navigation/navigation.service';
 import { User } from '../../../features/app_auth/models/user/user';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -69,31 +68,6 @@ export class UserService {
     const currentUser = this.getUser();
     currentUser.online = true;
     await this.fireService.updateOnlineStatus(currentUser);
-  }
-
-  /**
-   * Redirects to the dashboard or contact bar based on the device type.
-   */
-  redirectiontodashboard() {
-    this.navigationService.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
-  }
-
-  /**
-   * Redirects to the login page.
-   */
-  redirectiontologinpage() {
-    this.router.navigate(['/']);
-    this.navigationService.stopInitialize();
-  }
-
-  /**
-   * Redirects to the avatar selection page.
-   */
-  redirectiontoavatarselection() {
-    this.router.navigate(['/avatarselection']);
   }
 
   /**

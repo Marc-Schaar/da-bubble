@@ -11,8 +11,6 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { User } from '../../models/user/user';
 
-
-
 @Component({
   selector: 'app-resetpassword',
   standalone: true,
@@ -35,7 +33,11 @@ export class ResetpasswordComponent implements OnInit {
    * @param activatedRoute - ActivatedRoute service instance used to access information about the current route.
    * @param afApp - FirebaseApp service instance used to interact with Firebase services.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private afApp: FirebaseApp) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private afApp: FirebaseApp,
+  ) {}
 
   /**
    * @description - Lifecycle hook that initializes the component and verifies the reset code from the URL.
@@ -57,17 +59,17 @@ export class ResetpasswordComponent implements OnInit {
    * @param emailform - The form containing the user's password input.
    */
   async onSubmit(emailform: NgForm) {
-    if (this.resetCode && this.users.password) {
-      this.isOverlayActive = true;
-      confirmPasswordReset(this.auth, this.resetCode, this.users.password)
-        .then(() => {
-          this.router.navigate(['/']);
-        })
-        .catch((error) => {});
-      emailform.reset();
-      setTimeout(() => {
-        this.isOverlayActive = false;
-      }, 1500);
-    }
+    // if (this.resetCode && this.users.password) {
+    //   this.isOverlayActive = true;
+    //   confirmPasswordReset(this.auth, this.resetCode, this.users.password)
+    //     .then(() => {
+    //       this.router.navigate(['/']);
+    //     })
+    //     .catch((error) => {});
+    //   emailform.reset();
+    //   setTimeout(() => {
+    //     this.isOverlayActive = false;
+    //   }, 1500);
+    // }
   }
 }

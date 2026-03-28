@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
+import { computed, inject, Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, distinctUntilChanged, filter, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NewmessageComponent } from '../../../features/app_chat/chat-new-message/chat-new.component';
 import { DirectmessagesComponent } from '../../../features/app_chat/chat-direct/chat-direct.component';
 import { ChatContentComponent } from '../../../features/app_chat/chat-channel/chat-channel.component';
-
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +36,17 @@ export class NavigationService {
    * and manages component navigation based on the current channel type and screen size.
    */
   constructor() {}
+
+  public gotToAvatarSelection() {
+    this.router.navigate(['register/avatar']);
+  }
+
+  /**
+   * Redirects to the dashboard or contact bar based on the device type.
+   */
+  public gotToChat() {
+    this.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
+  }
 
   public initialize(): void {
     this.isInitialize = true;
@@ -212,7 +223,7 @@ export class NavigationService {
       .pipe(
         map(() => this.checkScreenWidth()),
         distinctUntilChanged(),
-        startWith(this.checkScreenWidth())
+        startWith(this.checkScreenWidth()),
       )
       .subscribe(this.screenWidthSubject);
   }

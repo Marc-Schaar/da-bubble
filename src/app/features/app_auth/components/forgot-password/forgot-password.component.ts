@@ -10,27 +10,18 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { User } from '../../models/user/user';
 
-
-
 @Component({
   selector: 'app-forgotpassword',
   imports: [HeaderComponent, FooterComponent, FormsModule, CommonModule, RouterLink],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
-export class ForgotpasswordComponent implements OnInit {
+export class ForgotpasswordComponent {
   isOverlayActive = false;
   user = new User();
   submitted = false;
-  shareddata = inject(UserService);
-  auth = getAuth();
 
-  /**
-   * Lifecycle hook that is called when the component is initialized.
-   */
-  ngOnInit(): void {
-    this.shareddata.login = false;
-  }
+  auth = getAuth();
 
   /**
    * Handles the form submission, sends a password reset email and manages loading state.
@@ -49,7 +40,6 @@ export class ForgotpasswordComponent implements OnInit {
     setTimeout(() => {
       this.isOverlayActive = false;
       this.submitted = false;
-      this.shareddata.redirectiontologinpage();
     }, 1500);
   }
 }

@@ -1,76 +1,27 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { getAuth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../../../shared/services/user/shared.service';
-import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { FooterComponent } from '../../../../shared/components/footer/footer.component';
-import { User } from '../../models/user/user';
 import { AuthService } from '../../services/auth/auth.service';
-
-
 
 @Component({
   selector: 'app-avatarselection',
-  imports: [HeaderComponent, FooterComponent, CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './avatar-selection.component.html',
   styleUrls: ['./avatar-selection.component.scss'],
 })
+export class AvatarselectionComponent {
+  public currentAvatar = signal<string>('img/avatars/avatar_default.png');
 
-export class AvatarselectionComponent implements OnInit {
-  shareddata = inject(UserService);
-  auth = getAuth();
-  user: User;
-  error = false;
-  isOverlayActive = false;
-  profilephoto = 'img/profilephoto.png';
-  currentUser = this.auth.currentUser;
-  newPassword: string;
-  @ViewChild('loginbutton') loginbutton!: ElementRef<HTMLButtonElement>;
+  public readonly authService: AuthService = inject(AuthService);
 
-  /**
-   * Initializes component state on load.
-   */
-  ngOnInit(): void {
-    this.shareddata.login = false;
-    console.log(this.user);
+  public avatars = ['avatar_1.png', 'avatar_2.png', 'avatar_3.png', 'avatar_4.png', 'avatar_5.png', 'avatar_6.png'];
+
+  public selectAvatar(avatar: string) {
+    const fullPath = `img/avatars/${avatar}`;
+    this.currentAvatar.set(fullPath);
   }
 
-  /**
-   * Creates an instance of the component and sets user data.
-   * @param firestore Firestore service instance
-   * @param userService Service for retrieving user data
-   */
-  constructor(public firestore: Firestore, private userService: UserService, private authService: AuthService) {
-    this.user = this.userService.getUser();
-    this.newPassword = this.user.password;
-  }
-
-  /**
-   * Sets the selected profile photo.
-   * @param profilephoto Path to the selected photo
-   */
-  async selectphoto(profilephoto: string) {
-    this.profilephoto = profilephoto;
-    this.user.profilephoto = this.profilephoto;
-  }
-
-  /**
-   * Registers the user, updates their profile and Firestore, and redirects to the login page.
-   */
-  async completeregistration() {
-    try {
-      await this.authService.register(this.user);
-      this.isOverlayActive = true;
-      setTimeout(() => {
-        this.shareddata.redirectiontologinpage();
-      }, 2000);
-    } catch (error) {
-      this.error = true;
-      this.isOverlayActive = false;
-    }
+  public onSubmit() {
+    this.authService.completeRegistration(this.currentAvatar());
   }
 }

@@ -6,18 +6,16 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { IntroComponent } from '../intro/intro.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
 
-
-
-
 @Component({
   selector: 'app-main-component',
-  imports: [CommonModule, HeaderComponent, FooterComponent,  IntroComponent, RouterModule],
+  imports: [CommonModule, HeaderComponent, FooterComponent, IntroComponent, RouterModule],
   templateUrl: './main-component.component.html',
   styleUrl: './main-component.component.scss',
 })
 export class MainComponentComponent implements OnInit {
   shareddata = inject(UserService);
   showIntro: boolean = true;
+  isOverlayActive = false;
 
   /**
    * Lifecycle hook that is called when the component is initialized.

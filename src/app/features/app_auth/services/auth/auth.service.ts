@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 
@@ -10,24 +10,133 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
-import { User } from '../../models/user/user';
+import { RegisterData, User } from '../../models/user/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private userService: UserService = inject(UserService);
   private auth: Auth = inject(Auth);
   private navigationService: NavigationService = inject(NavigationService);
   private firestore: Firestore = inject(Firestore);
-  private shared: UserService = inject(UserService);
+  private userService: UserService = inject(UserService);
   private fireService = inject(FireServiceService);
   googleAuthProvider = new GoogleAuthProvider();
   error = false;
   isLoading = false;
 
+  //Ab hier refactored
   private formBuilder = inject(FormBuilder);
   private readonly passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$';
+  private tempUserData = signal<RegisterData | null>(null);
+
+  private _currentUser = signal<User | null>(null);
+  public currentUser = this._currentUser.asReadonly();
+
+  public setStep1Data(data: RegisterData) {
+    this.tempUserData.set(data);
+  }
+
+  public getUserName() {
+    return this.tempUserData()?.displayName;
+  }
+
+  public async completeRegistration(avatarUrl: string): Promise<void> {
+    const data = this.tempUserData();
+    if (!data) return this.handleRegError('Keine Daten gefunden');
+
+    this.isLoading = true;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
+      const firebaseUser = userCredential.user;
+      const newUser: User = {
+        id: firebaseUser.uid,
+        email: data.email,
+        displayName: data.displayName,
+        avatarUrl: avatarUrl,
+        online: false,
+      };
+
+      await Promise.all([
+        this.updateFirebaseProfile(firebaseUser, newUser.displayName, avatarUrl),
+        this.syncUserToFirestore(firebaseUser, newUser.displayName, avatarUrl),
+      ]);
+
+      this.finalizeRegistration();
+    } catch (error) {
+      this.handleRegError(error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private async updateFirebaseProfile(user: any, name: string, photo: string) {
+    return updateProfile(user, { displayName: name, photoURL: photo });
+  }
+
+  private async syncUserToFirestore(user: any, name: string, photo: string) {
+    const userData: User = {
+      id: user.uid,
+      displayName: name,
+      email: user.email,
+      avatarUrl: photo,
+      online: false,
+    };
+    await this.addInUserCollection(userData);
+    await this.addInDefaultChannel(userData);
+  }
+
+  private finalizeRegistration() {
+    this.tempUserData.set(null);
+    this.userService.setOnlineStatus();
+    this.navigationService.gotToChat();
+  }
+
+  private handleRegError(error: any) {
+    console.error('Registrierung Fehler:', error);
+    this.error = true;
+    this.isLoading = false;
+  }
+
+  /**
+   * Adds a user to the user collection in Firestore.
+   * This method is used when a user registers or logs in.
+   *
+   * @param user - The user to be added to the user collection
+   */
+  private async addInUserCollection(user: User) {
+    const userDocRef = doc(this.firestore, `users/${user.id}`);
+    await setDoc(userDocRef, {
+      displayName: user.displayName,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      online: false,
+      id: user.id,
+    });
+  }
+
+  /**
+   * Adds a user to the default channel.
+   * This method is used when a user registers or logs in.
+   *
+   * @param user - The user to be added to the default channel
+   */
+  private async addInDefaultChannel(user: User) {
+    const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
+    try {
+      await updateDoc(defaultChannelRef, {
+        member: arrayUnion({
+          fullname: user.displayName,
+          email: user.email,
+          profilephoto: user.avatarUrl,
+          online: false,
+          id: user.id,
+        }),
+      });
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen zum Standardkanal:', error);
+    }
+  }
 
   /**
    * Gemeinsame Basis-Konfiguration für Login und Register
@@ -66,8 +175,8 @@ export class AuthService {
   public createRegisterForm(): FormGroup {
     return this.formBuilder.group({
       ...this.basicAuthFields,
-      fullname: ['', [Validators.required, Validators.minLength(5)]],
-      profilephoto: ['img/profilephoto.png'],
+      displayName: ['', [Validators.required, Validators.minLength(5)]],
+      photoURL: ['img/profilephoto.png'],
       acceptTerms: [false, [Validators.requiredTrue]],
     });
   }
@@ -84,8 +193,8 @@ export class AuthService {
     this.isLoading = true;
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
-      await this.shared.setOnlineStatus();
-      this.shared.redirectiontodashboard();
+      await this.userService.setOnlineStatus();
+      this.navigationService.gotToChat();
     } catch (error) {
       this.error = true;
     } finally {
@@ -100,22 +209,21 @@ export class AuthService {
    * Sets an error flag on failure.
    */
   public async logInWithGoogle() {
-    try {
-      const result = await signInWithPopup(this.auth, this.googleAuthProvider);
-      const firebaseUser = result.user;
-      await updateProfile(firebaseUser, {
-        photoURL: 'img/profilephoto.png',
-      });
-
-      await this.addInUserCollection(firebaseUser);
-      await this.addInDefaultChannel(firebaseUser);
-      await this.shared.setOnlineStatus();
-      this.shared.redirectiontodashboard();
-    } catch (error) {
-      this.error = true;
-    } finally {
-      this.isLoading = false;
-    }
+    // try {
+    //   const result = await signInWithPopup(this.auth, this.googleAuthProvider);
+    //   const firebaseUser = result.user;
+    //   await updateProfile(firebaseUser, {
+    //     photoURL: 'img/profilephoto.png',
+    //   });
+    //   await this.addInUserCollection(firebaseUser);
+    //   await this.addInDefaultChannel(firebaseUser);
+    //   await this.shared.setOnlineStatus();
+    //   this.shared.redirectiontodashboard();
+    // } catch (error) {
+    //   this.error = true;
+    // } finally {
+    //   this.isLoading = false;
+    // }
   }
 
   /**
@@ -124,93 +232,20 @@ export class AuthService {
    * Sets loading state and logs errors if any occur.
    */
   public async loginAsGuest() {
-    this.isLoading = true;
-    try {
-      const result = await signInAnonymously(this.auth);
-      await updateProfile(result.user, {
-        displayName: 'Gast',
-        photoURL: 'img/profilephoto.png',
-      });
-
-      await this.addInUserCollection(result.user);
-      await this.shared.setOnlineStatus();
-      this.shared.redirectiontodashboard();
-    } catch (error) {
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  /**
-   * Registers a new user with email and password.
-   * Updates user profile and creates the user document in Firestore.
-   * Adds the user to a default channel.
-   *
-   * @param user - The user data for registration
-   */
-  public async register(user: User): Promise<void> {
-    const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.password);
-    const firebaseUser = userCredential.user;
-    await updateProfile(firebaseUser, {
-      displayName: user.fullname,
-      photoURL: user.profilephoto,
-    });
-    await this.addInUserCollection(firebaseUser);
-    await this.addInDefaultChannel(firebaseUser);
-  }
-
-  /**
-   * Adds a user to the user collection in Firestore.
-   * This method is used when a user registers or logs in.
-   *
-   * @param user - The user to be added to the user collection
-   */
-  private async addInUserCollection(user: any) {
-    const userDocRef = doc(this.firestore, `users/${user.uid}`);
-    await setDoc(userDocRef, {
-      fullname: user.displayName,
-      email: user.email,
-      profilephoto: user.photoURL,
-      online: false,
-      id: user.uid,
-    });
-  }
-
-  /**
-   * Adds a user to the default channel.
-   * This method is used when a user registers or logs in.
-   *
-   * @param user - The user to be added to the default channel
-   */
-  private async addInDefaultChannel(user: any) {
-    const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
-    try {
-      await updateDoc(defaultChannelRef, {
-        member: arrayUnion({
-          fullname: user.displayName,
-          email: user.email,
-          profilephoto: user.photoURL,
-          online: false,
-          id: user.uid,
-        }),
-      });
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen zum Standardkanal:', error);
-    }
-  }
-
-  /**
-   * Updates the online status of the current user in Firestore.
-   *
-   * @param currentUser The user object containing the UID and online status.
-   */
-  async updateOnlineStatus(currentUser: any) {
-    if (currentUser.uid) {
-      const userRef = doc(this.firestore, 'users', currentUser.uid);
-      await updateDoc(userRef, {
-        online: currentUser.online,
-      });
-    }
+    // this.isLoading = true;
+    // try {
+    //   const result = await signInAnonymously(this.auth);
+    //   await updateProfile(result.user, {
+    //     displayName: 'Gast',
+    //     photoURL: 'img/profilephoto.png',
+    //   });
+    //   await this.addInUserCollection(result.user);
+    //   await this.shared.setOnlineStatus();
+    //   this.shared.redirectiontodashboard();
+    // } catch (error) {
+    // } finally {
+    //   this.isLoading = false;
+    // }
   }
 
   /**
@@ -218,16 +253,16 @@ export class AuthService {
    * Updates online status, deletes anonymous user data, and redirects to the login page.
    */
   public async logOut() {
-    this.navigationService.isInitialize = false;
-    const currentUser = this.userService.getUser();
-    currentUser.online = false;
-    await this.fireService.updateOnlineStatus(currentUser);
-    if (this.auth.currentUser?.isAnonymous) {
-      await deleteDoc(doc(this.firestore, `users/${currentUser.id}`));
-      await this.auth.currentUser.delete();
-    } else {
-      await signOut(this.auth);
-    }
-    this.userService.redirectiontologinpage();
+    //   this.navigationService.isInitialize = false;
+    //   const currentUser = this.userService.getUser();
+    //   currentUser.online = false;
+    //   await this.fireService.updateOnlineStatus(currentUser);
+    //   if (this.auth.currentUser?.isAnonymous) {
+    //     await deleteDoc(doc(this.firestore, `users/${currentUser.id}`));
+    //     await this.auth.currentUser.delete();
+    //   } else {
+    //     await signOut(this.auth);
+    //   }
+    //   this.userService.redirectiontologinpage();
   }
 }
