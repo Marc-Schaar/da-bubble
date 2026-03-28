@@ -29,7 +29,7 @@
 
       @if (loginForm.get("password")?.errors?.["required"] && (loginForm.get("password")?.touched || loginForm.get("password")?.dirty)) {
         <span class="error">*Bitte Password eingeben </span>
-      } @else if (authService.error) {
+      } @else if (authService.errorMessage()) {
         <span class="error">*Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. </span>
       }
     </div>

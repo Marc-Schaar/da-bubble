@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { UserService } from '../../services/user/shared.service';
+import { UserService } from '../../../shared/services/user/shared.service';
 import { MatIcon } from '@angular/material/icon';
 
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { NavigationService } from '../../services/navigation/navigation.service';
-import { UserMenuComponent } from '../../../features/dialogs/user-menu/user-menu.component';
+import { NavigationService } from '../../../shared/services/navigation/navigation.service';
+import { UserMenuComponent } from '../../dialogs/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-chat-header',
@@ -21,10 +21,7 @@ export class ChatHeaderComponent {
    *Navigate Back to the Channel or to the Contactbar.
    */
   public handleBack() {
-    if (this.navigationService.channelType === 'thread') {
-      this.navigationService.channelType = 'channel';
-      this.navigationService.showChannel();
-    } else this.navigationService.showContactbar();
+    this.navigationService.gotToChat();
   }
 
   /**

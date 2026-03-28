@@ -3,7 +3,7 @@ import { Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
-import { ChatHeaderComponent } from '../../../shared/components/chat-header/chat-header.component';
+import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { SearchResultComponent } from '../../../shared/components/search-result/search-result.component';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
@@ -35,11 +35,7 @@ export class NewmessageComponent {
   /**
    * ngOnInit lifecycle hook to load channels, users and set the current user.
    */
-  async ngOnInit() {
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
-  }
+  async ngOnInit() {}
 
   /**
    * Sets the current receiver of the message, determines the receiver type (channel or direct),

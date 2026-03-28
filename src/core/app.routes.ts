@@ -31,6 +31,7 @@ export const routes: Routes = [
     path: 'main',
     component: MainChatComponent,
     children: [
+      { path: '', redirectTo: 'new-message', pathMatch: 'full' },
       { path: 'channel/:id', component: ChatContentComponent },
       { path: 'direct/:id', component: DirectmessagesComponent },
       { path: 'new-message', component: NewmessageComponent },
@@ -39,12 +40,6 @@ export const routes: Routes = [
 
   { path: 'forgotpassword', component: ForgotpasswordComponent },
   { path: 'resetpassword', component: ResetpasswordComponent },
-  // { path: 'contactbar', component: ContactbarComponent },
-  // { path: 'chat', component: MainChatComponent },
-  // { path: 'channel', component: ChatContentComponent },
-  // { path: 'direct', component: DirectmessagesComponent },
-  // { path: 'new-message', component: NewmessageComponent },
-  { path: 'thread', component: ThreadComponent },
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
 ];

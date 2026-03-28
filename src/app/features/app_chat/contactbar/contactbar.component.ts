@@ -109,22 +109,22 @@ export class ContactbarComponent implements OnInit, OnDestroy {
    * Opens the dropdown for a channel or user, based on the current navigation state.
    */
   private async openDropdown() {
-    this.active = false;
-    this.message = false;
-    const isChannel = this.navigationService.channelType === 'channel';
-    const collection = isChannel ? 'channels' : 'users';
-    const docRef = this.firestoreService.getDocRef(collection, this.navigationService.reciverId);
-    if (!docRef) return;
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return;
-    const data = docSnap.data();
-    if (isChannel) {
-      this.active = true;
-      this.currentLink = data['name'];
-    } else {
-      this.message = true;
-      this.currentLink = data['fullname'];
-    }
+    // this.active = false;
+    // this.message = false;
+    // const isChannel = this.navigationService.channelType === 'channel';
+    // const collection = isChannel ? 'channels' : 'users';
+    // const docRef = this.firestoreService.getDocRef(collection, this.navigationService.reciverId);
+    // if (!docRef) return;
+    // const docSnap = await getDoc(docRef);
+    // if (!docSnap.exists()) return;
+    // const data = docSnap.data();
+    // if (isChannel) {
+    //   this.active = true;
+    //   this.currentLink = data['name'];
+    // } else {
+    //   this.message = true;
+    //   this.currentLink = data['fullname'];
+    // }
   }
 
   /**

@@ -11,9 +11,11 @@
       <div class="name">{{ displayName }}</div>
       <div class="tooltip-cont">
         <button class="edit-btn" (click)="modify()">
-          @if (navigationService.isMobile) {
-          <mat-icon>edit</mat-icon>
-          } @else { Bearbeiten}
+          @if (navigationService.isMobile()) {
+            <mat-icon>edit</mat-icon>
+          } @else {
+            Bearbeiten
+          }
         </button>
         <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
       </div>

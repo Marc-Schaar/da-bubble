@@ -11,12 +11,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DividerTemplateComponent } from '../../../shared/components/divider/divider-template.component';
 import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../../../shared/components/message/message-template.component';
-import { ChatHeaderComponent } from '../../../shared/components/chat-header/chat-header.component';
+import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
 import { MessagesService } from '../../../shared/services/messages/messages.service';
-
 
 @Component({
   selector: 'app-direct-messages',
@@ -54,9 +53,6 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
    */
   ngOnInit() {
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
     this.route.queryParamMap.subscribe((params) => {
       this.currentRecieverId = params.get('reciverId') || '';
       this.currentUserId = params.get('currentUserId') || '';

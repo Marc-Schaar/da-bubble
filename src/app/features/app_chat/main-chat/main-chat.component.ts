@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, OnInit, ChangeDetectorRef, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, ChangeDetectorRef, ElementRef, AfterViewInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -6,13 +6,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ContactbarComponent } from '../contactbar/contactbar.component';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 
 import { ThreadComponent } from '../chat-thread/chat-thread.component';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../shared/services/search/search.service';
+
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-main-chat',
@@ -22,59 +25,58 @@ import { SearchService } from '../../../shared/services/search/search.service';
     MatDividerModule,
     CommonModule,
     FormsModule,
-    HeaderComponent,
     MatSidenavModule,
-    ContactbarComponent,
     ThreadComponent,
+    RouterModule,
+    HeaderComponent,
+    ContactbarComponent,
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
 })
-export class MainChatComponent implements OnInit, AfterViewInit {
+export class MainChatComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
   public readonly navigationService: NavigationService = inject(NavigationService);
-  private readonly userService = inject(UserService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
   private searchService: SearchService = inject(SearchService);
   public feedbackVisible: boolean = false;
   public barOpen: boolean = true;
   public isChatOverlayVisible: boolean = false;
 
+  // Signal, das prüft, ob wir auf Mobile sind (< 768px)
+
+  // State, ob gerade ein Channel/Chat aktiv ist
+  showContent = signal(false);
+  private router = inject(Router);
+
+  constructor() {}
+
   /**
    * Lifecycle hook that is called when the component is initialized.
    * Sets the dashboard and login properties of the shared service and subscribes to various observables.
    */
   ngOnInit(): void {
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
+    this.updateContentState(this.router.url);
 
-    this.userService.dashboard = true;
-    this.userService.login = false;
     this.subscriptions.push(
-      this.navigationService.component$.subscribe(() => {
-        if (this.navigationService.channelType === 'direct') this.navigationService.toggleThread('close');
-
-        this.cdr.detectChanges();
-      })
+      this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
+        this.updateContentState(event.urlAfterRedirects);
+      }),
     );
-    this.subscriptions.push(this.userService.showFeedback$.subscribe((msg) => this.showFeedback(msg)));
-    this.subscriptions.push(
-      this.navigationService.threadToggle$.subscribe((val) => (val === 'open' ? this.drawer.open() : this.drawer.close()))
-    );
-    this.subscriptions.push(this.userService.contactbarSubscription$.subscribe(() => this.drawerContactbar.toggle()));
   }
 
-  /**
-   * Angular lifecycle hook that is called after the component's view has been fully initialized.
-   *
-   * If the current channel type is 'thread', it triggers the thread view to open.
-   */
-  ngAfterViewInit(): void {
-    if (this.navigationService.channelType === 'thread') this.navigationService.toggleThread('open');
+  private updateContentState(url: string) {
+    const hasContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');
+
+    if (this.navigationService.isMobile() && url.endsWith('/main')) {
+      this.showContent.set(false);
+    } else if (this.navigationService.isMobile() && hasContent) {
+      this.showContent.set(true);
+    } else {
+      this.showContent.set(false);
+    }
   }
 
   /**

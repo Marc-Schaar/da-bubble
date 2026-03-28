@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../../../shared/components/message/message-template.component';
-import { ChatHeaderComponent } from '../../../shared/components/chat-header/chat-header.component';
+import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../../shared/services/messages/messages.service';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
@@ -131,7 +131,7 @@ export class ThreadComponent implements OnInit {
    * Closes the current thread and redirects the user.
    */
   public closeThread() {
-    if (!this.navigationService.isMobile) this.navigationService.toggleThread('close');
+    if (!this.navigationService.isMobile()) this.navigationService.toggleThread('close');
     this.userService.setUrl('channel', this.currentChannelId, this.userId);
   }
 

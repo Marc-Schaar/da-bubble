@@ -1,34 +1,32 @@
-<aside (click)="toogleContactbar()" class="navbar-toggle-container">
-  @if (barOpen) { <span>Workspacemenü schließen</span> } @else { <span>Workspacemenü öffnen</span>}
-  <span [ngStyle]="{ transform: barOpen ? 'rotate(-90deg)' : 'rotate(90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
-</aside>
+@if (!navigationService.isMobile()) {
+  <aside (click)="toogleContactbar()" class="navbar-toggle-container">
+    <span>Workspacemenü {{ barOpen ? "öffnen" : "schließen" }}</span>
+    <span [ngStyle]="{ transform: barOpen ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
+  </aside>
+}
 
 <main (click)="closeAll()">
-  <section>
-    @if (!this.navigationService.isMobile) {
+  @if (!navigationService.isMobile()) {
     <app-header></app-header>
-    }
+  }
 
-    <div class="content-container">
-      <mat-drawer-container class="chat-content">
-        <mat-drawer class="contactbar-container" mode="side" #drawerContactbar opened>
-          <app-contactbar></app-contactbar>
-        </mat-drawer>
+  <div class="content-container">
+    <mat-drawer-container class="chat-content" autosize>
+      <mat-drawer class="contactbar-container" mode="side" [opened]="!navigationService.isMobile()" #drawerContactbar>
+        <app-contactbar></app-contactbar>
+      </mat-drawer>
 
-        <div class="component">
-          <ng-container *ngIf="navigationService.component$ | async as cmp">
-            <ng-container *ngComponentOutlet="cmp"></ng-container>
-          </ng-container>
-        </div>
+      <div class="component-area">
+        <router-outlet></router-outlet>
+      </div>
 
-        <mat-drawer mode="side" #drawer position="end" class="thread-container">
-          <app-thread></app-thread>
-        </mat-drawer>
-      </mat-drawer-container>
-    </div>
-  </section>
+      <mat-drawer mode="side" #drawer position="end" class="thread-container">
+        <app-thread></app-thread>
+      </mat-drawer>
+    </mat-drawer-container>
+  </div>
 </main>
 
 @if (feedbackVisible) {
-<div #feedback class="feedback-cont"></div>
+  <div #feedback class="feedback-cont"></div>
 }

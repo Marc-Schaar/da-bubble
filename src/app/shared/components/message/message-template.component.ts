@@ -71,11 +71,7 @@ export class MessageTemplateComponent implements OnInit {
    * Lifecycle hook called after component initialization.
    * Ensures the navigation service is initialized.
    */
-  ngOnInit(): void {
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
-  }
+  ngOnInit(): void {}
 
   /**
    * Enables editing mode for a specific message.
@@ -127,7 +123,7 @@ export class MessageTemplateComponent implements OnInit {
    * @param $event - The click event
    */
   public openThread(messageId: string) {
-    if (!this.navigationService.isMobile) this.navigationService.toggleThread('open');
+    if (!this.navigationService.isMobile()) this.navigationService.toggleThread('open');
     this.userService.setUrl('thread', this.currentChannelId, this.userId, messageId);
   }
 

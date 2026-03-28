@@ -8,15 +8,8 @@
         <app-search-result [(input)]="input"></app-search-result>
       </div>
     }
-  </div>
 
-  @if (navigationService.isAuthPage()) {
-    <div class="signup">
-      <p>Neu bei DABubble?</p>
-      <a routerLink="/register">Konto erstellen</a>
-    </div>
-  } @else if (!navigationService.isAuthPage()) {
-    @if (!navigationService.isContactbarPage()) {
+    @if (!navigationService.isContactbarPage() && !navigationService.isMobile()) {
       <div class="input">
         <input
           [(ngModel)]="input"
@@ -29,15 +22,22 @@
         <button><img src="img/icons.png" alt="" /></button>
       </div>
     }
+  </div>
 
+  @if (navigationService.isAuthPage()) {
+    <div class="signup">
+      <p>Neu bei DABubble?</p>
+      <a routerLink="/register">Konto erstellen</a>
+    </div>
+  } @else if (!navigationService.isAuthPage()) {
     <div class="user-menu">
       <div
-        (click)="navigationService.isMobile ? showMenuMobile() : showmenu()"
+        (click)="navigationService.isMobile() ? showMenuMobile() : showmenu()"
         [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"
       >
         <span>{{ authService.currentUser()?.displayName }}</span>
         <img [src]="authService.currentUser()?.photoUrl" alt="Bild" />
-        @if (!navigationService.isMobile) {
+        @if (!navigationService.isMobile()) {
           <mat-icon>keyboard_arrow_down</mat-icon>
         }
 

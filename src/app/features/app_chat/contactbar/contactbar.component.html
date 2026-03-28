@@ -1,10 +1,10 @@
 <main>
   <section class="column align-center">
-    <app-header *ngIf="this.navigationService.isMobile"></app-header>
+    <app-header *ngIf="this.navigationService.isMobile()"></app-header>
     <div class="headline">
       <div>
         <img src="img/workspace-logo.svg" alt="" />
-        <h1>Devspace</h1>
+        <h2>Devspace</h2>
       </div>
       <button (click)="this.navigationService.showNewMessage(); this.userService.setUrl('newMessage')">
         <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
@@ -19,7 +19,7 @@
         </button>
       </div>
     }
-    @if (this.navigationService.isMobile && navigationService.isContactbarPage()) {
+    @if (this.navigationService.isMobile() && navigationService.isContactbarPage()) {
       <div class="searchbar">
         <div class="input">
           <input

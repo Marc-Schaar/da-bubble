@@ -14,7 +14,7 @@ import { AddMemberComponent } from '../../app_channel/components/add-member/add-
 import { DividerTemplateComponent } from '../../../shared/components/divider/divider-template.component';
 import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
 import { MessageTemplateComponent } from '../../../shared/components/message/message-template.component';
-import { ChatHeaderComponent } from '../../../shared/components/chat-header/chat-header.component';
+import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
@@ -68,9 +68,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
-    if (!this.navigationService.isInitialize) {
-      this.navigationService.initialize();
-    }
     this.route.queryParamMap.subscribe((params) => {
       this.currentChannelId = params.get('reciverId') || '';
       this.userId = params.get('currentUserId') || '';

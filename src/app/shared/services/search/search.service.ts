@@ -260,7 +260,7 @@ export class SearchService {
   private searchChannel(searchInput: string, channelsToSearch: any) {
     let foundChannels: any = [];
     foundChannels = channelsToSearch.filter((channel: { data?: { name?: string } }) =>
-      channel.data?.name?.toLowerCase().includes(searchInput)
+      channel.data?.name?.toLowerCase().includes(searchInput),
     );
 
     return foundChannels;
@@ -278,7 +278,7 @@ export class SearchService {
     let channelsToSearch = this.isAnonymous()
       ? this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz')
       : this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
-          channel.data?.member?.some((member: any) => member.id === this.userId())
+          channel.data?.member?.some((member: any) => member.id === this.userId()),
         );
     if (searchCollection === 'channel') {
       result = this.searchChannel(searchInput, channelsToSearch);
@@ -300,7 +300,7 @@ export class SearchService {
     this.directTag = true;
     if (type === '#') {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
-        channel.data?.member?.some((member: any) => member.id === this.userId())
+        channel.data?.member?.some((member: any) => member.id === this.userId()),
       );
       if (this.userService.currentUser.isAnonymous) {
         this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');

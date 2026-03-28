@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FireServiceService } from '../firebase/fire-service.service';
