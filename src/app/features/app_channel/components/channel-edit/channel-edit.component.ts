@@ -11,8 +11,6 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 
-
-
 @Component({
   selector: 'app-channel-edit',
   imports: [CommonModule],
@@ -59,7 +57,7 @@ export class ChannelEditComponent {
   constructor(
     public firestore: Firestore,
     public dialogRef: MatDialogRef<ChannelEditComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
@@ -246,7 +244,7 @@ export class ChannelEditComponent {
    */
   async loadUsers() {
     try {
-      this.users = await this.fireService.getUsers();
+      this.users = await this.fireService.allUsers();
     } catch (error) {}
   }
 
@@ -305,7 +303,7 @@ export class ChannelEditComponent {
    */
   filterMembers() {
     this.filteredMembers = this.members.filter(
-      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id
+      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id,
     );
   }
 

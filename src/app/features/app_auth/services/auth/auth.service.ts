@@ -112,7 +112,7 @@ export class AuthService {
     try {
       await updateDoc(defaultChannelRef, {
         member: arrayUnion({
-          fullname: user.displayName,
+          displayName: user.displayName,
           email: user.email,
           photoUrl: user.photoUrl,
           online: false,
@@ -205,7 +205,7 @@ export class AuthService {
   private async handleGuestSync(firebaseUser: any) {
     const guestData = this.mapFirebaseUserToUser(firebaseUser, {
       displayName: 'Gast-Besucher',
-      photoUrl: 'assets/img/avatars/guest_avatar.png',
+      photoUrl: 'img/avatars/avatar_default.png',
     });
 
     await this.addInUserCollection(guestData);
@@ -247,7 +247,7 @@ export class AuthService {
       id: firebaseUser.uid,
       email: firebaseUser.email || '',
       displayName: firebaseUser.displayName || 'Unbekannter Nutzer',
-      photoUrl: firebaseUser.photoURL || 'img/profilephoto.png',
+      photoUrl: firebaseUser.photoURL || 'img/avatar_default.png',
       online: true,
       ...overrides,
     };
@@ -297,7 +297,7 @@ export class AuthService {
    * with additional fields required for creating a new user account:
    * - **email**: Inherited from basicAuthFields (Required, Email format).
    * - **password**: Inherited from basicAuthFields (Required, Min length 6).
-   * - **fullname**: Required field, minimum of 2 characters.
+   * - **displayName**: Required field, minimum of 2 characters.
    * - **profilephoto**: Optional, defaults to a standard placeholder path.
    * - **acceptTerms**: Required to be 'true' (checkbox must be checked).
    * * @returns {FormGroup} A fully configured FormGroup for the registration template.

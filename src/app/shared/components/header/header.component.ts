@@ -24,7 +24,7 @@ import { filter } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
   public authService: AuthService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
@@ -36,28 +36,10 @@ export class HeaderComponent implements OnInit {
   public input: string = '';
 
   private router = inject(Router);
-  public isAuthPage = signal<boolean>(true);
-  public isContactbarPage = signal<boolean>(true);
-
-  ngOnInit() {
-    this.checkCurrentUrl(this.router.url);
-
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.checkCurrentUrl(event.urlAfterRedirects);
-    });
-  }
 
   /**
    * Zentrale Methode, um die URL zu prüfen und das Signal zu setzen
    */
-  private checkCurrentUrl(url: string) {
-    const isAuth = url.includes('login') || url.includes('register');
-    const isContactbar = url.includes('contactbar');
-    this.isAuthPage.set(isAuth);
-    this.isContactbarPage.set(isContactbar);
-    console.log('Ist Auth-Seite:', isAuth);
-    console.log('Ist Contactabar-Seite:', isContactbar);
-  }
 
   /**
    * Opens the User Profile Dialog.

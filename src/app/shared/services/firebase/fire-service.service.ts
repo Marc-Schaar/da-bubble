@@ -1,14 +1,27 @@
-import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDocs, updateDoc } from '@angular/fire/firestore';
+import { computed, inject, Injectable, Injector, signal } from '@angular/core';
+import {
+  addDoc,
+  collection,
+  CollectionReference,
+  doc,
+  DocumentReference,
+  Firestore,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { Message } from '../../../features/app_chat/models/message/message';
-
-
+import { User } from '../../../features/app_auth/models/user/user';
+import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
-  firestore: Firestore = inject(Firestore);
+  public firestore: Firestore = inject(Firestore);
+  private injector = inject(Injector);
+  public allUsers = signal<User[]>([]);
+  private _allChannels = signal<any[]>([]);
 
   /**
    * Updates the online status of the current user in Firestore.
@@ -25,22 +38,62 @@ export class FireServiceService {
   }
 
   /**
-   * Retrieves all users from Firestore.
-   *
-   * @returns A promise that resolves with an array of user objects.
-   * @throws If there is an error fetching users from Firestore.
+   * Erstellt eine permanente Verbindung zur User-Collection.
+   * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
    */
-  async getUsers() {
-    try {
-      const usersCollection = collection(this.firestore, 'users');
-      const userSnapshot = await getDocs(usersCollection);
-      return userSnapshot.docs.map((doc) => ({
+  subAllUsers() {
+    const usersCollection = collection(this.firestore, 'users');
+
+    return onSnapshot(
+      usersCollection,
+      (snapshot) => {
+        const users = snapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            }) as User,
+        );
+
+        this.allUsers.set(users);
+        console.log(users);
+      },
+      (error) => {
+        console.error('Fehler beim User-Streaming:', error);
+      },
+    );
+  }
+
+  public myChannels = computed(() => {
+    const authService = this.injector.get(AuthService);
+    const channels = this._allChannels();
+    const currentUser = authService.currentUser();
+    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
+
+    if (!currentUser) return [];
+
+    return channels.filter((channel) => {
+      if (currentUser.email === 'gast@portfolio.de') {
+        return channel.id === DEFAULT_CHANNEL_ID;
+      }
+
+      return channel.member?.some((m: any) => m.id === currentUser.id);
+    });
+  });
+
+  /**
+   * Startet den Echtzeit-Stream für alle Channels
+   */
+  public subChannels() {
+    const channelRef = collection(this.firestore, 'channels');
+
+    return onSnapshot(channelRef, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-    } catch (error) {
-      throw error;
-    }
+      this._allChannels.set(data);
+    });
   }
 
   /**
@@ -166,7 +219,7 @@ export class FireServiceService {
    */
   async sendThreadMessage(channelId: string, messageObject: any, parentMessageId: string) {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(
-      `channels/${channelId}/messages/${parentMessageId}/thread`
+      `channels/${channelId}/messages/${parentMessageId}/thread`,
     );
     if (messagesCollectionRef) {
       await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());

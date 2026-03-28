@@ -44,7 +44,10 @@ export class AddMemberComponent implements OnInit {
    * @param data - Data passed into the dialog, contains information like the current channel,
    *               current user, and the state of the addMember window.
    */
-  constructor(public dialogRef: MatDialogRef<AddMemberComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    public dialogRef: MatDialogRef<AddMemberComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {
     this.currentChannel = data.currentChannel;
     this.currentChannelId = data.currentChannelId;
     this.currentUser = data.currentUser;
@@ -66,7 +69,7 @@ export class AddMemberComponent implements OnInit {
    */
   filterMembers() {
     this.filteredMembers = this.members.filter(
-      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id
+      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id,
     );
   }
 
@@ -92,7 +95,7 @@ export class AddMemberComponent implements OnInit {
    */
   async loadUsers() {
     try {
-      this.users = await this.fireService.getUsers();
+      this.users = await this.fireService.allUsers();
     } catch (error) {}
   }
 

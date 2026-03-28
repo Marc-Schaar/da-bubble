@@ -12,104 +12,110 @@
     </div>
 
     @if (isClicked) {
-    <div class="justify-sb full-width p-lr-16">
-      <h2>Search</h2>
-      <button (click)="isClicked = false">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    } @if(this.navigationService.isMobile){
-    <div class="searchbar">
-      <div class="input" *ngIf="!userService.login && userService.dashboard">
-        <input
-          (click)="isClicked = true"
-          [(ngModel)]="input"
-          (input)="searchService.observeInput(input, 'header')"
-          type="text"
-          placeholder="Gehe zu ..."
-          class="full-width"
-        />
-        <mat-icon>search</mat-icon>
+      <div class="justify-sb full-width p-lr-16">
+        <h2>Search</h2>
+        <button (click)="isClicked = false">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
+    }
+    @if (this.navigationService.isMobile && navigationService.isContactbarPage()) {
+      <div class="searchbar">
+        <div class="input">
+          <input
+            (click)="isClicked = true"
+            [(ngModel)]="input"
+            (input)="searchService.observeInput(input, 'header')"
+            type="text"
+            placeholder="Gehe zu ..."
+            class="full-width"
+          />
+          <mat-icon>search</mat-icon>
+        </div>
 
-      @if (searchService.getHeaderListBoolean()&& isClicked) {
-      <div class="tag-container">
-        <app-search-result [(input)]="input"></app-search-result>
+        @if (searchService.getHeaderListBoolean() && isClicked) {
+          <div class="tag-container">
+            <app-search-result [(input)]="input"></app-search-result>
+          </div>
+        }
       </div>
-      }
-    </div>
-
-    } @if (!isClicked) {
-    <div class="contactbar">
-      <div class="channels">
-        <div class="drop-down-title">
-          <button class="d-flex align-center gap-10" (click)="toggleActive()">
-            <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isActive() }"> arrow_drop_down</mat-icon>
-            <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
-            Channels
-          </button>
-
-          <div class="tooltip-cont">
-            <button class="align-center" (click)="openAddChannel()">
-              <mat-icon>add</mat-icon>
+    }
+    @if (!isClicked) {
+      <div class="contactbar">
+        <div class="channels">
+          <div class="drop-down-title">
+            <button class="d-flex align-center gap-10" (click)="toggleActive()">
+              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isActive() }"> arrow_drop_down</mat-icon>
+              <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
+              Channels
             </button>
 
-            <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-          </div>
-        </div>
+            <div class="tooltip-cont">
+              <button class="align-center" (click)="openAddChannel()">
+                <mat-icon>add</mat-icon>
+              </button>
 
-        <ul [ngClass]="{ show: isActive() }" class="channellist">
-          @for (channel of channels; track $index; let index = $index) {
-          <li
-            [ngClass]="{ 'active-link': currentLink === channel.name }"
-            class="li"
-            (click)="
-              openWindow('channel', channel.name); this.userService.setUrl('channel', channel.id, this.userService.auth.currentUser?.uid)
-            "
-          >
-            <mat-icon class="material-symbols-outlined">tag</mat-icon>
-            <span>{{ channel.name }}</span>
-          </li>
-          } @empty {No Channel found}
-        </ul>
-      </div>
-      <div class="tooltip-cont">
-        <button class="addChannel" (click)="openAddChannel()">
-          <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
-          Channel hinzufügen
-        </button>
-        <span class="tooltip">Zugang für Gäste gesperrt</span>
-      </div>
-
-      <div class="messages">
-        <div class="drop-down-title">
-          <button class="d-flex align-center gap-10" (click)="toggleMessage()">
-            <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isOpen() }"> arrow_drop_down</mat-icon>
-            <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
-            Direktnachrichten
-          </button>
-        </div>
-
-        <ul [ngClass]="{ show: isOpen() }" class="contacts">
-          @for (user of users; track $index; let index = $index) {
-          <li
-            [ngClass]="{ 'active-link': currentLink === user.fullname }"
-            (click)="
-              openWindow('direct', user.fullname); this.userService.setUrl('direct', user.id, this.userService.auth.currentUser?.uid)
-            "
-            class="li"
-          >
-            <div class="imageContainer">
-              <img class="profile-image" [src]="user.profilephoto" alt="" />
-              <div class="status-dot" [ngClass]="{ green: user.online }"></div>
+              <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
             </div>
+          </div>
 
-            <span>{{ user.fullname }}</span>
-          </li>
-          }@empty {No User found}
-        </ul>
+          <ul [ngClass]="{ show: isActive() }" class="channellist">
+            @for (channel of firestoreService.myChannels(); track $index; let index = $index) {
+              <li
+                [ngClass]="{ 'active-link': currentLink === channel.name }"
+                class="li"
+                (click)="
+                  openWindow('channel', channel.name);
+                  this.userService.setUrl('channel', channel.id, this.userService.auth.currentUser?.uid)
+                "
+              >
+                <mat-icon class="material-symbols-outlined">tag</mat-icon>
+                <span>{{ channel.name }}</span>
+              </li>
+            } @empty {
+              No Channel found
+            }
+          </ul>
+        </div>
+        <div class="tooltip-cont">
+          <button class="addChannel" (click)="openAddChannel()">
+            <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
+            Channel hinzufügen
+          </button>
+          <span class="tooltip">Zugang für Gäste gesperrt</span>
+        </div>
+
+        <div class="messages">
+          <div class="drop-down-title">
+            <button class="d-flex align-center gap-10" (click)="toggleMessage()">
+              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isOpen() }"> arrow_drop_down</mat-icon>
+              <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+              Direktnachrichten
+            </button>
+          </div>
+
+          <ul [ngClass]="{ show: isOpen() }" class="contacts">
+            @for (user of firestoreService.allUsers(); track $index; let index = $index) {
+              <li
+                [ngClass]="{ 'active-link': currentLink === user.displayName }"
+                (click)="
+                  openWindow('direct', user.displayName); this.userService.setUrl('direct', user.id, this.userService.auth.currentUser?.uid)
+                "
+                class="li"
+              >
+                <div class="imageContainer">
+                  <img class="profile-image" [src]="user.photoUrl" alt="" />
+                  <div class="status-dot" [ngClass]="{ green: user.online }"></div>
+                </div>
+
+                <span>{{ user.displayName }}</span>
+              </li>
+            } @empty {
+              No User found
+            }
+          </ul>
+        </div>
       </div>
-    </div>
     }
   </section>
 

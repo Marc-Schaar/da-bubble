@@ -10,13 +10,13 @@
     }
   </div>
 
-  @if (isAuthPage()) {
+  @if (navigationService.isAuthPage()) {
     <div class="signup">
       <p>Neu bei DABubble?</p>
       <a routerLink="/register">Konto erstellen</a>
     </div>
-  } @else if (!isAuthPage()) {
-    @if (!isContactbarPage()) {
+  } @else if (!navigationService.isAuthPage()) {
+    @if (!navigationService.isContactbarPage()) {
       <div class="input">
         <input
           [(ngModel)]="input"

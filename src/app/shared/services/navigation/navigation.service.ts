@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, distinctUntilChanged, filter, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
 import { Location } from '@angular/common';
@@ -31,11 +31,20 @@ export class NavigationService {
   public messageId: string = '';
   public channelType: 'direct' | 'channel' | 'thread' | 'newMessage' | 'default' = 'default';
 
+  public isAuthPage = signal<boolean>(true);
+  public isContactbarPage = signal<boolean>(true);
+
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
    * and manages component navigation based on the current channel type and screen size.
    */
-  constructor() {}
+  constructor() {
+    this.checkCurrentUrl(this.router.url);
+
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.checkCurrentUrl(event.urlAfterRedirects);
+    });
+  }
 
   public gotToAvatarSelection() {
     this.router.navigate(['register/avatar']);
@@ -50,6 +59,15 @@ export class NavigationService {
 
   public goToLogin() {
     this.router.navigate(['login']);
+  }
+
+  private checkCurrentUrl(url: string) {
+    const isAuth = url.includes('login') || url.includes('register');
+    const isContactbar = url.includes('contactbar');
+    this.isAuthPage.set(isAuth);
+    this.isContactbarPage.set(isContactbar);
+    console.log('Ist Auth-Seite:', isAuth);
+    console.log('Ist Contactabar-Seite:', isContactbar);
   }
 
   public initialize(): void {
