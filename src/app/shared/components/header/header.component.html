@@ -1,4 +1,4 @@
-<main [ngClass]="{ 'header-login': userService.login }" class="header">
+<main class="header">
   <div class="logo-container">
     <a routerLink="/login"><img src="img/headerlogo.png" alt="" /></a>
   </div>
@@ -15,26 +15,28 @@
       <p>Neu bei DABubble?</p>
       <a routerLink="/register">Konto erstellen</a>
     </div>
-  } @else {
-    <div class="input">
-      <input
-        [(ngModel)]="input"
-        (input)="searchService.observeInput(input, 'header')"
-        (click)="searchService.closeList(); searchService.setResult(false)"
-        type="text"
-        placeholder="Devspace durchsuchen"
-        class="full-width"
-      />
-      <button><img src="img/icons.png" alt="" /></button>
-    </div>
+  } @else if (!isAuthPage()) {
+    @if (!isContactbarPage()) {
+      <div class="input">
+        <input
+          [(ngModel)]="input"
+          (input)="searchService.observeInput(input, 'header')"
+          (click)="searchService.closeList(); searchService.setResult(false)"
+          type="text"
+          placeholder="Devspace durchsuchen"
+          class="full-width"
+        />
+        <button><img src="img/icons.png" alt="" /></button>
+      </div>
+    }
 
-    <div class="user-menu" *ngIf="!userService.login && userService.dashboard">
+    <div class="user-menu">
       <div
         (click)="navigationService.isMobile ? showMenuMobile() : showmenu()"
         [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"
       >
-        <span>{{ auth.currentUser?.displayName }}</span>
-        <img [src]="auth.currentUser?.photoURL || 'img/profilephoto.png'" alt="" />
+        <span>{{ authService.currentUser()?.displayName }}</span>
+        <img [src]="authService.currentUser()?.photoUrl" alt="Bild" />
         @if (!navigationService.isMobile) {
           <mat-icon>keyboard_arrow_down</mat-icon>
         }

@@ -18,7 +18,6 @@ import { UserMenuComponent } from '../../../features/dialogs/user-menu/user-menu
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 import { filter } from 'rxjs';
 
-
 @Component({
   selector: 'app-header',
   imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule],
@@ -27,9 +26,7 @@ import { filter } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   @ViewChild(MatMenuTrigger) menuTriggerRef!: MatMenuTrigger;
-  public auth = inject(Auth);
-  private authService: AuthService = inject(AuthService);
-  public userService = inject(UserService);
+  public authService: AuthService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
   private matDialog: MatDialog = inject(MatDialog);
@@ -38,20 +35,29 @@ export class HeaderComponent implements OnInit {
   isProfileCard: boolean = false;
   public input: string = '';
 
-  private router = inject(Router)
-  public isAuthPage=signal<boolean>(true)
+  private router = inject(Router);
+  public isAuthPage = signal<boolean>(true);
+  public isContactbarPage = signal<boolean>(true);
 
-    ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      const url = event.urlAfterRedirects;
-      this.isAuthPage.set( url.includes('login') || url.includes('register')) 
-      
-      console.log('Ist Auth-Seite:', this.isAuthPage());
+  ngOnInit() {
+    this.checkCurrentUrl(this.router.url);
+
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.checkCurrentUrl(event.urlAfterRedirects);
     });
   }
-  
+
+  /**
+   * Zentrale Methode, um die URL zu prüfen und das Signal zu setzen
+   */
+  private checkCurrentUrl(url: string) {
+    const isAuth = url.includes('login') || url.includes('register');
+    const isContactbar = url.includes('contactbar');
+    this.isAuthPage.set(isAuth);
+    this.isContactbarPage.set(isContactbar);
+    console.log('Ist Auth-Seite:', isAuth);
+    console.log('Ist Contactabar-Seite:', isContactbar);
+  }
 
   /**
    * Opens the User Profile Dialog.
