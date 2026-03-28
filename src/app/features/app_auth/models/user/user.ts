@@ -25,7 +25,7 @@ export interface User {
   id: string;
   email: string;
   displayName: string;
-  avatarUrl?: string;
+  photoUrl?: string;
   online: boolean;
 }
 

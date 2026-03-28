@@ -48,6 +48,10 @@ export class NavigationService {
     this.isMobile ? this.router.navigate(['/contactbar']) : this.router.navigate(['/chat']);
   }
 
+  public goToLogin() {
+    this.router.navigate(['login']);
+  }
+
   public initialize(): void {
     this.isInitialize = true;
     if (this.isInitialize) {

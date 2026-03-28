@@ -2,12 +2,11 @@ import { inject, Injectable, signal } from '@angular/core';
 
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 
-import { arrayUnion, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { RegisterData, User } from '../../models/user/user';
@@ -19,11 +18,12 @@ export class AuthService {
   private auth: Auth = inject(Auth);
   private navigationService: NavigationService = inject(NavigationService);
   private firestore: Firestore = inject(Firestore);
-  private userService: UserService = inject(UserService);
   private fireService = inject(FireServiceService);
-  googleAuthProvider = new GoogleAuthProvider();
-  error = false;
+  private googleAuthProvider = new GoogleAuthProvider();
+
   isLoading = false;
+
+  public errorMessage = signal<string | null>(null);
 
   //Ab hier refactored
   private formBuilder = inject(FormBuilder);
@@ -33,6 +33,10 @@ export class AuthService {
   private _currentUser = signal<User | null>(null);
   public currentUser = this._currentUser.asReadonly();
 
+  constructor() {
+    this.setCurrentUser();
+  }
+
   public setStep1Data(data: RegisterData) {
     this.tempUserData.set(data);
   }
@@ -41,7 +45,7 @@ export class AuthService {
     return this.tempUserData()?.displayName;
   }
 
-  public async completeRegistration(avatarUrl: string): Promise<void> {
+  public async completeRegistration(photoUrl: string): Promise<void> {
     const data = this.tempUserData();
     if (!data) return this.handleRegError('Keine Daten gefunden');
 
@@ -49,17 +53,15 @@ export class AuthService {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
       const firebaseUser = userCredential.user;
-      const newUser: User = {
-        id: firebaseUser.uid,
-        email: data.email,
+      const newUser = this.mapFirebaseUserToUser(userCredential.user, {
         displayName: data.displayName,
-        avatarUrl: avatarUrl,
+        photoUrl: photoUrl,
         online: false,
-      };
+      });
 
       await Promise.all([
-        this.updateFirebaseProfile(firebaseUser, newUser.displayName, avatarUrl),
-        this.syncUserToFirestore(firebaseUser, newUser.displayName, avatarUrl),
+        this.updateFirebaseProfile(firebaseUser, newUser.displayName, photoUrl),
+        this.syncUserToFirestore(firebaseUser, newUser.displayName, photoUrl),
       ]);
 
       this.finalizeRegistration();
@@ -74,28 +76,18 @@ export class AuthService {
     return updateProfile(user, { displayName: name, photoURL: photo });
   }
 
-  private async syncUserToFirestore(user: any, name: string, photo: string) {
-    const userData: User = {
-      id: user.uid,
+  private async syncUserToFirestore(firebaseUser: any, name: string, photo: string) {
+    const userData = this.mapFirebaseUserToUser(firebaseUser, {
       displayName: name,
-      email: user.email,
-      avatarUrl: photo,
-      online: false,
-    };
+      photoUrl: photo,
+    });
     await this.addInUserCollection(userData);
     await this.addInDefaultChannel(userData);
   }
 
   private finalizeRegistration() {
     this.tempUserData.set(null);
-    this.userService.setOnlineStatus();
     this.navigationService.gotToChat();
-  }
-
-  private handleRegError(error: any) {
-    console.error('Registrierung Fehler:', error);
-    this.error = true;
-    this.isLoading = false;
   }
 
   /**
@@ -106,13 +98,7 @@ export class AuthService {
    */
   private async addInUserCollection(user: User) {
     const userDocRef = doc(this.firestore, `users/${user.id}`);
-    await setDoc(userDocRef, {
-      displayName: user.displayName,
-      email: user.email,
-      avatarUrl: user.avatarUrl,
-      online: false,
-      id: user.id,
-    });
+    await setDoc(userDocRef, { ...user });
   }
 
   /**
@@ -128,13 +114,157 @@ export class AuthService {
         member: arrayUnion({
           fullname: user.displayName,
           email: user.email,
-          profilephoto: user.avatarUrl,
+          photoUrl: user.photoUrl,
           online: false,
           id: user.id,
         }),
       });
     } catch (error) {
       console.error('Fehler beim Hinzufügen zum Standardkanal:', error);
+    }
+  }
+
+  /**
+   * Logs in a user using email and password.
+   * Sets the user online and redirects to the dashboard on success.
+   * Sets an error flag on failure.
+   *
+   * @param email - User's email address
+   * @param password - User's password
+   */
+  public async logInWithEmailAndPassword(email: string, password: string) {
+    this.isLoading = true;
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      this.navigationService.gotToChat();
+    } catch (error) {
+      this.handleRegError(error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Logs in a user with Google authentication.
+   * Updates user profile and sets online status.
+   * Creates a user document in Firestore if needed.
+   * Sets an error flag on failure.
+   */
+  public async logInWithGoogle() {
+    this.isLoading = true;
+    try {
+      const result = await signInWithPopup(this.auth, this.googleAuthProvider);
+      if (result) {
+        const userData = this.mapFirebaseUserToUser(result.user);
+        await this.addInUserCollection(userData);
+        await this.addInDefaultChannel(userData);
+        this.navigationService.gotToChat();
+      }
+    } catch (error: any) {
+      if (error.code === 'auth/network-request-failed') {
+        console.error('Netzwerkfehler: Prüfe Adblocker oder Firewall!');
+      }
+      this.handleRegError(error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Logs in the user anonymously as a guest.
+   * Creates a guest profile in Firestore and redirects to the dashboard.
+   * Sets loading state and logs errors if any occur.
+   */
+  public async loginAsGuest() {
+    this.isLoading = true;
+    const GUEST_EMAIL = 'gast@portfolio.de';
+    const GUEST_PW = 'Gast1234';
+
+    try {
+      const result = await signInWithEmailAndPassword(this.auth, GUEST_EMAIL, GUEST_PW);
+      await this.handleGuestSync(result.user);
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          const result = await createUserWithEmailAndPassword(this.auth, GUEST_EMAIL, GUEST_PW);
+          await this.handleGuestSync(result.user);
+        } catch (createError) {
+          this.handleRegError(createError);
+        }
+      } else {
+        this.handleRegError(error);
+      }
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Hilfsmethode, um den Gast-Datensatz in Firestore konsistent zu halten
+   */
+  private async handleGuestSync(firebaseUser: any) {
+    const guestData = this.mapFirebaseUserToUser(firebaseUser, {
+      displayName: 'Gast-Besucher',
+      photoUrl: 'assets/img/avatars/guest_avatar.png',
+    });
+
+    await this.addInUserCollection(guestData);
+    this.navigationService.gotToChat();
+  }
+
+  /**
+   * Sets the current user by subscribing to the auth state.
+   * Retrieves the user from Firebase authentication.
+   */
+  setCurrentUser() {
+    onAuthStateChanged(this.auth, (firebaseUser) => {
+      firebaseUser ? this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser)) : this._currentUser.set(null);
+    });
+  }
+
+  /**
+   * Logs out the currently authenticated user.
+   * Updates online status, deletes anonymous user data, and redirects to the login page.
+   */
+  public async logOut() {
+    this.isLoading = true;
+    try {
+      const user = this.currentUser();
+      if (user) {
+        await this.fireService.updateOnlineStatus({ ...user, online: false });
+      }
+      await signOut(this.auth);
+      this.navigationService.goToLogin();
+    } catch (error) {
+      console.error('Logout Fehler:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private mapFirebaseUserToUser(firebaseUser: any, overrides?: Partial<User>): User {
+    return {
+      id: firebaseUser.uid,
+      email: firebaseUser.email || '',
+      displayName: firebaseUser.displayName || 'Unbekannter Nutzer',
+      photoUrl: firebaseUser.photoURL || 'img/profilephoto.png',
+      online: true,
+      ...overrides,
+    };
+  }
+
+  private handleRegError(error: any) {
+    this.errorMessage.set(this.getFriendlyErrorMessage(error.code));
+  }
+
+  private getFriendlyErrorMessage(code: string): string {
+    switch (code) {
+      case 'auth/invalid-credential':
+        return 'E-Mail oder Passwort falsch.';
+      case 'auth/network-request-failed':
+        return 'Netzwerkfehler. Prüfe deinen Adblocker.';
+      default:
+        return 'Ein unerwarteter Fehler ist aufgetreten.';
     }
   }
 
@@ -179,90 +309,5 @@ export class AuthService {
       photoURL: ['img/profilephoto.png'],
       acceptTerms: [false, [Validators.requiredTrue]],
     });
-  }
-
-  /**
-   * Logs in a user using email and password.
-   * Sets the user online and redirects to the dashboard on success.
-   * Sets an error flag on failure.
-   *
-   * @param email - User's email address
-   * @param password - User's password
-   */
-  public async logInWithEmailAndPassword(email: string, password: string) {
-    this.isLoading = true;
-    try {
-      await signInWithEmailAndPassword(this.auth, email, password);
-      await this.userService.setOnlineStatus();
-      this.navigationService.gotToChat();
-    } catch (error) {
-      this.error = true;
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  /**
-   * Logs in a user with Google authentication.
-   * Updates user profile and sets online status.
-   * Creates a user document in Firestore if needed.
-   * Sets an error flag on failure.
-   */
-  public async logInWithGoogle() {
-    // try {
-    //   const result = await signInWithPopup(this.auth, this.googleAuthProvider);
-    //   const firebaseUser = result.user;
-    //   await updateProfile(firebaseUser, {
-    //     photoURL: 'img/profilephoto.png',
-    //   });
-    //   await this.addInUserCollection(firebaseUser);
-    //   await this.addInDefaultChannel(firebaseUser);
-    //   await this.shared.setOnlineStatus();
-    //   this.shared.redirectiontodashboard();
-    // } catch (error) {
-    //   this.error = true;
-    // } finally {
-    //   this.isLoading = false;
-    // }
-  }
-
-  /**
-   * Logs in the user anonymously as a guest.
-   * Creates a guest profile in Firestore and redirects to the dashboard.
-   * Sets loading state and logs errors if any occur.
-   */
-  public async loginAsGuest() {
-    // this.isLoading = true;
-    // try {
-    //   const result = await signInAnonymously(this.auth);
-    //   await updateProfile(result.user, {
-    //     displayName: 'Gast',
-    //     photoURL: 'img/profilephoto.png',
-    //   });
-    //   await this.addInUserCollection(result.user);
-    //   await this.shared.setOnlineStatus();
-    //   this.shared.redirectiontodashboard();
-    // } catch (error) {
-    // } finally {
-    //   this.isLoading = false;
-    // }
-  }
-
-  /**
-   * Logs out the currently authenticated user.
-   * Updates online status, deletes anonymous user data, and redirects to the login page.
-   */
-  public async logOut() {
-    //   this.navigationService.isInitialize = false;
-    //   const currentUser = this.userService.getUser();
-    //   currentUser.online = false;
-    //   await this.fireService.updateOnlineStatus(currentUser);
-    //   if (this.auth.currentUser?.isAnonymous) {
-    //     await deleteDoc(doc(this.firestore, `users/${currentUser.id}`));
-    //     await this.auth.currentUser.delete();
-    //   } else {
-    //     await signOut(this.auth);
-    //   }
-    //   this.userService.redirectiontologinpage();
   }
 }

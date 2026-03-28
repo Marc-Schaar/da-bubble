@@ -39,7 +39,6 @@ export class UserService {
    * @param route - ActivatedRoute to access route parameters and data.
    */
   constructor(private route: ActivatedRoute) {
-    this.setCurrentUser();
     this.getChannels();
     this.getUsers();
   }
@@ -58,33 +57,6 @@ export class UserService {
    */
   getUser(): User {
     return this.currentUser;
-  }
-
-  /**
-   * Sets the online status of the current user.
-   * Updates the online status in Firestore.
-   */
-  async setOnlineStatus() {
-    const currentUser = this.getUser();
-    currentUser.online = true;
-    await this.fireService.updateOnlineStatus(currentUser);
-  }
-
-  /**
-   * Sets the current user by subscribing to the auth state.
-   * Retrieves the user from Firebase authentication.
-   */
-  setCurrentUser() {
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.currentUser = {
-          id: user.uid,
-          ...user,
-        };
-      } else {
-        this.currentUser = new User(null);
-      }
-    });
   }
 
   /**
