@@ -64,10 +64,7 @@
               <li
                 [ngClass]="{ 'active-link': currentLink === channel.name }"
                 class="li"
-                (click)="
-                  openWindow('channel', channel.name);
-                  this.userService.setUrl('channel', channel.id, this.userService.auth.currentUser?.uid)
-                "
+                (click)="navigationService.selectChannel(channel.id)"
               >
                 <mat-icon class="material-symbols-outlined">tag</mat-icon>
                 <span>{{ channel.name }}</span>
@@ -98,9 +95,7 @@
             @for (user of firestoreService.allUsers(); track $index; let index = $index) {
               <li
                 [ngClass]="{ 'active-link': currentLink === user.displayName }"
-                (click)="
-                  openWindow('direct', user.displayName); this.userService.setUrl('direct', user.id, this.userService.auth.currentUser?.uid)
-                "
+                (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 class="li"
               >
                 <div class="imageContainer">

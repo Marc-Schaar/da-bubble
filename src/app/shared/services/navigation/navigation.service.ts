@@ -63,8 +63,12 @@ export class NavigationService {
     this.isMainChat.set(isMain);
   }
 
-  selectChannel(id: string) {
+  public selectChannel(id: string) {
     this.router.navigate(['/main/channel', id]);
+  }
+
+  public selectDirectMessageRecipient(id: string) {
+    this.router.navigate(['/main/direct', id]);
   }
 
   goBackToList() {
