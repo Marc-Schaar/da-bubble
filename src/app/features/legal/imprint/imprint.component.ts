@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../../shared/services/messages/messages.service';
 
@@ -10,17 +9,7 @@ import { MessagesService } from '../../../shared/services/messages/messages.serv
   templateUrl: './imprint.component.html',
   styleUrl: './imprint.component.scss',
 })
-export class ImprintComponent implements OnInit {
-  shared = inject(UserService);
+export class ImprintComponent {
   navigate = inject(NavigationService);
   message = inject(MessagesService);
-
-  /**
-   * Lifecycle hook that is called when the component is initialized.
-   * It sets the dashboard and login properties of the shared service to false.
-   */
-  ngOnInit(): void {
-    this.shared.dashboard = false;
-    this.shared.login = false;
-  }
 }

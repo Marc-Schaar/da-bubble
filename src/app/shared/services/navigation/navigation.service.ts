@@ -15,6 +15,8 @@ export class NavigationService {
 
   public isAuthPage = signal<boolean>(true);
   public isContactbarPage = signal<boolean>(true);
+  public isChatContent = signal<boolean>(true);
+  public isMainChat = signal<boolean>(true);
   public showContent = signal(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
 
@@ -39,9 +41,9 @@ export class NavigationService {
    * Redirects to the dashboard or contact bar based on the device type.
    */
   public gotToChat() {
-    if (this.isMobile()) {
-      this.router.navigate(['/main']);
-    } else {
+    this.router.navigate(['/main']);
+
+    if (!this.isMobile()) {
       this.router.navigate(['/main/new-message']);
     }
   }
@@ -53,8 +55,12 @@ export class NavigationService {
   private checkCurrentUrl(url: string) {
     const isAuth = url.includes('login') || url.includes('register');
     const isContactbar = url.includes('contactbar');
+    const isChatContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');
+    const isMainChat = url.includes('/main');
     this.isAuthPage.set(isAuth);
     this.isContactbarPage.set(isContactbar);
+    this.isMainChat.set(isMainChat);
+    this.isChatContent.set(isChatContent);
   }
 
   selectChannel(id: string) {
@@ -79,6 +85,9 @@ export class NavigationService {
       .subscribe((isMobileNow) => {
         this.isMobile.set(isMobileNow);
         console.log('Mobile Mode:', isMobileNow);
+        if (!isMobileNow && this.router.url === '/main') {
+          this.router.navigate(['/main/new-message']);
+        }
       });
   }
 

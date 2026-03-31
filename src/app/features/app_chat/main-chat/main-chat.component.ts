@@ -34,58 +34,16 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
 })
-export class MainChatComponent implements OnInit {
+export class MainChatComponent {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   @ViewChild('feedback') feedbackRef!: ElementRef<HTMLDivElement>;
   public readonly navigationService: NavigationService = inject(NavigationService);
-  private subscriptions: Subscription[] = [];
   private searchService: SearchService = inject(SearchService);
+
   public feedbackVisible: boolean = false;
-  public barOpen: boolean = true;
+  public barOpen = signal<boolean>(true);
   public isChatOverlayVisible: boolean = false;
-
-  // Signal, das prüft, ob wir auf Mobile sind (< 768px)
-
-  // State, ob gerade ein Channel/Chat aktiv ist
-  showContent = signal(false);
-  private router = inject(Router);
-
-  constructor() {}
-
-  /**
-   * Lifecycle hook that is called when the component is initialized.
-   * Sets the dashboard and login properties of the shared service and subscribes to various observables.
-   */
-  ngOnInit(): void {
-    this.updateContentState(this.router.url);
-
-    this.subscriptions.push(
-      this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-        this.updateContentState(event.urlAfterRedirects);
-      }),
-    );
-  }
-
-  private updateContentState(url: string) {
-    const hasContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');
-
-    if (this.navigationService.isMobile() && url.endsWith('/main')) {
-      this.showContent.set(false);
-    } else if (this.navigationService.isMobile() && hasContent) {
-      this.showContent.set(true);
-    } else {
-      this.showContent.set(false);
-    }
-  }
-
-  /**
-   * Lifecycle hook that is called when the component is destroyed.
-   * Unsubscribes from all active subscriptions.
-   */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((s) => s.unsubscribe());
-  }
 
   /**
    * Displays a feedback message for a brief period.
@@ -107,8 +65,10 @@ export class MainChatComponent implements OnInit {
    * Toggles the visibility of the contact bar.
    */
   public toogleContactbar() {
-    this.drawerContactbar.toggle();
-    this.barOpen = !this.barOpen;
+    if (this.drawerContactbar) {
+      this.drawerContactbar.toggle();
+      this.barOpen.set(this.drawerContactbar.opened);
+    }
   }
 
   public closeAll() {

@@ -1,10 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
-import { UserService } from '../../../shared/services/user/shared.service';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../../shared/services/messages/messages.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-
 
 @Component({
   selector: 'app-dataprotection',
@@ -12,17 +9,6 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
   templateUrl: './data-protection.component.html',
   styleUrl: './data-protection.component.scss',
 })
-export class DataprotectionComponent implements OnInit {
-  shared = inject(UserService);
-  navigate = inject(NavigationService);
+export class DataprotectionComponent {
   message = inject(MessagesService);
-
-  /**
-   * Initializes the component and sets dashboard and login flags to false.
-   * This method is called once the component is initialized.
-   */
-  ngOnInit(): void {
-    this.shared.dashboard = false;
-    this.shared.login = false;
-  }
 }

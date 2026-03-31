@@ -1,10 +1,3 @@
-@if (!navigationService.isMobile()) {
-  <aside (click)="toogleContactbar()" class="navbar-toggle-container">
-    <span>Workspacemenü {{ barOpen ? "öffnen" : "schließen" }}</span>
-    <span [ngStyle]="{ transform: barOpen ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
-  </aside>
-}
-
 <main (click)="closeAll()">
   @if (!navigationService.isMobile()) {
     <app-header></app-header>
@@ -12,12 +5,22 @@
 
   <div class="content-container">
     <mat-drawer-container class="chat-content" autosize>
-      <mat-drawer class="contactbar-container" mode="side" [opened]="!navigationService.isMobile()" #drawerContactbar>
-        <app-contactbar></app-contactbar>
-      </mat-drawer>
+      @if (!navigationService.isMobile()) {
+        <mat-drawer #drawerContactbar mode="side" [opened]="barOpen()" class="contactbar-container">
+          <app-contactbar></app-contactbar>
+        </mat-drawer>
+      }
 
       <div class="component-area">
-        <router-outlet></router-outlet>
+        @if (navigationService.isMobile()) {
+          @if (navigationService.isMainChat()) {
+            <app-contactbar></app-contactbar>
+          } @else {
+            <router-outlet></router-outlet>
+          }
+        } @else {
+          <router-outlet></router-outlet>
+        }
       </div>
 
       <mat-drawer mode="side" #drawer position="end" class="thread-container">
@@ -26,6 +29,15 @@
     </mat-drawer-container>
   </div>
 </main>
+
+@if (!navigationService.isMobile()) {
+  <aside (click)="toogleContactbar()" class="navbar-toggle-container">
+    <span>Workspacemenü {{ barOpen() ? "öffnen" : "schließen" }}</span>
+    <span [ngStyle]="{ transform: barOpen() ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined">
+      left_panel_open
+    </span>
+  </aside>
+}
 
 @if (feedbackVisible) {
   <div #feedback class="feedback-cont"></div>

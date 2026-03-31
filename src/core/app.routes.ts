@@ -31,7 +31,6 @@ export const routes: Routes = [
     path: 'main',
     component: MainChatComponent,
     children: [
-      { path: '', redirectTo: 'new-message', pathMatch: 'full' },
       { path: 'channel/:id', component: ChatContentComponent },
       { path: 'direct/:id', component: DirectmessagesComponent },
       { path: 'new-message', component: NewmessageComponent },
