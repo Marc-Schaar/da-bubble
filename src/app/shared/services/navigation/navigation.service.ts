@@ -18,6 +18,8 @@ export class NavigationService {
   public isChatContent = signal<boolean>(true);
   public isMainChat = signal<boolean>(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
+  public isChannelsOpen = signal<boolean>(true); // Default offen
+  public isDirectMessagesOpen = signal<boolean>(false);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -52,6 +54,17 @@ export class NavigationService {
   }
 
   private checkCurrentUrl(url: string) {
+    const isChannelRoute = url.includes('channel/');
+    const isDirectRoute = url.includes('direct/');
+
+    if (isChannelRoute) {
+      this.isChannelsOpen.set(true);
+      this.isDirectMessagesOpen.set(false);
+    }
+    if (isDirectRoute) {
+      this.isDirectMessagesOpen.set(true);
+      this.isChannelsOpen.set(false);
+    }
     const isAuth = url.includes('login') || url.includes('register');
     const isContactbar = url.includes('contactbar');
     const isChatContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');

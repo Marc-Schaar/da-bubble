@@ -1,6 +1,9 @@
 <main>
   <section class="column align-center">
-    <app-header *ngIf="this.navigationService.isMobile()"></app-header>
+    @if (navigationService.isMobile()) {
+      <app-header></app-header>
+    }
+
     <div class="headline">
       <div>
         <img src="img/workspace-logo.svg" alt="" />
@@ -44,8 +47,10 @@
       <div class="contactbar">
         <div class="channels">
           <div class="drop-down-title">
-            <button class="d-flex align-center gap-10" (click)="toggleActive()">
-              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isActive() }"> arrow_drop_down</mat-icon>
+            <button class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
+              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: navigationService.isChannelsOpen() }">
+                arrow_drop_down</mat-icon
+              >
               <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
               Channels
             </button>
@@ -59,12 +64,12 @@
             </div>
           </div>
 
-          <ul [ngClass]="{ show: isActive() }" class="channellist">
+          <ul [ngClass]="{ show: navigationService.isChannelsOpen() }" class="channellist">
             @for (channel of firestoreService.myChannels(); track $index; let index = $index) {
               <li
-                [ngClass]="{ 'active-link': currentLink === channel.name }"
                 class="li"
                 (click)="navigationService.selectChannel(channel.id)"
+                [class.active-link]="router.url.includes('channel/' + channel.id)"
               >
                 <mat-icon class="material-symbols-outlined">tag</mat-icon>
                 <span>{{ channel.name }}</span>
@@ -84,19 +89,21 @@
 
         <div class="messages">
           <div class="drop-down-title">
-            <button class="d-flex align-center gap-10" (click)="toggleMessage()">
-              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: isOpen() }"> arrow_drop_down</mat-icon>
+            <button class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
+              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: navigationService.isDirectMessagesOpen() }">
+                arrow_drop_down</mat-icon
+              >
               <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
               Direktnachrichten
             </button>
           </div>
 
-          <ul [ngClass]="{ show: isOpen() }" class="contacts">
+          <ul [ngClass]="{ show: navigationService.isDirectMessagesOpen() }" class="contacts">
             @for (user of firestoreService.allUsers(); track $index; let index = $index) {
               <li
-                [ngClass]="{ 'active-link': currentLink === user.displayName }"
-                (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 class="li"
+                (click)="navigationService.selectDirectMessageRecipient(user.id)"
+                [class.active-link]="router.url.includes('direct/' + user.id)"
               >
                 <div class="imageContainer">
                   <img class="profile-image" [src]="user.photoUrl" alt="" />

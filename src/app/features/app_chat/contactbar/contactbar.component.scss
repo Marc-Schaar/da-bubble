@@ -107,7 +107,7 @@ button {
 .li {
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: 100%;
   gap: 10px;
   padding: 4px 20px;
   margin-left: 8px;
@@ -120,6 +120,16 @@ button {
     background-color: var(--bg-color);
     color: var(--dark-purple);
     font-weight: 700;
+  }
+
+  &.active-link {
+    background-color: var(--bg-color) !important;
+    color: var(--dark-purple) !important;
+    font-weight: 700 !important;
+
+    mat-icon {
+      color: var(--dark-purple);
+    }
   }
 }
 
@@ -191,12 +201,6 @@ button {
 
 .pin-right-bottom-mobile {
   display: none;
-}
-
-.active-link {
-  background-color: var(--bg-color);
-  color: var(--dark-purple);
-  font-weight: 700;
 }
 
 .searchbar {
@@ -369,7 +373,9 @@ button {
     bottom: 110%;
     left: 50%;
     transform: translateX(-50%);
-    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    transition:
+      opacity 0.15s ease-in-out,
+      visibility 0.15s ease-in-out;
     white-space: nowrap;
     font-size: 0.8rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
