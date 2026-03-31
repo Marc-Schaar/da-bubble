@@ -178,7 +178,7 @@ export class ChannelEditComponent {
     } catch (error) {}
     this.dialogRef.close();
     this.userService.showFeedback('Channel verlassen');
-    this.navigationService.showNewMessage();
+    this.navigationService.goToNewMessage();
     this.userService.setUrl('newMessage');
   }
 

@@ -17,7 +17,6 @@ export class NavigationService {
   public isContactbarPage = signal<boolean>(true);
   public isChatContent = signal<boolean>(true);
   public isMainChat = signal<boolean>(true);
-  public showContent = signal(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
 
   /**
@@ -56,23 +55,25 @@ export class NavigationService {
     const isAuth = url.includes('login') || url.includes('register');
     const isContactbar = url.includes('contactbar');
     const isChatContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');
-    const isMainChat = url.includes('/main');
+    const path = url.split('?')[0];
+    const isMain = path === '/main' || path === '/main/';
     this.isAuthPage.set(isAuth);
     this.isContactbarPage.set(isContactbar);
-    this.isMainChat.set(isMainChat);
     this.isChatContent.set(isChatContent);
+    this.isMainChat.set(isMain);
   }
 
   selectChannel(id: string) {
-    this.showContent.set(true);
     this.router.navigate(['/main/channel', id]);
   }
 
   goBackToList() {
-    this.showContent.set(false);
-    this.router.navigate(['/main/new-message']);
+    this.goToNewMessage();
   }
 
+  public goToNewMessage() {
+    this.router.navigate(['/main/new-message']);
+  }
   /**
    * Observes screen width changes and updates the screenWidthSubject.
    */
@@ -107,6 +108,5 @@ export class NavigationService {
 
   public showDirect() {}
 
-  public showNewMessage() {}
   public toggleThread(a: any) {}
 }
