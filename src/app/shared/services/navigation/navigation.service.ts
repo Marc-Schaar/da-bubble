@@ -15,7 +15,6 @@ export class NavigationService {
 
   public isAuthPage = signal<boolean>(true);
   public isContactbarPage = signal<boolean>(true);
-  public isChatContent = signal<boolean>(true);
   public isMainChat = signal<boolean>(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
   public isChannelsOpen = signal<boolean>(true); // Default offen
@@ -67,12 +66,10 @@ export class NavigationService {
     }
     const isAuth = url.includes('login') || url.includes('register');
     const isContactbar = url.includes('contactbar');
-    const isChatContent = url.includes('channel/') || url.includes('direct/') || url.includes('new-message');
     const path = url.split('?')[0];
     const isMain = path === '/main' || path === '/main/';
     this.isAuthPage.set(isAuth);
     this.isContactbarPage.set(isContactbar);
-    this.isChatContent.set(isChatContent);
     this.isMainChat.set(isMain);
   }
 
