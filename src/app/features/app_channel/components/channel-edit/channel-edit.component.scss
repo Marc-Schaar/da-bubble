@@ -49,10 +49,14 @@
   }
 
   &--list {
+    --offset: 590px;
     flex-direction: column;
     overflow: hidden;
-    max-height: calc(100svh - 590px);
+    max-height: calc(100svh - var(--offset));
 
+    @media (width>= 1024px) {
+      --offset: 704px;
+    }
     .member-list {
       overflow: auto;
       &--item {

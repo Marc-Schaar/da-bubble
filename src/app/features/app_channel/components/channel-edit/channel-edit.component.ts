@@ -19,11 +19,9 @@ import { ChannelService } from '../../services/channel/channel.service';
 })
 export class ChannelEditComponent {
   private readonly userService = inject(UserService);
-  private readonly authService = inject(AuthService);
   private readonly navigationService = inject(NavigationService);
   private readonly dialog = inject(MatDialog);
   private readonly dialogRef: MatDialogRef<ChannelEditComponent> = inject(MatDialogRef<ChannelEditComponent>);
-  private readonly fireService = inject(FireServiceService);
   public readonly channelService = inject(ChannelService);
 
   public channelNameEdit: boolean = false;
