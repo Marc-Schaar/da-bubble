@@ -18,7 +18,7 @@ import { User } from '../../models/user/user';
 })
 export class ForgotpasswordComponent {
   isOverlayActive = false;
-  user = new User();
+  user: User | null = null;
   submitted = false;
 
   auth = getAuth();
@@ -29,7 +29,7 @@ export class ForgotpasswordComponent {
    */
   async onSubmit(emailform: NgForm) {
     this.isOverlayActive = true;
-    await sendPasswordResetEmail(this.auth, this.user.email)
+    await sendPasswordResetEmail(this.auth, this.user!.email)
       .then(() => {})
       .catch((error) => {
         const errorCode = error.code;

@@ -112,10 +112,6 @@ export class AuthService {
     try {
       await updateDoc(defaultChannelRef, {
         member: arrayUnion({
-          displayName: user.displayName,
-          email: user.email,
-          photoUrl: user.photoUrl,
-          online: false,
           id: user.id,
         }),
       });
@@ -155,6 +151,10 @@ export class AuthService {
     try {
       const result = await signInWithPopup(this.auth, this.googleAuthProvider);
       if (result) {
+        await updateProfile(result.user, {
+          photoURL: 'img/avatars/avatar_default.png',
+        });
+
         const userData = this.mapFirebaseUserToUser(result.user);
         await this.addInUserCollection(userData);
         await this.addInDefaultChannel(userData);
@@ -260,7 +260,7 @@ export class AuthService {
       id: firebaseUser.uid,
       email: firebaseUser.email || '',
       displayName: firebaseUser.displayName || 'Unbekannter Nutzer',
-      photoUrl: firebaseUser.photoURL || 'img/avatar_default.png',
+      photoUrl: firebaseUser.photoURL || 'img/avatars/avatar_default.png',
       online: true,
       ...overrides,
     };
@@ -319,7 +319,7 @@ export class AuthService {
     return this.formBuilder.group({
       ...this.basicAuthFields,
       displayName: ['', [Validators.required, Validators.minLength(5)]],
-      photoURL: ['img/profilephoto.png'],
+      photoURL: ['img/avatar_default.png'],
       acceptTerms: [false, [Validators.requiredTrue]],
     });
   }

@@ -82,7 +82,7 @@
                 >
                   <div class="img-status-cont">
                     <img src="{{ filteredUser.profilephoto }}" alt="" />
-                    <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
+                    <div class="satus-circle" [ngClass]="{ online: filteredUser.online }"></div>
                   </div>
                   <div>{{ filteredUser.fullname }}</div>
                 </div>
@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="btn-cont">
-          <button [ngClass]="{ 'disabled-btn': disabled }" [disabled]="disabled" (click)="addUserToChannel()" >Erstellen</button>
+          <button [ngClass]="{ 'disabled-btn': disabled }" [disabled]="disabled" (click)="addUserToChannel()">Erstellen</button>
         </div>
       </form>
     </div>
@@ -102,7 +102,7 @@
   <div class="feedback" *ngIf="showFeedback">
     <span class="feedback-msg" id="feedbackMessage">Channel wurde erstellt</span>
   </div>
-    <div class="feedback" *ngIf="showUserFeedback">
+  <div class="feedback" *ngIf="showUserFeedback">
     <span class="feedback-msg" id="feedbackMessage">Benutzer wurden hinzugefügt</span>
   </div>
 </div>

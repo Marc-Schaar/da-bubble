@@ -9,7 +9,9 @@
   gap: 20px;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
   @media (max-width: 1023px) {
     width: 398px;
     height: 371px;
@@ -248,10 +250,6 @@
     border: none;
     cursor: pointer;
   }
-}
-
-.green-circle {
-  background-color: rgba(146, 200, 62, 1) !important;
 }
 
 .disabled-btn {

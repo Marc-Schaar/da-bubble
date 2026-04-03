@@ -160,33 +160,6 @@ button {
   gap: 25px;
 }
 
-.profile-image {
-  width: 50px;
-  border-radius: 30px;
-}
-
-.imageContainer {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.status-dot {
-  position: absolute;
-  bottom: 0;
-  right: -2px;
-  width: 12px;
-  aspect-ratio: 1;
-  outline: 2px solid var(--bg-color);
-  background-color: var(--offline);
-  border-radius: 50%;
-}
-
-.green {
-  background-color: var(--online);
-}
-
 .pin-right-bottom-mobile {
   display: none;
 }

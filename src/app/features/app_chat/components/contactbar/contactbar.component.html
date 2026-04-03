@@ -105,12 +105,12 @@
                 (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 [class.active-link]="router.url.includes('direct/' + user.id)"
               >
-                <div class="imageContainer">
-                  <img class="profile-image" [src]="user.photoUrl" alt="" />
-                  <div class="status-dot" [ngClass]="{ green: user.online }"></div>
+                <div class="profile-status">
+                  <img class="profile-status__image" [src]="user.photoUrl" alt="" />
+                  <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': user.online }"></div>
                 </div>
 
-                <span>{{ user.displayName }}</span>
+                {{ user.displayName }}
               </li>
             } @empty {
               No User found

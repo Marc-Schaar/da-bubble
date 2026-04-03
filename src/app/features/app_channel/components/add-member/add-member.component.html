@@ -10,14 +10,14 @@
     <div class="user">
       <div class="img-status">
         <img src="{{ authService.currentUser()?.photoUrl }}" alt="" />
-        <div class="dot green-circle"></div>
+        <div class="dot online"></div>
       </div>
       <div>{{ authService.currentUser()?.displayName }} (Du)</div>
     </div>
     <div (click)="showProfile(filteredMember)" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
       <div class="img-status">
         <img src="{{ filteredMember.profilephoto }}" alt="" />
-        <div class="dot" [ngClass]="{ 'green-circle': filteredMember.online }"></div>
+        <div class="dot" [ngClass]="{ online: filteredMember.online }"></div>
       </div>
       <div>{{ filteredMember.fullname }}</div>
     </div>
@@ -60,7 +60,7 @@
           <div class="user-select-cont" (click)="addUserToSelection(index)">
             <div class="img-status-cont">
               <img src="{{ filteredUser.profilephoto }}" alt="" />
-              <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
+              <div class="satus-circle" [ngClass]="{ online: filteredUser.online }"></div>
             </div>
             <div>{{ filteredUser.fullname }}</div>
           </div>

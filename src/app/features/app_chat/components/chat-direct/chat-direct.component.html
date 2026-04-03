@@ -5,9 +5,9 @@
   <section (click)="hideList()">
     <div class="chat-header">
       <button (click)="showProfile()">
-        <div class="imageContainer">
-          <img [src]="currentReciever()?.photoUrl" alt="" />
-          <div class="status-dot" [ngClass]="{ green: currentReciever()?.online }"></div>
+        <div class="profile-status">
+          <img class="profile-status__image" [src]="currentReciever()?.photoUrl" alt="" />
+          <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': currentReciever()?.online }"></div>
         </div>
         {{ currentReciever()?.displayName }}
       </button>

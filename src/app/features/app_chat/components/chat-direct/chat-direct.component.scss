@@ -40,34 +40,6 @@ section {
   }
 }
 
-.imageContainer {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > img {
-    width: 50px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-  }
-}
-
-.status-dot {
-  position: absolute;
-  bottom: 0;
-  right: -2px;
-  width: 12px;
-  aspect-ratio: 1;
-  outline: 2px solid var(--bg-color);
-  border-radius: 50%;
-  background-color: var(--offline);
-}
-
-.green {
-  background-color: var(--online);
-}
-
 .card-footer {
   padding: 25px;
 }

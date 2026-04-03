@@ -28,9 +28,9 @@ export class FireServiceService {
    *
    * @param currentUser The user object containing the UID and online status.
    */
-  async updateOnlineStatus(currentUser: any) {
-    if (currentUser.uid) {
-      const userRef = doc(this.firestore, 'users', currentUser.uid);
+  async updateOnlineStatus(currentUser: User) {
+    if (currentUser.id) {
+      const userRef = doc(this.firestore, 'users', currentUser.id);
       await updateDoc(userRef, {
         online: currentUser.online,
       });
@@ -41,7 +41,7 @@ export class FireServiceService {
    * Erstellt eine permanente Verbindung zur User-Collection.
    * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
    */
-  subAllUsers() {
+  public subAllUsers() {
     const usersCollection = collection(this.firestore, 'users');
 
     return onSnapshot(

@@ -21,7 +21,7 @@ import { User } from '../../models/user/user';
 export class ResetpasswordComponent implements OnInit {
   shared = inject(UserService);
   isOverlayActive = false;
-  users = new User();
+  users: User | null = null;
   auth: any;
   email: string | null = null;
   resetCode = '';

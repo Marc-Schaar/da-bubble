@@ -58,7 +58,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
 
-  currentUser: User = new User(null);
+  currentUser: User | null = null;
   public userId: string = '';
 
   public currentChannelId = signal<string | null>(null);
@@ -148,8 +148,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   openChannelInfo() {
     const dialogData = {
-      currentChannel: this.currentChannel(),
-      currentChannelId: this.currentChannelId(),
+      currentChannel: this.currentChannel,
+      currentChannelId: this.currentChannelId,
       currentUser: this.currentUser,
     };
     this.dialog.open(ChannelEditComponent, {
