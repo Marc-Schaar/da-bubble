@@ -1,7 +1,6 @@
-import { inject, Injectable, Query, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { onSnapshot, orderBy, query, QuerySnapshot, serverTimestamp } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { DirectMessage } from '../../models/direct-message/direct-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
@@ -15,10 +14,6 @@ export class MessagesService {
   email = 'gianniskarakasidhs@hotmail.com';
 
   public messages = signal<ChannelMessage[] | DirectMessage[]>([]);
-
-  constructor() {
-    console.log(this.authService.currentUser());
-  }
 
   public subToMessages(channelId: string | null) {
     if (!channelId) return () => {};
@@ -68,53 +63,51 @@ export class MessagesService {
     return 'reaction' in data;
   }
 
-  /**
-   * @description - Determines if a new day has started based on the last message in the array.
-   * @param messages - The array of messages to check.
-   * @returns A boolean indicating whether a new day has started.
-   */
-  private isNewDay(messages: ChannelMessage[] | DirectMessage[]): boolean {
-    if (messages.length === 0) return true;
-    let lastMessage = messages[messages.length - 1];
-    let lastMessageDate = lastMessage.timestamp ? lastMessage.timestamp : lastMessage.timestamp;
-    let todayDate = new Date().toISOString().split('T')[0];
-    return lastMessageDate !== todayDate;
+  public async sendChannelMessage(text: string, channelId: string) {
+    const user = this.authService.currentUser();
+    if (!user) return;
+
+    const channelMessage = new ChannelMessage({
+      message: text,
+      name: user.displayName,
+      photoUrl: user.photoUrl,
+    });
+
+    await this.fireService.postChannelMessage(channelId, channelMessage.toJSON());
   }
 
-  /**
-   * @description - Builds an object for a channel message to be sent to Firestore.
-   * @param input - The content of the message.
-   * @param messages - The current list of messages (optional).
-   * @param reactions - Any reactions to the message (optional).
-   * @returns An object representing the channel message.
-   */
-  public buildChannelMessageObject(input: string, messages?: any, reactions?: any): {} {
-    return {
-      message: input || '',
-      photoUrl: this.authService.currentUser()?.photoUrl,
-      name: this.authService.currentUser()?.displayName,
-      newDay: this.isNewDay(messages),
-      reaction: reactions || [],
-    };
+  public async sendDirectMessage(text: string, receiverId: string) {
+    const user = this.authService.currentUser();
+    const currentUserId = user?.id;
+    if (!currentUserId) return;
+
+    const messageInstance = new DirectMessage({
+      message: text,
+      from: currentUserId,
+      to: receiverId,
+      name: user?.displayName,
+      photoUrl: user?.photoUrl,
+    });
+
+    const [uid1, uid2] = [currentUserId, receiverId].sort();
+    const conversationId = `${uid1}_${uid2}`;
+
+    const senderPath = `users/${currentUserId}/conversations/${conversationId}/messages`;
+    const receiverPath = `users/${receiverId}/conversations/${conversationId}/messages`;
+
+    await this.fireService.postDirectMessage(senderPath, receiverPath, currentUserId, receiverId, messageInstance.toJSON());
   }
 
-  /**
-   * @description - Builds an object for a direct message to be sent to Firestore.
-   * @param input - The content of the message.
-   * @param messages - The current list of messages (used for the "new day" logic).
-   * @param from - The sender's user ID.
-   * @param to - The recipient's user ID.
-   * @returns An object representing the direct message.
-   */
-  public buildDirectMessageObject(input: string, messages: any, from: string, to: string) {
-    return {
-      name: this.authService.currentUser()?.displayName,
-      photoUrl: this.authService.currentUser()?.photoUrl,
-      message: input,
-      timestamp: serverTimestamp(),
-      from: from,
-      to: to,
-      newDay: this.isNewDay(messages),
-    };
+  public async sendThreadMessage(text: string, channelId: string, parentMessageId: string) {
+    const user = this.authService.currentUser();
+    if (!user) return;
+
+    const threadMessage = new ChannelMessage({
+      message: text,
+      name: user.displayName,
+      photoUrl: user.photoUrl,
+    });
+
+    await this.fireService.postThreadMessage(channelId, parentMessageId, threadMessage.toJSON());
   }
 }

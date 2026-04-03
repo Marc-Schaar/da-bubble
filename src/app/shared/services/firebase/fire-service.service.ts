@@ -184,45 +184,42 @@ export class FireServiceService {
   }
 
   /**
-   * Adds a thread message to Firestore.
-   *
-   * @param messageDocRef The reference to the parent message document.
-   * @param messageObject The message object to be added.
-   * @returns A promise that resolves when the thread message is added.
-   */
-  async addThreadMessageData(messageDocRef: DocumentReference, messageObject: any) {
-    await updateDoc(messageDocRef, new ChannelMessage(messageObject).toJSON());
-  }
-
-  /**
    * Sends a message to a specific channel.
    *
    * @param channelId The ID of the channel.
    * @param messageObject The message object to be sent.
    * @returns A promise that resolves when the message is sent.
    */
-  async sendMessage(channelId: string, messageObject: any) {
-    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
-    if (messagesCollectionRef) {
-      let messageDocRef = await addDoc(messagesCollectionRef, new ChannelMessage(messageObject).toJSON());
-      this.addThreadMessageData(messageDocRef, messageObject);
-    }
+  async postChannelMessage(channelId: string, data: any) {
+    const path = `channels/${channelId}/messages`;
+    const messagesRef = collection(this.firestore, path);
+
+    const messageDocRef = await addDoc(messagesRef, data);
+
+    await this.initializeThreadData(messageDocRef, data);
   }
 
-  /**
-   * Sends a thread message to a specific channel.
-   *
-   * @param channelId The ID of the channel.
-   * @param messageObject The message object to be sent.
-   * @param parentMessageId The ID of the parent message.
-   * @returns A promise that resolves when the thread message is sent.
-   */
-  async sendThreadMessage(channelId: string, messageObject: any, parentMessageId: string) {
-    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(
-      `channels/${channelId}/messages/${parentMessageId}/thread`,
-    );
-    if (messagesCollectionRef) {
-      await addDoc(messagesCollectionRef, new ChannelMessage(messageObject).toJSON());
-    }
+  private async initializeThreadData(docRef: DocumentReference, messageObject: any) {
+    await updateDoc(docRef, new ChannelMessage(messageObject).toJSON());
+  }
+
+  public async postDirectMessage(
+    senderPath: string,
+    receiverPath: string,
+    senderId: string | undefined,
+    receiverId: string,
+    messageData: any,
+  ) {
+    const senderRef = collection(this.firestore, senderPath);
+    const receiverRef = collection(this.firestore, receiverPath);
+
+    await Promise.all([addDoc(senderRef, messageData), senderId !== receiverId ? addDoc(receiverRef, messageData) : Promise.resolve()]);
+  }
+
+  public async postThreadMessage(channelId: string, parentMessageId: string, data: any) {
+    const path = `channels/${channelId}/messages/${parentMessageId}/thread`;
+    const threadRef = collection(this.firestore, path);
+
+    await addDoc(threadRef, data);
   }
 }
