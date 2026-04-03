@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { Firestore, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
 
-import { LinkifyPipe } from '../../pipes/linkify.pipe';
-import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../../../shared/components/message/message-template.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
-import { MessagesService } from '../../../shared/services/messages/messages.service';
-import { UserService } from '../../../shared/services/user/shared.service';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
+import { MessageTemplateComponent } from '../../../../shared/components/message/message-template.component';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-thread',
@@ -19,10 +20,10 @@ import { NavigationService } from '../../../shared/services/navigation/navigatio
     CommonModule,
     FormsModule,
     MatIconModule,
-    TextareaTemplateComponent,
-    MessageTemplateComponent,
     ChatHeaderComponent,
     LinkifyPipe,
+    TextareaTemplateComponent,
+    MessageTemplateComponent,
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
@@ -33,6 +34,7 @@ export class ThreadComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private messagesService: MessagesService = inject(MessagesService);
   public userService: UserService = inject(UserService);
+  public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
   public currentUser: any;
   public userId: string = '';
@@ -66,7 +68,7 @@ export class ThreadComponent implements OnInit {
       await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
-      this.currentUser = this.userService.currentUser;
+      this.currentUser = this.authService.currentUser();
     });
   }
 
@@ -122,7 +124,7 @@ export class ThreadComponent implements OnInit {
 
       onSnapshot(threadQuery, (snapshot) => {
         this.messages = this.messagesService.processData(snapshot);
-        this.userService.scrollToBottom(this.chatContentRef.nativeElement);
+        // this.userService.scrollToBottom(this.chatContentRef.nativeElement);
       });
     }
   }

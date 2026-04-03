@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 
-import { MessagesService } from '../../../shared/services/messages/messages.service';
+import { MessagesService } from '../../app_chat/services/messages/messages.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({

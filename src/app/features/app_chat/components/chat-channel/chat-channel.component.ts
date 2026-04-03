@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,18 +9,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { User } from '../../app_auth/models/user/user';
-import { AddMemberComponent } from '../../app_channel/components/add-member/add-member.component';
-import { DividerTemplateComponent } from '../../../shared/components/divider/divider-template.component';
-import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../../../shared/components/message/message-template.component';
+import { User } from '../../../app_auth/models/user/user';
+import { AddMemberComponent } from '../../../app_channel/components/add-member/add-member.component';
+import { DividerTemplateComponent } from '../../../../shared/components/divider/divider-template.component';
+import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
+import { MessageTemplateComponent } from '../../../../shared/components/message/message-template.component';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { ChannelEditComponent } from '../../../app_channel/components/channel-edit/channel-edit.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
-import { UserService } from '../../../shared/services/user/shared.service';
-import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { MessagesService } from '../../../shared/services/messages/messages.service';
-import { ChannelEditComponent } from '../../app_channel/components/channel-edit/channel-edit.component';
-
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -41,7 +40,6 @@ import { ChannelEditComponent } from '../../app_channel/components/channel-edit/
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  private subscriptions = new Subscription();
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   firestore: Firestore = inject(Firestore);
@@ -53,65 +51,78 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   showBackground: boolean = false;
   channels: any = [];
-  messages: any;
+
   currentChannel: any = {};
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
-  unsubMessages!: () => void;
+
   currentUser: User = new User(null);
   public userId: string = '';
-  public currentChannelId: string = '';
+
+  public currentChannelId = signal<string | null>(null);
+
+  unsubChannelData!: () => void;
+  unsubMessages?: () => void;
+
+  constructor() {
+    effect(() => {
+      const channelId = this.currentChannelId();
+      untracked(() => {
+        if (this.unsubChannelData) this.unsubChannelData();
+        if (channelId) {
+          this.unsubMessages = this.messagesService.subToMessages(channelId);
+          this.getCurrentChannelData(channelId);
+        }
+      });
+    });
+
+    effect(() => {
+      const messages = this.messagesService.messages();
+      untracked(() => {
+        if (this.messagesService.messages().length > 0) {
+          this.handleScroll();
+        }
+      });
+    });
+  }
 
   /**
   /**
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
-    this.route.queryParamMap.subscribe((params) => {
-      this.currentChannelId = params.get('reciverId') || '';
-      this.userId = params.get('currentUserId') || '';
-      this.getMessages();
-      this.getChannelFromUrl();
-      this.currentUser = this.userService.currentUser;
+    this.route.paramMap.subscribe((params) => {
+      this.currentChannelId.set(params.get('id'));
     });
   }
 
-  /**
-   * Cleans up subscriptions and listeners when the component is destroyed.
-   */
-  ngOnDestroy() {
-    if (this.unsubMessages) this.unsubMessages();
-    this.subscriptions.unsubscribe();
+  private handleScroll() {
+    const element = this.chatContentRef?.nativeElement;
+    if (!element) return;
+
+    const threshold = 100;
+    const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < threshold;
+
+    if (isNearBottom) {
+      this.userService.scrollToBottom(element);
+    }
   }
 
   /**
    * Loads the current channel from Firestore based on the channel ID.
    */
-  getChannelFromUrl() {
-    if (this.currentChannelId) {
-      const docRef = doc(this.firestore, 'channels', this.currentChannelId);
-      onSnapshot(docRef, (docSnap) => {
+  private getCurrentChannelData(channelId: string | null) {
+    if (this.unsubChannelData) this.unsubChannelData();
+
+    if (channelId) {
+      const docRef = doc(this.firestore, 'channels', channelId);
+      this.unsubChannelData = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           this.currentChannel = { id: docSnap.id, ...docSnap.data() };
-        } else {
-          this.currentChannel = null;
         }
       });
     }
-  }
-
-  /**
-   * Retrieves messages for the current channel and loads their threads.
-   */
-  getMessages() {
-    this.unsubMessages = this.messagesService.getChannelMessages(this.currentChannelId, (messages) => {
-      this.messages = messages;
-      this.messages.forEach((message: any) => {
-        this.getThread(message.id);
-        this.userService.scrollToBottom(this.chatContentRef?.nativeElement);
-      });
-    });
   }
 
   /**
@@ -120,13 +131,13 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   getThread(messageId: string) {
     if (messageId) {
-      let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${messageId}/thread`);
+      let threadRef = collection(this.firestore, `channels/${this.currentChannelId()}/messages/${messageId}/thread`);
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
 
       onSnapshot(threadQuery, (snapshot) => {
-        const updatedThreads = this.messagesService.processData(snapshot);
-        const msgIndex = this.messages.findIndex((m: any) => m.id === messageId);
-        if (msgIndex >= 0) this.messages[msgIndex].thread = updatedThreads;
+        // const updatedThreads = this.messagesService.processData(snapshot);
+        // const msgIndex = this.messagesService.messages() ? this.messagesService.messages()?.findIndex((m: any) => m.id === messageId) : -1;
+        // if (msgIndex >= 0) this.messagesService.messages()?[msgIndex].thread = updatedThreads;
       });
     }
   }
@@ -136,8 +147,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   openChannelInfo() {
     const dialogData = {
-      currentChannel: this.currentChannel,
-      currentChannelId: this.currentChannelId,
+      currentChannel: this.currentChannel(),
+      currentChannelId: this.currentChannelId(),
       currentUser: this.currentUser,
     };
     this.dialog.open(ChannelEditComponent, {
@@ -171,5 +182,14 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
       position: { top: '200px', right: '150px' },
     });
+  }
+
+  /**
+   * Cleans up subscriptions and listeners when the component is destroyed.
+   */
+  ngOnDestroy() {
+    if (this.unsubChannelData) this.unsubChannelData();
+    if (this.unsubMessages) this.unsubMessages();
+    this.messagesService.messages.set([]);
   }
 }

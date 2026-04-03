@@ -27,6 +27,7 @@ export interface User {
   displayName: string;
   photoUrl?: string;
   online: boolean;
+  isAnonymous?: boolean;
 }
 
 export interface RegisterData extends Omit<User, 'id'> {

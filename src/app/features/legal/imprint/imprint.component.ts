@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { MessagesService } from '../../../shared/services/messages/messages.service';
+import { MessagesService } from '../../app_chat/services/messages/messages.service';
 
 @Component({
   selector: 'app-imprint',

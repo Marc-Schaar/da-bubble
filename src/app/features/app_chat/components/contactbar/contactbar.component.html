@@ -64,7 +64,7 @@
             </div>
           </div>
 
-          <ul [ngClass]="{ show: navigationService.isChannelsOpen() }" class="channellist">
+          <ul [ngClass]="{ open: navigationService.isChannelsOpen() }" class="drop-down">
             @for (channel of firestoreService.myChannels(); track $index; let index = $index) {
               <li
                 class="li"
@@ -98,7 +98,7 @@
             </button>
           </div>
 
-          <ul [ngClass]="{ show: navigationService.isDirectMessagesOpen() }" class="contacts">
+          <ul [ngClass]="{ open: navigationService.isDirectMessagesOpen() }" class="drop-down">
             @for (user of firestoreService.allUsers(); track $index; let index = $index) {
               <li
                 class="li"

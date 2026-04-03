@@ -10,6 +10,7 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-channel-edit',
@@ -19,6 +20,8 @@ import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-r
 })
 export class ChannelEditComponent {
   userService = inject(UserService);
+  private authService = inject(AuthService);
+
   navigationService = inject(NavigationService);
   channelnameEdit: boolean = false;
   channeldescriptionEdit: boolean = false;
@@ -161,13 +164,13 @@ export class ChannelEditComponent {
    */
   async exitChannel() {
     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-    const currentUser = this.userService.auth.currentUser;
+    const currentUser = this.authService.currentUser();
     try {
       const channelDoc = await getDoc(channelRef);
       const channelData = channelDoc.data();
       if (channelData && currentUser) {
         let updateMember = [...channelData['member']];
-        const index = updateMember.findIndex((member) => member.id === currentUser.uid);
+        const index = updateMember.findIndex((member) => member.id === currentUser.id);
         if (index !== -1) {
           updateMember.splice(index, 1);
         }
@@ -211,7 +214,7 @@ export class ChannelEditComponent {
       this.filteredUsers = this.users
         .filter((user) => user.fullname.toLowerCase().includes(filterValue))
         .filter((user) => !this.members.some((member) => member.id === user.id))
-        .filter((user) => user.id !== this.userService.auth.currentUser?.uid)
+        .filter((user) => user.id !== this.authService.currentUser()?.id)
         .filter((user) => user.email !== null);
     } else {
       this.filteredUsers = this.users.filter((user) => !this.selectedUsers.some((selected) => selected.uid === user.id));
@@ -303,7 +306,7 @@ export class ChannelEditComponent {
    */
   filterMembers() {
     this.filteredMembers = this.members.filter(
-      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id,
+      (member) => this.authService.currentUser() && this.authService.currentUser()?.id !== member.id,
     );
   }
 

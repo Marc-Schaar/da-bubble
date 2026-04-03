@@ -10,7 +10,7 @@ import {
   onSnapshot,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Message } from '../../../features/app_chat/models/message/message';
+import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 
@@ -191,7 +191,7 @@ export class FireServiceService {
    * @returns A promise that resolves when the thread message is added.
    */
   async addThreadMessageData(messageDocRef: DocumentReference, messageObject: any) {
-    await updateDoc(messageDocRef, new Message(messageObject).toJSON());
+    await updateDoc(messageDocRef, new ChannelMessage(messageObject).toJSON());
   }
 
   /**
@@ -204,7 +204,7 @@ export class FireServiceService {
   async sendMessage(channelId: string, messageObject: any) {
     let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
     if (messagesCollectionRef) {
-      let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+      let messageDocRef = await addDoc(messagesCollectionRef, new ChannelMessage(messageObject).toJSON());
       this.addThreadMessageData(messageDocRef, messageObject);
     }
   }
@@ -222,7 +222,7 @@ export class FireServiceService {
       `channels/${channelId}/messages/${parentMessageId}/thread`,
     );
     if (messagesCollectionRef) {
-      await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+      await addDoc(messagesCollectionRef, new ChannelMessage(messageObject).toJSON());
     }
   }
 }

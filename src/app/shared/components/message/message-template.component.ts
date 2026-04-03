@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, input, Input, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/shared.service';
 import { FireServiceService } from '../../services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,9 @@ import { Firestore } from '@angular/fire/firestore';
 import { LinkifyPipe } from '../../../features/pipes/linkify.pipe';
 
 import { DialogReciverComponent } from '../../../features/dialogs/dialog-reciver/dialog-reciver.component';
-import { Message } from '../../../features/app_chat/models/message/message';
+import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
+import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { DirectMessage } from '../../../features/app_chat/models/direct-message/direct-message';
 
 @Component({
   selector: 'app-message-template',
@@ -27,7 +29,7 @@ import { Message } from '../../../features/app_chat/models/message/message';
 export class MessageTemplateComponent implements OnInit {
   public userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
-  private router: Router = inject(Router);
+  public authService = inject(AuthService);
   private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
   private firestore: Firestore = inject(Firestore);
@@ -52,19 +54,30 @@ export class MessageTemplateComponent implements OnInit {
     nerd: '\u{1F913}',
   };
   public preSelectedEmojiList = Object.values(this.preSelectedEmojis);
-  @Input() message: any;
+
+  message = input.required<ChannelMessage | DirectMessage>();
   @Input() currentChannelId: string = '';
   @Input() parentMessageId: string = '';
   @Input() isThread: boolean = false;
   @Input() channelType: 'direct' | 'channel' | 'thread' | null = null;
+
+  isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
+
+  reactions = computed(() => {
+    const msg = this.message();
+    return msg instanceof ChannelMessage ? msg.reaction : [];
+  });
 
   /**
    * Initializes the component by setting the current user ID
    * and loading the emoji database.
    */
   constructor() {
-    this.userId = this.userService.auth.currentUser?.uid;
+    this.userId = this.authService.currentUser()?.id;
     this.emojiDataBase = emojiData;
+    effect(() => {
+      console.log('Nachricht hat sich geändert:', this.message()?.asDate);
+    });
   }
 
   /**
@@ -78,7 +91,7 @@ export class MessageTemplateComponent implements OnInit {
    * @param message - The message to edit
    * @param index - Index of the message in the message list
    */
-  public editMessage(message: Message) {
+  public editMessage(message: ChannelMessage | DirectMessage) {
     this.menuOpen = false;
     this.isEditing = true;
     this.inputEdit = message.message;
@@ -138,7 +151,7 @@ export class MessageTemplateComponent implements OnInit {
       ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
       : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
 
-    let newReaction = { emoji: emoji, from: this.userService.auth.currentUser?.uid || 'n/a' };
+    let newReaction = { emoji: emoji, from: this.authService.currentUser()?.id || 'n/a' };
     if (!this.hasReacted(newReaction.emoji, message.reaction)) {
       message.reaction.push(newReaction);
       if (messageRef) {
@@ -263,7 +276,7 @@ export class MessageTemplateComponent implements OnInit {
    */
   private async getReceiverIdByName() {
     const usersCollection = this.fireService.getCollectionRef('users');
-    const q = query(usersCollection!, where('fullname', '==', this.message.name));
+    const q = query(usersCollection!, where('fullname', '==', this.message?.name || ''));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {

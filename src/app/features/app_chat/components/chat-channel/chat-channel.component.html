@@ -52,15 +52,15 @@
     </section>
 
     <ul class="chat-content gap-10" #chatContent>
-      @for (message of messages; track $index) {
+      @for (message of this.messagesService.messages(); track $index) {
         @if (message.newDay) {
           <li>
-            <app-divider-template [messageData]="message"></app-divider-template>
+            <app-divider-template [messageData]="{ date: message.date, time: message.timestamp }"></app-divider-template>
           </li>
         }
 
         <li>
-          <app-message-template [message]="message" [currentChannelId]="currentChannelId"></app-message-template>
+          <app-message-template [message]="message" [currentChannelId]="currentChannelId() || ''"></app-message-template>
         </li>
       }
     </ul>
@@ -68,10 +68,10 @@
     <section class="card-footer">
       <app-textarea-template
         [currentUserId]="userId"
-        [reciverId]="currentChannelId"
+        [reciverId]="currentChannelId() || ''"
         [reciverName]="currentChannel?.name"
         [reciverCompontent]="'channel'"
-        [messages]="messages"
+        [messages]="this.messagesService.messages()"
         [isChannelComponent]="true"
         [placeholderText]="'Nachricht an #' + currentChannel?.name"
       ></app-textarea-template>

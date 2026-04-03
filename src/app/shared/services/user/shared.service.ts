@@ -5,13 +5,11 @@ import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FireServiceService } from '../firebase/fire-service.service';
 import { NavigationService } from '../navigation/navigation.service';
-import { User } from '../../../features/app_auth/models/user/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  auth: Auth = inject(Auth);
   firestore: Firestore = inject(Firestore);
   fireService: FireServiceService = inject(FireServiceService);
   router: Router = inject(Router);
@@ -31,7 +29,6 @@ export class UserService {
   channels: any = [];
   messages: any = [];
   currentChannel: any;
-  public currentUser: any;
 
   /**
    * Creates an instance of the class.
@@ -41,22 +38,6 @@ export class UserService {
   constructor(private route: ActivatedRoute) {
     this.getChannels();
     this.getUsers();
-  }
-
-  /**
-   * Sets the current user.
-   * @param user The user to set as the current user.
-   */
-  setUser(user: User) {
-    this.currentUser = user;
-  }
-
-  /**
-   * Retrieves the current user.
-   * @returns The current user.
-   */
-  getUser(): User {
-    return this.currentUser;
   }
 
   /**
@@ -98,7 +79,6 @@ export class UserService {
    */
   async getChannel(channel: any, user: any) {
     this.currentChannel = channel;
-    this.currentUser = user;
   }
 
   /**
@@ -117,13 +97,6 @@ export class UserService {
         messageId: messageId,
       },
     });
-  }
-
-  /**
-   * Toggles the contact bar view.
-   */
-  toggleContactbar() {
-    this.contactbarToggleSubject.next();
   }
 
   /**

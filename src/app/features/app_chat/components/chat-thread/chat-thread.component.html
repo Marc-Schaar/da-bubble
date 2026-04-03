@@ -18,10 +18,7 @@
     </div>
 
     <div class="chatbox-container" #chat>
-      <li
-        [ngClass]="{ reverse: parentMessageData?.name === this.userService.auth.currentUser?.displayName }"
-        class="background-color-effect"
-      >
+      <li [ngClass]="{ reverse: parentMessageData?.name === this.authService.currentUser()?.displayName }" class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
             <img src="{{ parentMessageData?.avatar || 'img/profilephoto.png' }}" alt="{{ parentMessageData?.name }}" />

@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { TextareaTemplateComponent } from '../../../shared/components/textarea/textarea-template.component';
+import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
-import { SearchResultComponent } from '../../../shared/components/search-result/search-result.component';
-import { UserService } from '../../../shared/services/user/shared.service';
-import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
-import { MessagesService } from '../../../shared/services/messages/messages.service';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { SearchService } from '../../../shared/services/search/search.service';
+import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { SearchService } from '../../../../shared/services/search/search.service';
 
 @Injectable({
   providedIn: 'root',

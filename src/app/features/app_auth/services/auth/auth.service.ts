@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 
-import { arrayUnion, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, doc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -218,7 +218,20 @@ export class AuthService {
    */
   setCurrentUser() {
     onAuthStateChanged(this.auth, (firebaseUser) => {
-      firebaseUser ? this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser)) : this._currentUser.set(null);
+      if (firebaseUser) {
+        this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser));
+
+        const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+
+        onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const firestoreData = docSnap.data() as User;
+            this._currentUser.set(firestoreData);
+          }
+        });
+      } else {
+        this._currentUser.set(null);
+      }
     });
   }
 

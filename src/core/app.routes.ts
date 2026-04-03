@@ -4,16 +4,15 @@ import { DataprotectionComponent } from '../app/features/legal/data-protection/d
 import { MainComponentComponent } from '../app/features/app_auth/components/main-component/main-component.component';
 import { ForgotpasswordComponent } from '../app/features/app_auth/components/forgot-password/forgot-password.component';
 import { ResetpasswordComponent } from '../app/features/app_auth/components/reset-password/reset-password.component';
-import { ContactbarComponent } from '../app/features/app_chat/contactbar/contactbar.component';
 import { MainChatComponent } from '../app/features/app_chat/main-chat/main-chat.component';
-import { ChatContentComponent } from '../app/features/app_chat/chat-channel/chat-channel.component';
-import { DirectmessagesComponent } from '../app/features/app_chat/chat-direct/chat-direct.component';
-import { NewmessageComponent } from '../app/features/app_chat/chat-new-message/chat-new.component';
-import { ThreadComponent } from '../app/features/app_chat/chat-thread/chat-thread.component';
+import { ChatContentComponent } from '../app/features/app_chat/components/chat-channel/chat-channel.component';
+import { DirectmessagesComponent } from '../app/features/app_chat/components/chat-direct/chat-direct.component';
+import { NewmessageComponent } from '../app/features/app_chat/components/chat-new-message/chat-new.component';
 
 import { LoginComponent } from '../app/features/app_auth/components/login/login.component';
 import { RegisterComponent } from '../app/features/app_auth/components/register/register.component';
 import { AvatarselectionComponent } from '../app/features/app_auth/components/avatar-selection/avatar-selection.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
@@ -35,6 +34,7 @@ export const routes: Routes = [
       { path: 'direct/:id', component: DirectmessagesComponent },
       { path: 'new-message', component: NewmessageComponent },
     ],
+    canActivate: [authGuard],
   },
 
   { path: 'forgotpassword', component: ForgotpasswordComponent },

@@ -4,14 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { FireServiceService } from '../../services/firebase/fire-service.service';
 
-import { MessagesService } from '../../services/messages/messages.service';
+import { MessagesService } from '../../../features/app_chat/services/messages/messages.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
 import { SearchService } from '../../services/search/search.service';
 import { SearchResultComponent } from '../search-result/search-result.component';
-import { Message } from '../../../features/app_chat/models/message/message';
-
+import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 
 @Component({
   selector: 'app-textarea-template',
@@ -97,8 +96,8 @@ export class TextareaTemplateComponent {
   sendThreadMessage(messageToSend: string) {
     this.fireService.sendThreadMessage(
       this.reciverId,
-      new Message(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)),
-      this.threadId
+      new ChannelMessage(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)),
+      this.threadId,
     );
   }
 
@@ -118,7 +117,10 @@ export class TextareaTemplateComponent {
    * Sends a new message in the current Channel.
    */
   sendChannelMessage(messageToSend: string): void {
-    this.fireService.sendMessage(this.reciverId, new Message(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)));
+    this.fireService.sendMessage(
+      this.reciverId,
+      new ChannelMessage(this.messagesService.buildChannelMessageObject(messageToSend, this.messages)),
+    );
   }
 
   /**
@@ -127,7 +129,7 @@ export class TextareaTemplateComponent {
   private async postData(
     senderConversationRef: CollectionReference<any, DocumentData>,
     receiverConversationRef: CollectionReference<any, DocumentData>,
-    messageData: any
+    messageData: any,
   ) {
     await Promise.all([
       addDoc(senderConversationRef, messageData),

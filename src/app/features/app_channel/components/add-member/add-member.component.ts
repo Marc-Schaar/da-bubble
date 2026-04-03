@@ -6,6 +6,7 @@ import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-add-member',
@@ -16,6 +17,7 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 export class AddMemberComponent implements OnInit {
   fireService: FireServiceService = inject(FireServiceService);
   userService = inject(UserService);
+  public authService = inject(AuthService);
   @Input() currentChannel: any = {};
   @Input() currentChannelId: any;
   @Input() showBackground: boolean = true;
@@ -69,7 +71,7 @@ export class AddMemberComponent implements OnInit {
    */
   filterMembers() {
     this.filteredMembers = this.members.filter(
-      (member) => this.userService.auth.currentUser && this.userService.auth.currentUser.uid !== member.id,
+      (member) => this.authService.currentUser() && this.authService.currentUser()?.id !== member.id,
     );
   }
 
@@ -86,7 +88,7 @@ export class AddMemberComponent implements OnInit {
     this.filteredUsers = this.users
       .filter((user) => !this.members?.some((member) => member.id === user.id))
       .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-      .filter((user) => user.id !== this.userService.auth.currentUser?.uid);
+      .filter((user) => user.id !== this.authService.currentUser()?.id);
     // .filter((user) => !user.isAnonymous);
   }
 

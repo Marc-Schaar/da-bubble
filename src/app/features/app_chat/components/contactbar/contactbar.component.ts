@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { FireServiceService } from '../../../shared/services/firebase/fire-service.service';
-import { SearchResultComponent } from '../../../shared/components/search-result/search-result.component';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { SearchService } from '../../../shared/services/search/search.service';
-import { AddChannelComponent } from '../../app_channel/components/add-channel/add-channel.component';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { SearchService } from '../../../../shared/services/search/search.service';
+import { AddChannelComponent } from '../../../app_channel/components/add-channel/add-channel.component';
 
 @Component({
   selector: 'app-contactbar',

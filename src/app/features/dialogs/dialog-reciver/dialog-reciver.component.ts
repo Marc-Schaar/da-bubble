@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
+import { AuthService } from '../../app_auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-dialog-reciver',
@@ -15,6 +16,7 @@ export class DialogReciverComponent {
   private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
   private userService = inject(UserService);
   private navigationService = inject(NavigationService);
+  private authService = inject(AuthService);
 
   /**
    * Closes the menu and emits an event to notify the parent component that the content should be hidden.
@@ -31,7 +33,7 @@ export class DialogReciverComponent {
    */
   public openReciver() {
     this.navigationService.showDirect();
-    this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
+    this.userService.setUrl('direct', this.reciverData.recieverId, this.authService.currentUser()?.id);
     this.closeMenu();
   }
 }

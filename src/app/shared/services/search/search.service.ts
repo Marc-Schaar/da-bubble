@@ -1,14 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from '../user/shared.service';
 import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
   constructor() {}
-  private authService: Auth = inject(Auth);
+  private authService: AuthService = inject(AuthService);
   private userService: UserService = inject(UserService);
+
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
   private newMessageListOpen: boolean = false;
@@ -116,7 +118,7 @@ export class SearchService {
    * @returns {boolean | undefined} True if anonymous, false if not, or undefined if no user is signed in.
    */
   private isAnonymous(): boolean | undefined {
-    return this.authService.currentUser?.isAnonymous;
+    return this.authService.currentUser()?.isAnonymous;
   }
 
   /**
@@ -124,7 +126,7 @@ export class SearchService {
    * @returns {string | undefined} The user ID, or undefined if no user is signed in.
    */
   private userId(): string | undefined {
-    return this.authService.currentUser?.uid;
+    return this.authService.currentUser()?.id;
   }
 
   /**
@@ -302,7 +304,7 @@ export class SearchService {
       this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
         channel.data?.member?.some((member: any) => member.id === this.userId()),
       );
-      if (this.userService.currentUser.isAnonymous) {
+      if (this.authService.currentUser()?.isAnonymous) {
         this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
       }
       this.isChannel = true;

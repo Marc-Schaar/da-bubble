@@ -5,17 +5,13 @@ import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import { ContactbarComponent } from '../contactbar/contactbar.component';
-import { filter, Subscription } from 'rxjs';
 
-import { ThreadComponent } from '../chat-thread/chat-thread.component';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../shared/services/search/search.service';
-
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ThreadComponent } from '../components/chat-thread/chat-thread.component';
+import { ContactbarComponent } from '../components/contactbar/contactbar.component';
 
 @Component({
   selector: 'app-main-chat',

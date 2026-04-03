@@ -6,18 +6,18 @@
     <div class="chat-header">
       <button (click)="showProfile()">
         <div class="imageContainer">
-          <img [src]="currentReciever?.profilephoto || 'img/profilephoto.png'" alt="" />
-          <div class="status-dot" [ngClass]="{ green: currentReciever?.online }"></div>
+          <img [src]="currentReciever()?.photoUrl" alt="" />
+          <div class="status-dot" [ngClass]="{ green: currentReciever()?.online }"></div>
         </div>
-        {{ currentReciever?.fullname }}
+        {{ currentReciever()?.displayName }}
       </button>
     </div>
 
     <ul class="chat-content" #chat>
-      @for (message of currentMessages; track $index; let i = $index) {
+      @for (message of this.messagesService.messages(); track $index; let i = $index) {
         @if (message.newDay) {
           <li>
-            <app-divider-template [messageData]="message"></app-divider-template>
+            <app-divider-template [messageData]="{ date: message.date, time: '' }"> </app-divider-template>
           </li>
         }
         <li>
@@ -26,14 +26,14 @@
       } @empty {
         <li class="startContainer">
           <div class="userContainer">
-            <img [src]="currentReciever?.profilephoto" alt="" />
-            <span>{{ currentReciever?.fullname }}</span>
+            <img [src]="currentReciever()?.photoUrl" alt="" />
+            <span>{{ currentReciever()?.displayName }}</span>
           </div>
           <div class="welcomeText">
             @if (!isYou()) {
               <p>
                 Diese Unterhaltung findet nur zwischen
-                <a>&commat;{{ currentReciever?.fullname }} </a>und dir statt.
+                <a>&commat;{{ currentReciever()?.displayName }} </a>und dir statt.
               </p>
             } @else {
               <p>
@@ -49,11 +49,11 @@
     <footer class="card-footer">
       <app-textarea-template
         [currentUserId]="currentUserId"
-        [reciverId]="currentRecieverId"
+        [reciverId]="currentRecieverId() || ''"
         [reciverCompontent]="'direct'"
-        [messages]="currentMessages"
+        [messages]="this.messagesService.messages()"
         [isChannelComponent]="false"
-        [placeholderText]="'Nachricht an @' + currentReciever?.fullname"
+        [placeholderText]="'Nachricht an @' + currentReciever()?.displayName"
       ></app-textarea-template>
     </footer>
   </section>

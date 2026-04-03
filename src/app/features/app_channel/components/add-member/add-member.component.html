@@ -9,10 +9,10 @@
   <div class="user-cont" *ngIf="!addMemberWindow">
     <div class="user">
       <div class="img-status">
-        <img src="{{ userService.auth.currentUser?.photoURL }}" alt="" />
+        <img src="{{ authService.currentUser()?.photoUrl }}" alt="" />
         <div class="dot green-circle"></div>
       </div>
-      <div>{{ userService.auth.currentUser?.displayName }} (Du)</div>
+      <div>{{ authService.currentUser()?.displayName }} (Du)</div>
     </div>
     <div (click)="showProfile(filteredMember)" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
       <div class="img-status">
@@ -57,15 +57,15 @@
 
       <div class="choose-user-bar" *ngIf="showUserBar" #chooseUserBar>
         @for (filteredUser of filteredUsers; track $index; let index = $index) {
-        <div class="user-select-cont" (click)="addUserToSelection(index)">
-          <div class="img-status-cont">
-            <img src="{{ filteredUser.profilephoto }}" alt="" />
-            <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
+          <div class="user-select-cont" (click)="addUserToSelection(index)">
+            <div class="img-status-cont">
+              <img src="{{ filteredUser.profilephoto }}" alt="" />
+              <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
+            </div>
+            <div>{{ filteredUser.fullname }}</div>
           </div>
-          <div>{{ filteredUser.fullname }}</div>
-        </div>
-        }@empty {
-        <p>Kein User hinzufügbar oder bereits alle hinzugefügt</p>
+        } @empty {
+          <p>Kein User hinzufügbar oder bereits alle hinzugefügt</p>
         }
 
         <div></div>

@@ -7,6 +7,6 @@
   </div>
 
   <button (click)="openUserMenu()">
-    <img [src]="this.userService.auth.currentUser?.photoURL" alt="this.userService.auth.currentUser?.displayName" />
+    <img [src]="this.authService.currentUser()?.photoUrl" alt="this.authService.currentUser()?.displayName" />
   </button>
 </header>

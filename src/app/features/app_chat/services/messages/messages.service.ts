@@ -1,54 +1,54 @@
-import { inject, Injectable } from '@angular/core';
-import { onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
-import { FireServiceService } from '../firebase/fire-service.service';
-import { UserService } from '../user/shared.service';
+import { inject, Injectable, Query, signal } from '@angular/core';
+import { onSnapshot, orderBy, query, QuerySnapshot, serverTimestamp } from '@angular/fire/firestore';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { ChannelMessage } from '../../models/channel-message/channel-message';
+import { DirectMessage } from '../../models/direct-message/direct-message';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessagesService {
   private fireService = inject(FireServiceService);
-  private userService = inject(UserService);
+  private readonly authService = inject(AuthService);
   email = 'gianniskarakasidhs@hotmail.com';
 
-  /**
-   * @description - Retrieves messages from a specific channel and listens for updates.
-   * @param channelId - The ID of the channel to fetch messages for.
-   * @param onUpdate - Callback function that is called with the updated messages.
-   * @returns A function to unsubscribe from the message updates.
-   */
-  public getChannelMessages(channelId: string, onUpdate: (messages: any[]) => void): () => void {
-    const messagesRef = this.fireService.getCollectionRef(`channels/${channelId}/messages`);
-    if (messagesRef) {
-      const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-      return onSnapshot(messagesQuery, (snapshot) => {
-        const processedMessages = this.processData(snapshot);
-        onUpdate(processedMessages);
-      });
-    }
-    return () => {};
+  public messages = signal<ChannelMessage[] | DirectMessage[]>([]);
+
+  constructor() {
+    console.log(this.authService.currentUser());
   }
 
-  /**
-   * @description - Retrieves messages from a conversation between two users and listens for updates.
-   * @param userA - The ID of the first user in the conversation.
-   * @param userB - The ID of the second user in the conversation.
-   * @param onUpdate - Callback function that is called with the updated messages.
-   * @returns A function to unsubscribe from the conversation message updates.
-   */
-  public getConversationMessages(userA: string, userB: string, onUpdate: (messages: any[]) => void): () => void {
-    const currentUserId = this.userService.currentUser?.uid;
+  public subToMessages(channelId: string | null) {
+    if (!channelId) return () => {};
+    const messagesRef = this.fireService.getCollectionRef(`channels/${channelId}/messages`);
+    if (!messagesRef) return () => {};
+
+    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+    return onSnapshot(messagesQuery, (snapshot) => {
+      this.messages.set(this.processData(snapshot));
+    });
+  }
+
+  public subToConversationMessages(userA: string, userB: string): () => void {
+    const currentUserId = this.authService.currentUser()?.id;
+    if (!currentUserId) return () => {};
+
     const [uid1, uid2] = [userA, userB].sort();
     const conversationId = `${uid1}_${uid2}`;
+
     const messagesRef = this.fireService.getCollectionRef(`users/${currentUserId}/conversations/${conversationId}/messages`);
-    if (messagesRef) {
-      const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-      return onSnapshot(messagesQuery, (snapshot) => {
-        const processedMessages = this.processData(snapshot);
-        onUpdate(processedMessages);
-      });
-    }
-    return () => {};
+
+    if (!messagesRef) return () => {};
+
+    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+    return onSnapshot(messagesQuery, (snapshot) => {
+      const processedMessages = this.processData(snapshot);
+      this.messages.set(processedMessages);
+    });
   }
 
   /**
@@ -56,20 +56,16 @@ export class MessagesService {
    * @param snap - The Firestore snapshot containing the messages.
    * @returns An array of processed message objects.
    */
-  processData(snap: any) {
+  public processData(snap: QuerySnapshot<any>): any[] {
     return snap.docs.map((doc: any) => {
-      let data = doc.data();
-      return {
-        id: doc.id,
-        ...data,
-        time: data['timestamp']
-          ? new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          : '–',
-      };
+      const data = doc.data();
+      const id = doc.id;
+      return this.isChannelMessage(data) ? new ChannelMessage({ id, ...data }) : new DirectMessage({ id, ...data });
     });
+  }
+
+  private isChannelMessage(data: any): boolean {
+    return 'reaction' in data;
   }
 
   /**
@@ -118,15 +114,12 @@ export class MessagesService {
    * @returns An object representing the channel message.
    */
   public buildChannelMessageObject(input: string, messages?: any, reactions?: any): {} {
-    console.log(this.userService.currentUser);
-
     return {
       message: input || '',
-      avatar: this.userService.auth.currentUser?.photoURL || '',
+      photoUrl: this.authService.currentUser()?.photoUrl,
       date: new Date().toISOString().split('T')[0],
-      name: this.userService.auth.currentUser?.displayName,
+      name: this.authService.currentUser()?.displayName,
       newDay: this.isNewDay(messages),
-      timestamp: serverTimestamp(),
       reaction: reactions || [],
     };
   }
@@ -141,8 +134,8 @@ export class MessagesService {
    */
   public buildDirectMessageObject(input: string, messages: any, from: string, to: string) {
     return {
-      name: this.userService.auth.currentUser?.displayName,
-      avatar: this.userService.auth.currentUser?.photoURL || '',
+      name: this.authService.currentUser()?.displayName,
+      photoUrl: this.authService.currentUser()?.photoUrl,
       message: input,
       date: new Date().toISOString().split('T')[0],
       timestamp: serverTimestamp(),
