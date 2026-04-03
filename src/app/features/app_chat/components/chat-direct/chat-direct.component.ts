@@ -1,16 +1,14 @@
-import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed } from '@angular/core';
 import { getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
-import { Subscription } from 'rxjs';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DividerTemplateComponent } from '../../../../shared/components/divider/divider-template.component';
-import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../../../../shared/components/message/message-template.component';
+import { DividerTemplateComponent } from '../divider/divider-template.component';
+import { MessageTemplateComponent } from '../message/message-template.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
@@ -18,6 +16,8 @@ import { MessagesService } from '../../services/messages/messages.service';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
+import { ChatService } from '../../services/chat/chat.service';
 
 @Component({
   selector: 'app-direct-messages',
@@ -40,14 +40,14 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   public readonly navigationService = inject(NavigationService);
   private readonly firestoreService = inject(FireServiceService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  public authService = inject(AuthService);
+  public readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
   public messagesService = inject(MessagesService);
-
-  public currentUserId: string = '';
+  public chatService: ChatService = inject(ChatService);
 
   public currentRecieverId = signal<string | null>(null);
   public currentReciever = signal<User | null>(null);
+  public readonly currentUserId = computed(() => this.authService.currentUser()?.id || '');
 
   /**
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
@@ -65,8 +65,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   loadDirectChat(otherUserId: string) {
     if (this.unsubDirectMessages) this.unsubDirectMessages();
 
-    const currentUserId = this.authService.currentUser()?.id || '';
-    this.unsubDirectMessages = this.messagesService.subToConversationMessages(currentUserId, otherUserId);
+    this.unsubDirectMessages = this.messagesService.subToConversationMessages(this.currentUserId(), otherUserId);
   }
 
   /**
@@ -91,7 +90,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * @returns True if the message is from the current user.
    */
   public isUser(message: any): boolean {
-    return message.from === this.currentUserId;
+    return message.from === this.currentUserId();
   }
 
   /**
@@ -99,7 +98,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * @returns True if the current user is the receiver.
    */
   public isYou(): boolean {
-    return this.currentRecieverId() === this.currentUserId;
+    return this.currentRecieverId() === this.currentUserId();
   }
 
   /**

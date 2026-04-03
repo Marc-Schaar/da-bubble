@@ -1,24 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, Input, OnInit } from '@angular/core';
-import { UserService } from '../../services/user/shared.service';
-import { FireServiceService } from '../../services/firebase/fire-service.service';
+import { Component, computed, inject, input, Input } from '@angular/core';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
 import { collection, getDocs, query, where } from '@firebase/firestore';
-import { NavigationService } from '../../services/navigation/navigation.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import emojiData from 'unicode-emoji-json';
 
 import { Firestore } from '@angular/fire/firestore';
-import { LinkifyPipe } from '../../../features/pipes/linkify.pipe';
+import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 
-import { DialogReciverComponent } from '../../../features/dialogs/dialog-reciver/dialog-reciver.component';
-import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
-import { DirectMessage } from '../../../features/app_chat/models/direct-message/direct-message';
+import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
+import { ChannelMessage } from '../../models/channel-message/channel-message';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { DirectMessage } from '../../models/direct-message/direct-message';
 
 @Component({
   selector: 'app-message-template',
@@ -26,7 +25,7 @@ import { DirectMessage } from '../../../features/app_chat/models/direct-message/
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
 })
-export class MessageTemplateComponent implements OnInit {
+export class MessageTemplateComponent {
   public userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
   public authService = inject(AuthService);
@@ -75,16 +74,7 @@ export class MessageTemplateComponent implements OnInit {
   constructor() {
     this.userId = this.authService.currentUser()?.id;
     this.emojiDataBase = emojiData;
-    effect(() => {
-      console.log('Nachricht hat sich geändert:', this.message()?.asDate);
-    });
   }
-
-  /**
-   * Lifecycle hook called after component initialization.
-   * Ensures the navigation service is initialized.
-   */
-  ngOnInit(): void {}
 
   /**
    * Enables editing mode for a specific message.

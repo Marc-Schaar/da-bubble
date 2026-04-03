@@ -64,7 +64,7 @@ export class MessagesService {
     });
   }
 
-  private isChannelMessage(data: any): boolean {
+  private isChannelMessage(data: ChannelMessage | DirectMessage): boolean {
     return 'reaction' in data;
   }
 
@@ -73,37 +73,12 @@ export class MessagesService {
    * @param messages - The array of messages to check.
    * @returns A boolean indicating whether a new day has started.
    */
-  private isNewDay(messages: any): boolean {
+  private isNewDay(messages: ChannelMessage[] | DirectMessage[]): boolean {
     if (messages.length === 0) return true;
     let lastMessage = messages[messages.length - 1];
-    let lastMessageDate = lastMessage.date ? lastMessage.date : lastMessage.time;
+    let lastMessageDate = lastMessage.timestamp ? lastMessage.timestamp : lastMessage.timestamp;
     let todayDate = new Date().toISOString().split('T')[0];
     return lastMessageDate !== todayDate;
-  }
-
-  /**
-   * @description - Checks if the provided date corresponds to today's date.
-   * @param date - The date to check.
-   * @returns A boolean indicating if the date is today.
-   */
-  public isToday(date: any): boolean {
-    if (!date) return false;
-    let today = new Date().toISOString().split('T')[0];
-    let messageDate = new Date(date).toISOString().split('T')[0];
-    return today === messageDate;
-  }
-
-  /**
-   * @description - Formats a date into a human-readable string in the German locale.
-   * @param data - The date to format.
-   * @returns A formatted date string.
-   */
-  public formateDate(data: any) {
-    return new Date(data).toLocaleDateString('de-DE', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
   }
 
   /**
@@ -117,7 +92,6 @@ export class MessagesService {
     return {
       message: input || '',
       photoUrl: this.authService.currentUser()?.photoUrl,
-      date: new Date().toISOString().split('T')[0],
       name: this.authService.currentUser()?.displayName,
       newDay: this.isNewDay(messages),
       reaction: reactions || [],
@@ -137,7 +111,6 @@ export class MessagesService {
       name: this.authService.currentUser()?.displayName,
       photoUrl: this.authService.currentUser()?.photoUrl,
       message: input,
-      date: new Date().toISOString().split('T')[0],
       timestamp: serverTimestamp(),
       from: from,
       to: to,

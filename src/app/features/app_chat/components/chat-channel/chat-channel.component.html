@@ -52,10 +52,10 @@
     </section>
 
     <ul class="chat-content gap-10" #chatContent>
-      @for (message of this.messagesService.messages(); track $index) {
-        @if (message.newDay) {
+      @for (message of this.messagesService.messages(); track message.id; let i = $index) {
+        @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
           <li>
-            <app-divider-template [messageData]="{ date: message.date, time: message.timestamp }"></app-divider-template>
+            <app-divider-template [messageData]="message.timestamp"></app-divider-template>
           </li>
         }
 

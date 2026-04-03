@@ -14,10 +14,10 @@
     </div>
 
     <ul class="chat-content" #chat>
-      @for (message of this.messagesService.messages(); track $index; let i = $index) {
-        @if (message.newDay) {
+      @for (message of this.messagesService.messages(); track message.id; let i = $index) {
+        @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
           <li>
-            <app-divider-template [messageData]="{ date: message.date, time: '' }"> </app-divider-template>
+            <app-divider-template [messageData]="message.timestamp"> </app-divider-template>
           </li>
         }
         <li>
@@ -48,7 +48,7 @@
 
     <footer class="card-footer">
       <app-textarea-template
-        [currentUserId]="currentUserId"
+        [currentUserId]="currentUserId()"
         [reciverId]="currentRecieverId() || ''"
         [reciverCompontent]="'direct'"
         [messages]="this.messagesService.messages()"

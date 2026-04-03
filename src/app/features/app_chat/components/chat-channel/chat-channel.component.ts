@@ -6,20 +6,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { Firestore, onSnapshot, query, orderBy, collection, doc } from '@angular/fire/firestore';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { User } from '../../../app_auth/models/user/user';
 import { AddMemberComponent } from '../../../app_channel/components/add-member/add-member.component';
-import { DividerTemplateComponent } from '../../../../shared/components/divider/divider-template.component';
-import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../../../../shared/components/message/message-template.component';
+import { DividerTemplateComponent } from '../divider/divider-template.component';
+import { MessageTemplateComponent } from '../message/message-template.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
 import { ChannelEditComponent } from '../../../app_channel/components/channel-edit/channel-edit.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
+import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
+import { ChatService } from '../../services/chat/chat.service';
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -47,6 +47,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   navigationService: NavigationService = inject(NavigationService);
   messagesService: MessagesService = inject(MessagesService);
   route: ActivatedRoute = inject(ActivatedRoute);
+  public chatService: ChatService = inject(ChatService);
 
   isMobile: boolean = false;
   showBackground: boolean = false;

@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { FireServiceService } from '../../services/firebase/fire-service.service';
 
-import { MessagesService } from '../../../features/app_chat/services/messages/messages.service';
 import { CollectionReference, Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, DocumentData } from '@firebase/firestore';
 import emojiData from 'unicode-emoji-json';
-import { SearchService } from '../../services/search/search.service';
-import { SearchResultComponent } from '../search-result/search-result.component';
-import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
+import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
+import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { SearchService } from '../../../../shared/services/search/search.service';
+import { ChannelMessage } from '../../models/channel-message/channel-message';
 
 @Component({
   selector: 'app-textarea-template',

@@ -5,7 +5,6 @@ export abstract class BaseMessage {
   name: string;
   photoUrl: string;
   message: string;
-  date: string;
   timestamp: any;
   newDay: boolean;
 
@@ -14,14 +13,28 @@ export abstract class BaseMessage {
     this.name = obj?.name || obj?.username || '';
     this.photoUrl = obj?.photoUrl || '';
     this.message = obj?.message || '';
-    this.date = obj?.date || '';
     this.timestamp = obj?.timestamp || serverTimestamp();
     this.newDay = obj?.newDay || false;
   }
 
-  get asDate(): Date | null {
-    if (!this.timestamp) return null;
-    return typeof this.timestamp.toDate === 'function' ? this.timestamp.toDate() : new Date(this.timestamp);
+  get asDate(): Date {
+    // 1. Prüfen, ob der Timestamp überhaupt existiert
+    if (!this.timestamp) return new Date();
+
+    // 2. Prüfen, ob es ein Firebase-Timestamp mit .toDate() ist
+    if (typeof this.timestamp.toDate === 'function') {
+      return this.timestamp.toDate();
+    }
+
+    // 3. Prüfen, ob es ein serverTimestamp-Platzhalter ist
+    // (Diese haben oft eine 'method'-Eigenschaft oder sind interne Firebase-Objekte)
+    if (this.timestamp && typeof this.timestamp === 'object' && !('seconds' in this.timestamp)) {
+      return new Date(); // Fallback für lokale "fliegende" Nachrichten
+    }
+
+    // 4. Fallback für ISO-Strings oder Millisekunden
+    const date = new Date(this.timestamp);
+    return isNaN(date.getTime()) ? new Date() : date;
   }
 
   protected getBaseJSON() {
@@ -29,7 +42,6 @@ export abstract class BaseMessage {
       name: this.name,
       photoUrl: this.photoUrl,
       message: this.message,
-      date: this.date,
       timestamp: this.timestamp,
       newDay: this.newDay,
     };

@@ -10,9 +10,9 @@ import { MessagesService } from '../../services/messages/messages.service';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
-import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
-import { MessageTemplateComponent } from '../../../../shared/components/message/message-template.component';
+import { MessageTemplateComponent } from '../message/message-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 
 @Component({
   selector: 'app-thread',

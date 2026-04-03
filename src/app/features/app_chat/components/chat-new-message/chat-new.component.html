@@ -24,7 +24,7 @@
       <app-textarea-template
         [placeholderText]="'Starte eine Nachricht an: ' + (currentReceiver.data?.name || currentReceiver.fullname || '...')"
         [reciverId]="getReceiverId()"
-        [currentUserId]="userService.auth.currentUser?.uid!"
+        [currentUserId]="authService.currentUser()?.id!"
         [reciverCompontent]="isChannel(currentReceiver) ? 'channel' : 'direct'"
       ></app-textarea-template>
     </div>

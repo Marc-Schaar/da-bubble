@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { TextareaTemplateComponent } from '../../../../shared/components/textarea/textarea-template.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
-import { MessagesService } from '../../services/messages/messages.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
+import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +21,9 @@ import { SearchService } from '../../../../shared/services/search/search.service
 })
 export class NewmessageComponent {
   public userService = inject(UserService);
-  private firestoreService = inject(FireServiceService);
-  private messageService: MessagesService = inject(MessagesService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
+  public authService: AuthService = inject(AuthService);
 
   public currentReceiver: any = '';
   private receiverType: 'channel' | 'direct' | null = null;
