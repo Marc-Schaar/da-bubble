@@ -76,11 +76,7 @@
       <footer class="message-footer gap-20">
         @if ($any(message()).thread?.length > 0) {
           <div class="d-flex gap-20 flex-wrap">
-            <span
-              class="curser-pointer answer-btn"
-              (click)="this.userService.setUrl('thread', this.currentChannelId, userId, message().id); openThread(message().id)"
-              >{{ $any(message()).thread?.length }} Antworten</span
-            >
+            <span class="curser-pointer answer-btn" (click)="openThread(message().id)">{{ $any(message()).thread?.length }} Antworten</span>
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>
           </div>
         }

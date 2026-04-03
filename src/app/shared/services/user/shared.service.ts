@@ -1,110 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Firestore, onSnapshot } from '@angular/fire/firestore';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { FireServiceService } from '../firebase/fire-service.service';
-import { NavigationService } from '../navigation/navigation.service';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  firestore: Firestore = inject(Firestore);
-  fireService: FireServiceService = inject(FireServiceService);
-  router: Router = inject(Router);
-  navigationService: NavigationService = inject(NavigationService);
-  dashboard: boolean = false;
-  login: boolean = false;
-  private indexSource = new BehaviorSubject<number>(-1);
-  currentIndex$ = this.indexSource.asObservable();
-  private contactbarToggleSubject = new Subject<void>();
-  contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
+  constructor() {}
 
-  private showFeedbackSubject = new Subject<string>();
-  showFeedback$ = this.showFeedbackSubject.asObservable();
-  currentReciever: any;
-  public users: any = [];
-  channels: any = [];
-  messages: any = [];
-  currentChannel: any;
-
-  /**
-   * Creates an instance of the class.
-   * Initializes by setting the current user and loading channels and users.
-   * @param route - ActivatedRoute to access route parameters and data.
-   */
-  constructor(private route: ActivatedRoute) {
-    this.getChannels();
-    this.getUsers();
-  }
-
-  /**
-   * Fetches channels from Firestore and sets the current channel.
-   */
-  getChannels() {
-    let channelRef = this.fireService.getCollectionRef('channels');
-    this.channels = [];
-    if (channelRef) {
-      onSnapshot(channelRef, (colSnap) => {
-        this.channels = colSnap.docs.map((colSnap) => ({
-          key: colSnap.id,
-          data: colSnap.data(),
-        }));
-        this.currentChannel = this.channels[0];
-      });
-    }
-  }
-
-  /**
-   * Fetches users from Firestore and sets the users array.
-   */
-  getUsers() {
-    let userRef = this.fireService.getCollectionRef('users');
-    if (userRef) {
-      onSnapshot(userRef, (colSnap: any) => {
-        this.users = colSnap.docs.map((colSnap: any) => ({
-          key: colSnap.id,
-          ...colSnap.data(),
-        }));
-      });
-    }
-  }
-
-  /**
-   * Sets the current channel and user.
-   * @param channel The channel to set.
-   * @param user The user to set.
-   */
-  async getChannel(channel: any, user: any) {
-    this.currentChannel = channel;
-  }
-
-  /**
-   * Sets the URL with the provided parameters.
-   * @param channelType The type of the channel.
-   * @param id The channel id.
-   * @param reciepentId The recipient id.
-   * @param messageId The message id.
-   */
-  setUrl(channelType: string, reciverId?: string, currentUserId?: string, messageId?: string) {
-    this.router.navigate(['/chat'], {
-      queryParams: {
-        channelType: channelType,
-        reciverId: reciverId,
-        currentUserId: currentUserId,
-        messageId: messageId,
-      },
-    });
-  }
-
-  /**
-   * Displays feedback by emitting a message.
-   * @param message The message to display as feedback.
-   */
-  showFeedback(message: string) {
-    this.showFeedbackSubject.next(message);
-  }
-
+  showFeedback(a: any) {}
   /**
    * Scrolls the chat content area to the bottom.
    */

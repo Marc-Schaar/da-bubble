@@ -10,7 +10,9 @@ import {
   Firestore,
   getDocs,
   onSnapshot,
+  query,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
@@ -74,9 +76,11 @@ export class FireServiceService {
 
     if (!currentUser) return [];
 
+    const isGuest = currentUser.email === 'gast@portfolio.de';
+
     return channels.filter((channel) => {
-      if (currentUser.email === 'gast@portfolio.de') {
-        return channel.id === DEFAULT_CHANNEL_ID;
+      if (isGuest) {
+        return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
       }
 
       return channel.member?.some((m: any) => m.id === currentUser.id);
@@ -225,6 +229,16 @@ export class FireServiceService {
     await addDoc(threadRef, data);
   }
 
+  async addChannel(data: any) {
+    try {
+      const channelsRef = collection(this.firestore, 'channels');
+      return await addDoc(channelsRef, data);
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Channels in Firestore:', error);
+      throw error;
+    }
+  }
+
   async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
     if (!channelId) return;
 
@@ -262,5 +276,15 @@ export class FireServiceService {
       console.error('Fehler beim Verlassen des Channels:', error);
       throw error;
     }
+  }
+
+  public async checkChannelNameExists(name: string): Promise<boolean> {
+    const channelsRef = collection(this.firestore, 'channels');
+    const trimmedName = name.trim();
+
+    const q = query(channelsRef, where('name', '==', trimmedName));
+    const querySnapshot = await getDocs(q);
+
+    return !querySnapshot.empty;
   }
 }

@@ -39,10 +39,11 @@ export class ChannelService {
 
   public filteredUsers = computed(() => {
     const allUsers = this.fireService.allUsers();
-    const members = this.currentChannel().member || [];
+    const members = this.currentChannel()?.member || [];
     const currentUser = this.authService.currentUser();
     const currentSelection = this.selectedUsers();
     const query = this.userSearchQuery().toLowerCase();
+    console.log(query);
 
     return allUsers.filter((user) => {
       const isNotMember = !members.some((m: any) => m.id === user.id);
@@ -54,6 +55,51 @@ export class ChannelService {
       return isNotMember && isNotSelected && isNotMe && matchesQuery && hasEmail;
     });
   });
+
+  async createChannel(channelData: { name: string; description: string; member: any[] }) {
+    const currentUser = this.authService.currentUser();
+
+    const newChannel = {
+      ...channelData,
+      createdAt: new Date(),
+      createdBy: currentUser?.displayName || 'unknown',
+      member: currentUser ? [{ id: currentUser.id }] : [],
+    };
+
+    try {
+      const docRef = await this.fireService.addChannel(newChannel);
+
+      const createdChannel = { ...newChannel, id: docRef.id };
+      this.currentChannel.set(createdChannel);
+
+      return createdChannel;
+    } catch (error) {
+      console.error('Fehler im ChannelService beim Erstellen:', error);
+      throw error;
+    }
+  }
+
+  public addUserToSelection(user: User) {
+    this.selectedUsers.update((users) => [...users, user]);
+    this.userSearchQuery.set(''); // Suchbegriff leeren nach Auswahl
+  }
+
+  public removeUserFromSelection(index: number) {
+    this.selectedUsers.update((users) => {
+      const updatedUsers = [...users];
+      updatedUsers.splice(index, 1);
+      return updatedUsers;
+    });
+  }
+
+  public resetSelection() {
+    this.selectedUsers.set([]);
+    this.userSearchQuery.set('');
+  }
+
+  public updateSearchQuery(query: string) {
+    this.userSearchQuery.set(query);
+  }
 
   async updateName(id: string, name: string) {
     await this.fireService.updateChannelData(id, { name });

@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from '../user/shared.service';
-import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { FireServiceService } from '../firebase/fire-service.service';
+import { Channel } from '../../../features/app_channel/models/channel/channel';
+import { User } from '../../../features/app_auth/models/user/user';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +12,7 @@ export class SearchService {
   constructor() {}
   private authService: AuthService = inject(AuthService);
   private userService: UserService = inject(UserService);
+  private fireService: FireServiceService = inject(FireServiceService);
 
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
@@ -18,7 +21,7 @@ export class SearchService {
   private isResultTrue: boolean = false;
   private directTag: boolean = false;
 
-  private currentList: string[] = [];
+  private currentList: User[] | Channel[] = [];
   private tagType: 'channel' | 'user' | null = null;
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   private input: string = '';
@@ -242,7 +245,7 @@ export class SearchService {
    * @param channelsToSearch - The list of channels to search within.
    * @returns {string[]} A list of matching members.
    */
-  private searchChannelMembersByName(searchInput: string, channelsToSearch: any): string[] {
+  private searchChannelMembersByName(searchInput: string, channelsToSearch: any): Channel[] {
     let foundMembers: any[] = [];
     channelsToSearch.forEach((channel: { data?: { member?: any[] } }) => {
       let members = channel.data?.member || [];
@@ -274,14 +277,11 @@ export class SearchService {
    * @param searchCollection - The type of entity to search for ('channel' or 'user').
    * @returns {string[]} A list of matched results.
    */
-  public startSearch(input: string, searchCollection?: 'channel' | 'user'): string[] {
+  public startSearch(input: string, searchCollection?: 'channel' | 'user'): Channel[] {
     let searchInput = input.trim()?.toLowerCase() || '';
-    let result: any[] = [];
-    let channelsToSearch = this.isAnonymous()
-      ? this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz')
-      : this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
-          channel.data?.member?.some((member: any) => member.id === this.userId()),
-        );
+    let result: Channel[] = [];
+    const channelsToSearch = this.fireService.myChannels();
+
     if (searchCollection === 'channel') {
       result = this.searchChannel(searchInput, channelsToSearch);
     } else if (searchCollection === 'user') {
@@ -301,15 +301,10 @@ export class SearchService {
     this.searchInComponent = 'textarea';
     this.directTag = true;
     if (type === '#') {
-      this.currentList = this.userService.channels.filter((channel: { data?: { member?: any[] } }) =>
-        channel.data?.member?.some((member: any) => member.id === this.userId()),
-      );
-      if (this.authService.currentUser()?.isAnonymous) {
-        this.currentList = this.userService.channels.filter((channel: { key: string }) => channel.key === 'KqvcY68R1jP2UsQkv6Nz');
-      }
+      this.currentList = this.fireService.myChannels();
       this.isChannel = true;
     } else if (type === '@') {
-      this.currentList = this.userService.users;
+      this.currentList = this.fireService.allUsers();
       this.isChannel = false;
     }
   }

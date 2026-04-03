@@ -134,7 +134,6 @@ export class ThreadComponent implements OnInit {
    */
   public closeThread() {
     if (!this.navigationService.isMobile()) this.navigationService.toggleThread('close');
-    this.userService.setUrl('channel', this.currentChannelId, this.userId);
   }
 
   /**

@@ -45,12 +45,10 @@
     }
     @if (!isClicked) {
       <div class="contactbar">
-        <div class="channels">
-          <div class="drop-down-title">
+        <div class="dropdown">
+          <div class="dropdown__title">
             <button class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
-              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: navigationService.isChannelsOpen() }">
-                arrow_drop_down</mat-icon
-              >
+              <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
               <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
               Channels
             </button>
@@ -64,10 +62,10 @@
             </div>
           </div>
 
-          <ul [ngClass]="{ open: navigationService.isChannelsOpen() }" class="drop-down">
-            @for (channel of firestoreService.myChannels(); track $index; let index = $index) {
+          <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
+            @for (channel of firestoreService.myChannels(); track channel.id) {
               <li
-                class="li"
+                class="dropdown__list__item"
                 (click)="navigationService.selectChannel(channel.id)"
                 [class.active-link]="router.url.includes('channel/' + channel.id)"
               >
@@ -87,10 +85,10 @@
           <span class="tooltip">Zugang für Gäste gesperrt</span>
         </div>
 
-        <div class="messages">
-          <div class="drop-down-title">
+        <div class="dropdown">
+          <div class="dropdown__title">
             <button class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
-              <mat-icon class="material-symbols-outlined" [ngClass]="{ rotate: navigationService.isDirectMessagesOpen() }">
+              <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()">
                 arrow_drop_down</mat-icon
               >
               <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
@@ -98,10 +96,10 @@
             </button>
           </div>
 
-          <ul [ngClass]="{ open: navigationService.isDirectMessagesOpen() }" class="drop-down">
-            @for (user of firestoreService.allUsers(); track $index; let index = $index) {
+          <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
+            @for (user of firestoreService.allUsers(); track user.id) {
               <li
-                class="li"
+                class="dropdown__list__item"
                 (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 [class.active-link]="router.url.includes('direct/' + user.id)"
               >

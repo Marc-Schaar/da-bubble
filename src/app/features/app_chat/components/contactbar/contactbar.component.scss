@@ -58,21 +58,71 @@ button {
   overflow: auto;
 }
 
-.channels {
+.dropdown {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.drop-down-title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  &__title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-  > button {
-    gap: 15px;
+    button {
+      gap: 15px;
+    }
+  }
+
+  &__list {
+    width: 100%;
+    max-height: 0;
+    display: flex;
+    flex-direction: column;
+    transition: max-height 0.25s ease-in-out;
+    gap: 13px;
+    overflow: hidden;
+
+    &--open {
+      max-height: 1000px;
+    }
+
+    &__item {
+      &:first-child {
+        margin-top: 20px;
+      }
+
+      &:last-child {
+        margin-bottom: 20px;
+      }
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+      padding: 4px 20px;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: all 0.125s ease-in-out;
+      border-radius: 20px;
+      font-size: 1.125rem;
+
+      &:hover {
+        background-color: var(--bg-color);
+        color: var(--dark-purple);
+        font-weight: 700;
+      }
+
+      &.active-link {
+        background-color: var(--bg-color) !important;
+        color: var(--dark-purple) !important;
+        font-weight: 700 !important;
+
+        mat-icon {
+          color: var(--dark-purple);
+        }
+      }
+    }
   }
 }
 
@@ -92,49 +142,6 @@ button {
   transform: rotate(-90deg);
 }
 
-.drop-down {
-  width: 100%;
-  max-height: 0;
-  display: flex;
-  flex-direction: column;
-  transition: max-height 0.125s ease-in-out;
-  gap: 13px;
-  overflow: hidden;
-
-  &.open {
-    max-height: 100% !important;
-  }
-
-  .li {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-    padding: 4px 20px;
-    margin-left: 8px;
-    cursor: pointer;
-    transition: all 0.125s ease-in-out;
-    border-radius: 20px;
-    font-size: 1.125rem;
-
-    &:hover {
-      background-color: var(--bg-color);
-      color: var(--dark-purple);
-      font-weight: 700;
-    }
-
-    &.active-link {
-      background-color: var(--bg-color) !important;
-      color: var(--dark-purple) !important;
-      font-weight: 700 !important;
-
-      mat-icon {
-        color: var(--dark-purple);
-      }
-    }
-  }
-}
-
 .addChannel {
   display: flex;
   align-items: center;
@@ -150,14 +157,6 @@ button {
     align-self: baseline;
     margin-left: 17px;
   }
-}
-
-.messages {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
 }
 
 .pin-right-bottom-mobile {

@@ -126,8 +126,7 @@ export class MessageTemplateComponent {
    * @param $event - The click event
    */
   public openThread(messageId: string) {
-    if (!this.navigationService.isMobile()) this.navigationService.toggleThread('open');
-    this.userService.setUrl('thread', this.currentChannelId, this.userId, messageId);
+    this.navigationService.goToThread(messageId);
   }
 
   /**
@@ -217,7 +216,7 @@ export class MessageTemplateComponent {
    * @returns A list of user names who have reacted with the target emoji
    */
   public getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] | any {
-    let allUsers = this.userService.users;
+    let allUsers = this.fireService.allUsers();
     let currentUserId = this.userId;
     let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
     let userIds = reactionsWithEmoji.map((reaction: any) => reaction.from);

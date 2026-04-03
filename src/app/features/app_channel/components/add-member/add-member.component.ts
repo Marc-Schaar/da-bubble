@@ -7,6 +7,7 @@ import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-r
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { User } from '../../../app_auth/models/user/user';
 
 @Component({
   selector: 'app-add-member',
@@ -222,12 +223,9 @@ export class AddMemberComponent implements OnInit {
    * Shows the profile of a given member.
    * @param member User object
    */
-  public showProfile() {
+  public showProfile(userData: User) {
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: this.userService.currentReciever,
-        recieverId: this.currentRecieverId,
-      },
+      data: userData,
       width: '400px',
       panelClass: ['center-dialog'],
     });

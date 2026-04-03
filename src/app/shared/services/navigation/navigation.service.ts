@@ -48,6 +48,10 @@ export class NavigationService {
     }
   }
 
+  public goToThread(id: string) {
+    console.log(id);
+  }
+
   public goToLogin() {
     this.router.navigate(['login']);
   }
