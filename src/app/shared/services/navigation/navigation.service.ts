@@ -120,7 +120,5 @@ export class NavigationService {
 
   public showChannel() {}
 
-  public showDirect() {}
-
   public toggleThread(a: any) {}
 }

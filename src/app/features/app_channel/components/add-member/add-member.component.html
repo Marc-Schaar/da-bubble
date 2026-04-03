@@ -14,7 +14,7 @@
       </div>
       <div>{{ authService.currentUser()?.displayName }} (Du)</div>
     </div>
-    <div (click)="showProfile(filteredMember)" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
+    <div (click)="showProfile()" class="user" *ngFor="let filteredMember of filteredMembers; let i = index">
       <div class="img-status">
         <img src="{{ filteredMember.profilephoto }}" alt="" />
         <div class="dot" [ngClass]="{ online: filteredMember.online }"></div>

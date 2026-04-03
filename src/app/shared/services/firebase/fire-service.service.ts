@@ -1,6 +1,8 @@
 import { computed, inject, Injectable, Injector, signal } from '@angular/core';
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   CollectionReference,
   doc,
@@ -18,7 +20,7 @@ import { AuthService } from '../../../features/app_auth/services/auth/auth.servi
   providedIn: 'root',
 })
 export class FireServiceService {
-  public firestore: Firestore = inject(Firestore);
+  private firestore: Firestore = inject(Firestore);
   private injector = inject(Injector);
   public allUsers = signal<User[]>([]);
   private _allChannels = signal<any[]>([]);
@@ -221,5 +223,44 @@ export class FireServiceService {
     const threadRef = collection(this.firestore, path);
 
     await addDoc(threadRef, data);
+  }
+
+  async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
+    if (!channelId) return;
+
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    try {
+      await updateDoc(channelRef, data);
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren der Channel-Daten:', error);
+      throw error;
+    }
+  }
+
+  async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
+    if (!channelId || memberObjects.length === 0) return;
+
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    try {
+      await updateDoc(channelRef, {
+        member: arrayUnion(...memberObjects),
+      });
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen von Mitgliedern:', error);
+      throw error;
+    }
+  }
+
+  public async leaveChannel(channelId: string, userId: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+
+    try {
+      await updateDoc(channelRef, {
+        member: arrayRemove({ id: userId }),
+      });
+    } catch (error) {
+      console.error('Fehler beim Verlassen des Channels:', error);
+      throw error;
+    }
   }
 }

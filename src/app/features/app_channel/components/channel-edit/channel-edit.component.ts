@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ElementRef, ViewChild, Inject, HostListener, effect, computed, signal } from '@angular/core';
-import { arrayUnion, doc, getDoc, updateDoc } from '@angular/fire/firestore';
-import { Firestore } from '@angular/fire/firestore';
-
+import { Component, inject, ElementRef, ViewChild, Inject, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
@@ -25,7 +22,6 @@ export class ChannelEditComponent {
   private readonly navigationService = inject(NavigationService);
   private readonly dialog = inject(MatDialog);
   private readonly dialogRef: MatDialogRef<ChannelEditComponent> = inject(MatDialogRef<ChannelEditComponent>);
-  public readonly firestore: Firestore = inject(Firestore);
   private readonly fireService: FireServiceService = inject(FireServiceService);
 
   public currentChannel = signal<any>(null);
@@ -40,14 +36,11 @@ export class ChannelEditComponent {
 
   public userSearchQuery = signal('');
 
-  selectedUsers: User[] = [];
+  public selectedUsers = signal<User[]>([]);
+
+  public canSubmit = computed(() => this.selectedUsers().length > 0);
   showUserBar: boolean = false;
   isAddMemberOpen: boolean = false;
-  currentRecieverId: string | null = null;
-
-  @ViewChild('channelEditContainer') channelEditContainer!: ElementRef;
-  @ViewChild('addMemberMobileButton') addMemberMobileButton!: ElementRef; // Zugriff auf den Öffnen-Button
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef; // Reference to the user search input field
 
   /**
    * Constructor for ChannelEditComponent. Initializes the component with data passed
@@ -67,7 +60,7 @@ export class ChannelEditComponent {
     this.fireService.subAllUsers();
   }
 
-  enrichedMembers = computed(() => {
+  public enrichedMembers = computed(() => {
     const allUsers = this.fireService.allUsers();
     const channelMembers = this.currentChannel().member || [];
 
@@ -84,21 +77,59 @@ export class ChannelEditComponent {
     });
   });
 
-  filteredUsers = computed(() => {
+  public filteredUsers = computed(() => {
     const allUsers = this.fireService.allUsers();
     const members = this.currentChannel().member || [];
     const currentUser = this.authService.currentUser();
+    const currentSelection = this.selectedUsers();
     const query = this.userSearchQuery().toLowerCase();
 
     return allUsers.filter((user) => {
       const isNotMember = !members.some((m: any) => m.id === user.id);
+      const isNotSelected = !currentSelection.some((u) => u.id === user.id);
       const isNotMe = user.id !== currentUser?.id;
       const matchesQuery = user.displayName.toLowerCase().includes(query);
       const hasEmail = !!user.email;
 
-      return isNotMember && isNotMe && matchesQuery && hasEmail;
+      return isNotMember && isNotSelected && isNotMe && matchesQuery && hasEmail;
     });
   });
+
+  public addUserToSelection(user: User) {
+    this.selectedUsers.update((users) => [...users, user]);
+    this.userSearchQuery.set('');
+    this.showUserBar = false;
+  }
+
+  public onSearchInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.userSearchQuery.set(value);
+    this.showUserBar = true;
+  }
+
+  public async onSubmit() {
+    const channelId = this.currentChannel()?.id;
+    const userObjectsToAdd = this.selectedUsers().map((user) => ({
+      id: user.id,
+    }));
+
+    if (!channelId || userObjectsToAdd.length === 0) return;
+
+    try {
+      await this.fireService.addChannelMembers(channelId, userObjectsToAdd);
+
+      this.currentChannel.update((channel) => ({
+        ...channel,
+        member: [...(channel.member || []), ...userObjectsToAdd],
+      }));
+
+      this.selectedUsers.set([]);
+      this.isAddMemberOpen = false;
+      this.userService.showFeedback('User hinzugefügt');
+    } catch (error) {
+      this.userService.showFeedback('Fehler beim Hinzufügen der User');
+    }
+  }
 
   public async onEditChannelName() {
     if (!this.channelNameEdit) {
@@ -126,148 +157,77 @@ export class ChannelEditComponent {
       this.channelDescriptionEdit = false;
     }
   }
+
   private async saveChannelData(data: Partial<{ name: string; description: string }>) {
-    const channelRef = doc(this.firestore, 'channels', this.currentChannel().id);
+    const channelId = this.currentChannel()?.id;
+    if (!channelId) return;
+
     try {
-      await updateDoc(channelRef, data);
+      await this.fireService.updateChannelData(channelId, data);
       const field = Object.keys(data)[0] === 'name' ? 'Name' : 'Beschreibung';
       this.userService.showFeedback(`Channel ${field} aktualisiert`);
     } catch (error) {
-      console.error('Fehler beim Speichern:', error);
+      this.userService.showFeedback('Fehler beim Speichern');
     }
   }
 
-  /**
-   * Removes the current user from the channel's member list and updates Firestore.
-   */
-  async exitChannel() {
-    const channelRef = doc(this.firestore, 'channels', this.currentChannel().id);
+  public async leaveChannel() {
     const currentUser = this.authService.currentUser();
-    try {
-      const channelDoc = await getDoc(channelRef);
-      const channelData = channelDoc.data();
-      if (channelData && currentUser) {
-        let updateMember = [...channelData['member']];
-        const index = updateMember.findIndex((member) => member.id === currentUser.id);
-        if (index !== -1) {
-          updateMember.splice(index, 1);
-        }
-        await updateDoc(channelRef, {
-          member: updateMember,
-        });
+    const channelId = this.currentChannel()?.id;
+
+    if (currentUser?.id && channelId) {
+      try {
+        await this.fireService.leaveChannel(channelId, currentUser.id);
+        this.dialogRef.close();
+        this.userService.showFeedback('Channel verlassen');
+        this.navigationService.goToNewMessage();
+      } catch (error) {
+        this.userService.showFeedback('Fehler beim Verlassen des Channels');
       }
-    } catch (error) {}
-    this.dialogRef.close();
-    this.userService.showFeedback('Channel verlassen');
-    this.navigationService.goToNewMessage();
+    }
   }
 
   /**
    * Removes a selected user from the selection list.
    * @param index Index of the selected user
    */
-  removeSelectedUser(index: number) {
-    this.addUserToBar(index);
-    this.selectedUsers.splice(index, 1);
+  public removeSelectedUser(index: number) {
+    this.selectedUsers.update((users) => users.filter((_, i) => i !== index));
   }
 
-  /**
-   * Adds a user back to the bar after removal.
-   * @param index Index of the selected user
-   */
-  addUserToBar(index: number) {
-    // this.users.push(this.selectedUsers[index]);
-  }
-
-  /**
-   * Adds a user to the selection list for the channel.
-   * @param index Index of the user in the filtered list
-   */
-  addUserToSelection(index: number) {
-    const selectedUser = this.filteredUsers()[index];
-    this.selectedUsers.push(selectedUser);
-    this.removeUserFromBar(index);
-    // this.users = this.users.filter((user) => user.id !== selectedUser.id);
-    this.refreshBar();
-  }
-
-  /**
-   * Checks if the "Add" button should be enabled.
-   */
-  isAddUserValid() {
-    return this.selectedUsers.length > 0;
-  }
-
-  /**
-   * Clears the input in the user search bar.
-   */
-  refreshBar() {
-    const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
-    if (refresh) {
-      refresh.value = '';
-    }
-  }
-
-  /**
-   * Removes a user from the filtered user list.
-   * @param index Index to remove
-   */
-  removeUserFromBar(index: number) {
-    this.filteredUsers().splice(index, 1);
-  }
-
-  toogleAddMemberState() {
+  public toogleAddMemberState() {
     this.isAddMemberOpen = !this.isAddMemberOpen;
   }
 
   /**
    * Opens the user bar for member selection.
    */
-  openUserBar() {
+  public openUserBar() {
     this.showUserBar = true;
   }
 
-  onSearchInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.userSearchQuery.set(input.value);
-    this.openUserBar();
-  }
-
-  /**
-   * Adds all selected users to the current channel in Firestore.
-   */
-  async onSubmit() {
-    const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannel().id);
-    try {
-      await updateDoc(channelRef, {
-        member: arrayUnion(...this.selectedUsers),
-      });
-      this.selectedUsers = [];
-    } catch (error) {}
-    this.userService.showFeedback('User hinzugefügt');
+  public closeUserBar() {
+    this.showUserBar = false;
+    this.userSearchQuery.set('');
   }
 
   /**
    * Shows the profile of a given member.
    * @param member User object
    */
-  public showProfile(member: any) {
-    this.userService.currentReciever = member;
-    this.userService.showRecieverProfile();
+  public openProfileDialog(userData: User) {
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: this.userService.currentReciever,
-        recieverId: this.currentRecieverId,
-      },
+      data: userData,
       width: '400px',
       panelClass: ['center-dialog'],
     });
+    this.closeDialog();
   }
 
   /**
    * Closes the dialog window.
    */
-  close() {
+  public closeDialog() {
     this.dialogRef.close();
   }
 }

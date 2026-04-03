@@ -1,12 +1,12 @@
-<div #mainDialog class="dialog-container">
+<div class="dialog-container">
   <header class="channel-header">
     # {{ this.currentChannel()?.name }}
-    <button (click)="close()">
+    <button (click)="closeDialog()">
       <img src="img/close.svg" alt="" />
     </button>
   </header>
 
-  <main class="main">
+  <main class="main" (click)="closeUserBar()">
     <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit }">
       <div class="box--header">
         Channel-Name
@@ -57,7 +57,7 @@
 
       <ul class="member-list">
         @for (member of enrichedMembers(); track $index) {
-          <li (click)="showProfile(member)" class="member-list--item">
+          <li (click)="openProfileDialog(member)" class="member-list--item">
             <div class="profile-status">
               <img class="profile-status__image" [src]="member.photoUrl" alt="" />
               <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': member.online }"></div>
@@ -73,7 +73,7 @@
       </ul>
     </section>
 
-    <section #slectUserBar class="tooltip" [ngClass]="{ 'menu-toggle-open': isAddMemberOpen }">
+    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen }">
       <div class="tooltip--line"></div>
 
       <header class="tooltip--header">
@@ -81,7 +81,7 @@
         <button (click)="toogleAddMemberState()"><mat-icon>close</mat-icon></button>
       </header>
 
-      @for (user of selectedUsers; track user.id) {
+      @for (user of selectedUsers(); track user.id) {
         <div class="mini-profile-cont">
           <img class="user-img-mini" [src]="user.photoUrl" alt="" />
           {{ user.displayName }}
@@ -90,35 +90,38 @@
       }
 
       <div class="input-wrapper">
-        <input class="user-search-bar" (input)="onSearchInput($event)" (click)="openUserBar()" placeholder="Name eingeben..." />
+        <input
+          class="user-search-bar"
+          [ngModel]="userSearchQuery()"
+          (ngModelChange)="userSearchQuery.set($event)"
+          (input)="onSearchInput($event)"
+          (click)="openUserBar(); $event.stopPropagation()"
+          placeholder="Name eingeben..."
+        />
         @if (showUserBar) {
-          <div class="choose-user-bar" #chooseUserBar>
+          <ul class="choose-user-bar" #chooseUserBar>
             @for (user of filteredUsers(); track user.id; let i = $index) {
-              <div class="user-select-cont" (click)="addUserToSelection(i)">
-                <div class="img-status-cont">
-                  <img [src]="user.photoUrl" alt="" />
-                  <div class="satus-circle" [ngClass]="{ online: user.online }"></div>
+              <li class="user-select-cont" (click)="addUserToSelection(user)">
+                <div class="profile-status">
+                  <img class="profile-status__image" [src]="user.photoUrl" alt="" />
+                  <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': user.online }"></div>
                 </div>
-                <span>{{ user.displayName }}</span>
-              </div>
+                {{ user.displayName }}
+              </li>
+            } @empty {
+              <li>Keine Nutzer verfügbar</li>
             }
-          </div>
+          </ul>
         }
       </div>
 
-      <button class="submit-btn" [disabled]="!isAddUserValid()" (click)="onSubmit()">Hinzufügen</button>
+      <button class="submit-btn" [disabled]="!canSubmit()" (click)="onSubmit()">Hinzufügen</button>
     </section>
 
-    @if (isAddMemberOpen) {
-      <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>
-    }
-
-    <button class="exit-btn" (click)="exitChannel()">Channel verlassen</button>
+    <button class="exit-btn" (click)="leaveChannel()">Channel verlassen</button>
 
     @if (isAddMemberOpen) {
       <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>
     }
-
-    <button class="exit-btn" (click)="exitChannel()">Channel verlassen</button>
   </main>
 </div>

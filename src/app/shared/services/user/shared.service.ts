@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FireServiceService } from '../firebase/fire-service.service';
@@ -20,8 +19,7 @@ export class UserService {
   currentIndex$ = this.indexSource.asObservable();
   private contactbarToggleSubject = new Subject<void>();
   contactbarSubscription$ = this.contactbarToggleSubject.asObservable();
-  private openProfile = new Subject<void>();
-  openProfile$ = this.openProfile.asObservable();
+
   private showFeedbackSubject = new Subject<string>();
   showFeedback$ = this.showFeedbackSubject.asObservable();
   currentReciever: any;
@@ -97,13 +95,6 @@ export class UserService {
         messageId: messageId,
       },
     });
-  }
-
-  /**
-   * Shows the receiver's profile by emitting an event.
-   */
-  showRecieverProfile() {
-    this.openProfile.next();
   }
 
   /**

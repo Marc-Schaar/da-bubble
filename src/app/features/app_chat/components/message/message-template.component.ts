@@ -327,8 +327,7 @@ export class MessageTemplateComponent {
     const q = query(usersRef, where('fullname', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
-    this.navigationService.setUrl('direct', userDoc.id);
-    this.navigationService.showDirect();
+    this.navigationService.selectDirectMessageRecipient(userDoc.id);
   }
 
   /**

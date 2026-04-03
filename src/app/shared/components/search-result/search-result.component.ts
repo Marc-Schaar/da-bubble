@@ -55,9 +55,7 @@ export class SearchResultComponent {
    * @param element - The user element to open.
    */
   private openUser(element: any) {
-    let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.showDirect();
-    this.navigationService.setUrl('direct', element.id, currentUserId);
+    this.navigationService.selectDirectMessageRecipient(element.id);
     this.searchService.resetList();
   }
 

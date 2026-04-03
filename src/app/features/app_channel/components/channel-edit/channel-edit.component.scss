@@ -206,6 +206,10 @@ li {
     display: flex;
   }
 
+  &__open {
+    transform: translateY(0%);
+  }
+
   &--line {
     width: 62px;
     height: 6px;
@@ -272,10 +276,6 @@ li {
       background-color: var(--bg-color);
     }
   }
-}
-
-.menu-toggle-open {
-  transform: translateY(0%);
 }
 
 .mini-profile-cont {

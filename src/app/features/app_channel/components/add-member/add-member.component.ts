@@ -208,23 +208,21 @@ export class AddMemberComponent implements OnInit {
    * Adds all selected users to the current channel in Firestore.
    */
   async addUserToChannel() {
-    const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
-    try {
-      await updateDoc(channelRef, {
-        member: arrayUnion(...this.selectedUsers),
-      });
-      this.selectedUsers = [];
-    } catch (error) {}
-    this.userService.showFeedback('User hinzugefügt');
+    // const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
+    // try {
+    //   await updateDoc(channelRef, {
+    //     member: arrayUnion(...this.selectedUsers),
+    //   });
+    //   this.selectedUsers = [];
+    // } catch (error) {}
+    // this.userService.showFeedback('User hinzugefügt');
   }
 
   /**
    * Shows the profile of a given member.
    * @param member User object
    */
-  public showProfile(member: any) {
-    this.userService.currentReciever = member;
-    this.userService.showRecieverProfile();
+  public showProfile() {
     this.dialog.open(DialogReciverComponent, {
       data: {
         reciever: this.userService.currentReciever,

@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { AuthService } from '../../app_auth/services/auth/auth.service';
+import { User } from '../../app_auth/models/user/user';
 
 @Component({
   selector: 'app-dialog-reciver',
@@ -11,18 +10,13 @@ import { AuthService } from '../../app_auth/services/auth/auth.service';
   templateUrl: './dialog-reciver.component.html',
   styleUrl: './dialog-reciver.component.scss',
 })
-export class DialogReciverComponent {
-  public readonly reciverData = inject<{ reciever: any; recieverId: string }>(MAT_DIALOG_DATA);
+export class DialogReciverComponent implements OnInit {
+  public readonly reciverData = inject<User>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
-  private userService = inject(UserService);
-  private navigationService = inject(NavigationService);
-  private authService = inject(AuthService);
+  private readonly navigationService = inject(NavigationService);
 
-  /**
-   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
-   */
-  public closeMenu() {
-    this.dialogRef.close();
+  ngOnInit(): void {
+    console.log(this.reciverData);
   }
 
   /**
@@ -32,8 +26,14 @@ export class DialogReciverComponent {
    * shows the direct message view, and closes the user menu.
    */
   public openReciver() {
-    this.navigationService.showDirect();
-    this.userService.setUrl('direct', this.reciverData.recieverId, this.authService.currentUser()?.id);
+    this.navigationService.selectDirectMessageRecipient(this.reciverData.id);
     this.closeMenu();
+  }
+
+  /**
+   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
+   */
+  public closeMenu() {
+    this.dialogRef.close();
   }
 }
