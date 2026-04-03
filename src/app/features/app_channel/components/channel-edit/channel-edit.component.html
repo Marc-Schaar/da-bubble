@@ -1,6 +1,6 @@
 <div class="dialog-container">
   <header class="channel-header">
-    # {{ this.currentChannel()?.name }}
+    # {{ channelService.currentChannel()?.name }}
     <button (click)="closeDialog()">
       <img src="img/close.svg" alt="" />
     </button>
@@ -23,7 +23,7 @@
           />
         </div>
       } @else {
-        <div># {{ currentChannel().name }}</div>
+        <div># {{ channelService.currentChannel().name }}</div>
       }
     </section>
 
@@ -39,7 +39,7 @@
         <textarea name="" id="changeDescriptionInput" [(ngModel)]="tempDescription" (keyup.enter)="onEditChannelDescription()"></textarea>
       } @else {
         <div class="content--description">
-          {{ currentChannel().description || "Keine Beschreibung vorhanden" }}
+          {{ channelService.currentChannel().description || "Keine Beschreibung vorhanden" }}
         </div>
       }
 
@@ -47,7 +47,7 @@
       <div class="creator">
         Erstellt von
         <div class="creator--name">
-          {{ currentChannel().creator }}
+          {{ channelService.currentChannel().creator }}
         </div>
       </div>
     </section>
@@ -56,7 +56,7 @@
       <div class="box--header">Mitglieder</div>
 
       <ul class="member-list">
-        @for (member of enrichedMembers(); track $index) {
+        @for (member of channelService.enrichedMembers(); track $index) {
           <li (click)="openProfileDialog(member)" class="member-list--item">
             <div class="profile-status">
               <img class="profile-status__image" [src]="member.photoUrl" alt="" />
@@ -81,7 +81,7 @@
         <button (click)="toogleAddMemberState()"><mat-icon>close</mat-icon></button>
       </header>
 
-      @for (user of selectedUsers(); track user.id) {
+      @for (user of channelService.selectedUsers(); track user.id) {
         <div class="mini-profile-cont">
           <img class="user-img-mini" [src]="user.photoUrl" alt="" />
           {{ user.displayName }}
@@ -92,15 +92,15 @@
       <div class="input-wrapper">
         <input
           class="user-search-bar"
-          [ngModel]="userSearchQuery()"
-          (ngModelChange)="userSearchQuery.set($event)"
+          [ngModel]="channelService.userSearchQuery()"
+          (ngModelChange)="channelService.userSearchQuery.set($event)"
           (input)="onSearchInput($event)"
           (click)="openUserBar(); $event.stopPropagation()"
           placeholder="Name eingeben..."
         />
         @if (showUserBar) {
           <ul class="choose-user-bar" #chooseUserBar>
-            @for (user of filteredUsers(); track user.id; let i = $index) {
+            @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
               <li class="user-select-cont" (click)="addUserToSelection(user)">
                 <div class="profile-status">
                   <img class="profile-status__image" [src]="user.photoUrl" alt="" />
