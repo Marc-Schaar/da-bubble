@@ -29,6 +29,7 @@
   flex-direction: column;
   gap: 20px;
   padding: 20px;
+  overflow: auto;
 }
 
 .box {
@@ -40,6 +41,8 @@
   gap: 20px;
   transition: padding 0.125s ease-in-out;
   font-size: 1.125rem;
+  overflow: auto;
+  min-height: fit-content;
 
   &--header {
     display: flex;

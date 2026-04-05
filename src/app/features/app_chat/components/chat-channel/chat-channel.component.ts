@@ -16,7 +16,7 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
-import { ChannelEditComponent } from '../../../app_channel/components/channel-edit/channel-edit.component';
+import { EditChannelComponent } from '../../../app_channel/components/edit-channel/edit.channel.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
@@ -147,13 +147,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Opens the dialog to view or edit channel information.
    */
   openChannelInfo() {
-    const dialogData = {
-      currentChannel: this.currentChannel,
-      currentChannelId: this.currentChannelId,
-      currentUser: this.currentUser,
-    };
-    this.dialog.open(ChannelEditComponent, {
-      data: dialogData,
+    this.dialog.open(EditChannelComponent, {
+      data: this.currentChannel,
       position: { top: '200px' },
       width: '872px',
       maxWidth: '95vw',

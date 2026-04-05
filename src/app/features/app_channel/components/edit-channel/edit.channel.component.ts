@@ -3,26 +3,26 @@ import { Component, inject, Inject, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { User } from '../../../app_auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
+import { Channel } from '../../models/channel/channel';
 
 @Component({
   selector: 'app-channel-edit',
   imports: [CommonModule, MatIcon, FormsModule],
-  templateUrl: './channel-edit.component.html',
-  styleUrl: './channel-edit.component.scss',
+  templateUrl: './edit.channel.component.html',
+  styleUrl: './edit.channel.component.scss',
 })
-export class ChannelEditComponent {
+export class EditChannelComponent {
   private readonly userService = inject(UserService);
   private readonly navigationService = inject(NavigationService);
   private readonly dialog = inject(MatDialog);
-  private readonly dialogRef: MatDialogRef<ChannelEditComponent> = inject(MatDialogRef<ChannelEditComponent>);
+  private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
   public readonly channelService = inject(ChannelService);
+  public readonly data = inject<Channel>(MAT_DIALOG_DATA);
 
   public channelNameEdit: boolean = false;
   public channelDescriptionEdit: boolean = false;
@@ -33,14 +33,10 @@ export class ChannelEditComponent {
 
   public canSubmit = computed(() => this.channelService.selectedUsers().length > 0);
 
-  /**
-   * Constructor for ChannelEditComponent. Initializes the component with data passed
-   * from the parent component through MAT_DIALOG_DATA.
-   *
-   * @param data - Data passed into the dialog, contains the current channel, current user, and the channel ID.
-   */
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.channelService.currentChannel.set(data.currentChannel);
+  constructor() {
+    console.log(this.data);
+
+    this.channelService.currentChannel.set(this.data);
   }
 
   public addUserToSelection(user: User) {
