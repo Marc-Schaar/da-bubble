@@ -1,16 +1,18 @@
-import { Component, Inject, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
-import { MatRadioModule } from '@angular/material/radio';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
-import { Channel } from '../../models/channel/channel';
+import { filter, firstValueFrom, take } from 'rxjs';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatRadioModule } from '@angular/material/radio';
+
+import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { ChannelService } from '../../services/channel/channel.service';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
-import { MatIcon } from '@angular/material/icon';
-import { ChannelService } from '../../services/channel/channel.service';
-import { filter, firstValueFrom, take } from 'rxjs';
+
 import { User } from '../../../app_auth/models/user/user';
 
 @Component({
@@ -20,13 +22,11 @@ import { User } from '../../../app_auth/models/user/user';
   styleUrls: ['./add-channel.component.scss'],
 })
 export class AddChannelComponent {
-  chooseMember: boolean = false;
-  showFeedback: boolean = false;
-  showUserFeedback: boolean = false;
-
   public readonly channelService: ChannelService = inject(ChannelService);
   private readonly userService: UserService = inject(UserService);
   private readonly fireService: FireServiceService = inject(FireServiceService);
+  private readonly authService: AuthService = inject(AuthService);
+  private readonly dialogRef: MatDialogRef<AddChannelComponent> = inject(MatDialogRef);
 
   private fb = inject(FormBuilder);
   public channelForm = this.fb.group({
@@ -43,19 +43,22 @@ export class AddChannelComponent {
   public isSubmitting = signal(false);
   public isAddMemberDialogOpen = signal(false);
   public showUserBar = signal(false);
+  public allMembersSelected = signal<boolean>(true);
 
-  /**
-   * Constructor for AddChannelComponent. Initializes the component with the platform ID,
-   * Firestore service, and dialog reference.
-   *
-   * @param platformId - Platform ID, used to determine the platform the app is running on (e.g., browser or server).
-   * @param firestore - Firestore service instance for interacting with the Firestore database.
-   * @param dialogRef - Reference to the dialog for controlling the dialog box.
-   */
-  constructor(
-    public dialogRef: MatDialogRef<AddChannelComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { channels: any[] },
-  ) {}
+  public membersToSubmit = computed(() => {
+    const currentUser = this.authService.currentUser();
+
+    if (this.allMembersSelected()) {
+      return this.fireService.allUsers().map((u) => ({ id: u.id }));
+    } else {
+      const selected = this.channelService.selectedUsers().map((u) => ({ id: u.id }));
+
+      if (currentUser && !selected.some((m) => m.id === currentUser.id)) {
+        selected.push({ id: currentUser.id });
+      }
+      return selected;
+    }
+  });
 
   private channelNameValidator() {
     return async (control: AbstractControl): Promise<ValidationErrors | null> => {
@@ -71,38 +74,22 @@ export class AddChannelComponent {
     };
   }
 
-  public async onSubmit() {
+  public async onFirstStepSubmit() {
     if (this.channelForm.pending) {
       await firstValueFrom(
         this.channelForm.statusChanges.pipe(
-          filter((status) => status !== 'PENDING'),
+          filter((s) => s !== 'PENDING'),
           take(1),
         ),
       );
     }
     if (this.channelForm.invalid) return;
 
-    const { name, description } = this.channelForm.getRawValue();
-    this.isSubmitting.set(true);
-    try {
-      await this.channelService.createChannel({
-        name: name!,
-        description: description || '',
-        member: [],
-      });
-      this.isAddMemberDialogOpen.set(true);
-
-      this.userService.showFeedback('Channel erfolgreich erstellt');
-      this.channelForm.reset();
-    } catch (error) {
-      this.userService.showFeedback('Fehler beim Erstellen');
-    } finally {
-      this.isSubmitting.set(false);
-    }
+    this.isAddMemberDialogOpen.set(true);
   }
 
   public setChannelMember(isSpecific: boolean) {
-    this.chooseMember = isSpecific;
+    this.allMembersSelected.set(!isSpecific);
     if (!isSpecific) {
       this.channelService.resetSelection();
     }
@@ -113,20 +100,30 @@ export class AddChannelComponent {
     this.showUserBar.set(false);
   }
 
-  public async addUserToChannel() {
-    const channelId = this.channelService.currentChannel()?.id;
-    if (!channelId) return;
+  public async onFinalSubmit() {
+    this.isSubmitting.set(true);
 
-    let membersToAdd: { id: string }[] = [];
+    try {
+      const { name, description } = this.channelForm.getRawValue();
 
-    if (!this.chooseMember) {
-      membersToAdd = this.fireService.allUsers().map((u) => ({ id: u.id }));
-    } else {
-      membersToAdd = this.channelService.selectedUsers().map((u) => ({ id: u.id }));
+      await this.channelService.createChannel({
+        name: name!,
+        description: description || '',
+        member: this.membersToSubmit(),
+        creator: this.authService.currentUser()!.displayName,
+        createdAt: new Date(),
+      });
+
+      this.userService.showFeedback('Channel erfolgreich erstellt');
+      this.closeDialog();
+      this.channelForm.reset();
+      this.channelService.resetSelection();
+    } catch (error) {
+      console.error(error);
+      this.userService.showFeedback('Fehler beim Erstellen');
+    } finally {
+      this.isSubmitting.set(false);
     }
-
-    await this.channelService.addMembers(channelId, membersToAdd);
-    this.dialogRef.close();
   }
 
   public closeDialogAddMember() {

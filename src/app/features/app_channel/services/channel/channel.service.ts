@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { Channel } from '../../models/channel/channel';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,6 @@ export class ChannelService {
     const currentUser = this.authService.currentUser();
     const currentSelection = this.selectedUsers();
     const query = this.userSearchQuery().toLowerCase();
-    console.log(query);
 
     return allUsers.filter((user) => {
       const isNotMember = !members.some((m: any) => m.id === user.id);
@@ -56,23 +56,9 @@ export class ChannelService {
     });
   });
 
-  async createChannel(channelData: { name: string; description: string; member: any[] }) {
-    const currentUser = this.authService.currentUser();
-
-    const newChannel = {
-      ...channelData,
-      createdAt: new Date(),
-      createdBy: currentUser?.displayName || 'unknown',
-      member: currentUser ? [{ id: currentUser.id }] : [],
-    };
-
+  async createChannel(channelData: Channel) {
     try {
-      const docRef = await this.fireService.addChannel(newChannel);
-
-      const createdChannel = { ...newChannel, id: docRef.id };
-      this.currentChannel.set(createdChannel);
-
-      return createdChannel;
+      await this.fireService.addChannel(channelData);
     } catch (error) {
       console.error('Fehler im ChannelService beim Erstellen:', error);
       throw error;
@@ -81,7 +67,7 @@ export class ChannelService {
 
   public addUserToSelection(user: User) {
     this.selectedUsers.update((users) => [...users, user]);
-    this.userSearchQuery.set(''); // Suchbegriff leeren nach Auswahl
+    this.userSearchQuery.set('');
   }
 
   public removeUserFromSelection(index: number) {

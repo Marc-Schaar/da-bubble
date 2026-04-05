@@ -1,130 +1,122 @@
 <div class="main">
-  <div class="add-channel-cont">
-    @if (isAddMemberDialogOpen()) {
-      <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
-        <div class="add-channel-user-header">
-          Leute hinzufügen
-          <button (click)="closeDialogAddMember()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
+  <section class="add-channel-create">
+    <header class="header">
+      Channel erstellen
+      <button (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
 
-        <form (ngSubmit)="addUserToChannel()">
-          <div class="form__field form__field--row">
-            <input type="radio" id="allMembers" name="channelMember" value="false" (change)="setChannelMember(false)" checked />
-            <label class="form__field__label" for="allMembers">Alle Mitglieder von DABubble hinzufügen</label>
-          </div>
+    <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
+    <form class="form" (ngSubmit)="onFirstStepSubmit()" [formGroup]="channelForm">
+      <div class="form__field">
+        <label class="form__field__label" for="channelName">Channel-Name</label>
+        <div class="form__field__input-wrapper form__field__input-wrapper--hash">
+          <input
+            class="form__input"
+            id="channelName"
+            type="text"
+            placeholder="z.B. Kooperationsprojekte"
+            formControlName="name"
+            name="channelName"
+          />
 
-          <div class="form__field form__field--row">
-            <input type="radio" id="specificMembers" name="channelMember" value="true" (change)="setChannelMember(true)" />
-            <label class="form__field__label" for="specificMembers">Bestimmte Leute hinzufügen</label>
-          </div>
-
-          @if (chooseMember) {
-            <div class="choose__user">
-              <ul class="choose__user__list">
-                @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
-                  <li class="choose__user__list__item">
-                    <img class="user-img-mini" [src]="selectedUser.photoUrl" alt="" />
-                    <div class="username-mini">
-                      {{ selectedUser?.displayName }}
-                    </div>
-                    <button (click)="channelService.removeUserFromSelection(index)">
-                      <mat-icon>close</mat-icon>
-                    </button>
-                  </li>
-                }
-
-                <input
-                  placeholder="Name eingeben"
-                  [(ngModel)]="channelService.userSearchQuery"
-                  name="search"
-                  (focus)="showUserBar.set(true)"
-                  autocomplete="off"
-                  class="choose__user__input"
-                />
-                @if (channelService.filteredUsers().length > 0) {
-                  <ul class="choose__user__bar">
-                    @for (filteredUser of channelService.filteredUsers(); track filteredUser.id; let index = $index) {
-                      <li class="choose__user__bar__item" (click)="onSelectUser(filteredUser)">
-                        <div class="profile-status">
-                          <img class="profile-status__image" [src]="filteredUser.photoUrl" alt="" />
-                          <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': filteredUser.online }"></div>
-                        </div>
-                        {{ filteredUser.displayName }}
-                      </li>
-                    }
-                  </ul>
-                }
-              </ul>
-            </div>
+          @if (channelForm.get("name")?.pending) {
+            <span class="form__status">Prüfe Verfügbarkeit...</span>
           }
 
-          <button class="submit-btn" type="submit" [disabled]="chooseMember && channelService.selectedUsers().length === 0">
-            Erstellen
-          </button>
-        </form>
-      </section>
-    }
+          @if (channelForm.get("name")?.errors?.["nameTaken"]) {
+            <span class="form__error">Dieser Name ist bereits vergeben.</span>
+          }
 
-    <section class="add-channel-create">
-      <header class="dialog--header">
-        Channel erstellen
-        <button (click)="closeDialog()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </header>
+          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["required"]) {
+            <span class="form__error">Name ist erforderlich.</span>
+          }
 
-      <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
-      <form class="form" (ngSubmit)="onSubmit()" [formGroup]="channelForm">
-        <div class="form__field">
-          <label class="form__label" for="channelName">Channel-Name</label>
-          <div class="form__input-wrapper form__input-wrapper--hash">
-            <input
-              class="form__input"
-              id="channelName"
-              type="text"
-              placeholder="z.B. Kooperationsprojekte"
-              formControlName="name"
-              name="channelName"
-            />
-
-            @if (channelForm.get("name")?.pending) {
-              <span class="form__status">Prüfe Verfügbarkeit...</span>
-            }
-
-            @if (channelForm.get("name")?.errors?.["nameTaken"]) {
-              <span class="form__error">Dieser Name ist bereits vergeben.</span>
-            }
-
-            @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["minlength"]) {
-              <span class="form__error">Mindestens 3 Zeichen erforderlich.</span>
-            }
-          </div>
+          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["minlength"]) {
+            <span class="form__error">Mindestens 3 Zeichen erforderlich.</span>
+          }
         </div>
+      </div>
 
-        <div class="form__field">
-          <label class="form__label" for="">
-            Beschreibung <br />
-            (optional)
-          </label>
+      <div class="form__field">
+        <label class="form__label" for="">
+          Beschreibung <br />
+          (optional)
+        </label>
 
-          <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
+        <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
+    </form>
+  </section>
+
+  <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
+    <header class="header">
+      Leute hinzufügen
+      <button (click)="closeDialogAddMember()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <form class="form" (ngSubmit)="onFinalSubmit()">
+      <div class="form__field form__field--row">
+        <input type="radio" id="allMembers" name="channelMember" (change)="setChannelMember(false)" [checked]="allMembersSelected()" />
+        <label class="form__label" for="allMembers">Alle Mitglieder von DABubble hinzufügen</label>
+      </div>
+
+      <div class="form__field form__field--row">
+        <input type="radio" id="specificMembers" name="channelMember" (change)="setChannelMember(true)" [checked]="!allMembersSelected()" />
+        <label class="form__label" for="specificMembers">Bestimmte Leute hinzufügen</label>
+      </div>
+
+      @if (!allMembersSelected()) {
+        <div class="choose-user">
+          <ul class="choose-user__list">
+            @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
+              <li class="choose-user__item">
+                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
+                {{ selectedUser?.displayName }}
+                <button (click)="channelService.removeUserFromSelection(index)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </li>
+            }
+
+            @if (channelService.filteredUsers().length > 0) {
+              <ul class="choose-user__bar">
+                @for (filteredUser of channelService.filteredUsers(); track filteredUser.id; let index = $index) {
+                  <li class="choose-user__bar__item" (click)="onSelectUser(filteredUser)">
+                    <div class="profile-status">
+                      <img class="profile-status__image" [src]="filteredUser.photoUrl" alt="" />
+                      <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': filteredUser.online }"></div>
+                    </div>
+                    {{ filteredUser.displayName }}
+                  </li>
+                }
+              </ul>
+            }
+          </ul>
+
+          <input
+            placeholder="Name eingeben"
+            [(ngModel)]="channelService.userSearchQuery"
+            name="search"
+            (focus)="showUserBar.set(true)"
+            autocomplete="off"
+            class="choose-user__input"
+          />
         </div>
+      }
 
-        <button type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
-      </form>
-    </section>
-  </div>
-
-  @if (isAddMemberDialogOpen()) {
-    <div class="background"></div>
-  }
-
-  <div class="feedback" *ngIf="showFeedback">
-    <span class="feedback-msg" id="feedbackMessage">Channel wurde erstellt</span>
-  </div>
-  <div class="feedback" *ngIf="showUserFeedback">
-    <span class="feedback-msg" id="feedbackMessage">Benutzer wurden hinzugefügt</span>
-  </div>
+      <button class="submit-btn" type="submit" [disabled]="!allMembersSelected() && channelService.selectedUsers().length === 0">
+        Erstellen
+      </button>
+    </form>
+  </section>
 </div>
+
+@if (isAddMemberDialogOpen()) {
+  <div class="background"></div>
+}

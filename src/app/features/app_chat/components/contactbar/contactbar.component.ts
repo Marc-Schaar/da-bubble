@@ -65,7 +65,6 @@ export class ContactbarComponent implements OnInit, OnDestroy {
       height: 'auto',
       position: { top: '50%', left: '50%' },
       panelClass: 'fullscreen',
-      data: {},
     });
   }
 
