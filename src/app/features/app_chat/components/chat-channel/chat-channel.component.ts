@@ -16,7 +16,7 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
-import { EditChannelComponent } from '../../../app_channel/components/edit-channel/edit.channel.component';
+import { EditChannelComponent } from '../../../app_channel/components/edit.channel/edit.channel.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
@@ -163,14 +163,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   openMemberWindow(toggle: boolean) {
     this.addMemberWindow = toggle;
-    const dialogData = {
-      currentChannel: this.currentChannel,
-      currentChannelId: this.currentChannelId,
-      currentUser: this.currentUser,
-      addMemberWindow: toggle,
-    };
+
     this.dialog.open(AddMemberComponent, {
-      data: dialogData,
+      data: this.currentChannel,
       width: 'auto',
       maxWidth: '95vw',
       maxHeight: '90vh',

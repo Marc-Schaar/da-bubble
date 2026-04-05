@@ -43,22 +43,6 @@ export class AddChannelComponent {
   public isSubmitting = signal(false);
   public isAddMemberDialogOpen = signal(false);
   public showUserBar = signal(false);
-  public allMembersSelected = signal<boolean>(true);
-
-  public membersToSubmit = computed(() => {
-    const currentUser = this.authService.currentUser();
-
-    if (this.allMembersSelected()) {
-      return this.fireService.allUsers().map((u) => ({ id: u.id }));
-    } else {
-      const selected = this.channelService.selectedUsers().map((u) => ({ id: u.id }));
-
-      if (currentUser && !selected.some((m) => m.id === currentUser.id)) {
-        selected.push({ id: currentUser.id });
-      }
-      return selected;
-    }
-  });
 
   private channelNameValidator() {
     return async (control: AbstractControl): Promise<ValidationErrors | null> => {
@@ -89,10 +73,8 @@ export class AddChannelComponent {
   }
 
   public setChannelMember(isSpecific: boolean) {
-    this.allMembersSelected.set(!isSpecific);
-    if (!isSpecific) {
-      this.channelService.resetSelection();
-    }
+    this.channelService.allMembersSelected.set(!isSpecific);
+    if (!isSpecific) this.channelService.resetSelection();
   }
 
   public onSelectUser(user: User) {
@@ -109,7 +91,7 @@ export class AddChannelComponent {
       await this.channelService.createChannel({
         name: name!,
         description: description || '',
-        member: this.membersToSubmit(),
+        member: this.channelService.membersToSubmit(),
         creator: this.authService.currentUser()!.displayName,
         createdAt: new Date(),
       });

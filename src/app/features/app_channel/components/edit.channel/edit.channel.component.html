@@ -23,7 +23,7 @@
           />
         </div>
       } @else {
-        <div># {{ channelService.currentChannel().name }}</div>
+        <div># {{ channelService.currentChannel()?.name }}</div>
       }
     </section>
 
@@ -39,7 +39,7 @@
         <textarea name="" id="changeDescriptionInput" [(ngModel)]="tempDescription" (keyup.enter)="onEditChannelDescription()"></textarea>
       } @else {
         <div class="content--description">
-          {{ channelService.currentChannel().description || "Keine Beschreibung vorhanden" }}
+          {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
         </div>
       }
 
@@ -47,7 +47,7 @@
       <div class="creator">
         Erstellt von
         <div class="creator--name">
-          {{ channelService.currentChannel().creator }}
+          {{ channelService.currentChannel()?.creator }}
         </div>
       </div>
     </section>
@@ -115,7 +115,7 @@
         }
       </div>
 
-      <button class="submit-btn" [disabled]="!canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+      <button class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
     </section>
 
     <button class="exit-btn" (click)="leaveChannel()">Channel verlassen</button>

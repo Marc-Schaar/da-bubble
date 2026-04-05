@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
@@ -31,12 +31,10 @@ export class EditChannelComponent {
   public isAddMemberOpen: boolean = false;
   public showUserBar: boolean = false;
 
-  public canSubmit = computed(() => this.channelService.selectedUsers().length > 0);
-
   constructor() {
-    console.log(this.data);
-
     this.channelService.currentChannel.set(this.data);
+    this.channelService.allMembersSelected.set(false);
+    this.channelService.resetSelection();
   }
 
   public addUserToSelection(user: User) {
@@ -70,11 +68,15 @@ export class EditChannelComponent {
 
   public async onEditChannelName() {
     const channel = this.channelService.currentChannel();
+
+    if (!channel || !channel.id) return;
+
     if (!this.channelNameEdit) {
-      this.tempName.set(channel?.name);
+      this.tempName.set(channel.name);
       this.channelNameEdit = true;
     } else {
       const cleanedName = this.tempName().trim();
+
       if (cleanedName && cleanedName !== channel.name) {
         try {
           await this.channelService.updateName(channel.id, cleanedName);
@@ -89,13 +91,15 @@ export class EditChannelComponent {
 
   public async onEditChannelDescription() {
     const channel = this.channelService.currentChannel();
+    if (!channel || !channel.id) return;
+
     if (!this.channelDescriptionEdit) {
-      this.tempDescription.set(channel.description || '');
+      this.tempDescription.set(channel?.description || '');
       this.channelDescriptionEdit = true;
     } else {
-      if (this.tempDescription() !== channel.description) {
+      if (this.tempDescription() !== channel?.description) {
         try {
-          await this.channelService.updateDescription(channel.id, this.tempDescription());
+          await this.channelService.updateDescription(channel?.id, this.tempDescription());
           this.userService.showFeedback('Beschreibung aktualisiert');
         } catch (e) {}
       }
@@ -138,10 +142,6 @@ export class EditChannelComponent {
     this.channelService.userSearchQuery.set('');
   }
 
-  /**
-   * Shows the profile of a given member.
-   * @param member User object
-   */
   public openProfileDialog(userData: User) {
     this.dialog.open(DialogReciverComponent, {
       data: userData,

@@ -15,26 +15,32 @@ export class ChannelService {
   private readonly fireService = inject(FireServiceService);
   private readonly authService = inject(AuthService);
 
-  public currentChannel = signal<any>(null);
-
+  public currentChannel = signal<Channel | null>(null);
   public selectedUsers = signal<User[]>([]);
-
   public userSearchQuery = signal('');
+  public allMembersSelected = signal<boolean>(false);
 
   public enrichedMembers = computed(() => {
     const allUsers = this.fireService.allUsers();
-    const channelMembers = this.currentChannel().member || [];
+    const channelMembers = this.currentChannel()?.member || [];
 
-    return channelMembers.map((member: User) => {
-      const liveUser = allUsers.find((u) => u.id === member.id);
-      if (!liveUser) return member;
+    return channelMembers.map((member) => {
+      const memberId = member.id.toString();
+      const liveUser = allUsers.find((u) => u.id === memberId);
+      if (liveUser) {
+        return {
+          ...liveUser,
+          id: member.id.toString(),
+        } as User;
+      }
 
       return {
-        ...member,
-        displayName: liveUser.displayName,
-        photoUrl: liveUser.photoUrl,
-        online: liveUser.online,
-      };
+        id: member.id.toString(),
+        displayName: 'Unbekannter Nutzer',
+        photoUrl: 'assets/img/avatar.png',
+        online: false,
+        email: '',
+      } as User;
     });
   });
 
@@ -56,17 +62,49 @@ export class ChannelService {
     });
   });
 
+  public membersToSubmit = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const allUsers = this.fireService.allUsers();
+    const selectedUsers = this.selectedUsers();
+
+    if (this.allMembersSelected()) {
+      return allUsers.map((u) => ({ id: u.id }));
+    } else {
+      const selected = selectedUsers.map((u) => ({ id: u.id }));
+
+      if (currentUser && !selected.some((m) => m.id === currentUser.id)) {
+        selected.push({ id: currentUser.id });
+      }
+      return selected;
+    }
+  });
+
+  public canSubmit = computed(() => {
+    if (this.isSubmitting()) return false;
+    if (this.allMembersSelected()) return true;
+
+    return this.selectedUsers().length > 0;
+  });
+
+  private isSubmitting = signal<boolean>(false);
+
   async createChannel(channelData: Channel) {
     try {
+      this.isSubmitting.set(true);
       await this.fireService.addChannel(channelData);
     } catch (error) {
-      console.error('Fehler im ChannelService beim Erstellen:', error);
       throw error;
+    } finally {
+      this.isSubmitting.set(false);
     }
   }
 
   public addUserToSelection(user: User) {
-    this.selectedUsers.update((users) => [...users, user]);
+    this.allMembersSelected.set(false);
+    this.selectedUsers.update((users) => {
+      if (users.find((u) => u.id === user.id)) return users;
+      return [...users, user];
+    });
     this.userSearchQuery.set('');
   }
 
@@ -87,22 +125,43 @@ export class ChannelService {
     this.userSearchQuery.set(query);
   }
 
-  async updateName(id: string, name: string) {
+  public async updateName(id: string, name: string) {
     await this.fireService.updateChannelData(id, { name });
-    this.currentChannel.update((c) => ({ ...c, name }));
+    this.currentChannel.update((c) => ({ ...c, name }) as Channel);
   }
 
-  async updateDescription(id: string, description: string) {
+  public async updateDescription(id: string, description: string) {
     await this.fireService.updateChannelData(id, { description });
-    this.currentChannel.update((c) => ({ ...c, description }));
+    this.currentChannel.update((c) => ({ ...c, description }) as Channel);
   }
 
-  async addMembers(id: string, userObjects: { id: string }[]) {
-    await this.fireService.addChannelMembers(id, userObjects);
-    this.currentChannel.update((c) => ({
-      ...c,
-      member: [...(c.member || []), ...userObjects],
-    }));
+  public async addMembers(id: string, userObjects: { id: string }[]) {
+    if (!id || !userObjects || userObjects.length === 0) return;
+
+    try {
+      this.isSubmitting.set(true);
+
+      await this.fireService.addChannelMembers(id, userObjects);
+
+      this.currentChannel.update((current) => {
+        if (!current) return null;
+
+        const existingIds = new Set((current.member || []).map((m: any) => m.id));
+        const newUniqueMembers = userObjects.filter((obj) => !existingIds.has(obj.id));
+
+        return {
+          ...current,
+          member: [...(current.member || []), ...newUniqueMembers],
+        } as Channel;
+      });
+
+      this.resetSelection();
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen der Mitglieder:', error);
+      throw error;
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 
   public async leaveChannel() {

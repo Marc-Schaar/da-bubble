@@ -1,105 +1,66 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Inject, HostListener, inject, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { User } from '../../../app_auth/models/user/user';
+import { ChannelService } from '../../services/channel/channel.service';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add-member',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon, FormsModule],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })
-export class AddMemberComponent implements OnInit {
-  fireService: FireServiceService = inject(FireServiceService);
-  userService = inject(UserService);
-  public authService = inject(AuthService);
-  @Input() currentChannel: any = {};
-  @Input() currentChannelId: any;
-  @Input() showBackground: boolean = true;
-  @Input() currentUser: any;
-  members: any[] = [];
-  currentRecieverId: string | null = null;
-  users: any[] = [];
+export class AddMemberComponent {
+  public readonly authService: AuthService = inject(AuthService);
+  public readonly channelService: ChannelService = inject(ChannelService);
+  private readonly dialog = inject(MatDialog);
+
+  public readonly dialogRef = inject(MatDialogRef<AddMemberComponent>);
+  public readonly data = inject<any>(MAT_DIALOG_DATA);
 
   showUserBar: boolean = false;
-  chooseMember: boolean = false;
-  disabled: boolean = true;
-  selectedUsers: any[] = [];
-  filteredUsers: any[] = [];
-  filteredMembers: any[] = [];
   addMemberWindow: boolean = false;
-  readonly dialog = inject(MatDialog);
-  @ViewChild('userSearchInput') userSearchInput!: ElementRef;
-  @ViewChild('chooseUserBar') chooseUserBar!: ElementRef;
-  @ViewChild('mainDialog') mainDialog!: ElementRef;
 
-  /**
-   * Constructor for AddMemberComponent. Initializes the component with data passed
-   * from the parent component through MAT_DIALOG_DATA.
-   *
-   * @param dialogRef - Reference to the dialog for controlling the dialog box.
-   * @param data - Data passed into the dialog, contains information like the current channel,
-   *               current user, and the state of the addMember window.
-   */
-  constructor(
-    public dialogRef: MatDialogRef<AddMemberComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
-    this.currentChannel = data.currentChannel;
-    this.currentChannelId = data.currentChannelId;
-    this.currentUser = data.currentUser;
-    this.addMemberWindow = data.addMemberWindow;
+  public isSubmiting = signal<boolean>(false);
+
+  constructor() {
+    this.channelService.currentChannel.set(this.data);
+    this.channelService.allMembersSelected.set(false);
+    this.channelService.resetSelection();
   }
 
-  /**
-   * Initializes component data, loads users and members, and applies filters.
-   */
-  async ngOnInit() {
-    this.loadMember();
-    await this.loadUsers();
-    this.filterUsers();
-    this.filterMembers();
+  public addUserToSelection(user: User) {
+    this.channelService.selectedUsers.update((users) => [...users, user]);
+    this.channelService.userSearchQuery.set('');
+    this.showUserBar = false;
   }
 
-  /**
-   * Filters current members to exclude the current authenticated user.
-   */
-  filterMembers() {
-    this.filteredMembers = this.members.filter(
-      (member) => this.authService.currentUser() && this.authService.currentUser()?.id !== member.id,
-    );
+  public onSearchInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.channelService.userSearchQuery.set(value);
+    this.showUserBar = true;
   }
 
-  /**
-   * Filters available users for display in the search bar.
-   */
-  filterUsers() {
-    const filter = document.getElementById('user-search-bar') as HTMLInputElement | null;
-    let filterValue = '';
-    if (filter) {
-      filterValue = filter.value.toLowerCase();
-    }
+  public async onSubmit() {
+    const channelId = this.channelService.currentChannel()?.id;
 
-    this.filteredUsers = this.users
-      .filter((user) => !this.members?.some((member) => member.id === user.id))
-      .filter((user) => user.fullname.toLowerCase().includes(filterValue))
-      .filter((user) => user.id !== this.authService.currentUser()?.id);
-    // .filter((user) => !user.isAnonymous);
-  }
-
-  /**
-   * Loads the list of all users from the backend.
-   */
-  async loadUsers() {
+    if (!channelId || this.channelService.membersToSubmit().length === 0) return;
+    this.isSubmiting.set(true);
     try {
-      this.users = await this.fireService.allUsers();
-    } catch (error) {}
+      await this.channelService.addMembers(channelId, this.channelService.membersToSubmit());
+      this.channelService.resetSelection();
+      this.closeDialog();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.isSubmiting.set(false);
+    }
   }
 
   /**
@@ -110,16 +71,9 @@ export class AddMemberComponent implements OnInit {
   }
 
   /**
-   * Loads current channel members into local state.
-   */
-  loadMember() {
-    this.members = this.currentChannel['member'];
-  }
-
-  /**
    * Closes the member addition dialog.
    */
-  closeWindow() {
+  public closeDialog() {
     this.dialogRef.close();
   }
 
@@ -130,107 +84,15 @@ export class AddMemberComponent implements OnInit {
     this.showUserBar = true;
   }
 
-  /**
-   * Closes the user bar when clicking outside of it.
-   * @param event DOM click event
-   */
-  @HostListener('document:click', ['$event'])
-  closeUserBar(event: Event) {
-    const targetElement = event.target as Node;
-
-    if (this.showUserBar && this.chooseUserBar?.nativeElement && !this.chooseUserBar.nativeElement.contains(targetElement)) {
-      this.showUserBar = false;
-    }
+  openAddMember() {
+    this.addMemberWindow = true;
   }
 
-  /**
-   * Adds a user to the selection list for the channel.
-   * @param index Index of the user in the filtered list
-   */
-  addUserToSelection(index: number) {
-    const selectedUser = this.filteredUsers[index];
-    this.selectedUsers.push(selectedUser);
-    this.removeUserFromBar(index);
-    this.users = this.users.filter((user) => user.id !== selectedUser.id);
-    this.refreshBar();
-    this.filterUsers();
-    this.checkButton();
-  }
-
-  /**
-   * Checks if the "Add" button should be enabled.
-   */
-  checkButton() {
-    if (this.selectedUsers.length > 0) {
-      this.disabled = false;
-    } else {
-      this.disabled = true;
-    }
-  }
-
-  /**
-   * Removes a user from the filtered user list.
-   * @param index Index to remove
-   */
-  removeUserFromBar(index: number) {
-    this.filteredUsers.splice(index, 1);
-  }
-
-  /**
-   * Clears the input in the user search bar.
-   */
-  refreshBar() {
-    const refresh = document.getElementById('user-search-bar') as HTMLInputElement | null;
-    if (refresh) {
-      refresh.value = '';
-    }
-  }
-
-  /**
-   * Removes a selected user from the selection list.
-   * @param index Index of the selected user
-   */
-  removeSelectedUser(index: number) {
-    this.addUserToBar(index);
-    this.selectedUsers.splice(index, 1);
-    this.checkButton();
-  }
-
-  /**
-   * Adds a user back to the bar after removal.
-   * @param index Index of the selected user
-   */
-  addUserToBar(index: number) {
-    this.users.push(this.selectedUsers[index]);
-    this.filterUsers();
-  }
-
-  /**
-   * Adds all selected users to the current channel in Firestore.
-   */
-  async addUserToChannel() {
-    // const channelRef = doc(this.fireService.firestore, 'channels', this.currentChannelId);
-    // try {
-    //   await updateDoc(channelRef, {
-    //     member: arrayUnion(...this.selectedUsers),
-    //   });
-    //   this.selectedUsers = [];
-    // } catch (error) {}
-    // this.userService.showFeedback('User hinzugefügt');
-  }
-
-  /**
-   * Shows the profile of a given member.
-   * @param member User object
-   */
-  public showProfile(userData: User) {
+  public openProfileDialog(userData: User) {
     this.dialog.open(DialogReciverComponent, {
       data: userData,
       width: '400px',
       panelClass: ['center-dialog'],
     });
-  }
-  openAddMember() {
-    this.addMemberWindow = true;
   }
 }
