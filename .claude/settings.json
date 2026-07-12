@@ -9,7 +9,32 @@
       "Bash(git commit -m 'docs: add refactoring roadmap with smoke-test checklist \\(phase 0\\) *)",
       "Bash(git commit -m 'fix: guard against null currentChannel in add-member template *)",
       "Bash(git commit -m 'fix: remove erroneous @Injectable decorator from NewmessageComponent *)",
-      "Bash(git commit -m 'fix: actually invoke resetList\\(\\) in searchWithTag default case *)"
+      "Bash(git commit -m 'fix: actually invoke resetList\\(\\) in searchWithTag default case *)",
+      "Read(//c/Users/Marc/dev/**)",
+      "PowerShell(npx ng build 2>&1)",
+      "PowerShell(git add src/app/shared/services/search/search.service.ts src/app/shared/components/search-result/)",
+      "PowerShell(Select-String -Path src\\\\app\\\\features\\\\app_chat\\\\components\\\\chat-new-message\\\\chat-new.component.html -Pattern \"getReceiver|currentReceiver|setReceiver\" | ForEach-Object { \"$\\($_.LineNumber\\): $\\($_.Line.Trim\\(\\)\\)\" })",
+      "PowerShell(git add src/app/features/app_chat/components/chat-new-message/)",
+      "PowerShell(git add src/app/shared/constants.ts src/app/features/legal/ src/app/features/app_chat/services/messages/messages.service.ts src/app/shared/services/navigation/navigation.service.ts src/app/features/dialogs/dialog-reciver/dialog-reciver.component.ts src/app/features/app_chat/components/divider/divider-template.component.ts)",
+      "PowerShell(git checkout HEAD~1 -- src/app/features/legal/imprint/imprint.component.html src/app/features/legal/data-protection/data-protection.component.html)",
+      "PowerShell(git add src/app/shared/services/user/shared.service.ts src/app/features/app_chat/main-chat/)",
+      "PowerShell(git push origin refactor/phase-1-quickfixes)",
+      "PowerShell($cred = \"protocol=https`nhost=github.com`n\" | git credential fill; $token = \\($cred | Select-String '^password='\\).ToString\\(\\).Substring\\(9\\); if \\($token\\) { \"token found \\(length $\\($token.Length\\)\\)\" } else { \"no token\" })",
+      "PowerShell(git checkout -b refactor/phase-2-thread-navigation)",
+      "PowerShell(git checkout -b refactor/phase-3-subscription-hygiene)",
+      "PowerShell(git add src/app/features/app_auth/services/auth/auth.service.ts)",
+      "PowerShell(git checkout -b refactor/phase-4-channel-state)",
+      "PowerShell(git add src/app/features/app_channel/services/channel/channel.service.ts src/app/features/app_chat/components/chat-channel/)",
+      "PowerShell(git checkout -b refactor/phase-5-data-access)",
+      "PowerShell(git add src/app/features/app_chat/services/messages/messages.service.ts src/app/features/app_chat/components/chat-thread/)",
+      "PowerShell(git push -u origin refactor/phase-5-data-access 2>&1)",
+      "PowerShell(git checkout -b refactor/phase-6-dedup)",
+      "Bash(git credential *)",
+      "Read(//tmp/**)",
+      "PowerShell(git checkout -b refactor/phase-7-components)",
+      "PowerShell(git add src/app/features/app_chat/components/message/ src/app/features/app_chat/services/reactions/ src/app/features/app_chat/models/channel-message/ src/app/shared/constants.ts)",
+      "Bash(git fetch *)",
+      "PowerShell(git add -A)"
     ]
   }
 }
