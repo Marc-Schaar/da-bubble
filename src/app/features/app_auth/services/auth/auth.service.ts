@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
+import { UserStore } from '../../../../shared/services/user/user-store';
 import { RegisterData, User } from '../../models/user/user';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../../../shared/constants';
 
@@ -31,8 +32,8 @@ export class AuthService {
   private readonly passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$';
   private tempUserData = signal<RegisterData | null>(null);
 
-  private _currentUser = signal<User | null>(null);
-  public currentUser = this._currentUser.asReadonly();
+  private userStore = inject(UserStore);
+  public currentUser = this.userStore.currentUser;
   private unsubUserDoc?: () => void;
 
   constructor() {
@@ -223,18 +224,18 @@ export class AuthService {
       this.unsubUserDoc = undefined;
 
       if (firebaseUser) {
-        this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser));
+        this.userStore.setCurrentUser(this.mapFirebaseUserToUser(firebaseUser));
 
         const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
 
         this.unsubUserDoc = onSnapshot(userDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const firestoreData = docSnap.data() as User;
-            this._currentUser.set(firestoreData);
+            this.userStore.setCurrentUser(firestoreData);
           }
         });
       } else {
-        this._currentUser.set(null);
+        this.userStore.setCurrentUser(null);
       }
     });
   }

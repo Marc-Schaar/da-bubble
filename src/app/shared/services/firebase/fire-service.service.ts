@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Injector, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   addDoc,
   arrayRemove,
@@ -17,15 +17,15 @@ import {
 import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
+import { UserStore } from '../user/user-store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
   private firestore: Firestore = inject(Firestore);
-  private injector = inject(Injector);
+  private userStore = inject(UserStore);
   public allUsers = signal<User[]>([]);
   private _allChannels = signal<any[]>([]);
   private unsubAllUsers?: () => void;
@@ -91,9 +91,8 @@ export class FireServiceService {
   }
 
   public myChannels = computed(() => {
-    const authService = this.injector.get(AuthService);
     const channels: Channel[] = this._allChannels();
-    const currentUser = authService.currentUser();
+    const currentUser = this.userStore.currentUser();
 
     if (!currentUser) return [];
 
