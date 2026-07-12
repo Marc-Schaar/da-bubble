@@ -40,7 +40,7 @@ export class NewmessageComponent {
    */
   setReceiver(element: any): void {
     this.currentReceiver = element;
-    this.receiverId = element.key || element.id;
+    this.receiverId = element.id;
 
     this.isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
@@ -53,7 +53,7 @@ export class NewmessageComponent {
    * @returns True if the element is a channel, false otherwise.
    */
   public isChannel(element: any): boolean {
-    return element.data?.member;
+    return !!element && typeof element === 'object' && 'member' in element;
   }
 
   /**
@@ -71,8 +71,7 @@ export class NewmessageComponent {
    * @returns The name of the current receiver, or an empty string if not available.
    */
   public getReceiverName(): string {
-    let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.displayName || '';
-    return receiverName;
+    return this.currentReceiver?.name || this.currentReceiver?.displayName || '';
   }
 
   /**
