@@ -1,108 +1,129 @@
-<div #mainDialog class="main">
-  <div class="add-channel-cont" id="add-channel-cont" [ngClass]="{ 'change-size': !selectChannelMember }">
-    <div *ngIf="selectChannelMember && isMobile" class="background"></div>
-    <div *ngIf="!selectChannelMember || isMobile" class="add-channel-create">
-      <div class="add-channel-header">
-        <div class="add-channel-text">Channel erstellen</div>
-        <div class="close-cont" (click)="closeScreen()">
-          <img src="img/close.svg" alt="" />
-        </div>
-      </div>
-      <div class="description">
-        Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.
-      </div>
-      <form (ngSubmit)="onSubmit()" #channelForm="ngForm">
-        <div class="headline">Channel-Name</div>
-        <div class="input-cont">
+<div class="main">
+  <section class="add-channel-create">
+    <header class="header">
+      Channel erstellen
+      <button (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
+    <form class="form" (ngSubmit)="onFirstStepSubmit()" [formGroup]="channelForm">
+      <div class="form__field">
+        <label class="form__field__label" for="channelName">Channel-Name</label>
+        <div class="form__field__input-wrapper form__field__input-wrapper--hash">
           <input
-            class="channel-name"
+            class="form__input"
+            id="channelName"
             type="text"
             placeholder="z.B. Kooperationsprojekte"
-            [(ngModel)]="channelName"
+            formControlName="name"
             name="channelName"
-            (click)="isNameTaken = false"
-            required
           />
-        </div>
-        <div class="headline-optional">
-          <div class="headline">Beschreibung</div>
-          <div class="optional">(optional)</div>
-        </div>
-        <textarea
-          class="channel-description"
-          type="text"
-          name=""
-          id="channel-description"
-          (input)="adjustTextareaHeight($event)"
-          (blur)="shrinkTextarea($event)"
-          (focus)="expandTextarea($event)"
-        ></textarea>
-        <div class="tooltip-cont">
-          <button [disabled]="!channelForm.valid">Erstellen</button>
-          <span *ngIf="isNameTaken" class="tooltip">Channelname vergeben</span>
-        </div>
-      </form>
-    </div>
-    <div
-      class="select-member-cont"
-      [ngClass]="{ 'visible-select-menu': selectChannelMember }"
-      [style.height]="showUserBar ? '460px' : 'auto'"
-    >
-      <div (click)="closeScreen()" *ngIf="isMobile" class="mobile-btn-cont"><div class="mobile-btn"></div></div>
-      <div class="add-channel-user-header">
-        <div class="headline-channel-add-user">Leute hinzufügen</div>
-        <div class="close-cont" (click)="closeScreen()">
-          <img src="img/close.svg" alt="" />
+
+          @if (channelForm.get("name")?.pending) {
+            <span class="form__status">Prüfe Verfügbarkeit...</span>
+          }
+
+          @if (channelForm.get("name")?.errors?.["nameTaken"]) {
+            <span class="form__error">Dieser Name ist bereits vergeben.</span>
+          }
+
+          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["required"]) {
+            <span class="form__error">Name ist erforderlich.</span>
+          }
+
+          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["minlength"]) {
+            <span class="form__error">Mindestens 3 Zeichen erforderlich.</span>
+          }
         </div>
       </div>
-      <form>
-        <div class="decision">
-          <div>
-            <input type="radio" id="allMembers" name="channelMember" value="false" (change)="setChannelMember(false, '279px')" checked />
-            <label for="allMembers">Alle Mitglieder von DABubble hinzufügen</label>
-          </div>
-          <div>
-            <input type="radio" id="specificMembers" name="channelMember" value="true" (change)="setChannelMember(true, '354px')" />
-            <label for="specificMembers">Bestimmte Leute hinzufügen</label>
-          </div>
-          <div class="input-cont" *ngIf="chooseMember">
-            <div class="input-help-cont">
-              <div class="mini-profile-cont" *ngFor="let selectedUser of selectedUsers; let index = index">
-                <img class="user-img-mini" src="{{ selectedUsers[index]?.profilephoto }}" alt="" />
-                <div class="username-mini">
-                  {{ selectedUsers[index]?.fullname }}
-                </div>
-                <img (click)="removeSelectedUser(index)" src="img/close.svg" alt="" class="cross-mini" />
-              </div>
-              <div class="choose-user-bar" #chooseUserBar *ngIf="showUserBar">
-                <div
-                  class="user-select-cont"
-                  (click)="addUserToSelection(index)"
-                  *ngFor="let filteredUser of filteredUsers; let index = index"
-                >
-                  <div class="img-status-cont">
-                    <img src="{{ filteredUser.profilephoto }}" alt="" />
-                    <div class="satus-circle" [ngClass]="{ 'green-circle': filteredUser.online }"></div>
-                  </div>
-                  <div>{{ filteredUser.fullname }}</div>
-                </div>
-                <div></div>
-              </div>
-            </div>
-            <input name="" id="user-search-bar" (input)="openUserBar()" (click)="openUserBar()" (keyup)="filterUsers()" #userSearchInput />
-          </div>
-        </div>
-        <div class="btn-cont">
-          <button [ngClass]="{ 'disabled-btn': disabled }" [disabled]="disabled" (click)="addUserToChannel()" >Erstellen</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
-  <div class="feedback" *ngIf="showFeedback">
-    <span class="feedback-msg" id="feedbackMessage">Channel wurde erstellt</span>
-  </div>
-    <div class="feedback" *ngIf="showUserFeedback">
-    <span class="feedback-msg" id="feedbackMessage">Benutzer wurden hinzugefügt</span>
-  </div>
+      <div class="form__field">
+        <label class="form__label" for="">
+          Beschreibung <br />
+          (optional)
+        </label>
+
+        <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
+    </form>
+  </section>
+
+  <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
+    <header class="header">
+      Leute hinzufügen
+      <button (click)="closeDialogAddMember()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <form class="form" (ngSubmit)="onFinalSubmit()">
+      <div class="form__field form__field--row">
+        <input
+          type="radio"
+          id="allMembers"
+          name="channelMember"
+          (change)="setChannelMember(false)"
+          [checked]="channelService.allMembersSelected()"
+        />
+        <label class="form__label" for="allMembers">Alle Mitglieder von DABubble hinzufügen</label>
+      </div>
+
+      <div class="form__field form__field--row">
+        <input
+          type="radio"
+          id="specificMembers"
+          name="channelMember"
+          (change)="setChannelMember(true)"
+          [checked]="!channelService.allMembersSelected()"
+        />
+        <label class="form__label" for="specificMembers">Bestimmte Leute hinzufügen</label>
+      </div>
+
+      @if (!channelService.allMembersSelected()) {
+        <div class="choose-user">
+          <ul class="choose-user__list">
+            @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
+              <li class="choose-user__item">
+                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
+                {{ selectedUser?.displayName }}
+                <button (click)="channelService.removeUserFromSelection(index)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </li>
+            }
+
+            @if (channelService.filteredUsers().length > 0) {
+              <ul class="choose-user__bar">
+                @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
+                  <li class="choose-user__bar__item" (click)="onSelectUser(user)">
+                    <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
+                    {{ user.displayName }}
+                  </li>
+                }
+              </ul>
+            }
+          </ul>
+
+          <input
+            placeholder="Name eingeben"
+            [(ngModel)]="channelService.userSearchQuery"
+            name="search"
+            (focus)="showUserBar.set(true)"
+            autocomplete="off"
+            class="choose-user__input"
+          />
+        </div>
+      }
+
+      <button class="submit-btn" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</button>
+    </form>
+  </section>
 </div>
+
+@if (isAddMemberDialogOpen()) {
+  <div class="background"></div>
+}

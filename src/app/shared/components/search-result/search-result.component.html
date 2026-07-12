@@ -1,24 +1,24 @@
 <ul>
-  @for (element of searchService.getCurrentList(); track $index;) {
-  <li (click)="handleClick(element)">
-    @if (searchService.getChannelBoolean() === true) {
-    <div><mat-icon>tag</mat-icon></div>
-    } @else if (searchService.getChannelBoolean() === false) {
-    <div class="userCircle">
-      <img class="profilephoto" src="{{ element?.profilephoto }}" alt="" />
-      <div class="status-dot" [ngClass]="{ green: element?.online }"></div>
-    </div>
-    } @else { @if (element.data?.name) {
-    <div><mat-icon>tag</mat-icon></div>
-    } @else {
-    <div class="userCircle">
-      <img class="profilephoto" src="{{ element?.profilephoto }}" alt="" />
-      <div class="status-dot" [ngClass]="{ green: element?.online }"></div>
-    </div>
-    } }
+  @for (element of searchService.getCurrentList(); track $index) {
+    <li (click)="handleClick(element)">
+      @if (isChannel(element)) {
+        <div><mat-icon>tag</mat-icon></div>
+        {{ element.name }}
+      } @else if (isUser(element)) {
+        <app-profile-status [photoUrl]="element.photoUrl" [online]="element.online"></app-profile-status>
 
-    {{ element.fullname || element.data.name }}
-  </li>
-  } @empty { Kein @if (searchService.getChannelBoolean() === true) {Channel} @else if (searchService.getChannelBoolean() === false) {Nutzer}
-  @else {Eintrag} gefunden }
+        {{ element.displayName }}
+      }
+    </li>
+  } @empty {
+    Kein
+    @if (searchService.isChannel() === true) {
+      Channel
+    } @else if (searchService.isChannel() === false) {
+      Nutzer
+    } @else {
+      Eintrag
+    }
+    gefunden
+  }
 </ul>

@@ -1,6 +1,8 @@
 import { computed, inject, Injectable, Injector, signal } from '@angular/core';
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   CollectionReference,
   doc,
@@ -8,17 +10,20 @@ import {
   Firestore,
   getDocs,
   onSnapshot,
+  query,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
-import { Message } from '../../../features/app_chat/models/message/message';
+import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
+import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
-  public firestore: Firestore = inject(Firestore);
+  private firestore: Firestore = inject(Firestore);
   private injector = inject(Injector);
   public allUsers = signal<User[]>([]);
   private _allChannels = signal<any[]>([]);
@@ -28,9 +33,9 @@ export class FireServiceService {
    *
    * @param currentUser The user object containing the UID and online status.
    */
-  async updateOnlineStatus(currentUser: any) {
-    if (currentUser.uid) {
-      const userRef = doc(this.firestore, 'users', currentUser.uid);
+  async updateOnlineStatus(currentUser: User) {
+    if (currentUser.id) {
+      const userRef = doc(this.firestore, 'users', currentUser.id);
       await updateDoc(userRef, {
         online: currentUser.online,
       });
@@ -41,7 +46,7 @@ export class FireServiceService {
    * Erstellt eine permanente Verbindung zur User-Collection.
    * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
    */
-  subAllUsers() {
+  public subAllUsers() {
     const usersCollection = collection(this.firestore, 'users');
 
     return onSnapshot(
@@ -54,32 +59,13 @@ export class FireServiceService {
               ...doc.data(),
             }) as User,
         );
-
         this.allUsers.set(users);
-        console.log(users);
       },
       (error) => {
         console.error('Fehler beim User-Streaming:', error);
       },
     );
   }
-
-  public myChannels = computed(() => {
-    const authService = this.injector.get(AuthService);
-    const channels = this._allChannels();
-    const currentUser = authService.currentUser();
-    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
-
-    if (!currentUser) return [];
-
-    return channels.filter((channel) => {
-      if (currentUser.email === 'gast@portfolio.de') {
-        return channel.id === DEFAULT_CHANNEL_ID;
-      }
-
-      return channel.member?.some((m: any) => m.id === currentUser.id);
-    });
-  });
 
   /**
    * Startet den Echtzeit-Stream für alle Channels
@@ -96,24 +82,22 @@ export class FireServiceService {
     });
   }
 
-  /**
-   * Retrieves all channels from Firestore.
-   *
-   * @returns A promise that resolves with an array of channel objects.
-   * @throws If there is an error fetching channels from Firestore.
-   */
-  async getChannels() {
-    try {
-      const channelCollection = collection(this.firestore, 'channels');
-      const channelSnapshot = await getDocs(channelCollection);
-      return channelSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-    } catch (error) {
-      throw error;
-    }
-  }
+  public myChannels = computed(() => {
+    const authService = this.injector.get(AuthService);
+    const channels: Channel[] = this._allChannels();
+    const currentUser = authService.currentUser();
+    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
+
+    if (!currentUser) return [];
+
+    const isGuest = currentUser.email === 'gast@portfolio.de';
+    return channels.filter((channel) => {
+      if (isGuest) {
+        return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
+      }
+      return channel.member.some((m: { id: string }) => m.id === currentUser.id);
+    });
+  });
 
   /**
    * Returns a reference to a specific document in Firestore.
@@ -184,45 +168,101 @@ export class FireServiceService {
   }
 
   /**
-   * Adds a thread message to Firestore.
-   *
-   * @param messageDocRef The reference to the parent message document.
-   * @param messageObject The message object to be added.
-   * @returns A promise that resolves when the thread message is added.
-   */
-  async addThreadMessageData(messageDocRef: DocumentReference, messageObject: any) {
-    await updateDoc(messageDocRef, new Message(messageObject).toJSON());
-  }
-
-  /**
    * Sends a message to a specific channel.
    *
    * @param channelId The ID of the channel.
    * @param messageObject The message object to be sent.
    * @returns A promise that resolves when the message is sent.
    */
-  async sendMessage(channelId: string, messageObject: any) {
-    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(`channels/${channelId}/messages`);
-    if (messagesCollectionRef) {
-      let messageDocRef = await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
-      this.addThreadMessageData(messageDocRef, messageObject);
+  async postChannelMessage(channelId: string, data: any) {
+    const path = `channels/${channelId}/messages`;
+    const messagesRef = collection(this.firestore, path);
+
+    const messageDocRef = await addDoc(messagesRef, data);
+
+    await this.initializeThreadData(messageDocRef, data);
+  }
+
+  private async initializeThreadData(docRef: DocumentReference, messageObject: any) {
+    await updateDoc(docRef, new ChannelMessage(messageObject).toJSON());
+  }
+
+  public async postDirectMessage(
+    senderPath: string,
+    receiverPath: string,
+    senderId: string | undefined,
+    receiverId: string,
+    messageData: any,
+  ) {
+    const senderRef = collection(this.firestore, senderPath);
+    const receiverRef = collection(this.firestore, receiverPath);
+
+    await Promise.all([addDoc(senderRef, messageData), senderId !== receiverId ? addDoc(receiverRef, messageData) : Promise.resolve()]);
+  }
+
+  public async postThreadMessage(channelId: string, parentMessageId: string, data: any) {
+    const path = `channels/${channelId}/messages/${parentMessageId}/thread`;
+    const threadRef = collection(this.firestore, path);
+
+    await addDoc(threadRef, data);
+  }
+
+  async addChannel(data: any) {
+    try {
+      const channelsRef = collection(this.firestore, 'channels');
+      return await addDoc(channelsRef, data);
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Channels in Firestore:', error);
+      throw error;
     }
   }
 
-  /**
-   * Sends a thread message to a specific channel.
-   *
-   * @param channelId The ID of the channel.
-   * @param messageObject The message object to be sent.
-   * @param parentMessageId The ID of the parent message.
-   * @returns A promise that resolves when the thread message is sent.
-   */
-  async sendThreadMessage(channelId: string, messageObject: any, parentMessageId: string) {
-    let messagesCollectionRef: CollectionReference | null = this.getCollectionRef(
-      `channels/${channelId}/messages/${parentMessageId}/thread`,
-    );
-    if (messagesCollectionRef) {
-      await addDoc(messagesCollectionRef, new Message(messageObject).toJSON());
+  async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
+    if (!channelId) return;
+
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    try {
+      await updateDoc(channelRef, data);
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren der Channel-Daten:', error);
+      throw error;
     }
+  }
+
+  async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
+    if (!channelId || memberObjects.length === 0) return;
+
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    try {
+      await updateDoc(channelRef, {
+        member: arrayUnion(...memberObjects),
+      });
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen von Mitgliedern:', error);
+      throw error;
+    }
+  }
+
+  public async leaveChannel(channelId: string, userId: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+
+    try {
+      await updateDoc(channelRef, {
+        member: arrayRemove({ id: userId }),
+      });
+    } catch (error) {
+      console.error('Fehler beim Verlassen des Channels:', error);
+      throw error;
+    }
+  }
+
+  public async checkChannelNameExists(name: string): Promise<boolean> {
+    const channelsRef = collection(this.firestore, 'channels');
+    const trimmedName = name.trim();
+
+    const q = query(channelsRef, where('name', '==', trimmedName));
+    const querySnapshot = await getDocs(q);
+
+    return !querySnapshot.empty;
   }
 }

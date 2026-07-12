@@ -1,34 +1,44 @@
-<aside (click)="toogleContactbar()" class="navbar-toggle-container">
-  @if (barOpen) { <span>Workspacemenü schließen</span> } @else { <span>Workspacemenü öffnen</span>}
-  <span [ngStyle]="{ transform: barOpen ? 'rotate(-90deg)' : 'rotate(90deg)' }" class="material-symbols-outlined"> left_panel_open </span>
-</aside>
-
 <main (click)="closeAll()">
-  <section>
-    @if (!this.navigationService.isMobile) {
+  @if (!navigationService.isMobile()) {
     <app-header></app-header>
-    }
+  }
 
-    <div class="content-container">
-      <mat-drawer-container class="chat-content">
-        <mat-drawer class="contactbar-container" mode="side" #drawerContactbar opened>
+  <div class="content-container">
+    <mat-drawer-container class="chat-content" autosize>
+      @if (!navigationService.isMobile()) {
+        <mat-drawer #drawerContactbar mode="side" [opened]="barOpen()" class="contactbar-container">
           <app-contactbar></app-contactbar>
         </mat-drawer>
+      }
 
-        <div class="component">
-          <ng-container *ngIf="navigationService.component$ | async as cmp">
-            <ng-container *ngComponentOutlet="cmp"></ng-container>
-          </ng-container>
-        </div>
+      <div class="component-area">
+        @if (navigationService.isMobile()) {
+          @if (navigationService.isMainChat()) {
+            <app-contactbar></app-contactbar>
+          } @else {
+            <router-outlet></router-outlet>
+          }
+        } @else {
+          <router-outlet></router-outlet>
+        }
+      </div>
 
-        <mat-drawer mode="side" #drawer position="end" class="thread-container">
-          <app-thread></app-thread>
-        </mat-drawer>
-      </mat-drawer-container>
-    </div>
-  </section>
+      <mat-drawer mode="side" #drawer position="end" class="thread-container">
+        <app-thread></app-thread>
+      </mat-drawer>
+    </mat-drawer-container>
+  </div>
 </main>
 
-@if (feedbackVisible) {
-<div #feedback class="feedback-cont"></div>
+@if (!navigationService.isMobile()) {
+  <aside (click)="toogleContactbar()" class="navbar-toggle-container">
+    <span>Workspacemenü {{ barOpen() ? "öffnen" : "schließen" }}</span>
+    <span [ngStyle]="{ transform: barOpen() ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined">
+      left_panel_open
+    </span>
+  </aside>
+}
+
+@if (userService.feedbackMessage(); as feedback) {
+  <div class="feedback-cont">{{ feedback }}</div>
 }

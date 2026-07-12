@@ -16,7 +16,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   disabled = true;
   shared = inject(UserService);
   auth = inject(Auth);
@@ -26,14 +26,6 @@ export class LoginComponent implements OnInit {
   navigationService: NavigationService = inject(NavigationService);
 
   public loginForm = this.authService.createLoginForm();
-
-  /**
-   * Lifecycle hook that runs on component initialization.
-   * Resets the navigation service's initialization status to false.
-   */
-  ngOnInit() {
-    this.navigationService.isInitialize = false;
-  }
 
   /**
    * Signs in the user with email and password.

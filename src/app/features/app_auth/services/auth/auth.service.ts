@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 
 import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 
-import { arrayUnion, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, doc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -112,10 +112,6 @@ export class AuthService {
     try {
       await updateDoc(defaultChannelRef, {
         member: arrayUnion({
-          displayName: user.displayName,
-          email: user.email,
-          photoUrl: user.photoUrl,
-          online: false,
           id: user.id,
         }),
       });
@@ -155,6 +151,10 @@ export class AuthService {
     try {
       const result = await signInWithPopup(this.auth, this.googleAuthProvider);
       if (result) {
+        await updateProfile(result.user, {
+          photoURL: 'img/avatars/avatar_default.png',
+        });
+
         const userData = this.mapFirebaseUserToUser(result.user);
         await this.addInUserCollection(userData);
         await this.addInDefaultChannel(userData);
@@ -218,7 +218,20 @@ export class AuthService {
    */
   setCurrentUser() {
     onAuthStateChanged(this.auth, (firebaseUser) => {
-      firebaseUser ? this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser)) : this._currentUser.set(null);
+      if (firebaseUser) {
+        this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser));
+
+        const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+
+        onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const firestoreData = docSnap.data() as User;
+            this._currentUser.set(firestoreData);
+          }
+        });
+      } else {
+        this._currentUser.set(null);
+      }
     });
   }
 
@@ -247,7 +260,7 @@ export class AuthService {
       id: firebaseUser.uid,
       email: firebaseUser.email || '',
       displayName: firebaseUser.displayName || 'Unbekannter Nutzer',
-      photoUrl: firebaseUser.photoURL || 'img/avatar_default.png',
+      photoUrl: firebaseUser.photoURL || 'img/avatars/avatar_default.png',
       online: true,
       ...overrides,
     };
@@ -298,7 +311,7 @@ export class AuthService {
    * - **email**: Inherited from basicAuthFields (Required, Email format).
    * - **password**: Inherited from basicAuthFields (Required, Min length 6).
    * - **displayName**: Required field, minimum of 2 characters.
-   * - **profilephoto**: Optional, defaults to a standard placeholder path.
+   * - **photoURL**: Optional, defaults to a standard placeholder path.
    * - **acceptTerms**: Required to be 'true' (checkbox must be checked).
    * * @returns {FormGroup} A fully configured FormGroup for the registration template.
    */
@@ -306,7 +319,7 @@ export class AuthService {
     return this.formBuilder.group({
       ...this.basicAuthFields,
       displayName: ['', [Validators.required, Validators.minLength(5)]],
-      photoURL: ['img/profilephoto.png'],
+      photoURL: ['img/avatar_default.png'],
       acceptTerms: [false, [Validators.requiredTrue]],
     });
   }

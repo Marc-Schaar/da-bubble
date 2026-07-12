@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UserService } from '../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
+import { User } from '../../app_auth/models/user/user';
 
 @Component({
   selector: 'app-dialog-reciver',
@@ -11,17 +11,9 @@ import { NavigationService } from '../../../shared/services/navigation/navigatio
   styleUrl: './dialog-reciver.component.scss',
 })
 export class DialogReciverComponent {
-  public readonly reciverData = inject<{ reciever: any; recieverId: string }>(MAT_DIALOG_DATA);
+  public readonly reciverData = inject<User>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
-  private userService = inject(UserService);
-  private navigationService = inject(NavigationService);
-
-  /**
-   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
-   */
-  public closeMenu() {
-    this.dialogRef.close();
-  }
+  private readonly navigationService = inject(NavigationService);
 
   /**
    * Opens a direct chat with the selected receiver.
@@ -30,8 +22,14 @@ export class DialogReciverComponent {
    * shows the direct message view, and closes the user menu.
    */
   public openReciver() {
-    this.navigationService.showDirect();
-    this.userService.setUrl('direct', this.reciverData.recieverId, this.userService.currentUser.id);
+    this.navigationService.selectDirectMessageRecipient(this.reciverData.id);
     this.closeMenu();
+  }
+
+  /**
+   * Closes the menu and emits an event to notify the parent component that the content should be hidden.
+   */
+  public closeMenu() {
+    this.dialogRef.close();
   }
 }

@@ -1,0 +1,121 @@
+<div class="dialog-container">
+  <header class="channel-header">
+    # {{ channelService.currentChannel()?.name }}
+    <button (click)="closeDialog()">
+      <img src="img/close.svg" alt="" />
+    </button>
+  </header>
+
+  <main class="main" (click)="closeUserBar()">
+    <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit }">
+      <div class="box--header">
+        Channel-Name
+        <button class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</button>
+      </div>
+      @if (channelNameEdit) {
+        <div class="input-wrapper">
+          <input
+            type="text"
+            name="channelname-input"
+            [(ngModel)]="tempName"
+            placeholder="Channelname"
+            (keyup.enter)="onEditChannelName()"
+          />
+        </div>
+      } @else {
+        <div># {{ channelService.currentChannel()?.name }}</div>
+      }
+    </section>
+
+    <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit }">
+      <div class="box--header">
+        Beschreibung
+        <button class="save-btn" (click)="onEditChannelDescription()">
+          {{ !channelDescriptionEdit ? "Bearbeiten" : "Speichern" }}
+        </button>
+      </div>
+
+      @if (channelDescriptionEdit) {
+        <textarea name="" id="changeDescriptionInput" [(ngModel)]="tempDescription" (keyup.enter)="onEditChannelDescription()"></textarea>
+      } @else {
+        <div class="content--description">
+          {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
+        </div>
+      }
+
+      <div class="line"></div>
+      <div class="creator">
+        Erstellt von
+        <div class="creator--name">
+          {{ channelService.currentChannel()?.createdBy }}
+        </div>
+      </div>
+    </section>
+
+    <section class="box box--list">
+      <div class="box--header">Mitglieder</div>
+
+      <ul class="member-list">
+        @for (member of channelService.enrichedMembers(); track $index) {
+          <li (click)="openProfileDialog(member)" class="member-list--item">
+            <app-profile-status [photoUrl]="member.photoUrl" [online]="member.online"></app-profile-status>
+            {{ member.displayName }}
+          </li>
+        }
+
+        <button (click)="toogleAddMemberState()" #addMemberMobileButton class="add-member-mobile-btn member-list--item">
+          <mat-icon class="material-symbols-outlined">person_add</mat-icon>
+          Mitglieder hinzufügen
+        </button>
+      </ul>
+    </section>
+
+    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen }">
+      <div class="tooltip--line"></div>
+
+      <header class="tooltip--header">
+        Leute hinzufügen
+        <button (click)="toogleAddMemberState()"><mat-icon>close</mat-icon></button>
+      </header>
+
+      @for (user of channelService.selectedUsers(); track user.id) {
+        <div class="mini-profile-cont">
+          <img class="user-img-mini" [src]="user.photoUrl" alt="" />
+          {{ user.displayName }}
+          <button (click)="removeSelectedUser($index)"><mat-icon>close</mat-icon></button>
+        </div>
+      }
+
+      <div class="input-wrapper">
+        <input
+          class="user-search-bar"
+          [ngModel]="channelService.userSearchQuery()"
+          (ngModelChange)="channelService.userSearchQuery.set($event)"
+          (input)="onSearchInput($event)"
+          (click)="openUserBar(); $event.stopPropagation()"
+          placeholder="Name eingeben..."
+        />
+        @if (showUserBar) {
+          <ul class="choose-user-bar" #chooseUserBar>
+            @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
+              <li class="user-select-cont" (click)="addUserToSelection(user)">
+                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
+                {{ user.displayName }}
+              </li>
+            } @empty {
+              <li>Keine Nutzer verfügbar</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <button class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+    </section>
+
+    <button class="exit-btn" (click)="leaveChannel()">Channel verlassen</button>
+
+    @if (isAddMemberOpen) {
+      <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>
+    }
+  </main>
+</div>

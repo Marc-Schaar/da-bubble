@@ -1,0 +1,4 @@
+<div class="profile-status">
+  <img class="profile-status__image" [src]="photoUrl()" alt="Profilbild" />
+  <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': online() }"></div>
+</div>

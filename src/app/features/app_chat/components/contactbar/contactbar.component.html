@@ -1,0 +1,122 @@
+<main>
+  <section class="column align-center">
+    @if (navigationService.isMobile()) {
+      <app-header></app-header>
+    }
+
+    <div class="headline">
+      <div>
+        <img src="img/workspace-logo.svg" alt="" />
+        <h2>Devspace</h2>
+      </div>
+      <button (click)="this.navigationService.goToNewMessage()">
+        <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
+      </button>
+    </div>
+
+    @if (isClicked) {
+      <div class="justify-sb full-width p-lr-16">
+        <h2>Search</h2>
+        <button (click)="isClicked = false">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+    @if (this.navigationService.isMobile() && navigationService.isContactbarPage()) {
+      <div class="searchbar">
+        <div class="input">
+          <input
+            (click)="isClicked = true"
+            [(ngModel)]="input"
+            (input)="searchService.observeInput(input, 'header')"
+            type="text"
+            placeholder="Gehe zu ..."
+            class="full-width"
+          />
+          <mat-icon>search</mat-icon>
+        </div>
+
+        @if (searchService.getHeaderListBoolean() && isClicked) {
+          <div class="tag-container">
+            <app-search-result [(input)]="input"></app-search-result>
+          </div>
+        }
+      </div>
+    }
+    @if (!isClicked) {
+      <div class="contactbar">
+        <div class="dropdown">
+          <div class="dropdown__title">
+            <button class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
+              <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
+              <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
+              Channels
+            </button>
+
+            <div class="tooltip-cont">
+              <button class="align-center" (click)="openAddChannel()">
+                <mat-icon>add</mat-icon>
+              </button>
+
+              <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
+            </div>
+          </div>
+
+          <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
+            @for (channel of firestoreService.myChannels(); track channel.id) {
+              <li
+                class="dropdown__list__item"
+                (click)="navigationService.selectChannel(channel.id!)"
+                [class.active-link]="router.url.includes('channel/' + channel.id)"
+              >
+                <mat-icon class="material-symbols-outlined">tag</mat-icon>
+                <span>{{ channel.name }}</span>
+              </li>
+            } @empty {
+              No Channel found
+            }
+          </ul>
+        </div>
+        <div class="tooltip-cont">
+          <button class="addChannel" (click)="openAddChannel()">
+            <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
+            Channel hinzufügen
+          </button>
+          <span class="tooltip">Zugang für Gäste gesperrt</span>
+        </div>
+
+        <div class="dropdown">
+          <div class="dropdown__title">
+            <button class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
+              <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()">
+                arrow_drop_down</mat-icon
+              >
+              <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+              Direktnachrichten
+            </button>
+          </div>
+
+          <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
+            @for (user of firestoreService.allUsers(); track user.id) {
+              <li
+                class="dropdown__list__item"
+                (click)="navigationService.selectDirectMessageRecipient(user.id)"
+                [class.active-link]="router.url.includes('direct/' + user.id)"
+              >
+                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
+
+                {{ user.displayName }}
+              </li>
+            } @empty {
+              No User found
+            }
+          </ul>
+        </div>
+      </div>
+    }
+  </section>
+
+  <button class="add-message-btn-mobile" (click)="this.navigationService.goToNewMessage()">
+    <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
+  </button>
+</main>

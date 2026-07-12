@@ -36,8 +36,6 @@ export class MainComponentComponent implements OnInit {
         }
       }, 4000);
     }
-    this.shareddata.dashboard = false;
-    this.shareddata.login = true;
   }
 
   /**

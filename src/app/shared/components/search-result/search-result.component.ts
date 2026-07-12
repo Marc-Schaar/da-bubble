@@ -3,18 +3,19 @@ import { SearchService } from '../../services/search/search.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { Auth } from '@angular/fire/auth';
+import { Channel } from '../../../features/app_channel/models/channel/channel';
+import { User } from '../../../features/app_auth/models/user/user';
+import { ProfileStatusComponent } from '../profile-status/profile-status.component';
 
 @Component({
   selector: 'app-search-result',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, ProfileStatusComponent],
   templateUrl: './search-result.component.html',
   styleUrl: './search-result.component.scss',
 })
 export class SearchResultComponent {
   searchService: SearchService = inject(SearchService);
   navigationService: NavigationService = inject(NavigationService);
-  auth: Auth = inject(Auth);
 
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
@@ -28,8 +29,9 @@ export class SearchResultComponent {
    * @param receiverData - The data object of the receiver (user or channel).
    * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
-  public tagReceiver(receiverData: any, tagType: '@' | '#') {
-    const tagName = receiverData.fullname || receiverData.data.name;
+  public tagReceiver(receiverData: Channel | User, tagType: '@' | '#') {
+    const tagName = this.isChannel(receiverData) ? receiverData.name : receiverData.displayName;
+
     this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
 
     this.searchService.closeList();
@@ -42,11 +44,9 @@ export class SearchResultComponent {
    * @param element - The selected receiver element (channel or user).
    */
   public openReceiver(element: any) {
-    element.online === false || element.online === true
-      ? this.searchService.setChannelBoolean(false)
-      : this.searchService.setChannelBoolean(true);
-
-    this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
+    const isChannel = typeof element.online !== 'boolean';
+    this.searchService.isChannel.set(isChannel);
+    isChannel ? this.openChannel(element) : this.openUser(element);
   }
 
   /**
@@ -55,9 +55,7 @@ export class SearchResultComponent {
    * @param element - The user element to open.
    */
   private openUser(element: any) {
-    let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.showDirect();
-    this.navigationService.setUrl('direct', element.id, currentUserId);
+    this.navigationService.selectDirectMessageRecipient(element.id);
     this.searchService.resetList();
   }
 
@@ -67,9 +65,7 @@ export class SearchResultComponent {
    * @param element - The channel element to open.
    */
   private openChannel(element: any) {
-    let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.showChannel();
-    this.navigationService.setUrl('channel', element.key, currentUserId);
+    this.navigationService.selectChannel(element.id);
     this.searchService.resetList();
   }
 
@@ -79,6 +75,16 @@ export class SearchResultComponent {
   setReceiver(element: any) {
     this.currentReceiver.emit(element);
     this.searchService.resetList();
+  }
+
+  // Prüft, ob das Element ein Channel ist
+  isChannel(element: User | Channel): element is Channel {
+    return 'member' in element;
+  }
+
+  // Prüft, ob das Element ein User ist
+  isUser(element: User | Channel): element is User {
+    return 'displayName' in element;
   }
 
   /**
@@ -98,7 +104,7 @@ export class SearchResultComponent {
         break;
 
       case 'textarea':
-        this.tagReceiver(element, this.searchService.getChannelBoolean() === true ? '#' : '@');
+        this.tagReceiver(element, this.searchService.isChannel() ? '#' : '@');
         break;
 
       default:
