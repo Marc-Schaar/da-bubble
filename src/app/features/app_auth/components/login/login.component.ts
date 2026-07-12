@@ -1,12 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
-import { Auth } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Firestore } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
-import { UserService } from '../../../../shared/services/user/shared.service';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 
@@ -18,10 +14,6 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 })
 export class LoginComponent {
   disabled = true;
-  shared = inject(UserService);
-  auth = inject(Auth);
-  firestore = inject(Firestore);
-  fireService = inject(FireServiceService);
   authService: AuthService = inject(AuthService);
   navigationService: NavigationService = inject(NavigationService);
 

@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { User } from '../../../features/app_auth/models/user/user';
 
 /**
@@ -18,6 +18,15 @@ export class UserStore {
 
   public setCurrentUser(user: User | null): void {
     this._currentUser.set(user);
+  }
+
+  /**
+   * Fetches a user document by its id.
+   */
+  public async getUserById(id: string): Promise<User | null> {
+    if (!id) return null;
+    const snap = await getDoc(doc(this.firestore, 'users', id));
+    return snap.exists() ? ({ ...(snap.data() as Omit<User, 'id'>), id: snap.id } as User) : null;
   }
 
   /**
