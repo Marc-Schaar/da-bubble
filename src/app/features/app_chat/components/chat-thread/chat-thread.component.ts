@@ -13,8 +13,8 @@ import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
-import { UserStore } from '../../../../shared/services/user/user-store';
 import { ChannelService } from '../../../app_channel/services/channel/channel.service';
+import { MentionService } from '../../../../shared/services/mention/mention.service';
 
 @Component({
   selector: 'app-thread',
@@ -37,8 +37,8 @@ export class ThreadComponent implements OnInit {
   public userService: UserService = inject(UserService);
   public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
-  private userStore: UserStore = inject(UserStore);
   public channelService: ChannelService = inject(ChannelService);
+  private mentionService: MentionService = inject(MentionService);
   private readonly destroyRef = inject(DestroyRef);
   public currentUser: any;
   public userId: string = '';
@@ -123,67 +123,10 @@ export class ThreadComponent implements OnInit {
   }
 
   /**
-   * Handles click events on mention buttons within a message.
-   * Determines whether a mention button was clicked and, if so,
-   * extracts its symbol (@ or #) and the associated name,
-   * then delegates to navigation logic.
-   *
-   * @param event - The MouseEvent triggered by the click.
+   * Delegates clicks inside the rendered message to the MentionService.
    */
   onMentionClick(event: MouseEvent | TouchEvent) {
-    const btn = (event.target as HTMLElement).closest('.tag-btn');
-    if (!btn) return;
-
-    const fullTag = btn.textContent?.trim();
-    if (!fullTag) return;
-
-    const symbol = fullTag.charAt(0);
-    const name = fullTag.slice(1).trim();
-    this.showProfileOrChannel(symbol, name);
-  }
-
-  /**
-   * Routes the click on a mention based on its symbol.
-   * If the symbol is '@', performs a user lookup;
-   * if '#', performs a channel lookup.
-   *
-   * @param symbol - The mention symbol, either '@' or '#'.
-   * @param name - The username or channel name to lookup.
-   */
-  async showProfileOrChannel(symbol: string, name: string) {
-    switch (symbol) {
-      case '@':
-        await this.caseUser(name);
-        break;
-
-      case '#':
-        await this.caseChannel(name);
-        break;
-    }
-  }
-
-  /**
-   * Looks up a user in Firestore by their full name,
-   * sets the navigation service’s receiver ID to the found user’s document ID,
-   * and switches the UI to a direct chat view.
-   *
-   * @param name - The user’s full name to query.
-   */
-  async caseUser(name: string) {
-    const user = await this.userStore.findUserByDisplayName(name);
-    if (user) this.navigationService.selectDirectMessageRecipient(user.id);
-  }
-
-  /**
-   * Looks up a channel in Firestore by its name,
-   * sets the navigation service’s receiver ID to the found channel’s document ID,
-   * and switches the UI to the channel view.
-   *
-   * @param name - The channel’s name to query.
-   */
-  async caseChannel(name: string) {
-    const channel = await this.channelService.findChannelByName(name);
-    if (channel?.id) this.navigationService.selectChannel(channel.id);
+    this.mentionService.handleMentionClick(event);
   }
 
   ngOnDestroy(): void {
