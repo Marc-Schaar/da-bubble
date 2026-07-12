@@ -3,7 +3,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked,
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Firestore, onSnapshot, query, orderBy, collection, doc } from '@angular/fire/firestore';
+import { Firestore, onSnapshot, doc } from '@angular/fire/firestore';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
@@ -122,23 +122,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
         if (docSnap.exists()) {
           this.currentChannel = { id: docSnap.id, ...docSnap.data() };
         }
-      });
-    }
-  }
-
-  /**
-   * Loads the thread (replies) for a specific message.
-   * @param messageId - ID of the message to load the thread for
-   */
-  getThread(messageId: string) {
-    if (messageId) {
-      let threadRef = collection(this.firestore, `channels/${this.currentChannelId()}/messages/${messageId}/thread`);
-      let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
-
-      onSnapshot(threadQuery, (snapshot) => {
-        // const updatedThreads = this.messagesService.processData(snapshot);
-        // const msgIndex = this.messagesService.messages() ? this.messagesService.messages()?.findIndex((m: any) => m.id === messageId) : -1;
-        // if (msgIndex >= 0) this.messagesService.messages()?[msgIndex].thread = updatedThreads;
       });
     }
   }
