@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
-import { MessagesService } from '../../app_chat/services/messages/messages.service';
+import { CONTACT_EMAIL } from '../../../shared/constants';
 
 @Component({
   selector: 'app-imprint',
@@ -11,5 +11,5 @@ import { MessagesService } from '../../app_chat/services/messages/messages.servi
 })
 export class ImprintComponent {
   navigate = inject(NavigationService);
-  message = inject(MessagesService);
+  protected readonly contactEmail = CONTACT_EMAIL;
 }

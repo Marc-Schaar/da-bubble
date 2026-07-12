@@ -103,7 +103,6 @@ export class NavigationService {
       )
       .subscribe((isMobileNow) => {
         this.isMobile.set(isMobileNow);
-        console.log('Mobile Mode:', isMobileNow);
         if (!isMobileNow && this.router.url === '/main') {
           this.router.navigate(['/main/new-message']);
         }

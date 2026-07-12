@@ -11,7 +11,6 @@ import { AuthService } from '../../../app_auth/services/auth/auth.service';
 export class MessagesService {
   private fireService = inject(FireServiceService);
   private readonly authService = inject(AuthService);
-  email = 'gianniskarakasidhs@hotmail.com';
 
   public messages = signal<ChannelMessage[] | DirectMessage[]>([]);
 
