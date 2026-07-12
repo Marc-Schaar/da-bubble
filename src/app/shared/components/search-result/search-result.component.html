@@ -5,10 +5,8 @@
         <div><mat-icon>tag</mat-icon></div>
         {{ element.name }}
       } @else if (isUser(element)) {
-        <div class="profile-status">
-          <img class="profile-status__image" [src]="element.photoUrl" alt="" />
-          <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': element.online }"></div>
-        </div>
+        <app-profile-status [photoUrl]="element.photoUrl" [online]="element.online"></app-profile-status>
+
         {{ element.displayName }}
       }
     </li>

@@ -103,10 +103,7 @@
                 (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 [class.active-link]="router.url.includes('direct/' + user.id)"
               >
-                <div class="profile-status">
-                  <img class="profile-status__image" [src]="user.photoUrl" alt="" />
-                  <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': user.online }"></div>
-                </div>
+                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
 
                 {{ user.displayName }}
               </li>

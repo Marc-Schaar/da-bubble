@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { User } from '../../../features/app_auth/models/user/user';
+import { ProfileStatusComponent } from '../profile-status/profile-status.component';
 
 @Component({
   selector: 'app-search-result',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, ProfileStatusComponent],
   templateUrl: './search-result.component.html',
   styleUrl: './search-result.component.scss',
 })
