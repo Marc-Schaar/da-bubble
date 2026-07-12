@@ -27,6 +27,8 @@ export class FireServiceService {
   private injector = inject(Injector);
   public allUsers = signal<User[]>([]);
   private _allChannels = signal<any[]>([]);
+  private unsubAllUsers?: () => void;
+  private unsubChannels?: () => void;
 
   /**
    * Updates the online status of the current user in Firestore.
@@ -45,11 +47,14 @@ export class FireServiceService {
   /**
    * Erstellt eine permanente Verbindung zur User-Collection.
    * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
+   * Idempotent: der Listener lebt für die App-Lebensdauer, weitere Aufrufe
+   * sind No-ops (vorher entstand pro Aufruf ein neuer Listener).
    */
-  public subAllUsers() {
+  public subAllUsers(): void {
+    if (this.unsubAllUsers) return;
     const usersCollection = collection(this.firestore, 'users');
 
-    return onSnapshot(
+    this.unsubAllUsers = onSnapshot(
       usersCollection,
       (snapshot) => {
         const users = snapshot.docs.map(
@@ -68,12 +73,14 @@ export class FireServiceService {
   }
 
   /**
-   * Startet den Echtzeit-Stream für alle Channels
+   * Startet den Echtzeit-Stream für alle Channels.
+   * Idempotent wie subAllUsers().
    */
-  public subChannels() {
+  public subChannels(): void {
+    if (this.unsubChannels) return;
     const channelRef = collection(this.firestore, 'channels');
 
-    return onSnapshot(channelRef, (snapshot) => {
+    this.unsubChannels = onSnapshot(channelRef, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

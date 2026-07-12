@@ -1,6 +1,7 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,6 +37,7 @@ export class ThreadComponent implements OnInit {
   public userService: UserService = inject(UserService);
   public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
+  private readonly destroyRef = inject(DestroyRef);
   public currentUser: any;
   public userId: string = '';
   public currentChannel: any;
@@ -54,13 +56,13 @@ export class ThreadComponent implements OnInit {
    *
    * @type {() => void}
    */
-  unsubMessages!: () => void;
+  unsubMessages?: () => void;
 
   /**
    * OnInit lifecycle hook to set up query params and fetch data when component is initialized.
    */
   async ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
       this.currentChannelId = params['reciverId'] || '';
       this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
@@ -118,14 +120,18 @@ export class ThreadComponent implements OnInit {
    * Retrieves the messages in the current thread.
    */
   private getMessages() {
+    this.unsubMessages?.();
+    this.unsubMessages = undefined;
+
     if (this.parentMessageId) {
       let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
       let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
 
-      onSnapshot(threadQuery, (snapshot) => {
+      this.unsubMessages = onSnapshot(threadQuery, (snapshot) => {
         this.messages = this.messagesService.processData(snapshot);
-        // this.userService.scrollToBottom(this.chatContentRef.nativeElement);
       });
+    } else {
+      this.messages = [];
     }
   }
 

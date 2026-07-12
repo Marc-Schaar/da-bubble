@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog);
   public messagesService = inject(MessagesService);
   public chatService: ChatService = inject(ChatService);
+  private readonly destroyRef = inject(DestroyRef);
 
   public currentRecieverId = signal<string | null>(null);
   public currentReciever = signal<User | null>(null);
@@ -55,7 +57,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * Initializes the component and loads the necessary data such as receiver information, messages, users, and channels.
    */
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.currentRecieverId.set(params.get('id'));
       this.getRecieverFromUrl();
       this.loadDirectChat(this.currentRecieverId() || '');

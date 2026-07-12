@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,6 +49,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   messagesService: MessagesService = inject(MessagesService);
   route: ActivatedRoute = inject(ActivatedRoute);
   public chatService: ChatService = inject(ChatService);
+  private readonly destroyRef = inject(DestroyRef);
 
   isMobile: boolean = false;
   showBackground: boolean = false;
@@ -93,7 +95,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Initializes the component, loads messages and channel data from URL parameters.
    */
   async ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.currentChannelId.set(params.get('id'));
     });
   }
