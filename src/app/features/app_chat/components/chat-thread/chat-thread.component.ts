@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Firestore, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -33,9 +32,8 @@ import { ChannelService } from '../../../app_channel/services/channel/channel.se
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
-  private firestore: Firestore = inject(Firestore);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private messagesService: MessagesService = inject(MessagesService);
+  public messagesService: MessagesService = inject(MessagesService);
   public userService: UserService = inject(UserService);
   public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
@@ -44,7 +42,6 @@ export class ThreadComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   public currentUser: any;
   public userId: string = '';
-  public currentChannel: any;
   public currentChannelId: string = '';
   public parentMessageId: string = '';
   public inputEdit: string = '';
@@ -52,7 +49,6 @@ export class ThreadComponent implements OnInit {
   public editingMessageId: number | null = null;
   public listOpen: boolean = false;
   public isEditing: boolean = false;
-  public messages: any = [];
   public reactions: any = [];
 
   /**
@@ -71,7 +67,6 @@ export class ThreadComponent implements OnInit {
       this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
 
-      await this.getCurrentChannel();
       this.getThreadParentMessage();
       this.getMessages();
       this.currentUser = this.authService.currentUser();
@@ -79,28 +74,14 @@ export class ThreadComponent implements OnInit {
   }
 
   /**
-   * Fetches the current channel information from Firestore.
-   */
-  private async getCurrentChannel() {
-    if (this.currentChannelId) {
-      let channelRef = doc(this.firestore, `channels/${this.currentChannelId}`);
-      let channelRefDocSnap = await getDoc(channelRef);
-      channelRefDocSnap.exists() ? (this.currentChannel = channelRefDocSnap.data()) : null;
-    }
-  }
-
-  /**
    * Fetches the parent message details for the thread.
    */
   private async getThreadParentMessage() {
     if (this.parentMessageId) {
-      let parentMessageDocRef = doc(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}`);
-      let parentMessageDocSnap = await getDoc(parentMessageDocRef);
-
-      if (parentMessageDocSnap.exists()) {
-        let data = parentMessageDocSnap.data();
-        this.setParentMessageData(data);
-      }
+      const data = await this.messagesService.getParentMessage(this.currentChannelId, this.parentMessageId);
+      if (data) this.setParentMessageData(data);
+    } else {
+      this.parentMessageData = null;
     }
   }
 
@@ -128,14 +109,9 @@ export class ThreadComponent implements OnInit {
     this.unsubMessages = undefined;
 
     if (this.parentMessageId) {
-      let threadRef = collection(this.firestore, `channels/${this.currentChannelId}/messages/${this.parentMessageId}/thread`);
-      let threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
-
-      this.unsubMessages = onSnapshot(threadQuery, (snapshot) => {
-        this.messages = this.messagesService.processData(snapshot);
-      });
+      this.unsubMessages = this.messagesService.subToThreadMessages(this.currentChannelId, this.parentMessageId);
     } else {
-      this.messages = [];
+      this.messagesService.threadMessages.set([]);
     }
   }
 
@@ -214,5 +190,6 @@ export class ThreadComponent implements OnInit {
     if (this.unsubMessages) {
       this.unsubMessages();
     }
+    this.messagesService.threadMessages.set([]);
   }
 }
