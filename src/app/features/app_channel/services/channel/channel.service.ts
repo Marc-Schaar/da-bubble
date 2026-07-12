@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { onSnapshot } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
@@ -16,6 +17,7 @@ export class ChannelService {
   private readonly authService = inject(AuthService);
 
   public currentChannel = signal<Channel | null>(null);
+  private unsubCurrentChannel?: () => void;
   public selectedUsers = signal<User[]>([]);
   public userSearchQuery = signal('');
   public allMembersSelected = signal<boolean>(false);
@@ -87,6 +89,28 @@ export class ChannelService {
   });
 
   private isSubmitting = signal<boolean>(false);
+
+  /**
+   * Single source of truth for the active channel: holds THE one
+   * Firestore listener on the channel document (derived from the route
+   * param) and feeds the currentChannel signal. Passing null clears it.
+   */
+  public setActiveChannel(id: string | null): void {
+    this.unsubCurrentChannel?.();
+    this.unsubCurrentChannel = undefined;
+
+    if (!id) {
+      this.currentChannel.set(null);
+      return;
+    }
+
+    const channelRef = this.fireService.getDocRef('channels', id);
+    if (!channelRef) return;
+
+    this.unsubCurrentChannel = onSnapshot(channelRef, (snap) => {
+      this.currentChannel.set(snap.exists() ? ({ id: snap.id, ...snap.data() } as Channel) : null);
+    });
+  }
 
   async createChannel(channelData: Channel) {
     try {

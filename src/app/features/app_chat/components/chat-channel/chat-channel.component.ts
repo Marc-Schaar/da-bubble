@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Firestore, onSnapshot, doc } from '@angular/fire/firestore';
+import { ChannelService } from '../../../app_channel/services/channel/channel.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
@@ -43,7 +43,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
   fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
-  firestore: Firestore = inject(Firestore);
+  channelService: ChannelService = inject(ChannelService);
   dialog = inject(MatDialog);
   navigationService: NavigationService = inject(NavigationService);
   messagesService: MessagesService = inject(MessagesService);
@@ -55,7 +55,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   showBackground: boolean = false;
   channels: any = [];
 
-  currentChannel: any = {};
   channelInfo: boolean = false;
   addMemberInfoWindow: boolean = false;
   addMemberWindow: boolean = false;
@@ -65,19 +64,18 @@ export class ChatContentComponent implements OnInit, OnDestroy {
 
   public currentChannelId = signal<string | null>(null);
 
-  unsubChannelData!: () => void;
   unsubMessages?: () => void;
 
   constructor() {
     effect(() => {
       const channelId = this.currentChannelId();
       untracked(() => {
-        if (this.unsubChannelData) this.unsubChannelData();
         this.unsubMessages?.();
+        this.unsubMessages = undefined;
         if (channelId) {
           this.unsubMessages = this.messagesService.subToMessages(channelId);
-          this.getCurrentChannelData(channelId);
         }
+        this.channelService.setActiveChannel(channelId);
       });
     });
 
@@ -114,27 +112,11 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Loads the current channel from Firestore based on the channel ID.
-   */
-  private getCurrentChannelData(channelId: string | null) {
-    if (this.unsubChannelData) this.unsubChannelData();
-
-    if (channelId) {
-      const docRef = doc(this.firestore, 'channels', channelId);
-      this.unsubChannelData = onSnapshot(docRef, (docSnap) => {
-        if (docSnap.exists()) {
-          this.currentChannel = { id: docSnap.id, ...docSnap.data() };
-        }
-      });
-    }
-  }
-
-  /**
    * Opens the dialog to view or edit channel information.
    */
   openChannelInfo() {
     this.dialog.open(EditChannelComponent, {
-      data: this.currentChannel,
+      data: this.channelService.currentChannel(),
       position: { top: '200px' },
       width: '872px',
       maxWidth: '95vw',
@@ -151,7 +133,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.addMemberWindow = toggle;
 
     this.dialog.open(AddMemberComponent, {
-      data: this.currentChannel,
+      data: this.channelService.currentChannel(),
       width: 'auto',
       maxWidth: '95vw',
       maxHeight: '90vh',
@@ -165,8 +147,8 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Cleans up subscriptions and listeners when the component is destroyed.
    */
   ngOnDestroy() {
-    if (this.unsubChannelData) this.unsubChannelData();
     if (this.unsubMessages) this.unsubMessages();
     this.messagesService.messages.set([]);
+    this.channelService.setActiveChannel(null);
   }
 }
