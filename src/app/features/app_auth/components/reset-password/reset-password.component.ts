@@ -44,9 +44,7 @@ export class ResetpasswordComponent implements OnInit {
    */
   ngOnInit() {
     this.auth = getAuth(this.afApp);
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.resetCode = params['oobCode'] || '';
-    });
+    this.resetCode = this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '';
     verifyPasswordResetCode(this.auth, this.resetCode)
       .then((email) => {
         this.email = email;

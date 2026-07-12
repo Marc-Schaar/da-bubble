@@ -4,9 +4,11 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
+  const auth = inject(Auth);
 
   return new Promise((resolve) => {
-    onAuthStateChanged(inject(Auth), (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
       if (user) {
         resolve(true);
       } else {

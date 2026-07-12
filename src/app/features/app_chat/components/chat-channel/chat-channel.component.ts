@@ -73,6 +73,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       const channelId = this.currentChannelId();
       untracked(() => {
         if (this.unsubChannelData) this.unsubChannelData();
+        this.unsubMessages?.();
         if (channelId) {
           this.unsubMessages = this.messagesService.subToMessages(channelId);
           this.getCurrentChannelData(channelId);
