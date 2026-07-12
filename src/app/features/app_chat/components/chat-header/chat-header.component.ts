@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { UserMenuComponent } from '../../../dialogs/user-menu/user-menu.component';
+import { UserMenuComponent } from '../../../../shared/components/user-menu/user-menu.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
 @Component({

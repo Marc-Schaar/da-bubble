@@ -10,7 +10,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 
 import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 
-import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
+import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';

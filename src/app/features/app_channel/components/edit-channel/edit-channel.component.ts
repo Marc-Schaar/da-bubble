@@ -3,7 +3,7 @@ import { Component, inject, computed, signal } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
+import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { User } from '../../../app_auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';

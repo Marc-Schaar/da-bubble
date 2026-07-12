@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
+import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';

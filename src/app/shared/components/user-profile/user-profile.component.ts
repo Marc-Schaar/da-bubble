@@ -8,9 +8,9 @@ import { getAuth, User, updateProfile } from 'firebase/auth';
 import { MatIcon } from '@angular/material/icon';
 import { DialogRef } from '@angular/cdk/dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { AvatarSelectionComponent } from '../avatar-selection/avatar-selection/avatar-selection.component';
-import { UserService } from '../../../shared/services/user/shared.service';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
+import { AvatarSelectionComponent } from '../avatar-selection-dialog/avatar-selection.component';
+import { UserService } from '../../services/user/shared.service';
+import { NavigationService } from '../../services/navigation/navigation.service';
 
 @Component({
   selector: 'app-user-profile',

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { AvatarPickerComponent } from '../../../../shared/components/avatar-picker/avatar-picker.component';
+import { AvatarPickerComponent } from '../avatar-picker/avatar-picker.component';
 
 @Component({
   selector: 'app-avatar-selection',
