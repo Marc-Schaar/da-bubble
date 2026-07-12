@@ -15,7 +15,7 @@ import { NavigationService } from '../../services/navigation/navigation.service'
 import { SearchService } from '../../services/search/search.service';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
 
 @Component({

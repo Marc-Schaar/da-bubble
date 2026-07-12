@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { AuthService } from '../../../features/auth/services/auth/auth.service';
 
 
 @Component({

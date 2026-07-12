@@ -12,7 +12,7 @@ import { SearchResultComponent } from '../../../../shared/components/search-resu
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
-import { AddChannelComponent } from '../../../app_channel/components/add-channel/add-channel.component';
+import { AddChannelComponent } from '../../../channel/components/add-channel/add-channel.component';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({

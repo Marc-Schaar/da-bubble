@@ -12,9 +12,9 @@ import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 
 import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
-import { User } from '../../../app_auth/models/user/user';
+import { User } from '../../../auth/models/user/user';
 import { UserStore } from '../../../../shared/services/user/user-store';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ReactionContext, ReactionsService } from '../../services/reactions/reactions.service';

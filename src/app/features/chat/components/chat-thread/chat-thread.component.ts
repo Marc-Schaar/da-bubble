@@ -11,9 +11,9 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
-import { ChannelService } from '../../../app_channel/services/channel/channel.service';
+import { ChannelService } from '../../../channel/services/channel/channel.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 
 @Component({

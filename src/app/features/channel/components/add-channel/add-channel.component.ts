@@ -8,12 +8,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 import { ChannelService } from '../../services/channel/channel.service';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 
-import { User } from '../../../app_auth/models/user/user';
+import { User } from '../../../auth/models/user/user';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({

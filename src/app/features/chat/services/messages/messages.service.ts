@@ -3,7 +3,7 @@ import { getDoc, onSnapshot, orderBy, query, QuerySnapshot } from '@angular/fire
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { DirectMessage } from '../../models/direct-message/direct-message';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',

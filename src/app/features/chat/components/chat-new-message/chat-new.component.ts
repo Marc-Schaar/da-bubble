@@ -8,7 +8,7 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-newmessage',

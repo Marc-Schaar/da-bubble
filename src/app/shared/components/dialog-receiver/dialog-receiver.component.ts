@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { User } from '../../../features/app_auth/models/user/user';
+import { User } from '../../../features/auth/models/user/user';
 
 @Component({
   selector: 'app-dialog-receiver',

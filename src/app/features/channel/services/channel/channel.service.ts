@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
-import { User } from '../../../app_auth/models/user/user';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { User } from '../../../auth/models/user/user';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 import { Channel } from '../../models/channel/channel';
 
 @Injectable({

@@ -3,8 +3,8 @@ import { SearchService } from '../../services/search/search.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { Channel } from '../../../features/app_channel/models/channel/channel';
-import { User } from '../../../features/app_auth/models/user/user';
+import { Channel } from '../../../features/channel/models/channel/channel';
+import { User } from '../../../features/auth/models/user/user';
 import { ProfileStatusComponent } from '../profile-status/profile-status.component';
 
 @Component({

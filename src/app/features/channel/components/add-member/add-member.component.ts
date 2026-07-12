@@ -3,8 +3,8 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
-import { User } from '../../../app_auth/models/user/user';
+import { AuthService } from '../../../auth/services/auth/auth.service';
+import { User } from '../../../auth/models/user/user';
 import { ChannelService } from '../../services/channel/channel.service';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';

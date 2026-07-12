@@ -14,8 +14,8 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { UserStore } from '../../../../shared/services/user/user-store';
 import { MessagesService } from '../../services/messages/messages.service';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
-import { User } from '../../../app_auth/models/user/user';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
+import { User } from '../../../auth/models/user/user';
+import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
