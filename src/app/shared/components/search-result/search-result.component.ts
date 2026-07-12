@@ -44,11 +44,9 @@ export class SearchResultComponent {
    * @param element - The selected receiver element (channel or user).
    */
   public openReceiver(element: any) {
-    element.online === false || element.online === true
-      ? this.searchService.setChannelBoolean(false)
-      : this.searchService.setChannelBoolean(true);
-
-    this.searchService.getChannelBoolean() ? this.openChannel(element) : this.openUser(element);
+    const isChannel = typeof element.online !== 'boolean';
+    this.searchService.isChannel.set(isChannel);
+    isChannel ? this.openChannel(element) : this.openUser(element);
   }
 
   /**
@@ -106,7 +104,7 @@ export class SearchResultComponent {
         break;
 
       case 'textarea':
-        this.tagReceiver(element, this.searchService.getChannelBoolean() === true ? '#' : '@');
+        this.tagReceiver(element, this.searchService.isChannel() ? '#' : '@');
         break;
 
       default:

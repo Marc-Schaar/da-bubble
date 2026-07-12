@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { FireServiceService } from '../firebase/fire-service.service';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { User } from '../../../features/app_auth/models/user/user';
@@ -12,7 +12,7 @@ export class SearchService {
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
   private newMessageListOpen: boolean = false;
-  private isChannel: boolean | null = false;
+  public isChannel = signal<boolean | null>(false);
   private isResultTrue: boolean = false;
   private directTag: boolean = false;
 
@@ -47,22 +47,6 @@ export class SearchService {
    */
   public getNewListBoolean(): boolean {
     return this.newMessageListOpen;
-  }
-
-  /**
-   * Returns whether the current tagType is a channel.
-   */
-  public getChannelBoolean(): boolean | null {
-    return this.isChannel;
-  }
-
-  /**
-   * Sets the tagType to a channel.
-   *
-   * @param {boolean} isChannel - True if it should be marked as a channel, false otherwise.
-   */
-  public setChannelBoolean(boolean: boolean) {
-    this.isChannel = boolean;
   }
 
   /**
@@ -159,7 +143,7 @@ export class SearchService {
     this.textareaListOpen = false;
     this.searchInComponent === 'header' ? (this.headerListOpen = true) : (this.headerListOpen = false);
     this.searchInComponent === 'newMessage' ? (this.newMessageListOpen = true) : (this.newMessageListOpen = false);
-    this.isChannel = null;
+    this.isChannel.set(null);
   }
 
   /**
@@ -186,7 +170,7 @@ export class SearchService {
    */
   private caseChannel() {
     let searchInput: string | null = null;
-    this.isChannel = true;
+    this.isChannel.set(true);
     searchInput = this.searchQuery.split('#')[1];
     this.currentList = this.startSearch(searchInput, 'channel');
 
@@ -199,7 +183,7 @@ export class SearchService {
    */
   private caseUser() {
     let searchInput: string | null = null;
-    this.isChannel = false;
+    this.isChannel.set(false);
     searchInput = this.searchQuery.split('@')[1];
     this.currentList = this.startSearch(searchInput, 'user');
 
@@ -212,7 +196,7 @@ export class SearchService {
    */
   public resetList() {
     this.currentList = [];
-    this.isChannel = false;
+    this.isChannel.set(false);
     this.textareaListOpen = false;
     this.headerListOpen = false;
     this.newMessageListOpen = false;
@@ -293,10 +277,10 @@ export class SearchService {
     this.directTag = true;
     if (type === '#') {
       this.currentList = this.fireService.myChannels();
-      this.isChannel = true;
+      this.isChannel.set(true);
     } else if (type === '@') {
       this.currentList = this.fireService.allUsers();
-      this.isChannel = false;
+      this.isChannel.set(false);
     }
   }
 }

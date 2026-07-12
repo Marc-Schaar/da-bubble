@@ -12,9 +12,9 @@
     </li>
   } @empty {
     Kein
-    @if (searchService.getChannelBoolean() === true) {
+    @if (searchService.isChannel() === true) {
       Channel
-    } @else if (searchService.getChannelBoolean() === false) {
+    } @else if (searchService.isChannel() === false) {
       Nutzer
     } @else {
       Eintrag
