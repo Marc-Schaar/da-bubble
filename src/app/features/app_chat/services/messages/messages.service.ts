@@ -12,7 +12,7 @@ export class MessagesService {
   private fireService = inject(FireServiceService);
   private readonly authService = inject(AuthService);
 
-  public messages = signal<ChannelMessage[] | DirectMessage[]>([]);
+  public messages = signal<(ChannelMessage | DirectMessage)[]>([]);
   public threadMessages = signal<(ChannelMessage | DirectMessage)[]>([]);
 
   public subToMessages(channelId: string | null) {
@@ -76,11 +76,11 @@ export class MessagesService {
    * @param snap - The Firestore snapshot containing the messages.
    * @returns An array of processed message objects.
    */
-  public processData(snap: QuerySnapshot<any>): any[] {
-    return snap.docs.map((doc: any) => {
-      const data = doc.data();
+  public processData(snap: QuerySnapshot): (ChannelMessage | DirectMessage)[] {
+    return snap.docs.map((doc) => {
+      const data = doc.data() as ChannelMessage | DirectMessage;
       const id = doc.id;
-      return this.isChannelMessage(data) ? new ChannelMessage({ id, ...data }) : new DirectMessage({ id, ...data });
+      return this.isChannelMessage(data) ? new ChannelMessage({ ...data, id }) : new DirectMessage({ ...data, id });
     });
   }
 
