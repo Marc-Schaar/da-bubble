@@ -13,9 +13,9 @@ import { SearchResultComponent } from '../search-result/search-result.component'
 import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { SearchService } from '../../services/search/search.service';
-import { UserProfileComponent } from '../../../features/dialogs/user-profile/user-profile.component';
-import { UserMenuComponent } from '../../../features/dialogs/user-menu/user-menu.component';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
 
 @Component({

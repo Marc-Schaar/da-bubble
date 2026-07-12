@@ -1,6 +1,6 @@
 # Refactoring-Roadmap DA-Bubble
 
-Stand: 2026-07-12 · Branch: `refactor-chat-navigation` (16 Commits vor `main`)
+Stand: 2026-07-12 · **Phasen 0–8 umgesetzt** (PRs #11, #13–#19 + Phase-8-PR). Offen aus den Phasen: FireService-interne Gliederung in `UsersApi`/`ChannelsApi`/`MessagesApi` (Phase 5) und SearchService-Trennung UI-State/Suchlogik (Phase 6) — bewusst auf Folge-PRs verschoben.
 
 Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. Jede Phase ist einzeln committbar und über die Smoke-Test-Checkliste (unten) manuell verifizierbar — es gibt kein Test-Sicherheitsnetz (alle `.spec.ts` sind ungepflegte CLI-Scaffolds).
 

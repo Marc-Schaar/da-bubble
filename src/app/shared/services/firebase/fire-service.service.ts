@@ -14,9 +14,9 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ChannelMessage, Reaction } from '../../../features/app_chat/models/channel-message/channel-message';
-import { User } from '../../../features/app_auth/models/user/user';
-import { Channel } from '../../../features/app_channel/models/channel/channel';
+import { ChannelMessage, Reaction } from '../../../features/chat/models/channel-message/channel-message';
+import { User } from '../../../features/auth/models/user/user';
+import { Channel } from '../../../features/channel/models/channel/channel';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
 import { UserStore } from '../user/user-store';
 
