@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { AVATAR_IMAGES } from '../../constants';
 
 /**
@@ -9,6 +9,7 @@ import { AVATAR_IMAGES } from '../../constants';
   selector: 'app-avatar-picker',
   templateUrl: './avatar-picker.component.html',
   styleUrl: './avatar-picker.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarPickerComponent {
   public readonly avatars = AVATAR_IMAGES;

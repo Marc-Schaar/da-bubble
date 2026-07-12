@@ -1,10 +1,11 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-divider-template',
   imports: [],
   templateUrl: './divider-template.component.html',
   styleUrl: './divider-template.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerTemplateComponent {
   messageData = input.required<Date | any>();

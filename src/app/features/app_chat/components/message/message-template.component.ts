@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -7,23 +7,26 @@ import { FormsModule } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import emojiData from 'unicode-emoji-json';
 
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
-import { UserStore } from '../../../../shared/services/user/user-store';
-import { MentionService } from '../../../../shared/services/mention/mention.service';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
 import { User } from '../../../app_auth/models/user/user';
+import { UserStore } from '../../../../shared/services/user/user-store';
+import { MentionService } from '../../../../shared/services/mention/mention.service';
+import { ReactionContext, ReactionsService } from '../../services/reactions/reactions.service';
+import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
+import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe],
+  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateComponent {
   private fireService: FireServiceService = inject(FireServiceService);
@@ -32,52 +35,56 @@ export class MessageTemplateComponent {
   public navigationService: NavigationService = inject(NavigationService);
   private userStore: UserStore = inject(UserStore);
   private mentionService: MentionService = inject(MentionService);
+  public reactionsService: ReactionsService = inject(ReactionsService);
+
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
-  reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
-  showAllReactions: boolean = false;
   inputEdit: string = '';
-  emojis: string[] = [
-    'emoji _nerd face_',
-    'emoji _person raising both hands in celebration_',
-    'emoji _rocket_',
-    'emoji _white heavy check mark_',
-  ];
-  public emojiDataBase: any;
-  public preSelectedEmojis: Record<string, string> = {
-    thumbsUp: '\u{1F44D}',
-    checkMark: '\u{2705}',
-    rocket: '\u{1F680}',
-    nerd: '\u{1F913}',
-  };
-  public preSelectedEmojiList = Object.values(this.preSelectedEmojis);
+  public readonly preSelectedEmojis = PRESELECTED_EMOJIS;
+  public readonly preSelectedEmojiList = Object.values(PRESELECTED_EMOJIS);
 
   message = input.required<ChannelMessage | DirectMessage>();
-  @Input() currentChannelId: string = '';
-  @Input() parentMessageId: string = '';
-  @Input() isThread: boolean = false;
-  @Input() channelType: 'direct' | 'channel' | 'thread' | null = null;
+  currentChannelId = input<string>('');
+  parentMessageId = input<string>('');
+  isThread = input<boolean>(false);
+  channelType = input<'direct' | 'channel' | 'thread' | null>(null);
 
   isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
+
+  isOwnMessage = computed(() => this.message().name === this.authService.currentUser()?.displayName);
 
   reactions = computed(() => {
     const msg = this.message();
     return msg instanceof ChannelMessage ? msg.reaction : [];
   });
 
+  private reactionContext(): ReactionContext {
+    return {
+      channelId: this.currentChannelId(),
+      parentMessageId: this.parentMessageId(),
+      isThread: this.isThread(),
+    };
+  }
+
   /**
-   * Initializes the component by setting the current user ID
-   * and loading the emoji database.
+   * Toggles an emoji reaction on this message (hover reaction bar).
    */
-  constructor() {
-    this.emojiDataBase = emojiData;
+  public toggleReaction(emoji: string) {
+    const msg = this.message();
+    if (msg instanceof ChannelMessage) {
+      this.reactionsService.toggleReaction(msg, emoji, this.reactionContext());
+      this.reactionMenuOpen = false;
+    }
+  }
+
+  public hasReacted(emoji: string): boolean {
+    return this.reactionsService.hasReacted(emoji, this.reactions());
   }
 
   /**
    * Enables editing mode for a specific message.
    * @param message - The message to edit
-   * @param index - Index of the message in the message list
    */
   public editMessage(message: ChannelMessage | DirectMessage) {
     this.menuOpen = false;
@@ -85,16 +92,16 @@ export class MessageTemplateComponent {
     this.inputEdit = message.message;
   }
 
-  public async updateMessage(message: any) {
-    this.isThread ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
+  public async updateMessage(message: ChannelMessage | DirectMessage) {
+    this.isThread() ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
   }
 
   /**
    * Updates the message after editing.
    * @param message - The message to update.
    */
-  private updateThreadMessage(message: any) {
-    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+  private updateThreadMessage(message: ChannelMessage | DirectMessage) {
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId(), this.parentMessageId(), message.id);
     if (messageRef) {
       this.isEditing = false;
       try {
@@ -108,9 +115,8 @@ export class MessageTemplateComponent {
    * Updates the content of an edited message.
    * @param message - The message to update
    */
-
-  private updateChannelMessage(message: any) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+  private updateChannelMessage(message: ChannelMessage | DirectMessage) {
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId(), message.id);
     if (messageRef) {
       this.isEditing = false;
       this.fireService.updateMessage(messageRef, this.inputEdit);
@@ -121,114 +127,9 @@ export class MessageTemplateComponent {
   /**
    * Opens the thread view for a specific message.
    * @param messageId - ID of the message to open
-   * @param $event - The click event
    */
   public openThread(messageId: string) {
-    this.navigationService.goToThread(messageId, this.currentChannelId);
-  }
-
-  /**
-   * Adds a reaction to a message or removes it if already reacted.
-   * @param message - The message to react to
-   * @param emoji - The emoji reaction
-   */
-  public addReaction(message: any, emoji: string) {
-    let messageRef;
-    this.isThread
-      ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
-      : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
-
-    let newReaction = { emoji: emoji, from: this.authService.currentUser()?.id || 'n/a' };
-    if (!this.hasReacted(newReaction.emoji, message.reaction)) {
-      message.reaction.push(newReaction);
-      if (messageRef) {
-        this.fireService.updateReaction(messageRef, message.reaction);
-        this.reactionMenuOpen = false;
-      }
-    } else this.removeReaction(message, emoji);
-  }
-
-  /**
-   * Checks if the user has already reacted with a specific emoji.
-   * @param emoji - The emoji to check
-   * @param reactions - The list of reactions
-   * @returns True if the user has reacted, otherwise false
-   */
-  public hasReacted(emoji: any, reactions: any[]): boolean | undefined {
-    if (this.channelType !== 'direct')
-      return reactions.some((reaction) => reaction.from === this.authService.currentUser()?.id && reaction.emoji === emoji);
-    return;
-  }
-
-  /**
-   * Removes a specific emoji reaction from a message.
-   * @param message - The message to update
-   * @param emoji - The emoji to remove
-   */
-  public removeReaction(message: any, emoji: string): any {
-    let messageRef;
-    this.isThread
-      ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
-      : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
-
-    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.authService.currentUser()?.id && r.emoji === emoji);
-    if (reactionIndex >= 0) {
-      message.reaction.splice(reactionIndex, 1);
-      if (messageRef) {
-        this.fireService.updateReaction(messageRef, message.reaction);
-      }
-    }
-  }
-
-  /**
-   * Filters unique emojis from the reactions array.
-   * @param reactions - Array of emoji reactions
-   * @returns Filtered array with unique emojis
-   */
-  public uniqueEmojis(reactions: any[]): any[] {
-    return reactions.filter((reaction, index) => index === reactions.findIndex((r) => r.emoji === reaction.emoji));
-  }
-
-  /**
-   * Counts how many times an emoji was used in a reaction list.
-   * @param emoji - The emoji to count
-   * @param reactions - The array of reactions
-   * @returns Number of times the emoji was used
-   */
-  public countEmoji(emoji: any, reactions: any[]) {
-    return reactions.filter((e) => e.emoji === emoji.emoji).length;
-  }
-
-  /**
-   * Counts how many unique emojis exist in a list.
-   * @param iterable - The array to check
-   * @returns Count of unique emojis
-   */
-  public countUniqueEmojis(iterable: any[]): number {
-    return new Set(iterable.map((e) => e.emoji)).size;
-  }
-
-  /**
-   * Returns the names of users who have reacted to a specific emoji.
-   * @param targetEmoji - The emoji to check reactions for
-   * @param reactions - The list of reactions to check
-   * @returns A list of user names who have reacted with the target emoji
-   */
-  public getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] | any {
-    let allUsers = this.fireService.allUsers();
-    let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
-    let userIds = reactionsWithEmoji.map((reaction: any) => reaction.from);
-    let hasCurrentUserReacted = userIds.includes(this.authService.currentUser()?.id);
-
-    let otherUsers = allUsers
-      .filter((user: any) => userIds.includes(user.id) && user.id !== this.authService.currentUser()?.id)
-      .map((user: any) => user.displayName);
-
-    if (hasCurrentUserReacted) {
-      if (otherUsers.length === 0) return ['Du'];
-      else otherUsers.push('und du');
-    }
-    return otherUsers.length > 0 ? otherUsers : [];
+    this.navigationService.goToThread(messageId, this.currentChannelId());
   }
 
   /**
@@ -252,11 +153,7 @@ export class MessageTemplateComponent {
   }
 
   /**
-   * Retrieves a user document from Firestore by matching the full name.
-   * Queries the 'users' collection where 'displayName' equals the provided message name.
-   *
-   * @returns A promise that resolves to the user data object including the document ID,
-   *          or null if no matching user is found.
+   * Resolves the message author's user document by display name.
    */
   private async _getReceiverByName(): Promise<User | null> {
     const searchName = this.message().name;

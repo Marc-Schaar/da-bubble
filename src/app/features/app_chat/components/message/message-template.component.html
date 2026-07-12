@@ -1,61 +1,51 @@
 <div
-  (mouseleave)="reactionMenuOpen = false; reactionMenuOpenInFooter = false; menuOpen = false"
+  (mouseleave)="reactionMenuOpen = false; menuOpen = false"
   class="message"
   [ngClass]="{
-    reverse: message.name == this.authService.currentUser()?.displayName,
+    reverse: isOwnMessage(),
   }"
 >
-  @if (!isEditing && channelType !== "direct") {
+  @if (!isEditing && channelType() !== "direct") {
     <div class="reaction-bar">
       <button
         class="btn-secundary"
-        [ngClass]="{ 'bg-purple': this.hasReacted(preSelectedEmojis['checkMark'], reactions()) }"
-        (click)="addReaction(message, preSelectedEmojis['checkMark'])"
+        [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['checkMark']) }"
+        (click)="toggleReaction(preSelectedEmojis['checkMark'])"
       >
         {{ preSelectedEmojis["checkMark"] }}
       </button>
       <button
         class="btn-secundary"
-        [ngClass]="{
-          'bg-purple': this.hasReacted(preSelectedEmojis['thumbsUp'], reactions()),
-        }"
-        (click)="addReaction(message, preSelectedEmojis['thumbsUp'])"
+        [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['thumbsUp']) }"
+        (click)="toggleReaction(preSelectedEmojis['thumbsUp'])"
       >
         {{ preSelectedEmojis["thumbsUp"] }}
       </button>
       <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="btn-secundary">
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
       </button>
-      @if (!isThread) {
+      @if (!isThread()) {
         <button class="btn-secundary" (click)="openThread(message().id)">
           <mat-icon class="material-symbols-outlined"> comment </mat-icon>
         </button>
       }
 
-      <button
-        *ngIf="message.name == authService.currentUser()?.displayName"
-        class="hover-to-dark-purple"
-        (click)="this.menuOpen = !this.menuOpen"
-      >
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      @if (menuOpen && message.name == authService.currentUser()?.displayName) {
+      @if (isOwnMessage()) {
+        <button class="hover-to-dark-purple" (click)="this.menuOpen = !this.menuOpen">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      }
+      @if (menuOpen && isOwnMessage()) {
         <div class="menu">
           <button (click)="editMessage(message())">Nachricht bearbeiten</button>
         </div>
       }
-      @if (reactionMenuOpen) {
+      @if (reactionMenuOpen && isChannelMessage()) {
         <div class="reaction-menu">
           @for (emoji of preSelectedEmojiList; track $index) {
-            @if (isChannelMessage()) {
-              <button
-                class="btn-secundary circle"
-                [ngClass]="{ 'bg-purple': hasReacted(emoji, reactions()) }"
-                (click)="addReaction(message(), emoji)"
-              >
-                {{ emoji }}
-              </button>
-            }
+            <button class="btn-secundary circle" [ngClass]="{ 'bg-purple': hasReacted(emoji) }" (click)="toggleReaction(emoji)">
+              {{ emoji }}
+            </button>
           }
         </div>
       }
@@ -80,81 +70,13 @@
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>
           </div>
         }
-        @if (channelType !== "direct") {
-          <div class="emoji-container">
-            @for (
-              emoji of showAllReactions
-                ? uniqueEmojis($any(message()).reaction)
-                : (uniqueEmojis($any(message()).reaction) | slice: 0 : (navigationService.isMobile() ? 2 : 20));
-              track $index
-            ) {
-              <div
-                (click)="addReaction($any(message()), emoji.emoji)"
-                [ngClass]="{ 'bg-purple': this.hasReacted(emoji.emoji, reactions()) }"
-                class="emoji-box"
-              >
-                <span>{{ emoji.emoji }}</span>
-                <span>{{ countEmoji(emoji, $any(message()).reaction) }}</span>
-                <div class="reaction-from-dialog">
-                  <span>{{ emoji.emoji }}</span>
-                  @for (name of getReactionNamesForEmoji(emoji.emoji, reactions()); track $index) {
-                    <h3 class="font-weight-700">{{ name }}</h3>
-                  }
-                  @if (getReactionNamesForEmoji(emoji.emoji, reactions()).length > 1) {
-                    <span>haben</span>
-                  }
-                  @if (
-                    getReactionNamesForEmoji(emoji.emoji, reactions()).length === 1 &&
-                    getReactionNamesForEmoji(emoji.emoji, reactions())[0] === "Du"
-                  ) {
-                    <span>hast</span>
-                  } @else if (
-                    getReactionNamesForEmoji(emoji.emoji, reactions()).length === 1 &&
-                    getReactionNamesForEmoji(emoji.emoji, reactions())[0] !== "Du"
-                  ) {
-                    <span>hat</span>
-                  }
-                  <span> reagiert</span>
-                </div>
-              </div>
-            }
-
-            <button
-              class="emoji-box"
-              *ngIf="countUniqueEmojis(reactions()) > (navigationService.isMobile() ? 2 : 20) && !showAllReactions"
-              (click)="showAllReactions = true"
-            >
-              {{ countUniqueEmojis(reactions()) - (navigationService.isMobile() ? 2 : 20) }} weitere
-            </button>
-            <button
-              class="emoji-box"
-              *ngIf="reactions().length > (navigationService.isMobile() ? 2 : 20) && showAllReactions"
-              (click)="showAllReactions = false"
-            >
-              Weniger anzeigen
-            </button>
-            <button
-              *ngIf="reactions().length > 0"
-              (click)="this.reactionMenuOpenInFooter = !this.reactionMenuOpenInFooter"
-              class="hover-to-dark-purple"
-            >
-              <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
-            </button>
-
-            @if (reactionMenuOpenInFooter) {
-              <div class="reaction-menu">
-                @for (emoji of preSelectedEmojiList; track $index) {
-                  <button
-                    class="btn-secundary circle"
-                    [ngClass]="{ 'bg-purple': this.hasReacted(emoji, reactions()) }"
-                    (click)="addReaction(message, emoji)"
-                  >
-                    {{ emoji }}
-                  </button>
-                }
-              </div>
-            }
-          </div>
+        @if (channelType() !== "direct" && isChannelMessage()) {
+          <app-message-reactions
+            [message]="$any(message())"
+            [currentChannelId]="currentChannelId()"
+            [parentMessageId]="parentMessageId()"
+            [isThread]="isThread()"
+          ></app-message-reactions>
         }
       </footer>
     </section>
@@ -166,7 +88,7 @@
       <div class="action-container">
         <div class="d-flex gap-32">
           <button class="btn btn-outline" (click)="cancel()">Abbrechen</button>
-          <button class="btn btn-primary" (click)="updateMessage(message)">Speichern</button>
+          <button class="btn btn-primary" (click)="updateMessage(message())">Speichern</button>
         </div>
       </div>
     </div>

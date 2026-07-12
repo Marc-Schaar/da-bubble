@@ -14,7 +14,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
+import { ChannelMessage, Reaction } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
@@ -27,7 +27,7 @@ export class FireServiceService {
   private firestore: Firestore = inject(Firestore);
   private userStore = inject(UserStore);
   public allUsers = signal<User[]>([]);
-  private _allChannels = signal<any[]>([]);
+  private _allChannels = signal<Channel[]>([]);
   private unsubAllUsers?: () => void;
   private unsubChannels?: () => void;
 
@@ -82,10 +82,13 @@ export class FireServiceService {
     const channelRef = collection(this.firestore, 'channels');
 
     this.unsubChannels = onSnapshot(channelRef, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const data = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          }) as Channel,
+      );
       this._allChannels.set(data);
     });
   }
@@ -158,7 +161,7 @@ export class FireServiceService {
    * @param value The updated message value.
    * @returns A promise that resolves when the update is complete.
    */
-  updateMessage(ref: DocumentReference, value: any) {
+  updateMessage(ref: DocumentReference, value: string) {
     return ref ? updateDoc(ref, { message: value }) : null;
   }
 
@@ -169,7 +172,7 @@ export class FireServiceService {
    * @param value The updated reaction value.
    * @returns A promise that resolves when the update is complete.
    */
-  updateReaction(ref: DocumentReference, value: any) {
+  updateReaction(ref: DocumentReference, value: Reaction[]) {
     return ref ? updateDoc(ref, { reaction: value }) : null;
   }
 

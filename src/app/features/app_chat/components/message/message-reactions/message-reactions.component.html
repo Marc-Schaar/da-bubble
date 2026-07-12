@@ -1,0 +1,53 @@
+<div class="emoji-container">
+  @for (reaction of visibleReactions(); track reaction.emoji) {
+    @let names = reactionsService.getReactionNamesForEmoji(reaction.emoji, reactions());
+    <div
+      (click)="toggle(reaction.emoji)"
+      [ngClass]="{ 'bg-purple': reactionsService.hasReacted(reaction.emoji, reactions()) }"
+      class="emoji-box"
+    >
+      <span>{{ reaction.emoji }}</span>
+      <span>{{ reactionsService.countEmoji(reaction.emoji, reactions()) }}</span>
+      <div class="reaction-from-dialog">
+        <span>{{ reaction.emoji }}</span>
+        @for (name of names; track $index) {
+          <h3 class="font-weight-700">{{ name }}</h3>
+        }
+        @if (names.length > 1) {
+          <span>haben</span>
+        } @else if (names.length === 1 && names[0] === "Du") {
+          <span>hast</span>
+        } @else if (names.length === 1) {
+          <span>hat</span>
+        }
+        <span> reagiert</span>
+      </div>
+    </div>
+  }
+
+  @if (hiddenCount() > 0 && !showAllReactions()) {
+    <button class="emoji-box" (click)="showAllReactions.set(true)">{{ hiddenCount() }} weitere</button>
+  }
+  @if (showAllReactions() && reactions().length > visibleLimit()) {
+    <button class="emoji-box" (click)="showAllReactions.set(false)">Weniger anzeigen</button>
+  }
+  @if (reactions().length > 0) {
+    <button (click)="reactionMenuOpen.set(!reactionMenuOpen())" class="hover-to-dark-purple">
+      <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
+    </button>
+  }
+
+  @if (reactionMenuOpen()) {
+    <div class="reaction-menu">
+      @for (emoji of preSelectedEmojiList; track $index) {
+        <button
+          class="btn-secundary circle"
+          [ngClass]="{ 'bg-purple': reactionsService.hasReacted(emoji, reactions()) }"
+          (click)="toggle(emoji)"
+        >
+          {{ emoji }}
+        </button>
+      }
+    </div>
+  }
+</div>

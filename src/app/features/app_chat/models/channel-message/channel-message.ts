@@ -1,8 +1,13 @@
 import { BaseMessage } from '../base-message/base-message';
 
+export interface Reaction {
+  emoji: string;
+  from: string;
+}
+
 export class ChannelMessage extends BaseMessage {
-  reaction: string[];
-  thread: string[];
+  reaction: Reaction[];
+  thread: any[];
 
   constructor(obj?: any) {
     super(obj);
