@@ -32,6 +32,7 @@ export class AuthService {
 
   private _currentUser = signal<User | null>(null);
   public currentUser = this._currentUser.asReadonly();
+  private unsubUserDoc?: () => void;
 
   constructor() {
     this.setCurrentUser();
@@ -218,12 +219,15 @@ export class AuthService {
    */
   setCurrentUser() {
     onAuthStateChanged(this.auth, (firebaseUser) => {
+      this.unsubUserDoc?.();
+      this.unsubUserDoc = undefined;
+
       if (firebaseUser) {
         this._currentUser.set(this.mapFirebaseUserToUser(firebaseUser));
 
         const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
 
-        onSnapshot(userDocRef, (docSnap) => {
+        this.unsubUserDoc = onSnapshot(userDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const firestoreData = docSnap.data() as User;
             this._currentUser.set(firestoreData);
