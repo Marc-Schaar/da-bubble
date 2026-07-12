@@ -108,10 +108,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   public showProfile() {
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: this.currentReciever,
-        recieverId: this.currentRecieverId(),
-      },
+      data: this.currentReciever(),
       width: '400px',
       panelClass: ['center-dialog'],
     });

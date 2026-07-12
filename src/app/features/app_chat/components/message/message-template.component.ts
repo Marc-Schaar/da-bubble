@@ -18,6 +18,7 @@ import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-r
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
+import { User } from '../../../app_auth/models/user/user';
 
 @Component({
   selector: 'app-message-template',
@@ -242,12 +243,9 @@ export class MessageTemplateComponent {
    * Displays the receiver's profile.
    */
   public async showProfile() {
-    const reciverData = await this.getReceiverIdByName();
+    const reciverData = await this._getReceiverByName();
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: reciverData,
-        recieverId: reciverData?.id,
-      },
+      data: reciverData,
       width: '400px',
       panelClass: ['center-dialog'],
     });
@@ -260,15 +258,23 @@ export class MessageTemplateComponent {
    * @returns A promise that resolves to the user data object including the document ID,
    *          or null if no matching user is found.
    */
-  private async getReceiverIdByName() {
+  private async _getReceiverByName(): Promise<User | null> {
     const usersCollection = this.fireService.getCollectionRef('users');
-    const q = query(usersCollection!, where('displayName', '==', this.message().name || ''));
+    const searchName = this.message().name;
+    if (!searchName) return null;
+
+    const q = query(usersCollection!, where('displayName', '==', searchName));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
-      return { ...doc.data(), id: doc.id };
-    } else return null;
+      const user = {
+        ...(doc.data() as Omit<User, 'id'>),
+        id: doc.id,
+      } as User;
+      return user;
+    }
+    return null;
   }
 
   /**
