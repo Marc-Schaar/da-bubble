@@ -11,16 +11,7 @@
 
   <p>Aus der Liste wählen</p>
 
-  <div class="avatar-selection-box">
-    @for (avatar of avatars; track avatar) {
-      <img
-        [src]="'img/avatars/' + avatar"
-        [alt]="avatar"
-        (click)="selectAvatar(avatar)"
-        [class.selected]="currentAvatar() === 'img/avatars/' + avatar"
-      />
-    }
-  </div>
+  <app-avatar-picker [(selected)]="currentAvatar"></app-avatar-picker>
 </main>
 
 <footer class="footer">

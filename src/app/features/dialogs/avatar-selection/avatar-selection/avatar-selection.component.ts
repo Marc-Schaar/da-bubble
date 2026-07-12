@@ -1,36 +1,19 @@
-import { AfterViewInit, Component, inject, Inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-
+import { AvatarPickerComponent } from '../../../../shared/components/avatar-picker/avatar-picker.component';
 
 @Component({
   selector: 'app-avatar-selection',
-  imports: [MatIcon],
+  imports: [MatIcon, AvatarPickerComponent],
   templateUrl: './avatar-selection.component.html',
   styleUrl: './avatar-selection.component.scss',
 })
-export class AvatarSelectionComponent implements AfterViewInit {
-  public navigationService = inject(NavigationService);
+export class AvatarSelectionComponent {
+  public readonly dialogRef = inject(MatDialogRef<AvatarSelectionComponent>);
+  public readonly data = inject<any>(MAT_DIALOG_DATA);
 
-  constructor(public dialogRef: MatDialogRef<AvatarSelectionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
-  public selectedAvatar: string = '';
-
-  /**
-   * Lifecycle hook that runs after the component's view has been fully initialized.
-   * Sets the initially selected avatar based on the user's current photoURL.
-   */
-  ngAfterViewInit() {
-    this.selectedAvatar = this.data?.user?.photoURL;
-  }
-
-  /**
-   * Updates the currently selected avatar.
-   * @param avatar - The URL or identifier of the avatar to be selected.
-   */
-  setAvatar(avatar: string) {
-    this.selectedAvatar = avatar;
-  }
+  public selectedAvatar = signal<string>(this.data?.user?.photoUrl || this.data?.user?.photoURL || '');
 
   /**
    * Closes the dialog without saving any changes.
@@ -43,6 +26,6 @@ export class AvatarSelectionComponent implements AfterViewInit {
    * Closes the dialog and returns the selected avatar to the calling component.
    */
   onSave() {
-    this.dialogRef.close(this.selectedAvatar);
+    this.dialogRef.close(this.selectedAvatar());
   }
 }

@@ -1,0 +1,29 @@
+.avatar-picker {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 8px;
+
+  > img {
+    width: clamp(40px, 12vw, 64px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.125s ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.selected {
+      transform: scale(1.1);
+    }
+
+    &:hover:not(.selected) {
+      opacity: 0.8;
+    }
+  }
+}
