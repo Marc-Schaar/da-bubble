@@ -223,8 +223,8 @@ export class MessageTemplateComponent {
     let hasCurrentUserReacted = userIds.includes(currentUserId);
 
     let otherUsers = allUsers
-      .filter((user: any) => userIds.includes(user.key) && user.key !== currentUserId)
-      .map((user: any) => user.fullname);
+      .filter((user: any) => userIds.includes(user.id) && user.id !== currentUserId)
+      .map((user: any) => user.displayName);
 
     if (hasCurrentUserReacted) {
       if (otherUsers.length === 0) return ['Du'];
@@ -258,14 +258,15 @@ export class MessageTemplateComponent {
 
   /**
    * Retrieves a user document from Firestore by matching the full name.
-   * Queries the 'users' collection where 'fullname' equals the provided message name.
+   * Queries the 'users' collection where 'displayName' equals the provided message name.
    *
    * @returns A promise that resolves to the user data object including the document ID,
    *          or null if no matching user is found.
    */
   private async getReceiverIdByName() {
+    debugger;
     const usersCollection = this.fireService.getCollectionRef('users');
-    const q = query(usersCollection!, where('fullname', '==', this.message?.name || ''));
+    const q = query(usersCollection!, where('displayName', '==', this.message().name || ''));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -323,7 +324,7 @@ export class MessageTemplateComponent {
    */
   async caseUser(name: string) {
     const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('fullname', '==', name));
+    const q = query(usersRef, where('displayName', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
     this.navigationService.selectDirectMessageRecipient(userDoc.id);

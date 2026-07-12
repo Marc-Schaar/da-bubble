@@ -16,6 +16,7 @@ import {
 } from '@angular/fire/firestore';
 import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
+import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 
 @Injectable({
@@ -58,34 +59,13 @@ export class FireServiceService {
               ...doc.data(),
             }) as User,
         );
-
         this.allUsers.set(users);
-        console.log(users);
       },
       (error) => {
         console.error('Fehler beim User-Streaming:', error);
       },
     );
   }
-
-  public myChannels = computed(() => {
-    const authService = this.injector.get(AuthService);
-    const channels = this._allChannels();
-    const currentUser = authService.currentUser();
-    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
-
-    if (!currentUser) return [];
-
-    const isGuest = currentUser.email === 'gast@portfolio.de';
-
-    return channels.filter((channel) => {
-      if (isGuest) {
-        return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
-      }
-
-      return channel.member?.some((m: any) => m.id === currentUser.id);
-    });
-  });
 
   /**
    * Startet den Echtzeit-Stream für alle Channels
@@ -102,24 +82,22 @@ export class FireServiceService {
     });
   }
 
-  /**
-   * Retrieves all channels from Firestore.
-   *
-   * @returns A promise that resolves with an array of channel objects.
-   * @throws If there is an error fetching channels from Firestore.
-   */
-  async getChannels() {
-    try {
-      const channelCollection = collection(this.firestore, 'channels');
-      const channelSnapshot = await getDocs(channelCollection);
-      return channelSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-    } catch (error) {
-      throw error;
-    }
-  }
+  public myChannels = computed(() => {
+    const authService = this.injector.get(AuthService);
+    const channels: Channel[] = this._allChannels();
+    const currentUser = authService.currentUser();
+    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
+
+    if (!currentUser) return [];
+
+    const isGuest = currentUser.email === 'gast@portfolio.de';
+    return channels.filter((channel) => {
+      if (isGuest) {
+        return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
+      }
+      return channel.member.some((m: { id: string }) => m.id === currentUser.id);
+    });
+  });
 
   /**
    * Returns a reference to a specific document in Firestore.

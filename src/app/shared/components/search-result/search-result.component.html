@@ -1,25 +1,16 @@
 <ul>
   @for (element of searchService.getCurrentList(); track $index) {
     <li (click)="handleClick(element)">
-      @if (searchService.getChannelBoolean() === true) {
+      @if (isChannel(element)) {
         <div><mat-icon>tag</mat-icon></div>
-      } @else if (searchService.getChannelBoolean() === false) {
-        <div class="userCircle">
-          <img class="profilephoto" src="{{ element?.profilephoto }}" alt="" />
-          <div class="status-dot" [ngClass]="{ online: element?.online }"></div>
+        {{ element.name }}
+      } @else if (isUser(element)) {
+        <div class="profile-status">
+          <img class="profile-status__image" [src]="element.photoUrl" alt="" />
+          <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': element.online }"></div>
         </div>
-      } @else {
-        @if (element.data?.name) {
-          <div><mat-icon>tag</mat-icon></div>
-        } @else {
-          <div class="profile-status">
-            <img class="profile-status__image" [src]="element.photoUrl" alt="" />
-            <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': element?.online }"></div>
-          </div>
-        }
+        {{ element.displayName }}
       }
-
-      {{ element.fullname || element.data.name }}
     </li>
   } @empty {
     Kein

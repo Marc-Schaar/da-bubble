@@ -4,6 +4,8 @@ import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { Auth } from '@angular/fire/auth';
+import { Channel } from '../../../features/app_channel/models/channel/channel';
+import { User } from '../../../features/app_auth/models/user/user';
 
 @Component({
   selector: 'app-search-result',
@@ -28,8 +30,8 @@ export class SearchResultComponent {
    * @param receiverData - The data object of the receiver (user or channel).
    * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
-  public tagReceiver(receiverData: any, tagType: '@' | '#') {
-    const tagName = receiverData.fullname || receiverData.data.name;
+  public tagReceiver(receiverData: Channel | User, tagType: '@' | '#') {
+    const tagName = this.isChannel(receiverData) ? receiverData.name : receiverData.displayName;
     this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
 
     this.searchService.closeList();
@@ -77,6 +79,16 @@ export class SearchResultComponent {
   setReceiver(element: any) {
     this.currentReceiver.emit(element);
     this.searchService.resetList();
+  }
+
+  // Prüft, ob das Element ein Channel ist
+  isChannel(element: User | Channel): element is Channel {
+    return 'member' in element;
+  }
+
+  // Prüft, ob das Element ein User ist
+  isUser(element: User | Channel): element is User {
+    return 'displayName' in element;
   }
 
   /**

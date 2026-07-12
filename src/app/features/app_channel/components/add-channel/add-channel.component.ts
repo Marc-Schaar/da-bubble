@@ -92,7 +92,7 @@ export class AddChannelComponent {
         name: name!,
         description: description || '',
         member: this.channelService.membersToSubmit(),
-        creator: this.authService.currentUser()!.displayName,
+        createdBy: this.authService.currentUser()!.id,
         createdAt: new Date(),
       });
 

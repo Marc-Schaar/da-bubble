@@ -48,7 +48,6 @@
 
     <footer class="card-footer">
       <app-textarea-template
-        [currentUserId]="currentUserId()"
         [reciverId]="currentRecieverId() || ''"
         [reciverCompontent]="'direct'"
         [messages]="this.messagesService.messages()"

@@ -21,7 +21,7 @@ export class SearchService {
   private isResultTrue: boolean = false;
   private directTag: boolean = false;
 
-  private currentList: User[] | Channel[] = [];
+  private currentList: (User | Channel)[] = [];
   private tagType: 'channel' | 'user' | null = null;
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   private input: string = '';
@@ -73,7 +73,7 @@ export class SearchService {
   /**
    * Returns the current autocomplete result list.
    */
-  public getCurrentList(): any[] {
+  public getCurrentList(): (User | Channel)[] {
     return this.currentList;
   }
 
@@ -114,22 +114,6 @@ export class SearchService {
    */
   public stopObserveInput(): void {
     this.setResult(true);
-  }
-
-  /**
-   * Checks if the current user is anonymous.
-   * @returns {boolean | undefined} True if anonymous, false if not, or undefined if no user is signed in.
-   */
-  private isAnonymous(): boolean | undefined {
-    return this.authService.currentUser()?.isAnonymous;
-  }
-
-  /**
-   * Retrieves the UID of the current user.
-   * @returns {string | undefined} The user ID, or undefined if no user is signed in.
-   */
-  private userId(): string | undefined {
-    return this.authService.currentUser()?.id;
   }
 
   /**
@@ -245,30 +229,31 @@ export class SearchService {
    * @param channelsToSearch - The list of channels to search within.
    * @returns {string[]} A list of matching members.
    */
-  private searchChannelMembersByName(searchInput: string, channelsToSearch: any): Channel[] {
-    let foundMembers: any[] = [];
-    channelsToSearch.forEach((channel: { data?: { member?: any[] } }) => {
-      let members = channel.data?.member || [];
-      let matchingMembers = members.filter((member: any) => member.fullname?.toLowerCase().includes(searchInput));
+  private searchChannelMembersByName(searchInput: string, channelsToSearch: Channel[]): User[] {
+    const searchLower = searchInput.toLowerCase();
+    const memberIdsInChannels = new Set<string>();
 
-      foundMembers = [...foundMembers, ...matchingMembers];
+    channelsToSearch.forEach((channel) => {
+      const members = channel?.member || [];
+      members.forEach((member: { id: string }) => {
+        const id = typeof member === 'string' ? member : member.id;
+        if (id) memberIdsInChannels.add(id);
+      });
     });
-    return foundMembers;
+    this.fireService.subAllUsers();
+    const allUsers: User[] = this.fireService.allUsers();
+
+    return allUsers.filter((user) => memberIdsInChannels.has(user.id) && user.displayName?.toLowerCase().includes(searchLower));
   }
 
   /**
    * Searches channels by name.
    * @param searchInput - The lowercase input string to search for.
    * @param channelsToSearch - The list of channels to search within.
-   * @returns {string[]} A list of matching channels.
+   * @returns {Channel[]} A list of matching channels.
    */
-  private searchChannel(searchInput: string, channelsToSearch: any) {
-    let foundChannels: any = [];
-    foundChannels = channelsToSearch.filter((channel: { data?: { name?: string } }) =>
-      channel.data?.name?.toLowerCase().includes(searchInput),
-    );
-
-    return foundChannels;
+  private searchChannel(searchInput: string, channelsToSearch: Channel[]): Channel[] {
+    return channelsToSearch.filter((channel: { name: string }) => channel.name.toLowerCase().includes(searchInput));
   }
 
   /**
@@ -277,9 +262,10 @@ export class SearchService {
    * @param searchCollection - The type of entity to search for ('channel' or 'user').
    * @returns {string[]} A list of matched results.
    */
-  public startSearch(input: string, searchCollection?: 'channel' | 'user'): Channel[] {
+  public startSearch(input: string, searchCollection?: 'channel' | 'user'): (Channel | User)[] {
+    this.fireService.subChannels();
     let searchInput = input.trim()?.toLowerCase() || '';
-    let result: Channel[] = [];
+    let result: (Channel | User)[] = [];
     const channelsToSearch = this.fireService.myChannels();
 
     if (searchCollection === 'channel') {

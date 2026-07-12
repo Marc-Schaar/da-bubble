@@ -71,7 +71,7 @@ export class NewmessageComponent {
    * @returns The name of the current receiver, or an empty string if not available.
    */
   public getReceiverName(): string {
-    let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.fullname || '';
+    let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.displayName || '';
     return receiverName;
   }
 

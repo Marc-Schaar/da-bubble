@@ -12,7 +12,7 @@ Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. 
    - No-op-Stubs in `src/app/shared/services/navigation/navigation.service.ts`: `setUrl()` loggt nur `'test'` (Z.121), `goToThread()` loggt nur die ID (Z.51), `showChannel()`/`toggleThread()` leer (Z.125–127) → **Thread- und Mention-Navigation sind faktisch funktionslos**
    - `chat-new.component.ts` Z.13–16: Komponente hat `@Injectable({providedIn:'root'})` **und** `@Component` — Bug
    - `search.service.ts` Z.190: `this.resetList;` ohne `()` — wird nie ausgeführt
-   - Feld-Mismatch: Queries auf `fullname`/`user.key`, obwohl das User-Model `displayName`/`id` hat (message-template Z.225–227, 268, 326, 341 + chat-thread) → Reaktionsnamen bleiben leer, Mention-Lookup defekt
+   - Feld-Mismatch: Queries auf `displayName`/`user.key`, obwohl das User-Model `displayName`/`id` hat (message-template Z.225–227, 268, 326, 341 + chat-thread) → Reaktionsnamen bleiben leer, Mention-Lookup defekt
 2. **Memory Leaks**
    - `route.queryParams.subscribe` ohne Cleanup (chat-thread Z.63), `route.paramMap.subscribe` (chat-direct Z.56)
    - `onSnapshot` in chat-thread Z.125 wird nie dem deklarierten `unsubMessages` zugewiesen
@@ -41,7 +41,7 @@ Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. 
 0. **Build-Fehler fixen (blockiert alles):** `add-member.component.html` Z.39 — `channelService.currentChannel().name` schlägt fehl, weil `currentChannel()` `null` sein kann. Fix: `currentChannel()?.name` oder `@if`-Guard
 1. `@Injectable`-Decorator aus `src/app/features/app_chat/components/chat-new-message/chat-new.component.ts` (Z.13–15) entfernen
 2. `this.resetList;` → `this.resetList();` in `search.service.ts` Z.190
-3. Feld-Mismatch `fullname`/`key` → `displayName`/`id` in message-template + chat-thread (vorher per Grep prüfen, ob Firestore-Dokumente noch `fullname` enthalten — das User-Model ist die Wahrheit)
+3. Feld-Mismatch `displayName`/`key` → `displayName`/`id` in message-template + chat-thread (vorher per Grep prüfen, ob Firestore-Dokumente noch `displayName` enthalten — das User-Model ist die Wahrheit)
 4. Toten `getThread()`-Listener in `chat-channel.component.ts` Z.133–144 samt Aufrufer löschen
 5. Hartcodierte E-Mail in `messages.service.ts` Z.14 entfernen; `console.log` in fire-service Z.63 und navigation.service Z.106 entfernen
 6. Leeren Stub `UserService.showFeedback()` klären: delegieren oder Aufrufer entfernen
@@ -136,17 +136,17 @@ Reine Moves/Renames erzeugen riesige Diffs und würden die Reviews der inhaltlic
 
 ## Reihenfolge-Begründung
 
-| Phase | Warum an dieser Stelle |
-|---|---|
-| 0 | Ohne Baseline keine Regression erkennbar (keine Tests vorhanden) |
-| 1 | Isolierte Bugs zuerst: billig, risikoarm, entstören alle späteren Tests |
-| 2 | Branch-Zweck abschließen, bevor Neues beginnt; funktionierende Navigation ist Voraussetzung, um alles Weitere manuell testen zu können |
-| 3 | Leaks vor State-Refactor, sonst Geisterdaten-Debugging in Phase 4 |
-| 4 | Fundament (eine Channel-Wahrheit, kein DI-Zyklus) muss stehen, bevor Datenzugriffe verschoben werden |
-| 5 | Firestore aus den Komponenten ziehen macht Phase 6/7 erst möglich |
-| 6 | Dedup vor Zerlegung: sonst wird Dupliziertes mit-zerlegt |
-| 7 | Komponenten-Split/OnPush zuletzt der inhaltlichen Phasen — höchstes Regressionsrisiko, profitiert von allem davor |
-| 8 | Reine Moves ganz am Ende, um die Diffs der inhaltlichen Phasen sauber zu halten |
+| Phase | Warum an dieser Stelle                                                                                                                 |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | Ohne Baseline keine Regression erkennbar (keine Tests vorhanden)                                                                       |
+| 1     | Isolierte Bugs zuerst: billig, risikoarm, entstören alle späteren Tests                                                                |
+| 2     | Branch-Zweck abschließen, bevor Neues beginnt; funktionierende Navigation ist Voraussetzung, um alles Weitere manuell testen zu können |
+| 3     | Leaks vor State-Refactor, sonst Geisterdaten-Debugging in Phase 4                                                                      |
+| 4     | Fundament (eine Channel-Wahrheit, kein DI-Zyklus) muss stehen, bevor Datenzugriffe verschoben werden                                   |
+| 5     | Firestore aus den Komponenten ziehen macht Phase 6/7 erst möglich                                                                      |
+| 6     | Dedup vor Zerlegung: sonst wird Dupliziertes mit-zerlegt                                                                               |
+| 7     | Komponenten-Split/OnPush zuletzt der inhaltlichen Phasen — höchstes Regressionsrisiko, profitiert von allem davor                      |
+| 8     | Reine Moves ganz am Ende, um die Diffs der inhaltlichen Phasen sauber zu halten                                                        |
 
 ---
 
@@ -177,7 +177,7 @@ Nach jeder Phase (mindestens nach jedem Merge) einmal komplett durchspielen — 
 
 - Thread-Navigation über `goToThread()` ist funktionslos (No-op-Stub)
 - Channel-Mention-Navigation über `setUrl()`/`showChannel()` ist funktionslos (No-op-Stubs)
-- Reaktions-Hover zeigt vermutlich keine Namen (Feld-Mismatch `fullname`/`key` vs. `displayName`/`id`)
+- Reaktions-Hover zeigt vermutlich keine Namen (Feld-Mismatch `displayName`/`key` vs. `displayName`/`id`)
 
 ---
 

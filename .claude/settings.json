@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng *)",
+      "Bash(gh auth *)",
+      "PowerShell(gh --version)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'docs: add refactoring roadmap with smoke-test checklist \\(phase 0\\) *)",
+      "Bash(git commit -m 'fix: guard against null currentChannel in add-member template *)",
+      "Bash(git commit -m 'fix: remove erroneous @Injectable decorator from NewmessageComponent *)",
+      "Bash(git commit -m 'fix: actually invoke resetList\\(\\) in searchWithTag default case *)"
+    ]
+  }
+}

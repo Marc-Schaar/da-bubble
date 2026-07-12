@@ -15,7 +15,9 @@
         <mat-icon class="material-symbols-outlined">person</mat-icon>
         <input name="displayName" type="text" formControlName="displayName" placeholder="Name und Nachname" />
       </div>
-      @if (registerForm.get("displayName")?.invalid && (registerForm.get("displayName")?.touched || registerForm.get("fullname")?.dirty)) {
+      @if (
+        registerForm.get("displayName")?.invalid && (registerForm.get("displayName")?.touched || registerForm.get("displayName")?.dirty)
+      ) {
         <span class="error">Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span>
       }
     </section>

@@ -4,10 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import emojiData from 'unicode-emoji-json';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
-import { ChannelMessage } from '../../models/channel-message/channel-message';
-import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { MessagesService } from '../../services/messages/messages.service';
 
 @Component({
@@ -19,13 +16,11 @@ import { MessagesService } from '../../services/messages/messages.service';
 export class TextareaTemplateComponent {
   private messagesService = inject(MessagesService);
   public searchService: SearchService = inject(SearchService);
-  private authService = inject(AuthService);
   public reactionMenuOpenInTextarea: boolean = false;
   public input: string = '';
   private taggedNames: string[] = [];
 
   public emojis: any;
-  @Input() currentUserId: string = '';
   @Input() reciverId: string = '';
   @Input() reciverName: string = '';
   @Input() messages: any[] = [];

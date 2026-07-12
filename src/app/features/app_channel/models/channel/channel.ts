@@ -1,8 +1,8 @@
 export interface Channel {
   id?: string;
   name: string;
-  member: { id: String }[];
+  member: { id: string }[];
   description: string;
-  creator: string;
   createdAt: Date;
+  createdBy: string;
 }

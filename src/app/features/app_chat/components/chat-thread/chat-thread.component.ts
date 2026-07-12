@@ -185,7 +185,7 @@ export class ThreadComponent implements OnInit {
    */
   async caseUser(name: string) {
     const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('fullname', '==', name));
+    const q = query(usersRef, where('displayName', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
     this.navigationService.selectDirectMessageRecipient(userDoc.id);
