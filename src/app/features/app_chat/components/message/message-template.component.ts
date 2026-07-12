@@ -124,7 +124,7 @@ export class MessageTemplateComponent {
    * @param $event - The click event
    */
   public openThread(messageId: string) {
-    this.navigationService.goToThread(messageId);
+    this.navigationService.goToThread(messageId, this.currentChannelId);
   }
 
   /**

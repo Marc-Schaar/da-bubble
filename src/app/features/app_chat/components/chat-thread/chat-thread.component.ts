@@ -133,7 +133,7 @@ export class ThreadComponent implements OnInit {
    * Closes the current thread and redirects the user.
    */
   public closeThread() {
-    if (!this.navigationService.isMobile()) this.navigationService.toggleThread('close');
+    this.navigationService.toggleThread('close');
   }
 
   /**
