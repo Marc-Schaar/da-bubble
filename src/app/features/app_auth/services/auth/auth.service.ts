@@ -5,7 +5,6 @@ import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPop
 import { arrayUnion, doc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
@@ -27,9 +26,6 @@ export class AuthService {
 
   public errorMessage = signal<string | null>(null);
 
-  //Ab hier refactored
-  private formBuilder = inject(FormBuilder);
-  private readonly passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$';
   private tempUserData = signal<RegisterData | null>(null);
 
   private userStore = inject(UserStore);
@@ -286,46 +282,4 @@ export class AuthService {
     }
   }
 
-  /**
-   * Gemeinsame Basis-Konfiguration für Login und Register
-   */
-  private get basicAuthFields() {
-    return {
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(this.passwordPattern)]],
-    };
-  }
-
-  /**
-   * Initializes and configures the FormGroup for the login process.
-   * * @description
-   * Defines a form group containing 'email' and 'password' fields with the following rules:
-   * - **email**: Required, must follow a valid email format.
-   * - **password**: Required field.
-   * * @returns {FormGroup} A configured FormGroup instance ready for template binding.
-   */
-  public createLoginForm(): FormGroup {
-    return this.formBuilder.group(this.basicAuthFields);
-  }
-
-  /**
-   * Initializes and configures the FormGroup for the user registration process.
-   * * @description
-   * This method extends the basic authentication fields (email and password)
-   * with additional fields required for creating a new user account:
-   * - **email**: Inherited from basicAuthFields (Required, Email format).
-   * - **password**: Inherited from basicAuthFields (Required, Min length 6).
-   * - **displayName**: Required field, minimum of 2 characters.
-   * - **photoURL**: Optional, defaults to a standard placeholder path.
-   * - **acceptTerms**: Required to be 'true' (checkbox must be checked).
-   * * @returns {FormGroup} A fully configured FormGroup for the registration template.
-   */
-  public createRegisterForm(): FormGroup {
-    return this.formBuilder.group({
-      ...this.basicAuthFields,
-      displayName: ['', [Validators.required, Validators.minLength(5)]],
-      photoURL: ['img/avatar_default.png'],
-      acceptTerms: [false, [Validators.requiredTrue]],
-    });
-  }
 }

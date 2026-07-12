@@ -1,9 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { createRegisterForm } from '../../forms/auth-forms';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 export class RegisterComponent {
   public authService: AuthService = inject(AuthService);
   private navigationService: NavigationService = inject(NavigationService);
-  public registerForm = this.authService.createRegisterForm();
+  public registerForm = createRegisterForm(inject(FormBuilder));
 
   public onSubmit() {
     if (this.registerForm.invalid) {

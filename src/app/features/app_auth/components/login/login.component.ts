@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { createLoginForm } from '../../forms/auth-forms';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent {
   authService: AuthService = inject(AuthService);
   navigationService: NavigationService = inject(NavigationService);
 
-  public loginForm = this.authService.createLoginForm();
+  public loginForm = createLoginForm(inject(FormBuilder));
 
   /**
    * Signs in the user with email and password.
