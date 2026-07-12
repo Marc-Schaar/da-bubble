@@ -10,7 +10,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 
 import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 
-import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
+import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
@@ -144,9 +144,9 @@ export class MessageTemplateComponent {
    * Displays the receiver's profile.
    */
   public async showProfile() {
-    const reciverData = await this._getReceiverByName();
-    this.dialog.open(DialogReciverComponent, {
-      data: reciverData,
+    const receiverData = await this._getReceiverByName();
+    this.dialog.open(DialogReceiverComponent, {
+      data: receiverData,
       width: '400px',
       panelClass: ['center-dialog'],
     });

@@ -23,8 +23,8 @@
     <div class="card-footer">
       <app-textarea-template
         [placeholderText]="'Starte eine Nachricht an: ' + (getReceiverName() || '...')"
-        [reciverId]="getReceiverId()"
-        [reciverCompontent]="isChannel(currentReceiver) ? 'channel' : 'direct'"
+        [receiverId]="getReceiverId()"
+        [receiverComponent]="isChannel(currentReceiver) ? 'channel' : 'direct'"
       ></app-textarea-template>
     </div>
   </section>

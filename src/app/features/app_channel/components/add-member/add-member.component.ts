@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
+import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { User } from '../../../app_auth/models/user/user';
 import { ChannelService } from '../../services/channel/channel.service';
@@ -87,7 +87,7 @@ export class AddMemberComponent {
   }
 
   public openProfileDialog(userData: User) {
-    this.dialog.open(DialogReciverComponent, {
+    this.dialog.open(DialogReceiverComponent, {
       data: userData,
       width: '400px',
       panelClass: ['center-dialog'],

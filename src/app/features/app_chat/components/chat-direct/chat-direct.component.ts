@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
+import { DialogReceiverComponent } from '../../../dialogs/dialog-receiver/dialog-receiver.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -48,8 +48,8 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   public chatService: ChatService = inject(ChatService);
   private readonly destroyRef = inject(DestroyRef);
 
-  public currentRecieverId = signal<string | null>(null);
-  public currentReciever = signal<User | null>(null);
+  public currentReceiverId = signal<string | null>(null);
+  public currentReceiver = signal<User | null>(null);
   public readonly currentUserId = computed(() => this.authService.currentUser()?.id || '');
 
   /**
@@ -57,9 +57,9 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.currentRecieverId.set(params.get('id'));
-      this.getRecieverFromUrl();
-      this.loadDirectChat(this.currentRecieverId() || '');
+      this.currentReceiverId.set(params.get('id'));
+      this.getReceiverFromUrl();
+      this.loadDirectChat(this.currentReceiverId() || '');
     });
   }
 
@@ -74,9 +74,9 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   /**
    * Retrieves the receiver's data using the receiver ID from the route.
    */
-  private async getRecieverFromUrl() {
-    const user = await this.userStore.getUserById(this.currentRecieverId() || '');
-    if (user) this.currentReciever.set(user);
+  private async getReceiverFromUrl() {
+    const user = await this.userStore.getUserById(this.currentReceiverId() || '');
+    if (user) this.currentReceiver.set(user);
   }
 
   /**
@@ -93,15 +93,15 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * @returns True if the current user is the receiver.
    */
   public isYou(): boolean {
-    return this.currentRecieverId() === this.currentUserId();
+    return this.currentReceiverId() === this.currentUserId();
   }
 
   /**
    * Displays the receiver's profile.
    */
   public showProfile() {
-    this.dialog.open(DialogReciverComponent, {
-      data: this.currentReciever(),
+    this.dialog.open(DialogReceiverComponent, {
+      data: this.currentReceiver(),
       width: '400px',
       panelClass: ['center-dialog'],
     });

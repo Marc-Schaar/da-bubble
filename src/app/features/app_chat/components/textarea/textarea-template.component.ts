@@ -21,12 +21,12 @@ export class TextareaTemplateComponent {
   private taggedNames: string[] = [];
 
   public emojis: any;
-  @Input() reciverId: string = '';
-  @Input() reciverName: string = '';
+  @Input() receiverId: string = '';
+  @Input() receiverName: string = '';
   @Input() messages: any[] = [];
   @Input() isChannelComponent: boolean = false;
   @Input() placeholderText: string = 'Starte eine neue Nachricht';
-  @Input() reciverCompontent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
+  @Input() receiverComponent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
   @Input() threadId: string = '';
 
   /**
@@ -59,7 +59,7 @@ export class TextareaTemplateComponent {
   newMessage(): void {
     if (!this.input.trim()) return;
     const messageToSend = this.addMarkerSlashes(this.input);
-    switch (this.reciverCompontent) {
+    switch (this.receiverComponent) {
       case 'direct':
         this.sendDirectMessage(messageToSend);
         break;
@@ -96,21 +96,21 @@ export class TextareaTemplateComponent {
    * Sends a new message in the current thread.
    */
   sendThreadMessage(messageToSend: string) {
-    this.messagesService.sendThreadMessage(messageToSend, this.reciverId, this.threadId);
+    this.messagesService.sendThreadMessage(messageToSend, this.receiverId, this.threadId);
   }
 
   /**
    * Sends a new direct Message.
    */
   sendDirectMessage(messageToSend: string): void {
-    this.messagesService.sendDirectMessage(messageToSend, this.reciverId);
+    this.messagesService.sendDirectMessage(messageToSend, this.receiverId);
   }
 
   /**
    * Sends a new message in the current Channel.
    */
   sendChannelMessage(messageToSend: string): void {
-    this.messagesService.sendChannelMessage(messageToSend, this.reciverId);
+    this.messagesService.sendChannelMessage(messageToSend, this.receiverId);
   }
 
   /**

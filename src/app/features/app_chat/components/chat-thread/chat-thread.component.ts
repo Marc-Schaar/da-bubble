@@ -63,7 +63,7 @@ export class ThreadComponent implements OnInit {
    */
   async ngOnInit() {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
-      this.currentChannelId = params['reciverId'] || '';
+      this.currentChannelId = params['receiverId'] || '';
       this.userId = params['currentUserId'] || '';
       this.parentMessageId = params['messageId'] || '';
 

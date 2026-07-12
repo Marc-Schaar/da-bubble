@@ -5,14 +5,14 @@ import { NavigationService } from '../../../shared/services/navigation/navigatio
 import { User } from '../../app_auth/models/user/user';
 
 @Component({
-  selector: 'app-dialog-reciver',
+  selector: 'app-dialog-receiver',
   imports: [MatIconModule],
-  templateUrl: './dialog-reciver.component.html',
-  styleUrl: './dialog-reciver.component.scss',
+  templateUrl: './dialog-receiver.component.html',
+  styleUrl: './dialog-receiver.component.scss',
 })
-export class DialogReciverComponent {
-  public readonly reciverData = inject<User>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
+export class DialogReceiverComponent {
+  public readonly receiverData = inject<User>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<DialogReceiverComponent>);
   private readonly navigationService = inject(NavigationService);
 
   /**
@@ -21,8 +21,8 @@ export class DialogReciverComponent {
    * Sets the URL for a direct conversation between the current user and the receiver,
    * shows the direct message view, and closes the user menu.
    */
-  public openReciver() {
-    this.navigationService.selectDirectMessageRecipient(this.reciverData.id);
+  public openReceiver() {
+    this.navigationService.selectDirectMessageRecipient(this.receiverData.id);
     this.closeMenu();
   }
 

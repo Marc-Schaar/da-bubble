@@ -5,8 +5,8 @@
   <section (click)="hideList()">
     <div class="chat-header">
       <button (click)="showProfile()">
-        <app-profile-status [photoUrl]="currentReciever()!.photoUrl" [online]="currentReciever()!.online"></app-profile-status>
-        {{ currentReciever()?.displayName }}
+        <app-profile-status [photoUrl]="currentReceiver()!.photoUrl" [online]="currentReceiver()!.online"></app-profile-status>
+        {{ currentReceiver()?.displayName }}
       </button>
     </div>
 
@@ -23,14 +23,14 @@
       } @empty {
         <li class="startContainer">
           <div class="userContainer">
-            <img [src]="currentReciever()?.photoUrl" alt="" />
-            <span>{{ currentReciever()?.displayName }}</span>
+            <img [src]="currentReceiver()?.photoUrl" alt="" />
+            <span>{{ currentReceiver()?.displayName }}</span>
           </div>
           <div class="welcomeText">
             @if (!isYou()) {
               <p>
                 Diese Unterhaltung findet nur zwischen
-                <a>&commat;{{ currentReciever()?.displayName }} </a>und dir statt.
+                <a>&commat;{{ currentReceiver()?.displayName }} </a>und dir statt.
               </p>
             } @else {
               <p>
@@ -45,11 +45,11 @@
 
     <footer class="card-footer">
       <app-textarea-template
-        [reciverId]="currentRecieverId() || ''"
-        [reciverCompontent]="'direct'"
+        [receiverId]="currentReceiverId() || ''"
+        [receiverComponent]="'direct'"
         [messages]="this.messagesService.messages()"
         [isChannelComponent]="false"
-        [placeholderText]="'Nachricht an @' + currentReciever()?.displayName"
+        [placeholderText]="'Nachricht an @' + currentReceiver()?.displayName"
       ></app-textarea-template>
     </footer>
   </section>

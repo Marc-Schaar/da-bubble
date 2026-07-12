@@ -67,9 +67,9 @@
 
     <section class="card-footer">
       <app-textarea-template
-        [reciverId]="currentChannelId() || ''"
-        [reciverName]="channelService.currentChannel()?.name || ''"
-        [reciverCompontent]="'channel'"
+        [receiverId]="currentChannelId() || ''"
+        [receiverName]="channelService.currentChannel()?.name || ''"
+        [receiverComponent]="'channel'"
         [messages]="this.messagesService.messages()"
         [isChannelComponent]="true"
         [placeholderText]="'Nachricht an #' + (channelService.currentChannel()?.name || '')"
