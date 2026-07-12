@@ -151,12 +151,10 @@ export class ChannelService {
 
   public async updateName(id: string, name: string) {
     await this.fireService.updateChannelData(id, { name });
-    this.currentChannel.update((c) => ({ ...c, name }) as Channel);
   }
 
   public async updateDescription(id: string, description: string) {
     await this.fireService.updateChannelData(id, { description });
-    this.currentChannel.update((c) => ({ ...c, description }) as Channel);
   }
 
   public async addMembers(id: string, userObjects: { id: string }[]) {
@@ -166,19 +164,6 @@ export class ChannelService {
       this.isSubmitting.set(true);
 
       await this.fireService.addChannelMembers(id, userObjects);
-
-      this.currentChannel.update((current) => {
-        if (!current) return null;
-
-        const existingIds = new Set((current.member || []).map((m: any) => m.id));
-        const newUniqueMembers = userObjects.filter((obj) => !existingIds.has(obj.id));
-
-        return {
-          ...current,
-          member: [...(current.member || []), ...newUniqueMembers],
-        } as Channel;
-      });
-
       this.resetSelection();
     } catch (error) {
       console.error('Fehler beim Hinzufügen der Mitglieder:', error);

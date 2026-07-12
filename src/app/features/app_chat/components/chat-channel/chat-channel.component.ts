@@ -116,7 +116,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    */
   openChannelInfo() {
     this.dialog.open(EditChannelComponent, {
-      data: this.channelService.currentChannel(),
       position: { top: '200px' },
       width: '872px',
       maxWidth: '95vw',
@@ -133,7 +132,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.addMemberWindow = toggle;
 
     this.dialog.open(AddMemberComponent, {
-      data: this.channelService.currentChannel(),
       width: 'auto',
       maxWidth: '95vw',
       maxHeight: '90vh',
