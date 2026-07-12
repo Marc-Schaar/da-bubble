@@ -187,7 +187,7 @@ export class SearchService {
         break;
 
       default:
-        this.resetList;
+        this.resetList();
         break;
     }
   }
