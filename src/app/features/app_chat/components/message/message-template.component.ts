@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 
-import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';

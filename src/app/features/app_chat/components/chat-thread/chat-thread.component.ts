@@ -9,7 +9,7 @@ import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../services/messages/messages.service';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
