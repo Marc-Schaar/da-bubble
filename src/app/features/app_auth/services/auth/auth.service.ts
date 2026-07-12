@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { RegisterData, User } from '../../models/user/user';
+import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../../../shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -109,7 +110,7 @@ export class AuthService {
    * @param user - The user to be added to the default channel
    */
   private async addInDefaultChannel(user: User) {
-    const defaultChannelRef = doc(this.firestore, `channels/KqvcY68R1jP2UsQkv6Nz`);
+    const defaultChannelRef = doc(this.firestore, `channels/${DEFAULT_CHANNEL_ID}`);
     try {
       await updateDoc(defaultChannelRef, {
         member: arrayUnion({
@@ -178,7 +179,6 @@ export class AuthService {
    */
   public async loginAsGuest() {
     this.isLoading = true;
-    const GUEST_EMAIL = 'gast@portfolio.de';
     const GUEST_PW = 'Gast1234';
 
     try {

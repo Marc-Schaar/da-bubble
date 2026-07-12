@@ -18,6 +18,7 @@ import { ChannelMessage } from '../../../features/app_chat/models/channel-messag
 import { User } from '../../../features/app_auth/models/user/user';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -93,11 +94,10 @@ export class FireServiceService {
     const authService = this.injector.get(AuthService);
     const channels: Channel[] = this._allChannels();
     const currentUser = authService.currentUser();
-    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
 
     if (!currentUser) return [];
 
-    const isGuest = currentUser.email === 'gast@portfolio.de';
+    const isGuest = currentUser.email === GUEST_EMAIL;
     return channels.filter((channel) => {
       if (isGuest) {
         return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
