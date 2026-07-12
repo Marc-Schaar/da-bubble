@@ -13,8 +13,8 @@ import { ProfileStatusComponent } from '../../../../shared/components/profile-st
 @Component({
   selector: 'app-channel-edit',
   imports: [CommonModule, MatIcon, FormsModule, ProfileStatusComponent],
-  templateUrl: './edit.channel.component.html',
-  styleUrl: './edit.channel.component.scss',
+  templateUrl: './edit-channel.component.html',
+  styleUrl: './edit-channel.component.scss',
 })
 export class EditChannelComponent {
   private readonly userService = inject(UserService);
