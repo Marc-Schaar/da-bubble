@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
@@ -22,7 +22,6 @@ export class AddMemberComponent {
   private readonly dialog = inject(MatDialog);
 
   public readonly dialogRef = inject(MatDialogRef<AddMemberComponent>);
-  public readonly data = inject<any>(MAT_DIALOG_DATA);
 
   showUserBar: boolean = false;
   addMemberWindow: boolean = false;
@@ -30,7 +29,6 @@ export class AddMemberComponent {
   public isSubmiting = signal<boolean>(false);
 
   constructor() {
-    this.channelService.currentChannel.set(this.data);
     this.channelService.allMembersSelected.set(false);
     this.channelService.resetSelection();
   }

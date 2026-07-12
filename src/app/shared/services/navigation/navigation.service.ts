@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, filter, fromEvent, map, startWith, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, fromEvent, map } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Injectable({
@@ -8,17 +8,13 @@ import { NavigationEnd, Router } from '@angular/router';
 export class NavigationService {
   private router = inject(Router);
 
-  private screenWidthSubject = new BehaviorSubject<boolean>(this.checkScreenWidth());
-  screenWidth$ = this.screenWidthSubject.asObservable();
-  private screenWidthSubscription?: Subscription;
-  private resizeSubscription?: Subscription;
-
   public isAuthPage = signal<boolean>(true);
   public isContactbarPage = signal<boolean>(true);
   public isMainChat = signal<boolean>(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
   public isChannelsOpen = signal<boolean>(true); // Default offen
   public isDirectMessagesOpen = signal<boolean>(false);
+  public isThreadOpen = signal<boolean>(false);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -48,8 +44,16 @@ export class NavigationService {
     }
   }
 
-  public goToThread(id: string) {
-    console.log(id);
+  /**
+   * Opens the thread panel for a message by putting its id into the query
+   * params (read by ThreadComponent) and opening the thread drawer.
+   */
+  public goToThread(messageId: string, channelId: string) {
+    this.isThreadOpen.set(true);
+    this.router.navigate([], {
+      queryParams: { messageId: messageId, reciverId: channelId },
+      queryParamsHandling: 'merge',
+    });
   }
 
   public goToLogin() {
@@ -68,6 +72,7 @@ export class NavigationService {
       this.isDirectMessagesOpen.set(true);
       this.isChannelsOpen.set(false);
     }
+    this.isThreadOpen.set(url.includes('messageId='));
     const isAuth = url.includes('login') || url.includes('register');
     const isContactbar = url.includes('contactbar');
     const path = url.split('?')[0];
@@ -78,10 +83,12 @@ export class NavigationService {
   }
 
   public selectChannel(id: string) {
+    this.isThreadOpen.set(false);
     this.router.navigate(['/main/channel', id]);
   }
 
   public selectDirectMessageRecipient(id: string) {
+    this.isThreadOpen.set(false);
     this.router.navigate(['/main/direct', id]);
   }
 
@@ -93,7 +100,7 @@ export class NavigationService {
     this.router.navigate(['/main/new-message']);
   }
   /**
-   * Observes screen width changes and updates the screenWidthSubject.
+   * Observes screen width changes and updates the isMobile signal.
    */
   private observeScreenWidth(): void {
     fromEvent(window, 'resize')
@@ -117,5 +124,19 @@ export class NavigationService {
     return window.innerWidth < 1024;
   }
 
-  public toggleThread(a: any) {}
+  /**
+   * Opens or closes the thread drawer; closing also removes the messageId
+   * query param so a reload does not restore a stale thread.
+   */
+  public toggleThread(action: 'open' | 'close') {
+    if (action === 'close') {
+      this.isThreadOpen.set(false);
+      this.router.navigate([], {
+        queryParams: { messageId: null },
+        queryParamsHandling: 'merge',
+      });
+    } else {
+      this.isThreadOpen.set(true);
+    }
+  }
 }

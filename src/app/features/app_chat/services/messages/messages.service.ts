@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { onSnapshot, orderBy, query, QuerySnapshot, serverTimestamp } from '@angular/fire/firestore';
+import { getDoc, onSnapshot, orderBy, query, QuerySnapshot } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { DirectMessage } from '../../models/direct-message/direct-message';
@@ -13,6 +13,7 @@ export class MessagesService {
   private readonly authService = inject(AuthService);
 
   public messages = signal<ChannelMessage[] | DirectMessage[]>([]);
+  public threadMessages = signal<(ChannelMessage | DirectMessage)[]>([]);
 
   public subToMessages(channelId: string | null) {
     if (!channelId) return () => {};
@@ -24,6 +25,31 @@ export class MessagesService {
     return onSnapshot(messagesQuery, (snapshot) => {
       this.messages.set(this.processData(snapshot));
     });
+  }
+
+  /**
+   * Streams the replies of a thread into the threadMessages signal.
+   * @returns The unsubscribe function of the listener.
+   */
+  public subToThreadMessages(channelId: string, parentMessageId: string): () => void {
+    const threadRef = this.fireService.getCollectionRef(`channels/${channelId}/messages/${parentMessageId}/thread`);
+    if (!threadRef) return () => {};
+
+    const threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
+    return onSnapshot(threadQuery, (snapshot) => {
+      this.threadMessages.set(this.processData(snapshot));
+    });
+  }
+
+  /**
+   * Fetches the parent message of a thread once.
+   */
+  public async getParentMessage(channelId: string, messageId: string): Promise<any | null> {
+    const messageRef = this.fireService.getMessageRef(channelId, messageId);
+    if (!messageRef) return null;
+
+    const snap = await getDoc(messageRef);
+    return snap.exists() ? { id: snap.id, ...snap.data() } : null;
   }
 
   public subToConversationMessages(userA: string, userB: string): () => void {

@@ -7,7 +7,7 @@
     <section class="card-header">
       <div class="tooltip-cont">
         <div class="addChannel" class="align-center hover-bg cursor-pointer" (click)="openChannelInfo()">
-          # {{ this.currentChannel?.name }}
+          # {{ channelService.currentChannel()?.name }}
           <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
         </div>
         <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
@@ -17,12 +17,12 @@
         <div class="tooltip-cont">
           <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
             <div class="member-img-cont">
-              @for (member of currentChannel?.member; track $index; let i = $index) {
-                <img *ngIf="i < 3" class="avatar" [src]="member.photoURL" alt="Name" />
+              @for (member of channelService.currentChannel()?.member; track $index; let i = $index) {
+                <img *ngIf="i < 3" class="avatar" [src]="$any(member).photoURL" alt="Name" />
               }
             </div>
-            @if (currentChannel?.member?.length) {
-              <span>{{ currentChannel?.member?.length }}</span>
+            @if (channelService.currentChannel()?.member?.length) {
+              <span>{{ channelService.currentChannel()?.member?.length }}</span>
             }
           </div>
 
@@ -68,11 +68,11 @@
     <section class="card-footer">
       <app-textarea-template
         [reciverId]="currentChannelId() || ''"
-        [reciverName]="currentChannel?.name"
+        [reciverName]="channelService.currentChannel()?.name || ''"
         [reciverCompontent]="'channel'"
         [messages]="this.messagesService.messages()"
         [isChannelComponent]="true"
-        [placeholderText]="'Nachricht an #' + currentChannel?.name"
+        [placeholderText]="'Nachricht an #' + (channelService.currentChannel()?.name || '')"
       ></app-textarea-template>
     </section>
   </div>

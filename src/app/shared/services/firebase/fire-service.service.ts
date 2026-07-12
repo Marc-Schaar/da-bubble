@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Injector, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   addDoc,
   arrayRemove,
@@ -17,16 +17,19 @@ import {
 import { ChannelMessage } from '../../../features/app_chat/models/channel-message/channel-message';
 import { User } from '../../../features/app_auth/models/user/user';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
+import { UserStore } from '../user/user-store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
   private firestore: Firestore = inject(Firestore);
-  private injector = inject(Injector);
+  private userStore = inject(UserStore);
   public allUsers = signal<User[]>([]);
   private _allChannels = signal<any[]>([]);
+  private unsubAllUsers?: () => void;
+  private unsubChannels?: () => void;
 
   /**
    * Updates the online status of the current user in Firestore.
@@ -45,11 +48,14 @@ export class FireServiceService {
   /**
    * Erstellt eine permanente Verbindung zur User-Collection.
    * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
+   * Idempotent: der Listener lebt für die App-Lebensdauer, weitere Aufrufe
+   * sind No-ops (vorher entstand pro Aufruf ein neuer Listener).
    */
-  public subAllUsers() {
+  public subAllUsers(): void {
+    if (this.unsubAllUsers) return;
     const usersCollection = collection(this.firestore, 'users');
 
-    return onSnapshot(
+    this.unsubAllUsers = onSnapshot(
       usersCollection,
       (snapshot) => {
         const users = snapshot.docs.map(
@@ -68,12 +74,14 @@ export class FireServiceService {
   }
 
   /**
-   * Startet den Echtzeit-Stream für alle Channels
+   * Startet den Echtzeit-Stream für alle Channels.
+   * Idempotent wie subAllUsers().
    */
-  public subChannels() {
+  public subChannels(): void {
+    if (this.unsubChannels) return;
     const channelRef = collection(this.firestore, 'channels');
 
-    return onSnapshot(channelRef, (snapshot) => {
+    this.unsubChannels = onSnapshot(channelRef, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -83,14 +91,12 @@ export class FireServiceService {
   }
 
   public myChannels = computed(() => {
-    const authService = this.injector.get(AuthService);
     const channels: Channel[] = this._allChannels();
-    const currentUser = authService.currentUser();
-    const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
+    const currentUser = this.userStore.currentUser();
 
     if (!currentUser) return [];
 
-    const isGuest = currentUser.email === 'gast@portfolio.de';
+    const isGuest = currentUser.email === GUEST_EMAIL;
     return channels.filter((channel) => {
       if (isGuest) {
         return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;

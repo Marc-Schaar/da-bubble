@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, Input } from '@angular/core';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
-import { collection, getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import emojiData from 'unicode-emoji-json';
 
-import { Firestore } from '@angular/fire/firestore';
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { UserStore } from '../../../../shared/services/user/user-store';
+import { MentionService } from '../../../../shared/services/mention/mention.service';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
@@ -31,7 +30,8 @@ export class MessageTemplateComponent {
   public authService = inject(AuthService);
   private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
-  private firestore: Firestore = inject(Firestore);
+  private userStore: UserStore = inject(UserStore);
+  private mentionService: MentionService = inject(MentionService);
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
@@ -124,7 +124,7 @@ export class MessageTemplateComponent {
    * @param $event - The click event
    */
   public openThread(messageId: string) {
-    this.navigationService.goToThread(messageId);
+    this.navigationService.goToThread(messageId, this.currentChannelId);
   }
 
   /**
@@ -259,91 +259,15 @@ export class MessageTemplateComponent {
    *          or null if no matching user is found.
    */
   private async _getReceiverByName(): Promise<User | null> {
-    const usersCollection = this.fireService.getCollectionRef('users');
     const searchName = this.message().name;
     if (!searchName) return null;
-
-    const q = query(usersCollection!, where('displayName', '==', searchName));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const doc = querySnapshot.docs[0];
-      const user = {
-        ...(doc.data() as Omit<User, 'id'>),
-        id: doc.id,
-      } as User;
-      return user;
-    }
-    return null;
+    return this.userStore.findUserByDisplayName(searchName);
   }
 
   /**
-   * Handles click events on mention buttons within a message.
-   * Determines whether a mention button was clicked and, if so,
-   * extracts its symbol (@ or #) and the associated name,
-   * then delegates to navigation logic.
-   *
-   * @param event - The MouseEvent triggered by the click.
+   * Delegates clicks inside the rendered message to the MentionService.
    */
   onMentionClick(event: MouseEvent | TouchEvent) {
-    const btn = (event.target as HTMLElement).closest('.tag-btn');
-    if (!btn) return;
-
-    const fullTag = btn.textContent?.trim();
-    if (!fullTag) return;
-
-    const symbol = fullTag.charAt(0);
-    const name = fullTag.slice(1).trim();
-    this.showProfileOrChannel(symbol, name);
-  }
-
-  /**
-   * Routes the click on a mention based on its symbol.
-   * If the symbol is '@', performs a user lookup;
-   * if '#', performs a channel lookup.
-   *
-   * @param symbol - The mention symbol, either '@' or '#'.
-   * @param name - The username or channel name to lookup.
-   */
-  async showProfileOrChannel(symbol: string, name: string) {
-    switch (symbol) {
-      case '@':
-        await this.caseUser(name);
-        break;
-
-      case '#':
-        await this.caseChannel(name);
-        break;
-    }
-  }
-
-  /**
-   * Looks up a user in Firestore by their full name,
-   * sets the navigation service’s receiver ID to the found user’s document ID,
-   * and switches the UI to a direct chat view.
-   *
-   * @param name - The user’s full name to query.
-   */
-  async caseUser(name: string) {
-    const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('displayName', '==', name));
-    const snapshot = await getDocs(q);
-    const userDoc = snapshot.docs[0];
-    this.navigationService.selectDirectMessageRecipient(userDoc.id);
-  }
-
-  /**
-   * Looks up a channel in Firestore by its name,
-   * sets the navigation service’s receiver ID to the found channel’s document ID,
-   * and switches the UI to the channel view.
-   *
-   * @param name - The channel’s name to query.
-   */
-  async caseChannel(name: string) {
-    const channelsRef = collection(this.firestore, 'channels');
-    const q = query(channelsRef, where('name', '==', name));
-    const snapshot = await getDocs(q);
-    const channelDoc = snapshot.docs[0];
-    this.navigationService.selectChannel(channelDoc.id);
+    this.mentionService.handleMentionClick(event);
   }
 }

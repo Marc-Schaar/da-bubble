@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
@@ -16,6 +17,7 @@ export class ChannelService {
   private readonly authService = inject(AuthService);
 
   public currentChannel = signal<Channel | null>(null);
+  private unsubCurrentChannel?: () => void;
   public selectedUsers = signal<User[]>([]);
   public userSearchQuery = signal('');
   public allMembersSelected = signal<boolean>(false);
@@ -88,6 +90,28 @@ export class ChannelService {
 
   private isSubmitting = signal<boolean>(false);
 
+  /**
+   * Single source of truth for the active channel: holds THE one
+   * Firestore listener on the channel document (derived from the route
+   * param) and feeds the currentChannel signal. Passing null clears it.
+   */
+  public setActiveChannel(id: string | null): void {
+    this.unsubCurrentChannel?.();
+    this.unsubCurrentChannel = undefined;
+
+    if (!id) {
+      this.currentChannel.set(null);
+      return;
+    }
+
+    const channelRef = this.fireService.getDocRef('channels', id);
+    if (!channelRef) return;
+
+    this.unsubCurrentChannel = onSnapshot(channelRef, (snap) => {
+      this.currentChannel.set(snap.exists() ? ({ id: snap.id, ...snap.data() } as Channel) : null);
+    });
+  }
+
   async createChannel(channelData: Channel) {
     try {
       this.isSubmitting.set(true);
@@ -127,12 +151,10 @@ export class ChannelService {
 
   public async updateName(id: string, name: string) {
     await this.fireService.updateChannelData(id, { name });
-    this.currentChannel.update((c) => ({ ...c, name }) as Channel);
   }
 
   public async updateDescription(id: string, description: string) {
     await this.fireService.updateChannelData(id, { description });
-    this.currentChannel.update((c) => ({ ...c, description }) as Channel);
   }
 
   public async addMembers(id: string, userObjects: { id: string }[]) {
@@ -142,19 +164,6 @@ export class ChannelService {
       this.isSubmitting.set(true);
 
       await this.fireService.addChannelMembers(id, userObjects);
-
-      this.currentChannel.update((current) => {
-        if (!current) return null;
-
-        const existingIds = new Set((current.member || []).map((m: any) => m.id));
-        const newUniqueMembers = userObjects.filter((obj) => !existingIds.has(obj.id));
-
-        return {
-          ...current,
-          member: [...(current.member || []), ...newUniqueMembers],
-        } as Channel;
-      });
-
       this.resetSelection();
     } catch (error) {
       console.error('Fehler beim Hinzufügen der Mitglieder:', error);
@@ -162,6 +171,19 @@ export class ChannelService {
     } finally {
       this.isSubmitting.set(false);
     }
+  }
+
+  /**
+   * Looks up a channel document by its name (used for #mentions).
+   */
+  public async findChannelByName(name: string): Promise<Channel | null> {
+    const channelsRef = this.fireService.getCollectionRef('channels');
+    if (!channelsRef) return null;
+
+    const q = query(channelsRef, where('name', '==', name.trim()));
+    const snapshot = await getDocs(q);
+    const docSnap = snapshot.docs[0];
+    return docSnap ? ({ id: docSnap.id, ...docSnap.data() } as Channel) : null;
   }
 
   public async leaveChannel() {

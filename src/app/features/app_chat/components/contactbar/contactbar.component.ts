@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { ProfileStatusComponent } from '../../../../shared/components/profile-st
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })
-export class ContactbarComponent implements OnInit, OnDestroy {
+export class ContactbarComponent implements OnInit {
   public firestoreService = inject(FireServiceService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
@@ -37,15 +37,13 @@ export class ContactbarComponent implements OnInit, OnDestroy {
   public currentLink: string = '';
   public addChannelWindow: boolean = false;
 
-  private unsubUsers?: any;
-  private unsubChannels?: any;
-
   /**
-   * Initializes the component by loading users, channels, and setting the current user.
+   * Initializes the component by ensuring the shared user and channel
+   * streams are running (owned by FireService, app-lifetime).
    */
-  async ngOnInit() {
-    this.unsubUsers = this.firestoreService.subAllUsers();
-    this.unsubChannels = this.firestoreService.subChannels();
+  ngOnInit() {
+    this.firestoreService.subAllUsers();
+    this.firestoreService.subChannels();
   }
 
   public toggleDropdown(type: 'channels' | 'directMessages') {
@@ -69,8 +67,4 @@ export class ContactbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.unsubUsers) this.unsubUsers();
-    if (this.unsubChannels) this.unsubChannels();
-  }
 }

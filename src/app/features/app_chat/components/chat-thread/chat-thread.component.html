@@ -8,7 +8,7 @@
         <div class="thread-container">
           <p>Thread</p>
         </div>
-        <div class="channel-name-container"># {{ currentChannel?.name }}</div>
+        <div class="channel-name-container"># {{ channelService.currentChannel()?.name }}</div>
       </div>
       @if (!navigationService.isMobile()) {
         <button (click)="closeThread()" class="close-button filter-hover-purple-3">
@@ -36,12 +36,12 @@
       </li>
 
       <div class="answers-line-container">
-        {{ messages.length }} Antworten
+        {{ messagesService.threadMessages().length }} Antworten
         <div class="line-container"></div>
       </div>
 
       <ul>
-        @for (message of messages; track $index) {
+        @for (message of messagesService.threadMessages(); track $index) {
           <li>
             <app-message-template
               [message]="message"
@@ -58,7 +58,7 @@
       <app-textarea-template
         [reciverId]="currentChannelId"
         [reciverCompontent]="'thread'"
-        [messages]="messages"
+        [messages]="messagesService.threadMessages()"
         [isChannelComponent]="true"
         [placeholderText]="'Antworten...'"
         [threadId]="parentMessageId"

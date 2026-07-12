@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, computed, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
@@ -8,7 +8,6 @@ import { User } from '../../../app_auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
-import { Channel } from '../../models/channel/channel';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({
@@ -23,7 +22,6 @@ export class EditChannelComponent {
   private readonly dialog = inject(MatDialog);
   private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
   public readonly channelService = inject(ChannelService);
-  public readonly data = inject<Channel>(MAT_DIALOG_DATA);
 
   public channelNameEdit: boolean = false;
   public channelDescriptionEdit: boolean = false;
@@ -33,7 +31,6 @@ export class EditChannelComponent {
   public showUserBar: boolean = false;
 
   constructor() {
-    this.channelService.currentChannel.set(this.data);
     this.channelService.allMembersSelected.set(false);
     this.channelService.resetSelection();
   }

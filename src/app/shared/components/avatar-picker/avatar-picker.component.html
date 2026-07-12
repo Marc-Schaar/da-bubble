@@ -1,0 +1,5 @@
+<div class="avatar-picker">
+  @for (avatar of avatars; track avatar) {
+    <img [src]="avatar" [alt]="avatar" (click)="selected.set(avatar)" [class.selected]="selected() === avatar" />
+  }
+</div>
