@@ -39,6 +39,6 @@
   </aside>
 }
 
-@if (feedbackVisible) {
-  <div #feedback class="feedback-cont"></div>
+@if (userService.feedbackMessage(); as feedback) {
+  <div class="feedback-cont">{{ feedback }}</div>
 }
