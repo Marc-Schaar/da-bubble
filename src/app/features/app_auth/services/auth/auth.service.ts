@@ -311,7 +311,7 @@ export class AuthService {
    * - **email**: Inherited from basicAuthFields (Required, Email format).
    * - **password**: Inherited from basicAuthFields (Required, Min length 6).
    * - **displayName**: Required field, minimum of 2 characters.
-   * - **profilephoto**: Optional, defaults to a standard placeholder path.
+   * - **photoURL**: Optional, defaults to a standard placeholder path.
    * - **acceptTerms**: Required to be 'true' (checkbox must be checked).
    * * @returns {FormGroup} A fully configured FormGroup for the registration template.
    */

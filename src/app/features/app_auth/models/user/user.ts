@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   displayName: string;
-  photoUrl?: string;
+  photoUrl: string;
   online: boolean;
   isAnonymous?: boolean;
 }

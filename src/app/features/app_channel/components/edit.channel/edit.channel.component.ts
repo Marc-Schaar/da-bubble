@@ -9,10 +9,11 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
 import { Channel } from '../../models/channel/channel';
+import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule],
+  imports: [CommonModule, MatIcon, FormsModule, ProfileStatusComponent],
   templateUrl: './edit.channel.component.html',
   styleUrl: './edit.channel.component.scss',
 })

@@ -21,7 +21,7 @@
       <li [ngClass]="{ reverse: parentMessageData?.name === this.authService.currentUser()?.displayName }" class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
-            <img src="{{ parentMessageData?.avatar || 'img/profilephoto.png' }}" alt="{{ parentMessageData?.name }}" />
+            <img src="{{ parentMessageData?.avatar || 'img/photoURL.png' }}" alt="{{ parentMessageData?.name }}" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
@@ -56,7 +56,6 @@
 
     <div class="card-footer" (mouseleave)="listOpen = false">
       <app-textarea-template
-        [currentUserId]="userId"
         [reciverId]="currentChannelId"
         [reciverCompontent]="'thread'"
         [messages]="messages"

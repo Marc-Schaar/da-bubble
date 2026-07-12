@@ -47,7 +47,7 @@
       <div class="creator">
         Erstellt von
         <div class="creator--name">
-          {{ channelService.currentChannel()?.creator }}
+          {{ channelService.currentChannel()?.createdBy }}
         </div>
       </div>
     </section>
@@ -58,10 +58,7 @@
       <ul class="member-list">
         @for (member of channelService.enrichedMembers(); track $index) {
           <li (click)="openProfileDialog(member)" class="member-list--item">
-            <div class="profile-status">
-              <img class="profile-status__image" [src]="member.photoUrl" alt="" />
-              <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': member.online }"></div>
-            </div>
+            <app-profile-status [photoUrl]="member.photoUrl" [online]="member.online"></app-profile-status>
             {{ member.displayName }}
           </li>
         }
@@ -102,10 +99,7 @@
           <ul class="choose-user-bar" #chooseUserBar>
             @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
               <li class="user-select-cont" (click)="addUserToSelection(user)">
-                <div class="profile-status">
-                  <img class="profile-status__image" [src]="user.photoUrl" alt="" />
-                  <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': user.online }"></div>
-                </div>
+                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
                 {{ user.displayName }}
               </li>
             } @empty {

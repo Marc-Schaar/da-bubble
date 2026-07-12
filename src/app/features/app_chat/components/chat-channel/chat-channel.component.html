@@ -18,7 +18,7 @@
           <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
             <div class="member-img-cont">
               @for (member of currentChannel?.member; track $index; let i = $index) {
-                <img *ngIf="i < 3" class="avatar" [src]="member.profilephoto" alt="Name" />
+                <img *ngIf="i < 3" class="avatar" [src]="member.photoURL" alt="Name" />
               }
             </div>
             @if (currentChannel?.member?.length) {
@@ -67,7 +67,6 @@
 
     <section class="card-footer">
       <app-textarea-template
-        [currentUserId]="userId"
         [reciverId]="currentChannelId() || ''"
         [reciverName]="currentChannel?.name"
         [reciverCompontent]="'channel'"

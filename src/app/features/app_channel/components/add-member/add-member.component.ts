@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { User } from '../../../app_auth/models/user/user';
 import { ChannelService } from '../../services/channel/channel.service';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({
   selector: 'app-add-member',
-  imports: [CommonModule, MatIcon, FormsModule],
+  imports: [CommonModule, MatIcon, FormsModule, ProfileStatusComponent],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })

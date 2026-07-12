@@ -12,7 +12,6 @@ export class DividerTemplateComponent {
   formattedDate = computed(() => {
     const raw = this.messageData();
     if (!raw) return '';
-    console.log(raw);
 
     const date = typeof raw.toDate === 'function' ? raw.toDate() : new Date(raw);
 

@@ -1,6 +1,4 @@
-import { inject, Injectable } from '@angular/core';
-import { UserService } from '../user/shared.service';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { inject, Injectable, signal } from '@angular/core';
 import { FireServiceService } from '../firebase/fire-service.service';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { User } from '../../../features/app_auth/models/user/user';
@@ -9,22 +7,19 @@ import { User } from '../../../features/app_auth/models/user/user';
   providedIn: 'root',
 })
 export class SearchService {
-  constructor() {}
-  private authService: AuthService = inject(AuthService);
-  private userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
 
   private textareaListOpen: boolean = false;
   private headerListOpen: boolean = false;
   private newMessageListOpen: boolean = false;
-  private isChannel: boolean | null = false;
+  public isChannel = signal<boolean | null>(false);
   private isResultTrue: boolean = false;
   private directTag: boolean = false;
 
-  private currentList: User[] | Channel[] = [];
+  private currentList: (User | Channel)[] = [];
   private tagType: 'channel' | 'user' | null = null;
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
-  private input: string = '';
+  public searchQuery: string = '';
 
   /**
    * Returns the current Search Component.
@@ -55,25 +50,9 @@ export class SearchService {
   }
 
   /**
-   * Returns whether the current tagType is a channel.
-   */
-  public getChannelBoolean(): boolean | null {
-    return this.isChannel;
-  }
-
-  /**
-   * Sets the tagType to a channel.
-   *
-   * @param {boolean} isChannel - True if it should be marked as a channel, false otherwise.
-   */
-  public setChannelBoolean(boolean: boolean) {
-    this.isChannel = boolean;
-  }
-
-  /**
    * Returns the current autocomplete result list.
    */
-  public getCurrentList(): any[] {
+  public getCurrentList(): (User | Channel)[] {
     return this.currentList;
   }
 
@@ -117,19 +96,10 @@ export class SearchService {
   }
 
   /**
-   * Checks if the current user is anonymous.
-   * @returns {boolean | undefined} True if anonymous, false if not, or undefined if no user is signed in.
+   * Reset observing input to prevent triggering further search actions.
    */
-  private isAnonymous(): boolean | undefined {
-    return this.authService.currentUser()?.isAnonymous;
-  }
-
-  /**
-   * Retrieves the UID of the current user.
-   * @returns {string | undefined} The user ID, or undefined if no user is signed in.
-   */
-  private userId(): string | undefined {
-    return this.authService.currentUser()?.id;
+  public resetObserveInput(): void {
+    this.setResult(false);
   }
 
   /**
@@ -138,9 +108,10 @@ export class SearchService {
    * @param searchInComponent - The context where the input comes from: 'textarea' or 'header'.
    */
   public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage'): void {
+    if (this.isResultTrue) return;
     this.headerListOpen = false;
     this.textareaListOpen = false;
-    this.input = input;
+    this.searchQuery = input;
     this.searchInComponent = searchInComponent;
 
     this.getTagType(input);
@@ -156,7 +127,9 @@ export class SearchService {
    */
   private isNoTagSearch() {
     return (
-      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') && this.tagType == null && this.input.length > 0
+      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') &&
+      this.tagType == null &&
+      this.searchQuery.length > 0
     );
   }
 
@@ -164,13 +137,13 @@ export class SearchService {
    * Handles search when no tag is used, searching for both users and channels.
    */
   private searchWithoutTag() {
-    let userResults = this.startSearch(this.input, 'user');
-    let channelResults = this.startSearch(this.input, 'channel');
+    let userResults = this.startSearch(this.searchQuery, 'user');
+    let channelResults = this.startSearch(this.searchQuery, 'channel');
     this.currentList = [...userResults, ...channelResults];
     this.textareaListOpen = false;
     this.searchInComponent === 'header' ? (this.headerListOpen = true) : (this.headerListOpen = false);
     this.searchInComponent === 'newMessage' ? (this.newMessageListOpen = true) : (this.newMessageListOpen = false);
-    this.isChannel = null;
+    this.isChannel.set(null);
   }
 
   /**
@@ -187,7 +160,7 @@ export class SearchService {
         break;
 
       default:
-        this.resetList;
+        this.resetList();
         break;
     }
   }
@@ -197,8 +170,8 @@ export class SearchService {
    */
   private caseChannel() {
     let searchInput: string | null = null;
-    this.isChannel = true;
-    searchInput = this.input.split('#')[1];
+    this.isChannel.set(true);
+    searchInput = this.searchQuery.split('#')[1];
     this.currentList = this.startSearch(searchInput, 'channel');
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
@@ -210,8 +183,8 @@ export class SearchService {
    */
   private caseUser() {
     let searchInput: string | null = null;
-    this.isChannel = false;
-    searchInput = this.input.split('@')[1];
+    this.isChannel.set(false);
+    searchInput = this.searchQuery.split('@')[1];
     this.currentList = this.startSearch(searchInput, 'user');
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
@@ -223,7 +196,7 @@ export class SearchService {
    */
   public resetList() {
     this.currentList = [];
-    this.isChannel = false;
+    this.isChannel.set(false);
     this.textareaListOpen = false;
     this.headerListOpen = false;
     this.newMessageListOpen = false;
@@ -245,30 +218,31 @@ export class SearchService {
    * @param channelsToSearch - The list of channels to search within.
    * @returns {string[]} A list of matching members.
    */
-  private searchChannelMembersByName(searchInput: string, channelsToSearch: any): Channel[] {
-    let foundMembers: any[] = [];
-    channelsToSearch.forEach((channel: { data?: { member?: any[] } }) => {
-      let members = channel.data?.member || [];
-      let matchingMembers = members.filter((member: any) => member.fullname?.toLowerCase().includes(searchInput));
+  private searchChannelMembersByName(searchInput: string, channelsToSearch: Channel[]): User[] {
+    const searchLower = searchInput.toLowerCase();
+    const memberIdsInChannels = new Set<string>();
 
-      foundMembers = [...foundMembers, ...matchingMembers];
+    channelsToSearch.forEach((channel) => {
+      const members = channel?.member || [];
+      members.forEach((member: { id: string }) => {
+        const id = typeof member === 'string' ? member : member.id;
+        if (id) memberIdsInChannels.add(id);
+      });
     });
-    return foundMembers;
+    this.fireService.subAllUsers();
+    const allUsers: User[] = this.fireService.allUsers();
+
+    return allUsers.filter((user) => memberIdsInChannels.has(user.id) && user.displayName?.toLowerCase().includes(searchLower));
   }
 
   /**
    * Searches channels by name.
    * @param searchInput - The lowercase input string to search for.
    * @param channelsToSearch - The list of channels to search within.
-   * @returns {string[]} A list of matching channels.
+   * @returns {Channel[]} A list of matching channels.
    */
-  private searchChannel(searchInput: string, channelsToSearch: any) {
-    let foundChannels: any = [];
-    foundChannels = channelsToSearch.filter((channel: { data?: { name?: string } }) =>
-      channel.data?.name?.toLowerCase().includes(searchInput),
-    );
-
-    return foundChannels;
+  private searchChannel(searchInput: string, channelsToSearch: Channel[]): Channel[] {
+    return channelsToSearch.filter((channel: { name: string }) => channel.name.toLowerCase().includes(searchInput));
   }
 
   /**
@@ -277,9 +251,10 @@ export class SearchService {
    * @param searchCollection - The type of entity to search for ('channel' or 'user').
    * @returns {string[]} A list of matched results.
    */
-  public startSearch(input: string, searchCollection?: 'channel' | 'user'): Channel[] {
+  public startSearch(input: string, searchCollection?: 'channel' | 'user'): (Channel | User)[] {
+    this.fireService.subChannels();
     let searchInput = input.trim()?.toLowerCase() || '';
-    let result: Channel[] = [];
+    let result: (Channel | User)[] = [];
     const channelsToSearch = this.fireService.myChannels();
 
     if (searchCollection === 'channel') {
@@ -302,10 +277,10 @@ export class SearchService {
     this.directTag = true;
     if (type === '#') {
       this.currentList = this.fireService.myChannels();
-      this.isChannel = true;
+      this.isChannel.set(true);
     } else if (type === '@') {
       this.currentList = this.fireService.allUsers();
-      this.isChannel = false;
+      this.isChannel.set(false);
     }
   }
 }

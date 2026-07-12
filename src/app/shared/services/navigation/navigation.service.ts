@@ -103,7 +103,6 @@ export class NavigationService {
       )
       .subscribe((isMobileNow) => {
         this.isMobile.set(isMobileNow);
-        console.log('Mobile Mode:', isMobileNow);
         if (!isMobileNow && this.router.url === '/main') {
           this.router.navigate(['/main/new-message']);
         }
@@ -117,12 +116,6 @@ export class NavigationService {
   private checkScreenWidth(): boolean {
     return window.innerWidth < 1024;
   }
-
-  public setUrl(a: any, b: any, c?: any) {
-    console.log('test');
-  }
-
-  public showChannel() {}
 
   public toggleThread(a: any) {}
 }

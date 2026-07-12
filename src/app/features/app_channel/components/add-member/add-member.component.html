@@ -10,10 +10,7 @@
     <ul class="user__list">
       @for (member of channelService.enrichedMembers(); track $index) {
         <li (click)="openProfileDialog(member)" class="user__list__item">
-          <div class="profile-status">
-            <img class="profile-status__image" [src]="member.photoUrl" alt="" />
-            <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': member.online }"></div>
-          </div>
+          <app-profile-status [photoUrl]="member.photoUrl" [online]="member.online"></app-profile-status>
           <span>
             {{ member.displayName }}
             @if (member.id === authService.currentUser()?.id) {
@@ -36,7 +33,7 @@
       </button>
     </header>
 
-    <div class="channel-name"># {{ channelService.currentChannel().name }}</div>
+    <div class="channel-name"># {{ channelService.currentChannel()?.name }}</div>
 
     <div class="input-wrapper">
       <div class="input-cont">
@@ -55,10 +52,7 @@
             <ul class="choose-user-bar user__list">
               @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
                 <li class="user__list__item" (click)="addUserToSelection(user)">
-                  <div class="profile-status">
-                    <img class="profile-status__image" [src]="user.photoUrl" alt="" />
-                    <div class="profile-status__dot" [ngClass]="{ 'profile-status__dot--online': user.online }"></div>
-                  </div>
+                  <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
                   {{ user.displayName }}
                 </li>
               } @empty {

@@ -18,6 +18,7 @@ import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
+import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -30,6 +31,7 @@ import { ChatService } from '../../services/chat/chat.service';
     MatDialogModule,
     MessageTemplateComponent,
     ChatHeaderComponent,
+    ProfileStatusComponent,
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',
@@ -106,10 +108,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    */
   public showProfile() {
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: this.currentReciever,
-        recieverId: this.currentRecieverId(),
-      },
+      data: this.currentReciever(),
       width: '400px',
       panelClass: ['center-dialog'],
     });

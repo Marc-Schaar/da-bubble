@@ -185,7 +185,7 @@ export class ThreadComponent implements OnInit {
    */
   async caseUser(name: string) {
     const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('fullname', '==', name));
+    const q = query(usersRef, where('displayName', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
     this.navigationService.selectDirectMessageRecipient(userDoc.id);
@@ -203,8 +203,7 @@ export class ThreadComponent implements OnInit {
     const q = query(channelsRef, where('name', '==', name));
     const snapshot = await getDocs(q);
     const channelDoc = snapshot.docs[0];
-    this.navigationService.setUrl('channel', channelDoc.id);
-    this.navigationService.showChannel();
+    this.navigationService.selectChannel(channelDoc.id);
   }
 
   ngOnDestroy(): void {

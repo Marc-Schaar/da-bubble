@@ -18,6 +18,7 @@ import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-r
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
+import { User } from '../../../app_auth/models/user/user';
 
 @Component({
   selector: 'app-message-template',
@@ -26,7 +27,6 @@ import { DirectMessage } from '../../models/direct-message/direct-message';
   styleUrl: './message-template.component.scss',
 })
 export class MessageTemplateComponent {
-  public userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
   public authService = inject(AuthService);
   private dialog = inject(MatDialog);
@@ -37,7 +37,6 @@ export class MessageTemplateComponent {
   reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
   showAllReactions: boolean = false;
-  userId: string | undefined = '';
   inputEdit: string = '';
   emojis: string[] = [
     'emoji _nerd face_',
@@ -72,7 +71,6 @@ export class MessageTemplateComponent {
    * and loading the emoji database.
    */
   constructor() {
-    this.userId = this.authService.currentUser()?.id;
     this.emojiDataBase = emojiData;
   }
 
@@ -157,7 +155,8 @@ export class MessageTemplateComponent {
    * @returns True if the user has reacted, otherwise false
    */
   public hasReacted(emoji: any, reactions: any[]): boolean | undefined {
-    if (this.channelType !== 'direct') return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
+    if (this.channelType !== 'direct')
+      return reactions.some((reaction) => reaction.from === this.authService.currentUser()?.id && reaction.emoji === emoji);
     return;
   }
 
@@ -172,7 +171,7 @@ export class MessageTemplateComponent {
       ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
       : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
 
-    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
+    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.authService.currentUser()?.id && r.emoji === emoji);
     if (reactionIndex >= 0) {
       message.reaction.splice(reactionIndex, 1);
       if (messageRef) {
@@ -217,14 +216,13 @@ export class MessageTemplateComponent {
    */
   public getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] | any {
     let allUsers = this.fireService.allUsers();
-    let currentUserId = this.userId;
     let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
     let userIds = reactionsWithEmoji.map((reaction: any) => reaction.from);
-    let hasCurrentUserReacted = userIds.includes(currentUserId);
+    let hasCurrentUserReacted = userIds.includes(this.authService.currentUser()?.id);
 
     let otherUsers = allUsers
-      .filter((user: any) => userIds.includes(user.key) && user.key !== currentUserId)
-      .map((user: any) => user.fullname);
+      .filter((user: any) => userIds.includes(user.id) && user.id !== this.authService.currentUser()?.id)
+      .map((user: any) => user.displayName);
 
     if (hasCurrentUserReacted) {
       if (otherUsers.length === 0) return ['Du'];
@@ -245,12 +243,9 @@ export class MessageTemplateComponent {
    * Displays the receiver's profile.
    */
   public async showProfile() {
-    const reciverData = await this.getReceiverIdByName();
+    const reciverData = await this._getReceiverByName();
     this.dialog.open(DialogReciverComponent, {
-      data: {
-        reciever: reciverData,
-        recieverId: reciverData?.id,
-      },
+      data: reciverData,
       width: '400px',
       panelClass: ['center-dialog'],
     });
@@ -258,20 +253,28 @@ export class MessageTemplateComponent {
 
   /**
    * Retrieves a user document from Firestore by matching the full name.
-   * Queries the 'users' collection where 'fullname' equals the provided message name.
+   * Queries the 'users' collection where 'displayName' equals the provided message name.
    *
    * @returns A promise that resolves to the user data object including the document ID,
    *          or null if no matching user is found.
    */
-  private async getReceiverIdByName() {
+  private async _getReceiverByName(): Promise<User | null> {
     const usersCollection = this.fireService.getCollectionRef('users');
-    const q = query(usersCollection!, where('fullname', '==', this.message?.name || ''));
+    const searchName = this.message().name;
+    if (!searchName) return null;
+
+    const q = query(usersCollection!, where('displayName', '==', searchName));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
-      return { ...doc.data(), id: doc.id };
-    } else return null;
+      const user = {
+        ...(doc.data() as Omit<User, 'id'>),
+        id: doc.id,
+      } as User;
+      return user;
+    }
+    return null;
   }
 
   /**
@@ -323,7 +326,7 @@ export class MessageTemplateComponent {
    */
   async caseUser(name: string) {
     const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('fullname', '==', name));
+    const q = query(usersRef, where('displayName', '==', name));
     const snapshot = await getDocs(q);
     const userDoc = snapshot.docs[0];
     this.navigationService.selectDirectMessageRecipient(userDoc.id);
@@ -341,7 +344,6 @@ export class MessageTemplateComponent {
     const q = query(channelsRef, where('name', '==', name));
     const snapshot = await getDocs(q);
     const channelDoc = snapshot.docs[0];
-    this.navigationService.setUrl('channel', channelDoc.id);
-    this.navigationService.showChannel();
+    this.navigationService.selectChannel(channelDoc.id);
   }
 }

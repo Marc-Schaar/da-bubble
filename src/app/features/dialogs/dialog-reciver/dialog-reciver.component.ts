@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
@@ -10,14 +10,10 @@ import { User } from '../../app_auth/models/user/user';
   templateUrl: './dialog-reciver.component.html',
   styleUrl: './dialog-reciver.component.scss',
 })
-export class DialogReciverComponent implements OnInit {
+export class DialogReciverComponent {
   public readonly reciverData = inject<User>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<DialogReciverComponent>);
   private readonly navigationService = inject(NavigationService);
-
-  ngOnInit(): void {
-    console.log(this.reciverData);
-  }
 
   /**
    * Opens a direct chat with the selected receiver.

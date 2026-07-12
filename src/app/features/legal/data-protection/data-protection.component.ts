@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { MessagesService } from '../../app_chat/services/messages/messages.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { CONTACT_EMAIL } from '../../../shared/constants';
 
 @Component({
   selector: 'app-dataprotection',
@@ -10,5 +10,5 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
   styleUrl: './data-protection.component.scss',
 })
 export class DataprotectionComponent {
-  message = inject(MessagesService);
+  protected readonly contactEmail = CONTACT_EMAIL;
 }

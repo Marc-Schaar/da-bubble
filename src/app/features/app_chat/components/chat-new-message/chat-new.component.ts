@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -10,9 +10,6 @@ import { SearchService } from '../../../../shared/services/search/search.service
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Component({
   selector: 'app-newmessage',
   imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent, SearchResultComponent],
@@ -43,7 +40,7 @@ export class NewmessageComponent {
    */
   setReceiver(element: any): void {
     this.currentReceiver = element;
-    this.receiverId = element.key || element.id;
+    this.receiverId = element.id;
 
     this.isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
@@ -56,7 +53,7 @@ export class NewmessageComponent {
    * @returns True if the element is a channel, false otherwise.
    */
   public isChannel(element: any): boolean {
-    return element.data?.member;
+    return !!element && typeof element === 'object' && 'member' in element;
   }
 
   /**
@@ -74,8 +71,7 @@ export class NewmessageComponent {
    * @returns The name of the current receiver, or an empty string if not available.
    */
   public getReceiverName(): string {
-    let receiverName = this.currentReceiver?.data?.name || this.currentReceiver?.fullname || '';
-    return receiverName;
+    return this.currentReceiver?.name || this.currentReceiver?.displayName || '';
   }
 
   /**
