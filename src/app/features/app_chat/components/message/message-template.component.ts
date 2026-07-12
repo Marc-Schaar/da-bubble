@@ -26,7 +26,6 @@ import { DirectMessage } from '../../models/direct-message/direct-message';
   styleUrl: './message-template.component.scss',
 })
 export class MessageTemplateComponent {
-  public userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
   public authService = inject(AuthService);
   private dialog = inject(MatDialog);
@@ -37,7 +36,6 @@ export class MessageTemplateComponent {
   reactionMenuOpenInFooter: boolean = false;
   isEditing: boolean = false;
   showAllReactions: boolean = false;
-  userId: string | undefined = '';
   inputEdit: string = '';
   emojis: string[] = [
     'emoji _nerd face_',
@@ -72,7 +70,6 @@ export class MessageTemplateComponent {
    * and loading the emoji database.
    */
   constructor() {
-    this.userId = this.authService.currentUser()?.id;
     this.emojiDataBase = emojiData;
   }
 
@@ -157,7 +154,8 @@ export class MessageTemplateComponent {
    * @returns True if the user has reacted, otherwise false
    */
   public hasReacted(emoji: any, reactions: any[]): boolean | undefined {
-    if (this.channelType !== 'direct') return reactions.some((reaction) => reaction.from === this.userId && reaction.emoji === emoji);
+    if (this.channelType !== 'direct')
+      return reactions.some((reaction) => reaction.from === this.authService.currentUser()?.id && reaction.emoji === emoji);
     return;
   }
 
@@ -172,7 +170,7 @@ export class MessageTemplateComponent {
       ? (messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id))
       : (messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id));
 
-    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.userId && r.emoji === emoji);
+    let reactionIndex = message.reaction.findIndex((r: any) => r.from === this.authService.currentUser()?.id && r.emoji === emoji);
     if (reactionIndex >= 0) {
       message.reaction.splice(reactionIndex, 1);
       if (messageRef) {
@@ -217,13 +215,12 @@ export class MessageTemplateComponent {
    */
   public getReactionNamesForEmoji(targetEmoji: string, reactions: any[]): string[] | any {
     let allUsers = this.fireService.allUsers();
-    let currentUserId = this.userId;
     let reactionsWithEmoji = reactions.filter((reaction: any) => reaction.emoji === targetEmoji);
     let userIds = reactionsWithEmoji.map((reaction: any) => reaction.from);
-    let hasCurrentUserReacted = userIds.includes(currentUserId);
+    let hasCurrentUserReacted = userIds.includes(this.authService.currentUser()?.id);
 
     let otherUsers = allUsers
-      .filter((user: any) => userIds.includes(user.id) && user.id !== currentUserId)
+      .filter((user: any) => userIds.includes(user.id) && user.id !== this.authService.currentUser()?.id)
       .map((user: any) => user.displayName);
 
     if (hasCurrentUserReacted) {
@@ -264,7 +261,6 @@ export class MessageTemplateComponent {
    *          or null if no matching user is found.
    */
   private async getReceiverIdByName() {
-    debugger;
     const usersCollection = this.fireService.getCollectionRef('users');
     const q = query(usersCollection!, where('displayName', '==', this.message().name || ''));
     const querySnapshot = await getDocs(q);
@@ -342,7 +338,6 @@ export class MessageTemplateComponent {
     const q = query(channelsRef, where('name', '==', name));
     const snapshot = await getDocs(q);
     const channelDoc = snapshot.docs[0];
-    this.navigationService.setUrl('channel', channelDoc.id);
-    this.navigationService.showChannel();
+    this.navigationService.selectChannel(channelDoc.id);
   }
 }

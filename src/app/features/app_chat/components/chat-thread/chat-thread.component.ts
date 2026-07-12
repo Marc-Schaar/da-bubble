@@ -203,8 +203,7 @@ export class ThreadComponent implements OnInit {
     const q = query(channelsRef, where('name', '==', name));
     const snapshot = await getDocs(q);
     const channelDoc = snapshot.docs[0];
-    this.navigationService.setUrl('channel', channelDoc.id);
-    this.navigationService.showChannel();
+    this.navigationService.selectChannel(channelDoc.id);
   }
 
   ngOnDestroy(): void {

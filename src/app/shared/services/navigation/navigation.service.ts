@@ -118,11 +118,5 @@ export class NavigationService {
     return window.innerWidth < 1024;
   }
 
-  public setUrl(a: any, b: any, c?: any) {
-    console.log('test');
-  }
-
-  public showChannel() {}
-
   public toggleThread(a: any) {}
 }

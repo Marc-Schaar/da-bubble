@@ -38,7 +38,17 @@ export class TextareaTemplateComponent {
   }
 
   onTagInserted(tagName: string) {
-    this.input += ` ${tagName} `;
+    const query = this.searchService.searchQuery;
+
+    if (query && this.input.includes(query)) {
+      const symbol = query.charAt(0);
+      const fullTag = tagName.startsWith(symbol) ? tagName : symbol + tagName;
+
+      this.input = this.input.replace(query, fullTag) + ' ';
+    } else {
+      this.input = `${tagName} `;
+    }
+
     this.taggedNames.push(tagName);
   }
 

@@ -1,6 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { UserService } from '../user/shared.service';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
 import { FireServiceService } from '../firebase/fire-service.service';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { User } from '../../../features/app_auth/models/user/user';
@@ -9,9 +7,6 @@ import { User } from '../../../features/app_auth/models/user/user';
   providedIn: 'root',
 })
 export class SearchService {
-  constructor() {}
-  private authService: AuthService = inject(AuthService);
-  private userService: UserService = inject(UserService);
   private fireService: FireServiceService = inject(FireServiceService);
 
   private textareaListOpen: boolean = false;
@@ -24,7 +19,7 @@ export class SearchService {
   private currentList: (User | Channel)[] = [];
   private tagType: 'channel' | 'user' | null = null;
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
-  private input: string = '';
+  public searchQuery: string = '';
 
   /**
    * Returns the current Search Component.
@@ -117,14 +112,22 @@ export class SearchService {
   }
 
   /**
+   * Reset observing input to prevent triggering further search actions.
+   */
+  public resetObserveInput(): void {
+    this.setResult(false);
+  }
+
+  /**
    * Observes user input and determines whether to search for users or channels.
    * @param input - The input string entered by the user.
    * @param searchInComponent - The context where the input comes from: 'textarea' or 'header'.
    */
   public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage'): void {
+    if (this.isResultTrue) return;
     this.headerListOpen = false;
     this.textareaListOpen = false;
-    this.input = input;
+    this.searchQuery = input;
     this.searchInComponent = searchInComponent;
 
     this.getTagType(input);
@@ -140,7 +143,9 @@ export class SearchService {
    */
   private isNoTagSearch() {
     return (
-      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') && this.tagType == null && this.input.length > 0
+      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') &&
+      this.tagType == null &&
+      this.searchQuery.length > 0
     );
   }
 
@@ -148,8 +153,8 @@ export class SearchService {
    * Handles search when no tag is used, searching for both users and channels.
    */
   private searchWithoutTag() {
-    let userResults = this.startSearch(this.input, 'user');
-    let channelResults = this.startSearch(this.input, 'channel');
+    let userResults = this.startSearch(this.searchQuery, 'user');
+    let channelResults = this.startSearch(this.searchQuery, 'channel');
     this.currentList = [...userResults, ...channelResults];
     this.textareaListOpen = false;
     this.searchInComponent === 'header' ? (this.headerListOpen = true) : (this.headerListOpen = false);
@@ -182,7 +187,7 @@ export class SearchService {
   private caseChannel() {
     let searchInput: string | null = null;
     this.isChannel = true;
-    searchInput = this.input.split('#')[1];
+    searchInput = this.searchQuery.split('#')[1];
     this.currentList = this.startSearch(searchInput, 'channel');
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
@@ -195,7 +200,7 @@ export class SearchService {
   private caseUser() {
     let searchInput: string | null = null;
     this.isChannel = false;
-    searchInput = this.input.split('@')[1];
+    searchInput = this.searchQuery.split('@')[1];
     this.currentList = this.startSearch(searchInput, 'user');
 
     this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);

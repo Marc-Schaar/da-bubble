@@ -3,7 +3,6 @@ import { SearchService } from '../../services/search/search.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
-import { Auth } from '@angular/fire/auth';
 import { Channel } from '../../../features/app_channel/models/channel/channel';
 import { User } from '../../../features/app_auth/models/user/user';
 
@@ -16,7 +15,6 @@ import { User } from '../../../features/app_auth/models/user/user';
 export class SearchResultComponent {
   searchService: SearchService = inject(SearchService);
   navigationService: NavigationService = inject(NavigationService);
-  auth: Auth = inject(Auth);
 
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
@@ -32,6 +30,7 @@ export class SearchResultComponent {
    */
   public tagReceiver(receiverData: Channel | User, tagType: '@' | '#') {
     const tagName = this.isChannel(receiverData) ? receiverData.name : receiverData.displayName;
+
     this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
 
     this.searchService.closeList();
@@ -67,9 +66,7 @@ export class SearchResultComponent {
    * @param element - The channel element to open.
    */
   private openChannel(element: any) {
-    let currentUserId = this.auth.currentUser?.uid;
-    this.navigationService.showChannel();
-    this.navigationService.setUrl('channel', element.key, currentUserId);
+    this.navigationService.selectChannel(element.id);
     this.searchService.resetList();
   }
 
