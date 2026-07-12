@@ -5,7 +5,7 @@
     reverse: isOwnMessage(),
   }"
 >
-  @if (!isEditing && channelType !== "direct") {
+  @if (!isEditing && channelType() !== "direct") {
     <div class="reaction-bar">
       <button
         class="btn-secundary"
@@ -24,7 +24,7 @@
       <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="btn-secundary">
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
       </button>
-      @if (!isThread) {
+      @if (!isThread()) {
         <button class="btn-secundary" (click)="openThread(message().id)">
           <mat-icon class="material-symbols-outlined"> comment </mat-icon>
         </button>
@@ -70,12 +70,12 @@
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>
           </div>
         }
-        @if (channelType !== "direct" && isChannelMessage()) {
+        @if (channelType() !== "direct" && isChannelMessage()) {
           <app-message-reactions
             [message]="$any(message())"
-            [currentChannelId]="currentChannelId"
-            [parentMessageId]="parentMessageId"
-            [isThread]="isThread"
+            [currentChannelId]="currentChannelId()"
+            [parentMessageId]="parentMessageId()"
+            [isThread]="isThread()"
           ></app-message-reactions>
         }
       </footer>

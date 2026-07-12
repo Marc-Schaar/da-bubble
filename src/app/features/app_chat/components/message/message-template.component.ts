@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -26,6 +26,7 @@ import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
   imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateComponent {
   private fireService: FireServiceService = inject(FireServiceService);
@@ -44,10 +45,10 @@ export class MessageTemplateComponent {
   public readonly preSelectedEmojiList = Object.values(PRESELECTED_EMOJIS);
 
   message = input.required<ChannelMessage | DirectMessage>();
-  @Input() currentChannelId: string = '';
-  @Input() parentMessageId: string = '';
-  @Input() isThread: boolean = false;
-  @Input() channelType: 'direct' | 'channel' | 'thread' | null = null;
+  currentChannelId = input<string>('');
+  parentMessageId = input<string>('');
+  isThread = input<boolean>(false);
+  channelType = input<'direct' | 'channel' | 'thread' | null>(null);
 
   isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
 
@@ -60,9 +61,9 @@ export class MessageTemplateComponent {
 
   private reactionContext(): ReactionContext {
     return {
-      channelId: this.currentChannelId,
-      parentMessageId: this.parentMessageId,
-      isThread: this.isThread,
+      channelId: this.currentChannelId(),
+      parentMessageId: this.parentMessageId(),
+      isThread: this.isThread(),
     };
   }
 
@@ -92,7 +93,7 @@ export class MessageTemplateComponent {
   }
 
   public async updateMessage(message: ChannelMessage | DirectMessage) {
-    this.isThread ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
+    this.isThread() ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
   }
 
   /**
@@ -100,7 +101,7 @@ export class MessageTemplateComponent {
    * @param message - The message to update.
    */
   private updateThreadMessage(message: ChannelMessage | DirectMessage) {
-    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId, this.parentMessageId, message.id);
+    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId(), this.parentMessageId(), message.id);
     if (messageRef) {
       this.isEditing = false;
       try {
@@ -115,7 +116,7 @@ export class MessageTemplateComponent {
    * @param message - The message to update
    */
   private updateChannelMessage(message: ChannelMessage | DirectMessage) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId, message.id);
+    let messageRef = this.fireService.getMessageRef(this.currentChannelId(), message.id);
     if (messageRef) {
       this.isEditing = false;
       this.fireService.updateMessage(messageRef, this.inputEdit);
@@ -128,7 +129,7 @@ export class MessageTemplateComponent {
    * @param messageId - ID of the message to open
    */
   public openThread(messageId: string) {
-    this.navigationService.goToThread(messageId, this.currentChannelId);
+    this.navigationService.goToThread(messageId, this.currentChannelId());
   }
 
   /**

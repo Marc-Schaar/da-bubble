@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ChannelMessage } from '../../../models/channel-message/channel-message';
 import { ReactionsService, ReactionContext } from '../../../services/reactions/reactions.service';
@@ -15,6 +15,7 @@ import { PRESELECTED_EMOJIS } from '../../../../../shared/constants';
   imports: [CommonModule, MatIconModule],
   templateUrl: './message-reactions.component.html',
   styleUrl: './message-reactions.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageReactionsComponent {
   public readonly reactionsService = inject(ReactionsService);
@@ -25,8 +26,8 @@ export class MessageReactionsComponent {
   public parentMessageId = input<string>('');
   public isThread = input<boolean>(false);
 
-  public showAllReactions = false;
-  public reactionMenuOpen = false;
+  public showAllReactions = signal(false);
+  public reactionMenuOpen = signal(false);
   public readonly preSelectedEmojiList = Object.values(PRESELECTED_EMOJIS);
 
   public reactions = computed(() => this.message().reaction ?? []);
@@ -36,7 +37,7 @@ export class MessageReactionsComponent {
 
   public visibleReactions = computed(() => {
     const unique = this.reactionsService.uniqueEmojis(this.reactions());
-    return this.showAllReactions ? unique : unique.slice(0, this.visibleLimit());
+    return this.showAllReactions() ? unique : unique.slice(0, this.visibleLimit());
   });
 
   public hiddenCount = computed(() => this.reactionsService.countUniqueEmojis(this.reactions()) - this.visibleLimit());
@@ -51,6 +52,6 @@ export class MessageReactionsComponent {
 
   public toggle(emoji: string): void {
     this.reactionsService.toggleReaction(this.message(), emoji, this.context());
-    this.reactionMenuOpen = false;
+    this.reactionMenuOpen.set(false);
   }
 }
