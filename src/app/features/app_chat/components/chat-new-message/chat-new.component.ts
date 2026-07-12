@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -10,9 +10,6 @@ import { SearchService } from '../../../../shared/services/search/search.service
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Component({
   selector: 'app-newmessage',
   imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent, SearchResultComponent],
