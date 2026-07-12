@@ -7,12 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
-import { collection, getDocs, query, where } from '@firebase/firestore';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import emojiData from 'unicode-emoji-json';
 
-import { Firestore } from '@angular/fire/firestore';
 import { LinkifyPipe } from '../../../pipes/linkify.pipe';
+import { UserStore } from '../../../../shared/services/user/user-store';
+import { ChannelService } from '../../../app_channel/services/channel/channel.service';
 
 import { DialogReciverComponent } from '../../../dialogs/dialog-reciver/dialog-reciver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
@@ -31,7 +31,8 @@ export class MessageTemplateComponent {
   public authService = inject(AuthService);
   private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
-  private firestore: Firestore = inject(Firestore);
+  private userStore: UserStore = inject(UserStore);
+  private channelService: ChannelService = inject(ChannelService);
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
   reactionMenuOpenInFooter: boolean = false;
@@ -259,22 +260,9 @@ export class MessageTemplateComponent {
    *          or null if no matching user is found.
    */
   private async _getReceiverByName(): Promise<User | null> {
-    const usersCollection = this.fireService.getCollectionRef('users');
     const searchName = this.message().name;
     if (!searchName) return null;
-
-    const q = query(usersCollection!, where('displayName', '==', searchName));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const doc = querySnapshot.docs[0];
-      const user = {
-        ...(doc.data() as Omit<User, 'id'>),
-        id: doc.id,
-      } as User;
-      return user;
-    }
-    return null;
+    return this.userStore.findUserByDisplayName(searchName);
   }
 
   /**
@@ -325,11 +313,8 @@ export class MessageTemplateComponent {
    * @param name - The user’s full name to query.
    */
   async caseUser(name: string) {
-    const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('displayName', '==', name));
-    const snapshot = await getDocs(q);
-    const userDoc = snapshot.docs[0];
-    this.navigationService.selectDirectMessageRecipient(userDoc.id);
+    const user = await this.userStore.findUserByDisplayName(name);
+    if (user) this.navigationService.selectDirectMessageRecipient(user.id);
   }
 
   /**
@@ -340,10 +325,7 @@ export class MessageTemplateComponent {
    * @param name - The channel’s name to query.
    */
   async caseChannel(name: string) {
-    const channelsRef = collection(this.firestore, 'channels');
-    const q = query(channelsRef, where('name', '==', name));
-    const snapshot = await getDocs(q);
-    const channelDoc = snapshot.docs[0];
-    this.navigationService.selectChannel(channelDoc.id);
+    const channel = await this.channelService.findChannelByName(name);
+    if (channel?.id) this.navigationService.selectChannel(channel.id);
   }
 }

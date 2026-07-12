@@ -14,6 +14,8 @@ import { LinkifyPipe } from '../../../pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
+import { UserStore } from '../../../../shared/services/user/user-store';
+import { ChannelService } from '../../../app_channel/services/channel/channel.service';
 
 @Component({
   selector: 'app-thread',
@@ -37,6 +39,8 @@ export class ThreadComponent implements OnInit {
   public userService: UserService = inject(UserService);
   public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
+  private userStore: UserStore = inject(UserStore);
+  public channelService: ChannelService = inject(ChannelService);
   private readonly destroyRef = inject(DestroyRef);
   public currentUser: any;
   public userId: string = '';
@@ -190,11 +194,8 @@ export class ThreadComponent implements OnInit {
    * @param name - The user’s full name to query.
    */
   async caseUser(name: string) {
-    const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('displayName', '==', name));
-    const snapshot = await getDocs(q);
-    const userDoc = snapshot.docs[0];
-    this.navigationService.selectDirectMessageRecipient(userDoc.id);
+    const user = await this.userStore.findUserByDisplayName(name);
+    if (user) this.navigationService.selectDirectMessageRecipient(user.id);
   }
 
   /**
@@ -205,11 +206,8 @@ export class ThreadComponent implements OnInit {
    * @param name - The channel’s name to query.
    */
   async caseChannel(name: string) {
-    const channelsRef = collection(this.firestore, 'channels');
-    const q = query(channelsRef, where('name', '==', name));
-    const snapshot = await getDocs(q);
-    const channelDoc = snapshot.docs[0];
-    this.navigationService.selectChannel(channelDoc.id);
+    const channel = await this.channelService.findChannelByName(name);
+    if (channel?.id) this.navigationService.selectChannel(channel.id);
   }
 
   ngOnDestroy(): void {

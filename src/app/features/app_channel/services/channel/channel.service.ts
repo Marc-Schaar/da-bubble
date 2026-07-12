@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { onSnapshot } from '@angular/fire/firestore';
+import { getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { User } from '../../../app_auth/models/user/user';
 import { AuthService } from '../../../app_auth/services/auth/auth.service';
@@ -171,6 +171,19 @@ export class ChannelService {
     } finally {
       this.isSubmitting.set(false);
     }
+  }
+
+  /**
+   * Looks up a channel document by its name (used for #mentions).
+   */
+  public async findChannelByName(name: string): Promise<Channel | null> {
+    const channelsRef = this.fireService.getCollectionRef('channels');
+    if (!channelsRef) return null;
+
+    const q = query(channelsRef, where('name', '==', name.trim()));
+    const snapshot = await getDocs(q);
+    const docSnap = snapshot.docs[0];
+    return docSnap ? ({ id: docSnap.id, ...docSnap.data() } as Channel) : null;
   }
 
   public async leaveChannel() {
