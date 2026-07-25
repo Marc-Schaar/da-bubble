@@ -6,7 +6,13 @@
   <div class="content-container">
     <mat-drawer-container class="chat-content" autosize>
       @if (!navigationService.isMobile()) {
-        <mat-drawer #drawerContactbar mode="side" [opened]="barOpen()" class="contactbar-container">
+        <mat-drawer
+          #drawerContactbar
+          mode="side"
+          [opened]="barOpen()"
+          (openedChange)="barOpen.set($event)"
+          class="contactbar-container"
+        >
           <app-contactbar></app-contactbar>
         </mat-drawer>
       }

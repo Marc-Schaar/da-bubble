@@ -42,13 +42,12 @@ export class MainChatComponent {
   public isChatOverlayVisible: boolean = false;
 
   /**
-   * Toggles the visibility of the contact bar.
+   * Toggles the visibility of the contact bar. `barOpen` itself is kept in
+   * sync via the drawer's `(openedChange)` event, since `toggle()` animates
+   * asynchronously and reading `.opened` right after it fires would lag.
    */
   public toogleContactbar() {
-    if (this.drawerContactbar) {
-      this.drawerContactbar.toggle();
-      this.barOpen.set(this.drawerContactbar.opened);
-    }
+    this.drawerContactbar?.toggle();
   }
 
   public closeAll() {
