@@ -48,4 +48,31 @@ export class MentionService {
       }
     }
   }
+
+  /**
+   * Splices a chosen tag into the compose input, replacing the in-progress
+   * search query (e.g. "@jo") if one is present, otherwise appending the tag.
+   */
+  public insertTag(currentInput: string, tagName: string, searchQuery: string): string {
+    if (searchQuery && currentInput.includes(searchQuery)) {
+      const symbol = searchQuery.charAt(0);
+      const fullTag = tagName.startsWith(symbol) ? tagName : symbol + tagName;
+      return currentInput.replace(searchQuery, fullTag) + ' ';
+    }
+    return `${tagName} `;
+  }
+
+  /**
+   * Appends "//" to each mention in `taggedNames` found in `text`, but only
+   * for the first occurrence (if it doesn't already end with "//"), marking
+   * it as a resolved mention before the message is persisted.
+   */
+  public formatMentionMarkers(text: string, taggedNames: string[]): string {
+    let result = text;
+    for (const name of taggedNames) {
+      const re = new RegExp(`${name}(?!//)`);
+      result = result.replace(re, `${name}//`);
+    }
+    return result;
+  }
 }
