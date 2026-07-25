@@ -56,12 +56,9 @@
 
     <div class="card-footer" (mouseleave)="listOpen = false">
       <app-textarea-template
-        [receiverId]="currentChannelId"
-        [receiverComponent]="'thread'"
-        [messages]="messagesService.threadMessages()"
         [isChannelComponent]="true"
         [placeholderText]="'Antworten...'"
-        [threadId]="parentMessageId"
+        (send)="onSend($event)"
       ></app-textarea-template>
     </div>
   </section>

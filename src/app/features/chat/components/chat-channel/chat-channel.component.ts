@@ -112,6 +112,13 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Sends a new message to the currently open channel.
+   */
+  onSend(text: string) {
+    this.messagesService.sendChannelMessage(text, this.currentChannelId() || '');
+  }
+
+  /**
    * Opens the dialog to view or edit channel information.
    */
   openChannelInfo() {

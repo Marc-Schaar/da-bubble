@@ -12,6 +12,7 @@ import { AuthService } from '../../../auth/services/auth/auth.service';
 import { isChannel } from '../../../../shared/utils/receiver.util';
 import { Channel } from '../../../channel/models/channel/channel';
 import { User } from '../../../auth/models/user/user';
+import { MessagesService } from '../../services/messages/messages.service';
 
 @Component({
   selector: 'app-newmessage',
@@ -24,6 +25,7 @@ export class NewmessageComponent {
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
   public authService: AuthService = inject(AuthService);
+  private messagesService: MessagesService = inject(MessagesService);
 
   public currentReceiver: Channel | User | null = null;
   private receiverType: 'channel' | 'direct' | null = null;
@@ -82,5 +84,16 @@ export class NewmessageComponent {
    */
   public getReceiverId(): string {
     return this.receiverId;
+  }
+
+  /**
+   * Sends the first message of a new conversation to the chosen receiver,
+   * dispatching to the channel or direct-message send based on receiver type.
+   */
+  public onSend(text: string): void {
+    const type = this.getReceiverType();
+    const id = this.getReceiverId();
+    if (type === 'channel') this.messagesService.sendChannelMessage(text, id);
+    else if (type === 'direct') this.messagesService.sendDirectMessage(text, id);
   }
 }

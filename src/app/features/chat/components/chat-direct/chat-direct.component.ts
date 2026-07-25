@@ -72,6 +72,13 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Sends a new direct message to the current receiver.
+   */
+  onSend(text: string) {
+    this.messagesService.sendDirectMessage(text, this.currentReceiverId() || '');
+  }
+
+  /**
    * Retrieves the receiver's data using the receiver ID from the route.
    */
   private async getReceiverFromUrl() {

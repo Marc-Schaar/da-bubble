@@ -92,6 +92,13 @@ export class ThreadComponent implements OnInit {
   }
 
   /**
+   * Sends a new reply to the current thread.
+   */
+  onSend(text: string) {
+    this.messagesService.sendThreadMessage(text, this.currentChannelId, this.parentMessageId);
+  }
+
+  /**
    * Closes the current thread and redirects the user.
    */
   public closeThread() {

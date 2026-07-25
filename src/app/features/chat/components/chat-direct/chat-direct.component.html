@@ -45,11 +45,9 @@
 
     <footer class="card-footer">
       <app-textarea-template
-        [receiverId]="currentReceiverId() || ''"
-        [receiverComponent]="'direct'"
-        [messages]="this.messagesService.messages()"
         [isChannelComponent]="false"
         [placeholderText]="'Nachricht an @' + currentReceiver()?.displayName"
+        (send)="onSend($event)"
       ></app-textarea-template>
     </footer>
   </section>
