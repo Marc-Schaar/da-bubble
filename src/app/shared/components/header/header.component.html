@@ -31,7 +31,7 @@
     </div>
   } @else if (!navigationService.isAuthPage()) {
     <div class="user-menu">
-      <div (click)="onOpenMenu()" [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null">
+      <div (click)="onOpenMenu()" [matMenuTriggerFor]="!navigationService.isMobile() ? beforeMenu : null">
         <span>{{ authService.currentUser()?.displayName }}</span>
         <img [src]="authService.currentUser()?.photoUrl" alt="Bild" />
         @if (!navigationService.isMobile()) {

@@ -59,11 +59,13 @@ export class HeaderComponent {
   }
 
   /**
-   * Opens the appropriate menu based on the device type.
-   * Shows the mobile menu on mobile devices, or the user profile menu on desktop.
+   * Opens the mobile menu on mobile devices. On desktop, the click already
+   * triggers the mat-menu via [matMenuTriggerFor] on the same element.
    */
   public onOpenMenu() {
-    this.navigationService.isMobile() ? this.showMenuMobile() : this.showProfile();
+    if (this.navigationService.isMobile()) {
+      this.showMenuMobile();
+    }
   }
 
   /**
