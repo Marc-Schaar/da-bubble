@@ -13,12 +13,12 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { AddChannelComponent } from '../../../channel/components/add-channel/add-channel.component';
-import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, MatIconModule, FormsModule, SearchResultComponent, RouterModule, ProfileStatusComponent],
+  imports: [CommonModule, HeaderComponent, MatIconModule, FormsModule, SearchResultComponent, RouterModule, UserListItemComponent],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })

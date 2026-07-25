@@ -1,0 +1,7 @@
+<app-profile-status [photoUrl]="user().photoUrl" [online]="user().online"></app-profile-status>
+<span>
+  {{ user().displayName }}
+  @if (isCurrentUser()) {
+    (Du)
+  }
+</span>

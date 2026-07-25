@@ -103,9 +103,7 @@
                 (click)="navigationService.selectDirectMessageRecipient(user.id)"
                 [class.active-link]="router.url.includes('direct/' + user.id)"
               >
-                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
-
-                {{ user.displayName }}
+                <app-user-list-item [user]="user"></app-user-list-item>
               </li>
             } @empty {
               No User found

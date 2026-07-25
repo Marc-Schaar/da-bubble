@@ -10,13 +10,7 @@
     <ul class="user__list">
       @for (member of channelService.enrichedMembers(); track $index) {
         <li (click)="openProfileDialog(member)" class="user__list__item">
-          <app-profile-status [photoUrl]="member.photoUrl" [online]="member.online"></app-profile-status>
-          <span>
-            {{ member.displayName }}
-            @if (member.id === authService.currentUser()?.id) {
-              (Du)
-            }
-          </span>
+          <app-user-list-item [user]="member" [currentUserId]="authService.currentUser()?.id ?? null"></app-user-list-item>
         </li>
       }
     </ul>
@@ -52,8 +46,7 @@
             <ul class="choose-user-bar user__list">
               @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
                 <li class="user__list__item" (click)="addUserToSelection(user)">
-                  <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
-                  {{ user.displayName }}
+                  <app-user-list-item [user]="user"></app-user-list-item>
                 </li>
               } @empty {
                 <p>Kein User hinzufügbar oder bereits alle hinzugefügt</p>

@@ -1,10 +1,5 @@
 <main class="profile-main-cont">
-  <header class="profile-header">
-    <span>Profil</span>
-    <button class="close" (click)="closeMenu()">
-      <img src="img/close.svg" alt="" />
-    </button>
-  </header>
+  <app-dialog-header title="Profil" (closed)="closeMenu()"></app-dialog-header>
 
   <img class="profile-img" [src]="receiverData.photoUrl" alt="" />
   <section class="discription-cont">

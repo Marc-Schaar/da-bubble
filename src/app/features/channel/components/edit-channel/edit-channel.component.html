@@ -58,8 +58,7 @@
       <ul class="member-list">
         @for (member of channelService.enrichedMembers(); track $index) {
           <li (click)="openProfileDialog(member)" class="member-list--item">
-            <app-profile-status [photoUrl]="member.photoUrl" [online]="member.online"></app-profile-status>
-            {{ member.displayName }}
+            <app-user-list-item [user]="member"></app-user-list-item>
           </li>
         }
 
@@ -99,8 +98,7 @@
           <ul class="choose-user-bar" #chooseUserBar>
             @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
               <li class="user-select-cont" (click)="addUserToSelection(user)">
-                <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
-                {{ user.displayName }}
+                <app-user-list-item [user]="user"></app-user-list-item>
               </li>
             } @empty {
               <li>Keine Nutzer verfügbar</li>
