@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
+import { addDoc, arrayUnion, collection, CollectionReference, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
 import { ChannelMessage, Reaction } from '../../../features/chat/models/channel-message/channel-message';
 import { runWrite } from '../../utils/run-write.util';
 
@@ -129,9 +129,19 @@ export class MessagesApiService {
   public async postThreadMessage(channelId: string, parentMessageId: string, data: any) {
     return runWrite(async () => {
       const threadRef = this.getThreadCollectionRef(channelId, parentMessageId);
-      if (!threadRef) return;
+      const parentRef = this.getMessageRef(channelId, parentMessageId);
+      if (!threadRef || !parentRef) return;
 
       await addDoc(threadRef, data);
+      await updateDoc(parentRef, { thread: arrayUnion({ time: this.formatTime(new Date()) }) });
     }, 'Fehler beim Senden der Thread-Antwort:');
+  }
+
+  /**
+   * `arrayUnion` entries can't contain `serverTimestamp()`, so the reply
+   * counter on the parent doc stores a plain preformatted HH:mm string.
+   */
+  private formatTime(date: Date): string {
+    return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   }
 }

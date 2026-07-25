@@ -5,9 +5,13 @@ export interface Reaction {
   from: string;
 }
 
+export interface ThreadReplyMeta {
+  time: string;
+}
+
 export class ChannelMessage extends BaseMessage {
   reaction: Reaction[];
-  thread: any[];
+  thread: ThreadReplyMeta[];
 
   constructor(obj?: any) {
     super(obj);
