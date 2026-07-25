@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router';
 import { ImprintComponent } from '../app/features/legal/imprint/imprint.component';
 import { DataprotectionComponent } from '../app/features/legal/data-protection/data-protection.component';
-import { MainComponentComponent } from '../app/features/app_auth/components/main-component/main-component.component';
-import { ForgotpasswordComponent } from '../app/features/app_auth/components/forgot-password/forgot-password.component';
-import { ResetpasswordComponent } from '../app/features/app_auth/components/reset-password/reset-password.component';
-import { MainChatComponent } from '../app/features/app_chat/main-chat/main-chat.component';
-import { ChatContentComponent } from '../app/features/app_chat/components/chat-channel/chat-channel.component';
-import { DirectmessagesComponent } from '../app/features/app_chat/components/chat-direct/chat-direct.component';
-import { NewmessageComponent } from '../app/features/app_chat/components/chat-new-message/chat-new.component';
+import { MainComponentComponent } from '../app/features/auth/components/main-component/main-component.component';
+import { ForgotpasswordComponent } from '../app/features/auth/components/forgot-password/forgot-password.component';
+import { ResetpasswordComponent } from '../app/features/auth/components/reset-password/reset-password.component';
+import { MainChatComponent } from '../app/features/chat/main-chat/main-chat.component';
+import { ChatContentComponent } from '../app/features/chat/components/chat-channel/chat-channel.component';
+import { DirectmessagesComponent } from '../app/features/chat/components/chat-direct/chat-direct.component';
+import { NewmessageComponent } from '../app/features/chat/components/chat-new-message/chat-new.component';
 
-import { LoginComponent } from '../app/features/app_auth/components/login/login.component';
-import { RegisterComponent } from '../app/features/app_auth/components/register/register.component';
-import { AvatarselectionComponent } from '../app/features/app_auth/components/avatar-selection/avatar-selection.component';
+import { LoginComponent } from '../app/features/auth/components/login/login.component';
+import { RegisterComponent } from '../app/features/auth/components/register/register.component';
+import { AvatarselectionComponent } from '../app/features/auth/components/avatar-selection/avatar-selection.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [

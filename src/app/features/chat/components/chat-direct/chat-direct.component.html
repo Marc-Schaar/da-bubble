@@ -1,0 +1,56 @@
+@if (this.navigationService.isMobile()) {
+  <app-chat-header></app-chat-header>
+}
+<main>
+  <section (click)="hideList()">
+    <div class="chat-header">
+      <button (click)="showProfile()">
+        <app-profile-status [photoUrl]="currentReceiver()!.photoUrl" [online]="currentReceiver()!.online"></app-profile-status>
+        {{ currentReceiver()?.displayName }}
+      </button>
+    </div>
+
+    <ul class="chat-content" #chat>
+      @for (message of this.messagesService.messages(); track message.id; let i = $index) {
+        @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
+          <li>
+            <app-divider-template [messageData]="message.timestamp"> </app-divider-template>
+          </li>
+        }
+        <li>
+          <app-message-template [message]="message" [channelType]="'direct'"></app-message-template>
+        </li>
+      } @empty {
+        <li class="startContainer">
+          <div class="userContainer">
+            <img [src]="currentReceiver()?.photoUrl" alt="" />
+            <span>{{ currentReceiver()?.displayName }}</span>
+          </div>
+          <div class="welcomeText">
+            @if (!isYou()) {
+              <p>
+                Diese Unterhaltung findet nur zwischen
+                <a>&commat;{{ currentReceiver()?.displayName }} </a>und dir statt.
+              </p>
+            } @else {
+              <p>
+                <span> Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien
+                griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
+              </p>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+
+    <footer class="card-footer">
+      <app-textarea-template
+        [receiverId]="currentReceiverId() || ''"
+        [receiverComponent]="'direct'"
+        [messages]="this.messagesService.messages()"
+        [isChannelComponent]="false"
+        [placeholderText]="'Nachricht an @' + currentReceiver()?.displayName"
+      ></app-textarea-template>
+    </footer>
+  </section>
+</main>

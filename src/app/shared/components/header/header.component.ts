@@ -13,9 +13,9 @@ import { SearchResultComponent } from '../search-result/search-result.component'
 import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { SearchService } from '../../services/search/search.service';
-import { UserProfileComponent } from '../../../features/dialogs/user-profile/user-profile.component';
-import { UserMenuComponent } from '../../../features/dialogs/user-menu/user-menu.component';
-import { AuthService } from '../../../features/app_auth/services/auth/auth.service';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -44,10 +44,9 @@ export class HeaderComponent {
   /**
    * Opens the User Profile Dialog.
    */
-  public openUserProfile() {
+  public showProfile() {
     this.matDialog.open(UserProfileComponent, {
       panelClass: 'user-profile-dialog-bottom-left',
-      hasBackdrop: false,
     });
   }
 
@@ -60,16 +59,17 @@ export class HeaderComponent {
   }
 
   /**
-   * Displays the menu and sets the background visibility to true.
+   * Opens the appropriate menu based on the device type.
+   * Shows the mobile menu on mobile devices, or the user profile menu on desktop.
    */
-  public showmenu() {
-    this.showBackground = true;
+  public onOpenMenu() {
+    this.navigationService.isMobile() ? this.showMenuMobile() : this.showProfile();
   }
 
   /**
    * Displays the mobile menu as Bottomsheet.
    */
-  public showMenuMobile() {
+  private showMenuMobile() {
     this.bottomSheet.open(UserMenuComponent);
   }
 

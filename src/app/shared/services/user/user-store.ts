@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
-import { User } from '../../../features/app_auth/models/user/user';
+import { User } from '../../../features/auth/models/user/user';
 
 /**
  * Holds the authenticated user's data. AuthService writes to it,

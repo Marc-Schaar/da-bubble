@@ -1,0 +1,13 @@
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  .close {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+  }
+}

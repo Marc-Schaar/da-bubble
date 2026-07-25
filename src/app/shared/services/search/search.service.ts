@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { FireServiceService } from '../firebase/fire-service.service';
-import { Channel } from '../../../features/app_channel/models/channel/channel';
-import { User } from '../../../features/app_auth/models/user/user';
+import { Channel } from '../../../features/channel/models/channel/channel';
+import { User } from '../../../features/auth/models/user/user';
 
 @Injectable({
   providedIn: 'root',

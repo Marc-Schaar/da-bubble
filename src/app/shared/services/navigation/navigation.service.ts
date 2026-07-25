@@ -51,7 +51,7 @@ export class NavigationService {
   public goToThread(messageId: string, channelId: string) {
     this.isThreadOpen.set(true);
     this.router.navigate([], {
-      queryParams: { messageId: messageId, reciverId: channelId },
+      queryParams: { messageId: messageId, receiverId: channelId },
       queryParamsHandling: 'merge',
     });
   }

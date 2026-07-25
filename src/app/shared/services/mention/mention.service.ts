@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { NavigationService } from '../navigation/navigation.service';
 import { UserStore } from '../user/user-store';
-import { ChannelService } from '../../../features/app_channel/services/channel/channel.service';
+import { ChannelService } from '../../../features/channel/services/channel/channel.service';
 
 /**
  * Handles clicks on @user and #channel mentions rendered inside

@@ -1,0 +1,86 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { ChatHeaderComponent } from '../chat-header/chat-header.component';
+import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
+import { UserService } from '../../../../shared/services/user/shared.service';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
+import { SearchService } from '../../../../shared/services/search/search.service';
+import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
+import { AuthService } from '../../../auth/services/auth/auth.service';
+import { isChannel } from '../../../../shared/utils/receiver.util';
+import { Channel } from '../../../channel/models/channel/channel';
+import { User } from '../../../auth/models/user/user';
+
+@Component({
+  selector: 'app-newmessage',
+  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent, SearchResultComponent],
+  templateUrl: './chat-new.component.html',
+  styleUrl: './chat-new.component.scss',
+})
+export class NewmessageComponent {
+  public userService = inject(UserService);
+  public navigationService: NavigationService = inject(NavigationService);
+  public searchService: SearchService = inject(SearchService);
+  public authService: AuthService = inject(AuthService);
+
+  public currentReceiver: Channel | User | null = null;
+  private receiverType: 'channel' | 'direct' | null = null;
+  private receiverId: string = 'null';
+  public input: string = '';
+
+  protected readonly isChannel = isChannel;
+
+  /**
+   * Sets the current receiver of the message, determines the receiver type (channel or direct),
+   * resets the search list, and logs relevant information.
+   *
+   * @param element - The receiver element, either a channel or a user.
+   */
+  setReceiver(element: Channel | User): void {
+    this.currentReceiver = element;
+    this.receiverId = element.id!;
+
+    isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
+    this.searchService.resetList();
+  }
+
+  /**
+   * Sets the receiver type to either 'channel' or 'direct'.
+   *
+   * @param type - The type of the receiver.
+   */
+  public setReceiverType(type: 'channel' | 'direct'): void {
+    this.receiverType = type;
+  }
+
+  /**
+   * Retrieves the name of the current receiver.
+   *
+   * @returns The name of the current receiver, or an empty string if not available.
+   */
+  public getReceiverName(): string {
+    const receiver = this.currentReceiver;
+    if (!receiver) return '';
+    return isChannel(receiver) ? receiver.name : receiver.displayName;
+  }
+
+  /**
+   * Retrieves the type of the current receiver.
+   *
+   * @returns The receiver type: 'channel' or 'direct'.
+   */
+  public getReceiverType(): 'channel' | 'direct' | null {
+    return this.receiverType;
+  }
+
+  /**
+   * Retrieves the ID of the current receiver.
+   *
+   * @returns The receiver ID.
+   */
+  public getReceiverId(): string {
+    return this.receiverId;
+  }
+}

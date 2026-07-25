@@ -5,9 +5,7 @@
         <div><mat-icon>tag</mat-icon></div>
         {{ element.name }}
       } @else if (isUser(element)) {
-        <app-profile-status [photoUrl]="element.photoUrl" [online]="element.online"></app-profile-status>
-
-        {{ element.displayName }}
+        <app-user-list-item [user]="element"></app-user-list-item>
       }
     </li>
   } @empty {

@@ -1,59 +1,61 @@
-# DaBubble
+# DA Bubble
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
+DA Bubble ist ein Slack-inspirierter Team-Chat auf Basis von **Angular 19** und **Firebase** (Auth + Cloud Firestore).
 
-## Development server
+## Features
 
-To start a local development server, run:
+- E-Mail/Passwort-, Google- und Gast-Login; Registrierung mit Avatar-Auswahl
+- Channels: erstellen, bearbeiten, Mitglieder verwalten, verlassen
+- Nachrichten in Echtzeit: senden, bearbeiten, Emoji-Reaktionen mit Hover-Details
+- Threads (Antworten auf Nachrichten) im seitlichen Drawer
+- Direktnachrichten zwischen Nutzern
+- `@user`- und `#channel`-Mentions mit Navigation
+- Globale Suche über Nutzer und Channels
+- Responsives Layout (Desktop und Mobile < 1024px)
 
-```bash
-ng serve
-```
+## Tech-Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+| Bereich   | Technologie                                     |
+| --------- | ----------------------------------------------- |
+| Frontend  | Angular 19 (Standalone Components, Signals)     |
+| UI        | Angular Material, SCSS                          |
+| Backend   | Firebase Authentication, Cloud Firestore        |
+| Hosting   | Firebase Hosting                                |
 
-## Code scaffolding
+## Setup
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Abhängigkeiten installieren:
 
-```bash
-ng generate component component-name
-```
+   ```bash
+   npm install
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. Firebase konfigurieren: Die Firebase-Konfiguration liegt in `src/core/app.config.ts` (`initializeApp({ ... })`). Für ein eigenes Projekt die Werte aus der Firebase-Konsole (Projekteinstellungen → Web-App) eintragen.
 
-```bash
-ng generate --help
-```
+3. Dev-Server starten:
 
-## Building
+   ```bash
+   npm start
+   ```
 
-To build the project run:
+   Die App läuft anschließend unter `http://localhost:4200/`.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Build
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Das Ergebnis liegt in `dist/da-bubble`.
 
-## Additional Resources
+## Projektstruktur
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```
+src/
+├── core/            # Bootstrap, Routen, Guards
+└── app/
+    ├── features/    # Feature-Bereiche (Auth, Chat, Channel, Legal)
+    └── shared/      # Gemeinsame Komponenten, Services, Konstanten
+```
+
+Die Refactoring-Roadmap des Projekts ist in [REFACTORING.md](REFACTORING.md) dokumentiert, inklusive manueller Smoke-Test-Checkliste (es gibt aktuell kein automatisiertes Test-Sicherheitsnetz).
