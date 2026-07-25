@@ -17,8 +17,10 @@
         <div class="tooltip-cont">
           <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
             <div class="member-img-cont">
-              @for (member of channelService.currentChannel()?.member; track $index; let i = $index) {
-                <img *ngIf="i < 3" class="avatar" [src]="$any(member).photoURL" alt="Name" />
+              @for (member of channelService.enrichedMembers(); track member.id; let i = $index) {
+                @if (i < 3) {
+                  <img class="avatar" [src]="member.photoUrl" alt="Name" />
+                }
               }
             </div>
             @if (channelService.currentChannel()?.member?.length) {
