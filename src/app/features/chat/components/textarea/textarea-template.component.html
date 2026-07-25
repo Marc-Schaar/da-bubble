@@ -6,12 +6,12 @@
     [(ngModel)]="input"
     rows="3"
     [name]="input"
-    [placeholder]="placeholderText"
+    [placeholder]="placeholderText()"
   ></textarea>
 
   <div class="action-container justify-sb">
     <div class="gap-10">
-      @if (isChannelComponent) {
+      @if (isChannelComponent()) {
         <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()">
           <mat-icon>sentiment_satisfied</mat-icon>
         </button>
