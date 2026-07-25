@@ -1,6 +1,6 @@
 # Refactoring-Roadmap DA-Bubble
 
-Stand: 2026-07-25 · **Phasen 0–9 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR + Phase-9-Nachträge). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt. Phase 9 (Code-Review-Nachträge) hat 4 Funktionsbugs behoben und die verbliebenen strukturellen Duplikate aus dem Split bereinigt — siehe unten.
+Stand: 2026-07-25 · **Phasen 0–9 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR + Phase-9-Nachträge). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt. Phase 9 (Code-Review-Nachträge) hat 4 Funktionsbugs behoben und die verbliebenen strukturellen Duplikate aus dem Split bereinigt. **Phase 10.1 (Bugs) ist umgesetzt** — die restlichen Phase-10-Punkte (10.2–10.5) sind gesichtet und geplant, aber noch offen — siehe unten.
 
 Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. Jede Phase ist einzeln committbar und über die Smoke-Test-Checkliste (unten) manuell verifizierbar — es gibt kein Test-Sicherheitsnetz (alle `.spec.ts` sind ungepflegte CLI-Scaffolds).
 
@@ -241,3 +241,62 @@ Nach jeder Phase (mindestens nach jedem Merge) einmal komplett durchspielen — 
 - [ ] Duplizierten `onMentionClick`-Wrapper (`message-template.component.ts`/`chat-thread.component.ts`) bewusst nicht extrahiert — zwei 3-zeilige Pass-through-Methoden in unterschiedlichem Kontext rechtfertigen keine eigene Direktive.
 
 **Risiko:** keins (reine Löschungen ohne Verhaltensänderung). **Verifikation:** `ng build` + kompletter Smoke-Test (siehe oben).
+
+---
+
+## Phase 10 — Nachträge aus der manuellen To-Do-Liste (to-do.md, Stand 2026-07-25)
+
+**Ziel:** Die 22 handschriftlichen Punkte aus `to-do.md` sind gesichtet, den jeweiligen Codestellen zugeordnet und in committierbare Gruppen sortiert. Reihenfolge wie schon in Phase 9: erst isolierte Bugs (10.1), dann UI-Konsolidierung inkl. Barrierefreiheit (10.2 — Buttons/Inputs/Cards müssen VOR dem a11y-Durchgang stehen, sonst werden a11y-Fixes mehrfach in jeder Kopie gepflegt), dann Struktur-/Code-Qualität (10.3), dann Infrastruktur/Performance (10.4), zuletzt Doku/Tests/Design-Abgleich (10.5), da diese von den vorherigen Schritten profitieren.
+
+### 10.1 Bugs (hohe Priorität)
+
+- [x] **Header-Menü öffnet sich nicht (eingeloggt, Desktop)** — `[matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"` referenziert `isMobile` ohne Aufruf `()`, der Ausdruck ist ein Funktionsverweis (immer truthy) statt eines Booleans → `matMenuTriggerFor` ist praktisch immer `null`. `onOpenMenu()` ruft bei Desktop zusätzlich direkt `showProfile()` auf, sodass nur das Profil aufgeht.
+  Dateien: `shared/components/header/header.component.html:34`, `header.component.ts:65-67`
+- [x] **Thread-Antwortzähler wird nicht angezeigt** — `sendThreadMessage()` schreibt neue Antworten nur in die Firestore-Subcollection und aktualisiert nie das `thread`-Feld auf dem Parent-Dokument, das das Template per `$any(message()).thread?.length` ausliest.
+  Dateien: `features/chat/services/messages/messages.service.ts:143-154`, `features/chat/components/message/message-template.component.html:67-71`, `features/chat/models/channel-message/channel-message.ts:10,15`
+- [x] **Actions-Menü in message-template schließt nicht sauber** — Schließen hängt nur an `(mouseleave)` auf dem äußeren `.message`-Div; kein Klick-außerhalb-Listener. Bei Touch oder Mausbewegung über die Lücke zum absolut positionierten Menü bleibt es offen bzw. schließt nie. Fix: `HostListener('document:click')` oder CDK-Overlay mit `outsidePointerEvents`.
+  Dateien: `features/chat/components/message/message-template.component.ts/.html/.scss`
+- [x] **Contactbar scrollt zu spät / Margin-Left fehlt beim Ausblenden** — `toogleContactbar()` liest `drawerContactbar.opened` synchron direkt nach `toggle()`, obwohl `MatDrawer.toggle()` animiert/asynchron ist → `barOpen` hinkt dem echten Zustand hinterher. Das Layout verlässt sich komplett auf `mat-drawer-container autosize` ohne manuelles `margin-left` in `main-chat.component.scss`, wirkt dadurch bei jedem Umschalten verzögert. Fix: auf `(openedChange)`-Event statt synchronem Read umstellen.
+  Dateien: `features/chat/main-chat/main-chat.component.ts:47-52`, `.html`, `.scss`
+- [x] **Zurück-Pfeil in Impressum/Datenschutz ohne Funktion** — Buttons ohne `(click)`-Handler; `imprint.component.ts` injiziert `NavigationService` bereits, nutzt sie aber nirgends im Template; `data-protection.component.ts` injiziert sie gar nicht.
+  Dateien: `features/legal/imprint/imprint.component.html/.ts`, `features/legal/data-protection/data-protection.component.html/.ts`
+
+**Risiko:** niedrig. **Verifikation:** Header-Menü bei eingeloggtem Desktop-User öffnen; Thread mit mehreren Antworten → Zähler korrekt; Actions-Menü per Touch/Klick außerhalb schließen; Contactbar mehrfach ein-/ausblenden auf Desktop und Mobile; Impressum/Datenschutz über den Pfeil verlassen.
+
+### 10.2 UI-Konsolidierung & Barrierefreiheit
+
+- [ ] **Button-Komponente extrahieren** — 68 `<button>`-Vorkommen projektweit, nur 9 Dateien folgen einer `.btn-primary`/`.btn-outline`-Konvention (z. B. `message-template.component.html:90-91`) → gemeinsame `shared/components/button` mit Varianten (primary/outline/icon).
+- [ ] **Input-Komponente extrahieren** — 20 `<input>`-Vorkommen ohne gemeinsame Komponente → `shared/components/input` (Label, Fehleranzeige, a11y-Attribute einheitlich).
+- [ ] **Card-Header/Main/Footer-Komponente** — `.card`/`.card-header`-Markup bereits mehrfach inline dupliziert (`chat-channel.component.scss:8-27`, `chat-direct.component.scss`, `avatar-selection.component.scss`) → generisches Card-Pattern mit Content-Projection extrahieren.
+- [ ] **Barrierefreiheit** — nach Extraktion von Button/Input/Card: ARIA-Attribute, Tastaturnavigation (Fokus-Trap in Dialogen, Menü via Escape schließen), Farbkontrast prüfen.
+- [ ] **Datenschutz-Container „Blocksatz"** — `data-protection.component.scss` hat aktuell kein explizites `text-align`; langer Fließtext ohne begrenzte Zeilenlänge/`max-width` in `.box` wirkt unruhig. Bewusst linksbündig mit begrenzter `max-width` statt `justify` setzen.
+  Datei: `features/legal/data-protection/data-protection.component.scss`
+
+**Risiko:** niedrig–mittel (viele Aufrufstellen, aber mechanisch). **Verifikation:** visueller Vergleich aller Seiten mit Buttons/Inputs/Cards (Login, Register, Dialoge, Chat), Tab-Navigation durch die App, Screenreader-Stichprobe beim Öffnen/Schließen eines Dialogs.
+
+### 10.3 Code-Qualität & Struktur
+
+- [ ] **HTML-Attribute anpassen** — Grep-Sweep über alle Templates: leere `alt=""` auf bedeutungstragenden Bildern (z. B. `arrow_back.png` in den Legal-Komponenten), fehlendes `type="button"` auf Nicht-Submit-Buttons, inkonsistente `aria-*`.
+- [ ] **Legals-Struktur anpassen** — `features/legal/imprint` und `features/legal/data-protection` auf ein gemeinsames Layout/Header-Partial (inkl. des Zurück-Pfeils aus 10.1) ziehen, damit der Fix nicht doppelt gepflegt wird.
+- [ ] **Decorators (`private`/`public`/`readonly`)** — `shared/decorators/` existiert noch nicht, muss neu konzipiert werden. Vor Umsetzung klären, welches konkrete Problem gelöst werden soll — TypeScript hat bereits native `private`/`readonly`-Modifier, vermutlich geht es um Property-Decorators für Firestore-(De-)Serialisierung.
+- [ ] **CSS aufräumen** — nach 10.2 (Button/Input/Card-Extraktion) verbleibende tote/duplizierte Styles projektweit entfernen.
+
+**Risiko:** niedrig. **Verifikation:** `ng build`, kompletter Smoke-Test.
+
+### 10.4 Infrastruktur & Performance
+
+- [ ] **NotificationService einführen, `isOverlayActive` ablösen** — aktuell kein zentraler Service vorhanden; `isOverlayActive` ist ein lokales Boolean-Flag pro Komponente für eine Overlay-Übergangsanimation im Auth-Flow (nicht Notifications im eigentlichen Sinn). Neuen `NotificationService` (Toasts/Snackbar) bauen und dabei prüfen, ob die drei Stellen durch denselben Mechanismus ersetzt werden oder als reines Auth-UI-Detail bestehen bleiben.
+  Dateien: `features/auth/components/reset-password/`, `forgot-password/`, `main-component/`
+- [ ] **AuthGuard erweitern** — Guard existiert bereits (`src/core/auth.guard.ts`, aktiv auf dem `main`-Routenbaum via `app.routes.ts:37`); prüfen, ob weitere Routen (z. B. Auth-Seiten selbst gegen bereits eingeloggte User) einen inversen Guard brauchen.
+- [ ] **Lazy Loading** — `app.routes.ts` lädt aktuell alle Components eager (`component:` statt `loadComponent:`); Feature-Bereiche (`auth`, `chat`, `legal`) auf `loadComponent`/`loadChildren` umstellen.
+- [ ] **Performance** — nach Lazy Loading: Bundle-Analyse (`ng build --stats-json` + Analyzer), OnPush-Stand aus Phase 7 prüfen, fehlende `trackBy` auf `*ngFor`-Schleifen suchen.
+
+**Risiko:** mittel (Lazy Loading kann Routing-/Guard-Timing beeinflussen). **Verifikation:** `ng build`, alle Routen inkl. Deep-Links, Bundle-Größe vorher/nachher vergleichen.
+
+### 10.5 Doku, Tests, Design-Abgleich
+
+- [ ] **Tests implementieren** — die in Phase 8 als tote `.spec.ts`-Scaffolds identifizierten Dateien mit echten Unit-Tests füllen; Startpunkt: Services mit wenig UI-Abhängigkeit (`MentionService`, `ReactionsService`, API-Services).
+- [ ] **Dokumentation erweitern** — README (Phase 8 hat es nur ersetzt) um Architekturüberblick, Setup-Schritte und Firebase-Konfiguration ergänzen.
+- [ ] **Mit Figma abgleichen** — erst NACH 10.2 (Button/Input/Card), damit ein Design-Review nicht doppelt gegen bald ersetztes Markup läuft; Abweichungen als eigene Folge-Punkte erfassen statt hier pauschal „abgleichen".
+
+**Risiko:** keins. **Verifikation:** `ng test` läuft grün und deckt die neuen Tests ab; README von einer Person ohne Vorwissen gegenlesen lassen.
