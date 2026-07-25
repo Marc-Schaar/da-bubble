@@ -15,11 +15,19 @@ export class SearchUiStateService {
   private headerListOpen = false;
   private newMessageListOpen = false;
   public isChannel = signal<boolean | null>(false);
-  private isResultTrue = false;
-  private directTag = false;
   private currentList: (User | Channel)[] = [];
   private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
   public searchQuery = '';
+
+  /**
+   * Start-/End-Index des aktuell aktiven `@`/`#`-Tokens im Textarea-Text
+   * (nur relevant, wenn `searchInComponent === 'textarea'`).
+   */
+  public activeTokenStart: number | null = null;
+  public activeTokenEnd: number | null = null;
+
+  /** Index des per Tastatur markierten Vorschlags im Dropdown. */
+  private highlightedIndex = 0;
 
   public getSearchComponent(): 'header' | 'textarea' | 'newMessage' | null {
     return this.searchInComponent;
@@ -59,26 +67,31 @@ export class SearchUiStateService {
 
   public setCurrentList(list: (User | Channel)[]): void {
     this.currentList = list;
+    this.highlightedIndex = 0;
   }
 
-  public isDirectTag(): boolean {
-    return this.directTag;
-  }
-
-  public setIsDirectTag(isDirect: boolean): void {
-    this.directTag = isDirect;
+  public getHighlightedIndex(): number {
+    return this.highlightedIndex;
   }
 
   /**
-   * True, sobald ein Ergebnis final ausgewählt wurde und weitere
-   * Input-Events keine neue Suche mehr auslösen sollen.
+   * Bewegt die Tastatur-Markierung im Dropdown um `delta`, geclamped auf die
+   * aktuelle Ergebnisliste.
    */
-  public isResultStopped(): boolean {
-    return this.isResultTrue;
+  public moveHighlightedIndex(delta: number): void {
+    if (this.currentList.length === 0) return;
+    const next = this.highlightedIndex + delta;
+    this.highlightedIndex = Math.min(Math.max(next, 0), this.currentList.length - 1);
   }
 
-  public setResult(stopped: boolean): void {
-    this.isResultTrue = stopped;
+  public setActiveTokenRange(start: number, end: number): void {
+    this.activeTokenStart = start;
+    this.activeTokenEnd = end;
+  }
+
+  public clearActiveTokenRange(): void {
+    this.activeTokenStart = null;
+    this.activeTokenEnd = null;
   }
 
   /**
@@ -97,6 +110,7 @@ export class SearchUiStateService {
     this.textareaListOpen = false;
     this.headerListOpen = false;
     this.newMessageListOpen = false;
-    this.directTag = false;
+    this.highlightedIndex = 0;
+    this.clearActiveTokenRange();
   }
 }

@@ -28,12 +28,96 @@ export class TextareaTemplateComponent {
 
   public send = output<string>();
 
+  private readonly dropdownNavKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+
   /**
-   * Splices a chosen mention tag into the input at the current search query.
+   * Re-runs mention detection for the current caret position. Bound to both
+   * text-changing (input) and caret-only (click/keyup) events, so moving the
+   * caret in or out of a `@`/`#` token opens/closes the dropdown on its own.
    */
-  onTagInserted(tagName: string) {
-    this.input = this.mentionService.insertTag(this.input, tagName, this.searchService.searchQuery);
-    this.taggedNames.push(tagName);
+  onCaretMoved(ta: HTMLTextAreaElement) {
+    this.searchService.observeInput(this.input, 'textarea', ta.selectionStart ?? this.input.length);
+  }
+
+  /**
+   * Wraps `onCaretMoved` for the (keyup) binding: while the dropdown is open,
+   * Up/Down/Enter/Escape are consumed by `onKeydown` for list navigation and
+   * must not also trigger a re-search here — that would reset the
+   * keyboard-highlighted suggestion back to index 0 on every keystroke.
+   */
+  onKeyup(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+    if (this.searchService.getListBoolean() && this.dropdownNavKeys.has(event.key)) return;
+    this.onCaretMoved(ta);
+  }
+
+  /**
+   * Splices a chosen mention tag into the input at the currently tracked
+   * `@`/`#` token, then refocuses the textarea right after the inserted tag
+   * so the user can keep typing (including starting another mention).
+   */
+  onTagInserted(tagName: string, ta: HTMLTextAreaElement) {
+    const range = this.searchService.getActiveTokenRange();
+    if (!range) return;
+    const symbol = this.searchService.isChannel() ? '#' : '@';
+    const { text, caret } = this.mentionService.insertTag(this.input, tagName, symbol, range.start, range.end);
+    this.input = text;
+    this.taggedNames.push(`${symbol}${tagName}`);
+    this.searchService.resetList();
+
+    setTimeout(() => {
+      ta.focus();
+      ta.setSelectionRange(caret, caret);
+    });
+  }
+
+  /**
+   * Handles Enter/Arrow/Escape while the suggestion dropdown is open so it
+   * doesn't conflict with sending the message or moving the caret.
+   */
+  onKeydown(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+    if (!this.searchService.getListBoolean()) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        this.newMessage();
+      }
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.searchService.moveHighlightedIndex(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.searchService.moveHighlightedIndex(-1);
+        break;
+      case 'Enter': {
+        event.preventDefault();
+        const element = this.searchService.getHighlightedElement();
+        if (element) this.onTagInserted(this.mentionService.resolveTagName(element), ta);
+        break;
+      }
+      case 'Escape':
+        event.preventDefault();
+        this.searchService.resetList();
+        break;
+    }
+  }
+
+  /**
+   * Inserts the `@`/`#` trigger at the caret position (icon buttons), then
+   * runs it through the normal detection so the dropdown opens consistently
+   * with typing the character directly.
+   */
+  insertTrigger(symbol: '@' | '#', ta: HTMLTextAreaElement) {
+    const pos = ta.selectionStart ?? this.input.length;
+    this.input = this.input.slice(0, pos) + symbol + this.input.slice(pos);
+    setTimeout(() => {
+      ta.focus();
+      ta.setSelectionRange(pos + 1, pos + 1);
+      this.onCaretMoved(ta);
+    });
   }
 
   /**

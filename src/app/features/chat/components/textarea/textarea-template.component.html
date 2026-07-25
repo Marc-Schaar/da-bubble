@@ -1,8 +1,10 @@
 <div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
-    (keyup.enter)="newMessage()"
-    (click)="searchService.closeList(); searchService.setIsDirectTag(false); searchService.resetObserveInput()"
-    (input)="searchService.observeInput(input, 'textarea')"
+    #ta
+    (keydown)="onKeydown($event, ta)"
+    (click)="onCaretMoved(ta)"
+    (keyup)="onKeyup($event, ta)"
+    (input)="onCaretMoved(ta)"
     [(ngModel)]="input"
     rows="3"
     [name]="input"
@@ -17,10 +19,10 @@
         </button>
       }
 
-      <button class="btn" (click)="searchService.getList('@'); $event.stopPropagation()">
+      <button class="btn" (click)="insertTrigger('@', ta); $event.stopPropagation()">
         <mat-icon>alternate_email</mat-icon>
       </button>
-      <button class="btn" (click)="searchService.getList('#'); $event.stopPropagation()">
+      <button class="btn" (click)="insertTrigger('#', ta); $event.stopPropagation()">
         <mat-icon>tag</mat-icon>
       </button>
     </div>
@@ -30,7 +32,7 @@
 
     @if (searchService.getListBoolean()) {
       <div class="tag-container">
-        <app-search-result [input]="input" (tagInserted)="onTagInserted($event)"></app-search-result>
+        <app-search-result [input]="input" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
       </div>
     }
     @if (reactionMenuOpenInTextarea) {

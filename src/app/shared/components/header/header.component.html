@@ -14,7 +14,7 @@
         <input
           [(ngModel)]="input"
           (input)="searchService.observeInput(input, 'header')"
-          (click)="searchService.closeList(); searchService.setResult(false)"
+          (click)="searchService.closeList()"
           type="text"
           placeholder="Devspace durchsuchen"
           class="full-width"

@@ -17,7 +17,7 @@
         <div class="tooltip-cont">
           <div class="avatar-container hover-bg" (click)="openMemberWindow(false)">
             <div class="member-img-cont">
-              @for (member of channelService.enrichedMembers(); track member.id; let i = $index) {
+              @for (member of channelService.enrichedMembers(); track member.id + $index; let i = $index) {
                 @if (i < 3) {
                   <img class="avatar" [src]="member.photoUrl" alt="Name" />
                 }

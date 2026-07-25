@@ -1,6 +1,6 @@
 <ul>
   @for (element of searchService.getCurrentList(); track $index) {
-    <li (click)="handleClick(element)">
+    <li [class.highlighted]="$index === searchService.getHighlightedIndex()" (click)="handleClick(element)">
       @if (isChannel(element)) {
         <div><mat-icon>tag</mat-icon></div>
         {{ element.name }}
