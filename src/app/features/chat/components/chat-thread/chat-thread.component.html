@@ -41,7 +41,12 @@
       </div>
 
       <ul>
-        @for (message of messagesService.threadMessages(); track $index) {
+        @for (message of messagesService.threadMessages(); track message.id; let i = $index) {
+          @if (chatService.isNewDay(message, i === 0 ? parentMessageData : messagesService.threadMessages()[i - 1])) {
+            <li>
+              <app-divider-template [messageData]="message.timestamp"></app-divider-template>
+            </li>
+          }
           <li>
             <app-message-template
               [message]="message"
@@ -56,12 +61,9 @@
 
     <div class="card-footer" (mouseleave)="listOpen = false">
       <app-textarea-template
-        [receiverId]="currentChannelId"
-        [receiverComponent]="'thread'"
-        [messages]="messagesService.threadMessages()"
         [isChannelComponent]="true"
         [placeholderText]="'Antworten...'"
-        [threadId]="parentMessageId"
+        (send)="onSend($event)"
       ></app-textarea-template>
     </div>
   </section>

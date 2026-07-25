@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { DialogRef } from '@angular/cdk/dialog';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AvatarSelectionComponent } from '../avatar-selection-dialog/avatar-selection.component';
 import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { NavigationService } from '../../services/navigation/navigation.service';
@@ -21,7 +20,7 @@ export class UserProfileComponent {
 
   protected readonly authService = inject(AuthService);
   protected readonly navigationService = inject(NavigationService);
-  private readonly dialogRef = inject(DialogRef);
+  private readonly dialogRef = inject(MatDialogRef<UserProfileComponent>);
   private readonly dialog = inject(MatDialog);
 
   protected readonly user = this.authService.currentUser;

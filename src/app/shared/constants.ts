@@ -1,3 +1,5 @@
+import emojiData from 'unicode-emoji-json';
+
 export const CONTACT_EMAIL = 'gianniskarakasidhs@hotmail.com';
 
 export const DEFAULT_CHANNEL_ID = 'KqvcY68R1jP2UsQkv6Nz';
@@ -12,6 +14,8 @@ export const PRESELECTED_EMOJIS: Record<string, string> = {
   rocket: '\u{1F680}',
   nerd: '\u{1F913}',
 };
+
+export const ALL_EMOJIS: string[] = Object.keys(emojiData);
 
 export const AVATAR_IMAGES = [
   'img/avatars/avatar_1.png',

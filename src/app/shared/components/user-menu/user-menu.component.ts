@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 
-import { MatDialog } from '@angular/material/dialog';
-import { DialogRef } from '@angular/cdk/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
-
 
 @Component({
   selector: 'app-user-menu',
@@ -15,7 +13,7 @@ import { AuthService } from '../../../features/auth/services/auth/auth.service';
 })
 export class UserMenuComponent {
   private authService: AuthService = inject(AuthService);
-  private dialogRef: DialogRef = inject(DialogRef);
+  private dialogRef = inject(MatDialogRef<UserMenuComponent>);
   private dialog = inject(MatDialog);
 
   /**

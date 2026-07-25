@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { FireServiceService } from '../firebase/fire-service.service';
 import { SearchQueryService } from './search-query.service';
 import { SearchUiStateService } from './search-ui-state.service';
 
@@ -12,11 +11,8 @@ import { SearchUiStateService } from './search-ui-state.service';
   providedIn: 'root',
 })
 export class SearchService {
-  private fireService: FireServiceService = inject(FireServiceService);
   private uiState = inject(SearchUiStateService);
   private queryService = inject(SearchQueryService);
-
-  private tagType: 'channel' | 'user' | null = null;
 
   public get isChannel() {
     return this.uiState.isChannel;
@@ -66,24 +62,6 @@ export class SearchService {
   }
 
   /**
-   * Returns whether this tag is a direct message tag.
-   */
-  public isDirectTag(): boolean {
-    return this.uiState.isDirectTag();
-  }
-
-  /**
-   * Sets whether this tag is a direct message tag.
-   */
-  public setIsDirectTag(isDirect: boolean) {
-    this.uiState.setIsDirectTag(isDirect);
-  }
-
-  public setResult(stopped: boolean) {
-    this.uiState.setResult(stopped);
-  }
-
-  /**
    * Closes the currently active suggestion list.
    */
   public closeList(): void {
@@ -91,36 +69,76 @@ export class SearchService {
   }
 
   /**
-   * Stops observing input to prevent triggering further search actions.
+   * Returns the currently highlighted index in the suggestion dropdown.
    */
-  public stopObserveInput(): void {
-    this.setResult(true);
+  public getHighlightedIndex(): number {
+    return this.uiState.getHighlightedIndex();
   }
 
   /**
-   * Reset observing input to prevent triggering further search actions.
+   * Moves the keyboard highlight in the suggestion dropdown by `delta`.
    */
-  public resetObserveInput(): void {
-    this.setResult(false);
+  public moveHighlightedIndex(delta: number): void {
+    this.uiState.moveHighlightedIndex(delta);
+  }
+
+  /**
+   * Returns the currently highlighted suggestion, if any.
+   */
+  public getHighlightedElement() {
+    return this.uiState.getCurrentList()[this.uiState.getHighlightedIndex()];
+  }
+
+  /**
+   * Returns the start/end index of the `@`/`#` token currently being typed
+   * in the textarea, or null if none is active.
+   */
+  public getActiveTokenRange(): { start: number; end: number } | null {
+    const { activeTokenStart, activeTokenEnd } = this.uiState;
+    if (activeTokenStart == null || activeTokenEnd == null) return null;
+    return { start: activeTokenStart, end: activeTokenEnd };
   }
 
   /**
    * Observes user input and determines whether to search for users or channels.
-   * @param input - The input string entered by the user.
+   * @param input - The current full value of the input/textarea.
    * @param searchInComponent - The context where the input comes from: 'textarea', 'header' or 'newMessage'.
+   * @param cursorPos - The caret position within `input`. Defaults to the end of the string,
+   *   which reproduces the previous behaviour for single-line header/new-message inputs.
    */
-  public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage'): void {
-    if (this.uiState.isResultStopped()) return;
+  public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage', cursorPos: number = input.length): void {
     this.uiState.setHeaderListOpen(false);
     this.uiState.setTextareaListOpen(false);
     this.searchQuery = input;
     this.uiState.setSearchComponent(searchInComponent);
 
-    this.getTagType(input);
-    if (!input.trim()) this.closeList();
-    if (this.uiState.isResultStopped()) {
+    if (!input.trim()) {
+      this.resetList();
       return;
-    } else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
+    }
+
+    const token = this.extractActiveToken(input, cursorPos);
+    if (!token) {
+      this.isNoTagSearch() ? this.searchWithoutTag() : this.resetList();
+      return;
+    }
+    this.searchWithTag(token);
+  }
+
+  /**
+   * Finds the `@`/`#` token immediately before the caret: it must start either
+   * at the beginning of the input or right after whitespace, and must not yet
+   * contain whitespace itself. Returns null once the caret has left the token
+   * (e.g. after a space was typed), so the caller can close the suggestion list.
+   */
+  private extractActiveToken(input: string, cursorPos: number): { symbol: '@' | '#'; query: string; start: number; end: number } | null {
+    const uptoCursor = input.slice(0, cursorPos);
+    const match = uptoCursor.match(/(?:^|\s)([@#])([^\s@#]*)$/);
+    if (!match) return null;
+
+    const symbol = match[1] as '@' | '#';
+    const start = match.index! + (match[0].length - (match[1].length + match[2].length));
+    return { symbol, query: match[2], start, end: cursorPos };
   }
 
   /**
@@ -130,7 +148,6 @@ export class SearchService {
   private isNoTagSearch() {
     return (
       (this.uiState.getSearchComponent() === 'header' || this.uiState.getSearchComponent() === 'newMessage') &&
-      this.tagType == null &&
       this.searchQuery.length > 0
     );
   }
@@ -149,48 +166,15 @@ export class SearchService {
   }
 
   /**
-   * Handles search when a tag is detected (either '@' for users or '#' for channels).
+   * Handles search once an `@`/`#` token was found near the caret.
    */
-  private searchWithTag() {
-    switch (this.tagType) {
-      case 'channel':
-        this.caseChannel();
-        break;
-
-      case 'user':
-        this.caseUser();
-        break;
-
-      default:
-        this.resetList();
-        break;
-    }
-  }
-
-  /**
-   * Handles channel tag search logic.
-   */
-  private caseChannel() {
-    let searchInput: string | null = null;
-    this.uiState.isChannel.set(true);
-    searchInput = this.searchQuery.split('#')[1];
-    this.uiState.setCurrentList(this.queryService.startSearch(searchInput, 'channel'));
+  private searchWithTag(token: { symbol: '@' | '#'; query: string; start: number; end: number }) {
+    const isChannel = token.symbol === '#';
+    this.uiState.isChannel.set(isChannel);
+    this.uiState.setActiveTokenRange(token.start, token.end);
+    this.uiState.setCurrentList(this.queryService.startSearch(token.query, isChannel ? 'channel' : 'user'));
 
     this.uiState.getSearchComponent() === 'textarea' ? this.uiState.setTextareaListOpen(true) : this.uiState.setHeaderListOpen(true);
-    if (!searchInput) this.tagType = null;
-  }
-
-  /**
-   * Handles user tag search logic.
-   */
-  private caseUser() {
-    let searchInput: string | null = null;
-    this.uiState.isChannel.set(false);
-    searchInput = this.searchQuery.split('@')[1];
-    this.uiState.setCurrentList(this.queryService.startSearch(searchInput, 'user'));
-
-    this.uiState.getSearchComponent() === 'textarea' ? this.uiState.setTextareaListOpen(true) : this.uiState.setHeaderListOpen(true);
-    if (!searchInput) this.tagType = null;
   }
 
   /**
@@ -198,32 +182,5 @@ export class SearchService {
    */
   public resetList() {
     this.uiState.resetList();
-  }
-
-  /**
-   * Determines the tag type in the input string (user or channel).
-   * @param input - The input string to analyze.
-   */
-  private getTagType(input: string): void {
-    if (input.includes('@')) this.tagType = 'user';
-    if (input.includes('#')) this.tagType = 'channel';
-  }
-
-  /**
-   * Opens the appropriate autocomplete list based on the tag type ('@' or '#').
-   * @param type - Optional preset string to determine the tag context.
-   */
-  public getList(type?: string): void {
-    this.uiState.setTextareaListOpen(true);
-    this.uiState.setHeaderListOpen(false);
-    this.uiState.setSearchComponent('textarea');
-    this.uiState.setIsDirectTag(true);
-    if (type === '#') {
-      this.uiState.setCurrentList(this.fireService.myChannels());
-      this.uiState.isChannel.set(true);
-    } else if (type === '@') {
-      this.uiState.setCurrentList(this.fireService.allUsers());
-      this.uiState.isChannel.set(false);
-    }
   }
 }

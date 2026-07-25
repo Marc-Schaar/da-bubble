@@ -25,9 +25,7 @@ export class ReactionsService {
   }
 
   private getMessageRef(messageId: string, context: ReactionContext) {
-    return context.isThread && context.parentMessageId
-      ? this.fireService.getMessageThreadRef(context.channelId, context.parentMessageId, messageId)
-      : this.fireService.getMessageRef(context.channelId, messageId);
+    return this.fireService.getMessageRefForContext(context.channelId, messageId, context.parentMessageId, context.isThread);
   }
 
   /**

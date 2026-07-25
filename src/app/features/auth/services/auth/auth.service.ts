@@ -1,9 +1,16 @@
 import { inject, Injectable, signal } from '@angular/core';
 
-import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
+import {
+  Auth,
+  confirmPasswordReset,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+  verifyPasswordResetCode,
+} from '@angular/fire/auth';
 
-import { arrayUnion, doc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
-import { Firestore } from '@angular/fire/firestore';
 import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword } from '@firebase/auth';
 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
@@ -18,7 +25,6 @@ import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../../../shared/constants';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private navigationService: NavigationService = inject(NavigationService);
-  private firestore: Firestore = inject(Firestore);
   private fireService = inject(FireServiceService);
   private googleAuthProvider = new GoogleAuthProvider();
 
@@ -96,8 +102,7 @@ export class AuthService {
    * @param user - The user to be added to the user collection
    */
   private async addInUserCollection(user: User) {
-    const userDocRef = doc(this.firestore, `users/${user.id}`);
-    await setDoc(userDocRef, { ...user });
+    await this.fireService.createUser(user);
   }
 
   /**
@@ -107,13 +112,8 @@ export class AuthService {
    * @param user - The user to be added to the default channel
    */
   private async addInDefaultChannel(user: User) {
-    const defaultChannelRef = doc(this.firestore, `channels/${DEFAULT_CHANNEL_ID}`);
     try {
-      await updateDoc(defaultChannelRef, {
-        member: arrayUnion({
-          id: user.id,
-        }),
-      });
+      await this.fireService.addChannelMembers(DEFAULT_CHANNEL_ID, [{ id: user.id }]);
     } catch (error) {
       console.error('Fehler beim Hinzufügen zum Standardkanal:', error);
     }
@@ -222,13 +222,8 @@ export class AuthService {
       if (firebaseUser) {
         this.userStore.setCurrentUser(this.mapFirebaseUserToUser(firebaseUser));
 
-        const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-
-        this.unsubUserDoc = onSnapshot(userDocRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const firestoreData = docSnap.data() as User;
-            this.userStore.setCurrentUser(firestoreData);
-          }
+        this.unsubUserDoc = this.fireService.subUserDoc(firebaseUser.uid, (firestoreData) => {
+          if (firestoreData) this.userStore.setCurrentUser(firestoreData);
         });
       } else {
         this.userStore.setCurrentUser(null);
@@ -266,6 +261,21 @@ export class AuthService {
   }
 
   /**
+   * Validates a password-reset link's oobCode before showing the reset form.
+   * Rejects if the link is expired, already used, or malformed.
+   */
+  public async verifyPasswordResetCode(code: string): Promise<string> {
+    return verifyPasswordResetCode(this.auth, code);
+  }
+
+  /**
+   * Completes a password reset for the given oobCode.
+   */
+  public async confirmPasswordReset(code: string, newPassword: string): Promise<void> {
+    await confirmPasswordReset(this.auth, code, newPassword);
+  }
+
+  /**
    * Updates the current user's display name and avatar in Firebase Auth,
    * Firestore and the local UserStore signal, so every consumer stays in sync.
    *
@@ -277,9 +287,7 @@ export class AuthService {
     if (!firebaseUser) return;
 
     await this.updateFirebaseProfile(firebaseUser, displayName, photoUrl);
-
-    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-    await updateDoc(userDocRef, { displayName, photoUrl });
+    await this.fireService.updateUser(firebaseUser.uid, { displayName, photoUrl });
 
     const current = this.currentUser();
     this.userStore.setCurrentUser(current ? { ...current, displayName, photoUrl } : null);

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, effect, inject, OnInit, untracked, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -11,9 +11,11 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
+import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChannelService } from '../../../channel/services/channel/channel.service';
+import { ChatService } from '../../services/chat/chat.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 
@@ -27,6 +29,7 @@ import { ChannelMessage } from '../../models/channel-message/channel-message';
     LinkifyPipe,
     TextareaTemplateComponent,
     MessageTemplateComponent,
+    DividerTemplateComponent,
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
@@ -39,6 +42,7 @@ export class ThreadComponent implements OnInit {
   public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
+  public chatService: ChatService = inject(ChatService);
   private mentionService: MentionService = inject(MentionService);
   private readonly destroyRef = inject(DestroyRef);
   public userId: string = '';
@@ -46,6 +50,17 @@ export class ThreadComponent implements OnInit {
   public parentMessageId: string = '';
   public parentMessageData: ChannelMessage | null = null;
   public listOpen: boolean = false;
+
+  constructor() {
+    effect(() => {
+      const messages = this.messagesService.threadMessages();
+      untracked(() => {
+        if (messages.length > 0) {
+          this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+        }
+      });
+    });
+  }
 
   /**
    * A function that will unsubscribe from the Firestore snapshot listener for messages.
@@ -89,6 +104,13 @@ export class ThreadComponent implements OnInit {
     } else {
       this.messagesService.threadMessages.set([]);
     }
+  }
+
+  /**
+   * Sends a new reply to the current thread.
+   */
+  onSend(text: string) {
+    this.messagesService.sendThreadMessage(text, this.currentChannelId, this.parentMessageId);
   }
 
   /**

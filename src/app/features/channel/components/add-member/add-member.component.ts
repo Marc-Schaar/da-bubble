@@ -34,14 +34,13 @@ export class AddMemberComponent {
   }
 
   public addUserToSelection(user: User) {
-    this.channelService.selectedUsers.update((users) => [...users, user]);
-    this.channelService.userSearchQuery.set('');
+    this.channelService.addUserToSelection(user);
     this.showUserBar = false;
   }
 
   public onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    this.channelService.userSearchQuery.set(value);
+    this.channelService.updateSearchQuery(value);
     this.showUserBar = true;
   }
 

@@ -39,15 +39,7 @@
 
   @if (reactionMenuOpen()) {
     <div class="reaction-menu">
-      @for (emoji of preSelectedEmojiList; track $index) {
-        <button
-          class="btn-secundary circle"
-          [ngClass]="{ 'bg-purple': reactionsService.hasReacted(emoji, reactions()) }"
-          (click)="toggle(emoji)"
-        >
-          {{ emoji }}
-        </button>
-      }
+      <app-emoji-quick-picker [emojis]="preSelectedEmojiList" [isSelected]="isReactionSelected" (pick)="toggle($event)"></app-emoji-quick-picker>
     </div>
   }
 </div>

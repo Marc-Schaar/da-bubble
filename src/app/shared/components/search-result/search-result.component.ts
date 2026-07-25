@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
+import { MentionService } from '../../services/mention/mention.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
@@ -17,6 +18,7 @@ import { isChannel, isUser } from '../../utils/receiver.util';
 export class SearchResultComponent {
   searchService: SearchService = inject(SearchService);
   navigationService: NavigationService = inject(NavigationService);
+  private mentionService: MentionService = inject(MentionService);
 
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();
@@ -24,19 +26,14 @@ export class SearchResultComponent {
   @Output() currentReceiver = new EventEmitter<any>();
 
   /**
-   * Tags a receiver (user or channel) in the input field by inserting their name with the tagType.
-   * Emits the updated input, then closes and stops observing the search list.
+   * Tags a receiver (user or channel) by emitting its display name; the
+   * caller (TextareaTemplateComponent) knows the active `@`/`#` symbol and
+   * token position and performs the actual insertion.
    *
    * @param receiverData - The data object of the receiver (user or channel).
-   * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
-  public tagReceiver(receiverData: Channel | User, tagType: '@' | '#') {
-    const tagName = isChannel(receiverData) ? receiverData.name : receiverData.displayName;
-
-    this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
-
-    this.searchService.closeList();
-    this.searchService.stopObserveInput();
+  public tagReceiver(receiverData: Channel | User) {
+    this.tagInserted.emit(this.mentionService.resolveTagName(receiverData));
   }
 
   /**
@@ -97,7 +94,7 @@ export class SearchResultComponent {
         break;
 
       case 'textarea':
-        this.tagReceiver(element, this.searchService.isChannel() ? '#' : '@');
+        this.tagReceiver(element);
         break;
 
       default:

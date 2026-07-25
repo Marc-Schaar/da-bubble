@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 
 export const PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$';
 
@@ -16,6 +16,12 @@ export function createLoginForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group(basicAuthFields());
 }
 
+export function createForgotPasswordForm(formBuilder: FormBuilder): FormGroup {
+  return formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+  });
+}
+
 export function createRegisterForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group({
     ...basicAuthFields(),
@@ -23,4 +29,20 @@ export function createRegisterForm(formBuilder: FormBuilder): FormGroup {
     photoURL: ['img/avatar_default.png'],
     acceptTerms: [false, [Validators.requiredTrue]],
   });
+}
+
+function passwordsMatch(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const passwordConfirm = group.get('passwordConfirm')?.value;
+  return password === passwordConfirm ? null : { passwordMismatch: true };
+}
+
+export function createResetPasswordForm(formBuilder: FormBuilder): FormGroup {
+  return formBuilder.group(
+    {
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(PASSWORD_PATTERN)]],
+      passwordConfirm: ['', [Validators.required]],
+    },
+    { validators: passwordsMatch },
+  );
 }

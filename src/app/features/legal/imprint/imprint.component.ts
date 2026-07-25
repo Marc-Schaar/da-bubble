@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
+import { Location } from '@angular/common';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { CONTACT_EMAIL } from '../../../shared/constants';
 
 @Component({
@@ -10,6 +10,11 @@ import { CONTACT_EMAIL } from '../../../shared/constants';
   styleUrl: './imprint.component.scss',
 })
 export class ImprintComponent {
-  navigate = inject(NavigationService);
+  private location = inject(Location);
   protected readonly contactEmail = CONTACT_EMAIL;
+
+  /** Returns to whichever page linked here (login, register, main chat, …). */
+  public goBack() {
+    this.location.back();
+  }
 }

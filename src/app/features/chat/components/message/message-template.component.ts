@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
@@ -18,11 +18,12 @@ import { ReactionContext, ReactionsService } from '../../services/reactions/reac
 import { MessagesService } from '../../services/messages/messages.service';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
+import { EmojiQuickPickerComponent } from './emoji-quick-picker/emoji-quick-picker.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent],
+  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ export class MessageTemplateComponent {
   private userStore: UserStore = inject(UserStore);
   private mentionService: MentionService = inject(MentionService);
   public reactionsService: ReactionsService = inject(ReactionsService);
+  private elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
@@ -80,6 +82,9 @@ export class MessageTemplateComponent {
   public hasReacted(emoji: string): boolean {
     return this.reactionsService.hasReacted(emoji, this.reactions());
   }
+
+  /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
+  public readonly isReactionSelected = (emoji: string): boolean => this.hasReacted(emoji);
 
   /**
    * Enables editing mode for a specific message.
@@ -140,5 +145,19 @@ export class MessageTemplateComponent {
    */
   onMentionClick(event: MouseEvent | TouchEvent) {
     this.mentionService.handleMentionClick(event);
+  }
+
+  /**
+   * Closes the actions/reaction menu on any click outside this message —
+   * `mouseleave` alone missed touch input and clicks that pass over the
+   * absolutely positioned menu on the way out.
+   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.menuOpen && !this.reactionMenuOpen) return;
+    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+      this.menuOpen = false;
+      this.reactionMenuOpen = false;
+    }
   }
 }

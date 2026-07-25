@@ -9,12 +9,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { User } from '../../../auth/models/user/user';
 import { AddMemberComponent } from '../../../channel/components/add-member/add-member.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
 import { EditChannelComponent } from '../../../channel/components/edit-channel/edit-channel.component';
@@ -41,7 +39,6 @@ import { ChatService } from '../../services/chat/chat.service';
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  fireService: FireServiceService = inject(FireServiceService);
   userService: UserService = inject(UserService);
   channelService: ChannelService = inject(ChannelService);
   dialog = inject(MatDialog);
@@ -50,17 +47,6 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   route: ActivatedRoute = inject(ActivatedRoute);
   public chatService: ChatService = inject(ChatService);
   private readonly destroyRef = inject(DestroyRef);
-
-  isMobile: boolean = false;
-  showBackground: boolean = false;
-  channels: any = [];
-
-  channelInfo: boolean = false;
-  addMemberInfoWindow: boolean = false;
-  addMemberWindow: boolean = false;
-
-  currentUser: User | null = null;
-  public userId: string = '';
 
   public currentChannelId = signal<string | null>(null);
 
@@ -100,15 +86,14 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   private handleScroll() {
-    const element = this.chatContentRef?.nativeElement;
-    if (!element) return;
+    this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+  }
 
-    const threshold = 100;
-    const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < threshold;
-
-    if (isNearBottom) {
-      this.userService.scrollToBottom(element);
-    }
+  /**
+   * Sends a new message to the currently open channel.
+   */
+  onSend(text: string) {
+    this.messagesService.sendChannelMessage(text, this.currentChannelId() || '');
   }
 
   /**
@@ -125,12 +110,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Opens or closes the dialog to add members to the channel.
-   * @param toggle - Whether to show or hide the dialog
+   * Opens the dialog to add members to the channel.
    */
-  openMemberWindow(toggle: boolean) {
-    this.addMemberWindow = toggle;
-
+  openMemberWindow() {
     this.dialog.open(AddMemberComponent, {
       width: 'auto',
       maxWidth: '95vw',

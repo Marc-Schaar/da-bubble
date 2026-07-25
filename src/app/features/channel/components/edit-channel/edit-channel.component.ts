@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
@@ -36,14 +36,13 @@ export class EditChannelComponent {
   }
 
   public addUserToSelection(user: User) {
-    this.channelService.selectedUsers.update((users) => [...users, user]);
-    this.channelService.userSearchQuery.set('');
+    this.channelService.addUserToSelection(user);
     this.showUserBar = false;
   }
 
   public onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    this.channelService.userSearchQuery.set(value);
+    this.channelService.updateSearchQuery(value);
     this.showUserBar = true;
   }
 

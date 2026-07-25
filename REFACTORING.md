@@ -1,6 +1,6 @@
 # Refactoring-Roadmap DA-Bubble
 
-Stand: 2026-07-25 · **Phasen 0–8 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt.
+Stand: 2026-07-25 · **Phasen 0–9 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR + Phase-9-Nachträge). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt. Phase 9 (Code-Review-Nachträge) hat 4 Funktionsbugs behoben und die verbliebenen strukturellen Duplikate aus dem Split bereinigt. **Phase 10.1 (Bugs) ist umgesetzt** — die restlichen Phase-10-Punkte (10.2–10.5) sind gesichtet und geplant, aber noch offen — siehe unten.
 
 Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. Jede Phase ist einzeln committbar und über die Smoke-Test-Checkliste (unten) manuell verifizierbar — es gibt kein Test-Sicherheitsnetz (alle `.spec.ts` sind ungepflegte CLI-Scaffolds).
 
@@ -185,3 +185,118 @@ Nach jeder Phase (mindestens nach jedem Merge) einmal komplett durchspielen — 
 
 - Datum: 2026-07-12, Branch `refactor-chat-navigation`, Commit `f43c006`
 - `ng build`: ❌ **schlägt fehl** — `NG1: Object is possibly 'null'` in `src/app/features/app_channel/components/add-member/add-member.component.html:39` (`channelService.currentChannel().name`, `currentChannel()` kann `null` sein). → Fix ist Schritt 0 von Phase 1; erst danach ist der Build als Verifikations-Werkzeug nutzbar.
+
+---
+
+## Phase 9 — Nachträge aus Code-Review (2026-07-25)
+
+**Ziel:** Nach Abschluss der Phasen 0–8 hat eine erneute Review (3 parallele Explore-Agents über `features/chat`, `shared/services` und `features/auth|channel` + `shared/components`) vier verbliebene Funktionsbugs sowie Restduplikate gefunden, die vom Strukturrefactor nicht abgedeckt waren. Reihenfolge: 9.1 (Bugs) → 9.2 (Duplikate) → 9.3 (mittel) → 9.4 (Cleanup); jeder Punkt einzeln committbar.
+
+### 9.1 Bugs (hohe Priorität)
+
+- [x] **reset-password fertig implementieren** — Reactive Form mit `PASSWORD_PATTERN`/dem `createXForm`-Muster aus `auth-forms.ts`, Validierung + Fehleranzeige aktivieren (aktuell auskommentiert), Firebase-Reset-Aufruf über `AuthService` kapseln statt direkt `getAuth`/`confirmPasswordReset` in der Komponente.
+  Dateien: `features/auth/components/reset-password/reset-password.component.ts`, `.html`, `features/auth/forms/auth-forms.ts`, `features/auth/services/auth/auth.service.ts`
+- [x] **Duplicate-User-Bug in add-member/edit-channel beheben** — lokale `addUserToSelection`/`onSearchInput` (1:1 kopiert, ohne Duplikat-Schutz) entfernen, stattdessen `channelService.addUserToSelection(user)` / `channelService.updateSearchQuery(value)` direkt binden.
+  Dateien: `features/channel/components/add-member/add-member.component.ts` (+`.html`), `edit-channel/edit-channel.component.ts` (+`.html`)
+- [x] **Auto-Scroll in chat-direct und chat-thread ergänzen** — Scroll-Logik aus `chat-channel` (`handleScroll()` + `effect()` auf `messagesService.messages()`) extrahieren, in allen drei Komponenten nutzen (chat-direct/chat-thread deklarieren `@ViewChild('chat')` bereits, rufen aber nie `scrollToBottom` auf).
+  Dateien: `chat-channel/chat-channel.component.ts`, `chat-direct/chat-direct.component.ts`, `chat-thread/chat-thread.component.ts`
+- [x] **hideList() in chat-direct verdrahten** — `SearchService` injizieren, `resetList()` aufrufen (analog `MainChatComponent.closeAll()`). Hinweis: `main-chat.component.html:1` bindet `(click)="closeAll()"` bereits auf `<main>`, das `chat-direct` umschließt — die lokale Bindung ist strenggenommen bereits redundant durch Event-Bubbling, wird aber trotzdem sinnvoll implementiert statt entfernt, für Konsistenz mit dem Klick-Handler-Namen und Robustheit gegen künftige `stopPropagation()`-Aufrufe.
+  Datei: `chat-direct/chat-direct.component.ts` (+`.html:5`)
+
+### 9.2 Strukturelle Duplikate
+
+- [x] **AuthService auf den Firestore-Split umstellen** — direkte `Firestore`-Injection/`doc`/`setDoc`/`updateDoc`/`onSnapshot`-Aufrufe entfernen; `addInDefaultChannel()` durch `fireService.addChannelMembers(...)` ersetzen (ist 1:1 `ChannelsApiService.addChannelMembers`); fehlende Schreibmethode (`createUser`) in `UsersApiService` ergänzen, `addInUserCollection`/`setCurrentUser`-Snapshot darüber laufen lassen.
+  Dateien: `features/auth/services/auth/auth.service.ts`, `shared/services/firebase/users-api.service.ts`, `channels-api.service.ts`
+- [x] **Reaction-Quick-Picker konsolidieren** — identischen `reactionContext()`/`context()`-Builder und Emoji-Grid (TS + HTML + SCSS dupliziert) aus `message-template` und `message-reactions` zusammenführen.
+  Dateien: `features/chat/components/message/message-template.component.ts` (+`.html`/`.scss`), `message/message-reactions/message-reactions.component.ts` (+`.html`/`.scss`)
+- [x] **Message-Ref-Auflösung zentralisieren** — identischer Thread-vs-Channel-Ternary in `MessagesService.updateMessageText` und `ReactionsService.getMessageRef` → eine Methode auf `MessagesApiService` (z. B. `getMessageRefForContext`).
+  Dateien: `features/chat/services/messages/messages.service.ts`, `services/reactions/reactions.service.ts`
+- [x] **Doc→Entity-Mapping vereinheitlichen** — generischer `toEntity<T>(id, data)`-Helper (id **nach** dem Spread, da 4 von 5 Stellen `id` davor spreaden und ein gleichnamiges Datenfeld die echte Doc-ID überschreiben würde).
+  Dateien: `channels-api.service.ts`, `users-api.service.ts`, `features/channel/services/channel/channel.service.ts` (`setActiveChannel`, `findChannelByName`), `shared/services/user/user-store.ts`
+- [x] **Conversation-ID-Aufbau zentralisieren** — `[a,b].sort()` + Template-String kommt zweimal in `MessagesService` vor (`subToConversationMessages`, `sendDirectMessage`) → ein `getConversationId(userA, userB)`-Helper.
+  Datei: `features/chat/services/messages/messages.service.ts`
+- [x] **Message/Thread-Pfade zentralisieren** — `MessagesApiService` um `getMessagesCollectionRef`/`getThreadCollectionRef` ergänzen, `MessagesService` nutzt diese statt Pfad-Strings selbst zu bauen und über den generischen `fireService.getCollectionRef` zu gehen.
+  Dateien: `shared/services/firebase/messages-api.service.ts`, `features/chat/services/messages/messages.service.ts`
+- [x] **checkChannelNameExists/findChannelByName zusammenführen** — gleiche Query zweimal (einmal korrekt in `ChannelsApiService`, einmal über den `getCollectionRef`-Escape-Hatch in `ChannelService`) → eine Implementierung in `ChannelsApiService`.
+  Dateien: `shared/services/firebase/channels-api.service.ts`, `features/channel/services/channel/channel.service.ts`
+- [x] **Error-Handling in den API-Services vereinheitlichen** — `channels-api.service.ts` fängt+rethrowt, `messages-api.service.ts` fängt gar nicht, `auth.service.ts` fängt ohne rethrow → kleiner `runWrite`-Helper für konsistentes Verhalten.
+  Dateien: `shared/services/firebase/*.ts`
+
+### 9.3 Mittel
+
+- [x] Formular-Fehleranzeige vereinheitlichen: Passwort-Regel-Diskrepanz behoben (register-Fehlertext sagte fälschlich "8 Zeichen" statt 6); `forgot-password` von `NgForm`/eigenem E-Mail-Regex auf Reactive Forms + `Validators.email` (neue `createForgotPasswordForm` in `auth-forms.ts`) migriert. Bewusst **kein** generischer `getFieldError`-Helper für login/register — die Fehlermeldungen sind pro Feld unterschiedlich, eine Abstraktion hätte hier nur Indirektion ohne echten Gewinn gebracht.
+- [x] Divider-Template-Logik (Datums-Trenner) in chat-thread ergänzt (`ChatService.isNewDay` gegen `parentMessageData` bzw. den vorherigen Reply verglichen), jetzt konsistent mit chat-channel/chat-direct.
+- [x] Dialog-API vereinheitlicht: `user-menu`/`user-profile` nutzen jetzt `MatDialogRef` statt CDK `DialogRef`.
+- [x] Timestamp→Date-Normalisierung zentralisiert in `shared/utils/timestamp.util.ts` (`toDateSafe`), genutzt von `relative-date.pipe.ts` und `base-message.ts`.
+- [x] `fire-service.service.ts`: `getDocRef`/`getCollectionRef`-Escape-Hatches durch die oben zentralisierten Methoden ersetzen, sodass Consumer keine Domänen-Pfade mehr selbst bauen. (Beide generischen Methoden konnten komplett entfernt werden — letzter Aufrufer war `channel.service.ts`, jetzt über `ChannelsApiService.subChannelDoc` gelöst.)
+
+**Risiko 9.1–9.3:** niedrig–mittel (isolierte, meist additive Änderungen). **Verifikation:** nach jedem Punkt `ng build`; gezielt Passwort-Reset-Flow, Mitglieder zu Channel hinzufügen (kein Duplikat in der Liste), Scroll-Verhalten in Direct/Thread bei neuer Nachricht, Reaktion setzen in Channel-Nachricht UND Thread-Antwort, Registrierung (Standardkanal-Beitritt).
+
+### 9.4 Cleanup (Dead Code / Imports)
+
+- [x] `chat-channel.component.ts`: unbenutzte `fireService`-Injection, `isMobile`, `showBackground`, `channels`, `channelInfo`, `addMemberInfoWindow`, `userId`, `currentUser`, `addMemberWindow` entfernt (inkl. des jetzt parameterlosen `openMemberWindow()`).
+- [x] `contactbar.component.ts`: unbenutzte `currentUser`, `currentlist`, `currentArray`, `currentLink`, `addChannelWindow` entfernt; unbenutzte `dialogRef`-Variable in `openAddChannel()` entfernt.
+- [x] Unbenutzte Imports: `computed` in `edit-channel.component.ts`, separater `NgClass`-Import in `add-channel.component.ts` entfernt.
+- [x] Auskommentierte Markup-Reste entfernt: `avatar-selection.component.html` (auth), `reset-password.component.html` (entfiel automatisch mit der Neuimplementierung).
+- [ ] Duplizierten `onMentionClick`-Wrapper (`message-template.component.ts`/`chat-thread.component.ts`) bewusst nicht extrahiert — zwei 3-zeilige Pass-through-Methoden in unterschiedlichem Kontext rechtfertigen keine eigene Direktive.
+
+**Risiko:** keins (reine Löschungen ohne Verhaltensänderung). **Verifikation:** `ng build` + kompletter Smoke-Test (siehe oben).
+
+---
+
+## Phase 10 — Nachträge aus der manuellen To-Do-Liste (to-do.md, Stand 2026-07-25)
+
+**Ziel:** Die 22 handschriftlichen Punkte aus `to-do.md` sind gesichtet, den jeweiligen Codestellen zugeordnet und in committierbare Gruppen sortiert. Reihenfolge wie schon in Phase 9: erst isolierte Bugs (10.1), dann UI-Konsolidierung inkl. Barrierefreiheit (10.2 — Buttons/Inputs/Cards müssen VOR dem a11y-Durchgang stehen, sonst werden a11y-Fixes mehrfach in jeder Kopie gepflegt), dann Struktur-/Code-Qualität (10.3), dann Infrastruktur/Performance (10.4), zuletzt Doku/Tests/Design-Abgleich (10.5), da diese von den vorherigen Schritten profitieren.
+
+### 10.1 Bugs (hohe Priorität)
+
+- [x] **Header-Menü öffnet sich nicht (eingeloggt, Desktop)** — `[matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"` referenziert `isMobile` ohne Aufruf `()`, der Ausdruck ist ein Funktionsverweis (immer truthy) statt eines Booleans → `matMenuTriggerFor` ist praktisch immer `null`. `onOpenMenu()` ruft bei Desktop zusätzlich direkt `showProfile()` auf, sodass nur das Profil aufgeht.
+  Dateien: `shared/components/header/header.component.html:34`, `header.component.ts:65-67`
+- [x] **Thread-Antwortzähler wird nicht angezeigt** — `sendThreadMessage()` schreibt neue Antworten nur in die Firestore-Subcollection und aktualisiert nie das `thread`-Feld auf dem Parent-Dokument, das das Template per `$any(message()).thread?.length` ausliest.
+  Dateien: `features/chat/services/messages/messages.service.ts:143-154`, `features/chat/components/message/message-template.component.html:67-71`, `features/chat/models/channel-message/channel-message.ts:10,15`
+- [x] **Actions-Menü in message-template schließt nicht sauber** — Schließen hängt nur an `(mouseleave)` auf dem äußeren `.message`-Div; kein Klick-außerhalb-Listener. Bei Touch oder Mausbewegung über die Lücke zum absolut positionierten Menü bleibt es offen bzw. schließt nie. Fix: `HostListener('document:click')` oder CDK-Overlay mit `outsidePointerEvents`.
+  Dateien: `features/chat/components/message/message-template.component.ts/.html/.scss`
+- [x] **Contactbar scrollt zu spät / Margin-Left fehlt beim Ausblenden** — `toogleContactbar()` liest `drawerContactbar.opened` synchron direkt nach `toggle()`, obwohl `MatDrawer.toggle()` animiert/asynchron ist → `barOpen` hinkt dem echten Zustand hinterher. Das Layout verlässt sich komplett auf `mat-drawer-container autosize` ohne manuelles `margin-left` in `main-chat.component.scss`, wirkt dadurch bei jedem Umschalten verzögert. Fix: auf `(openedChange)`-Event statt synchronem Read umstellen.
+  Dateien: `features/chat/main-chat/main-chat.component.ts:47-52`, `.html`, `.scss`
+- [x] **Zurück-Pfeil in Impressum/Datenschutz ohne Funktion** — Buttons ohne `(click)`-Handler; `imprint.component.ts` injiziert `NavigationService` bereits, nutzt sie aber nirgends im Template; `data-protection.component.ts` injiziert sie gar nicht.
+  Dateien: `features/legal/imprint/imprint.component.html/.ts`, `features/legal/data-protection/data-protection.component.html/.ts`
+
+**Risiko:** niedrig. **Verifikation:** Header-Menü bei eingeloggtem Desktop-User öffnen; Thread mit mehreren Antworten → Zähler korrekt; Actions-Menü per Touch/Klick außerhalb schließen; Contactbar mehrfach ein-/ausblenden auf Desktop und Mobile; Impressum/Datenschutz über den Pfeil verlassen.
+
+### 10.2 UI-Konsolidierung & Barrierefreiheit
+
+- [ ] **Button-Komponente extrahieren** — 68 `<button>`-Vorkommen projektweit, nur 9 Dateien folgen einer `.btn-primary`/`.btn-outline`-Konvention (z. B. `message-template.component.html:90-91`) → gemeinsame `shared/components/button` mit Varianten (primary/outline/icon).
+- [ ] **Input-Komponente extrahieren** — 20 `<input>`-Vorkommen ohne gemeinsame Komponente → `shared/components/input` (Label, Fehleranzeige, a11y-Attribute einheitlich).
+- [ ] **Card-Header/Main/Footer-Komponente** — `.card`/`.card-header`-Markup bereits mehrfach inline dupliziert (`chat-channel.component.scss:8-27`, `chat-direct.component.scss`, `avatar-selection.component.scss`) → generisches Card-Pattern mit Content-Projection extrahieren.
+- [ ] **Barrierefreiheit** — nach Extraktion von Button/Input/Card: ARIA-Attribute, Tastaturnavigation (Fokus-Trap in Dialogen, Menü via Escape schließen), Farbkontrast prüfen.
+- [ ] **Datenschutz-Container „Blocksatz"** — `data-protection.component.scss` hat aktuell kein explizites `text-align`; langer Fließtext ohne begrenzte Zeilenlänge/`max-width` in `.box` wirkt unruhig. Bewusst linksbündig mit begrenzter `max-width` statt `justify` setzen.
+  Datei: `features/legal/data-protection/data-protection.component.scss`
+
+**Risiko:** niedrig–mittel (viele Aufrufstellen, aber mechanisch). **Verifikation:** visueller Vergleich aller Seiten mit Buttons/Inputs/Cards (Login, Register, Dialoge, Chat), Tab-Navigation durch die App, Screenreader-Stichprobe beim Öffnen/Schließen eines Dialogs.
+
+### 10.3 Code-Qualität & Struktur
+
+- [ ] **HTML-Attribute anpassen** — Grep-Sweep über alle Templates: leere `alt=""` auf bedeutungstragenden Bildern (z. B. `arrow_back.png` in den Legal-Komponenten), fehlendes `type="button"` auf Nicht-Submit-Buttons, inkonsistente `aria-*`.
+- [ ] **Legals-Struktur anpassen** — `features/legal/imprint` und `features/legal/data-protection` auf ein gemeinsames Layout/Header-Partial (inkl. des Zurück-Pfeils aus 10.1) ziehen, damit der Fix nicht doppelt gepflegt wird.
+- [ ] **Decorators (`private`/`public`/`readonly`)** — `shared/decorators/` existiert noch nicht, muss neu konzipiert werden. Vor Umsetzung klären, welches konkrete Problem gelöst werden soll — TypeScript hat bereits native `private`/`readonly`-Modifier, vermutlich geht es um Property-Decorators für Firestore-(De-)Serialisierung.
+- [ ] **CSS aufräumen** — nach 10.2 (Button/Input/Card-Extraktion) verbleibende tote/duplizierte Styles projektweit entfernen.
+
+**Risiko:** niedrig. **Verifikation:** `ng build`, kompletter Smoke-Test.
+
+### 10.4 Infrastruktur & Performance
+
+- [ ] **NotificationService einführen, `isOverlayActive` ablösen** — aktuell kein zentraler Service vorhanden; `isOverlayActive` ist ein lokales Boolean-Flag pro Komponente für eine Overlay-Übergangsanimation im Auth-Flow (nicht Notifications im eigentlichen Sinn). Neuen `NotificationService` (Toasts/Snackbar) bauen und dabei prüfen, ob die drei Stellen durch denselben Mechanismus ersetzt werden oder als reines Auth-UI-Detail bestehen bleiben.
+  Dateien: `features/auth/components/reset-password/`, `forgot-password/`, `main-component/`
+- [ ] **AuthGuard erweitern** — Guard existiert bereits (`src/core/auth.guard.ts`, aktiv auf dem `main`-Routenbaum via `app.routes.ts:37`); prüfen, ob weitere Routen (z. B. Auth-Seiten selbst gegen bereits eingeloggte User) einen inversen Guard brauchen.
+- [ ] **Lazy Loading** — `app.routes.ts` lädt aktuell alle Components eager (`component:` statt `loadComponent:`); Feature-Bereiche (`auth`, `chat`, `legal`) auf `loadComponent`/`loadChildren` umstellen.
+- [ ] **Performance** — nach Lazy Loading: Bundle-Analyse (`ng build --stats-json` + Analyzer), OnPush-Stand aus Phase 7 prüfen, fehlende `trackBy` auf `*ngFor`-Schleifen suchen.
+
+**Risiko:** mittel (Lazy Loading kann Routing-/Guard-Timing beeinflussen). **Verifikation:** `ng build`, alle Routen inkl. Deep-Links, Bundle-Größe vorher/nachher vergleichen.
+
+### 10.5 Doku, Tests, Design-Abgleich
+
+- [ ] **Tests implementieren** — die in Phase 8 als tote `.spec.ts`-Scaffolds identifizierten Dateien mit echten Unit-Tests füllen; Startpunkt: Services mit wenig UI-Abhängigkeit (`MentionService`, `ReactionsService`, API-Services).
+- [ ] **Dokumentation erweitern** — README (Phase 8 hat es nur ersetzt) um Architekturüberblick, Setup-Schritte und Firebase-Konfiguration ergänzen.
+- [ ] **Mit Figma abgleichen** — erst NACH 10.2 (Button/Input/Card), damit ein Design-Review nicht doppelt gegen bald ersetztes Markup läuft; Abweichungen als eigene Folge-Punkte erfassen statt hier pauschal „abgleichen".
+
+**Risiko:** keins. **Verifikation:** `ng test` läuft grün und deckt die neuen Tests ab; README von einer Person ohne Vorwissen gegenlesen lassen.

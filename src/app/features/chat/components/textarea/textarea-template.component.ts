@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import emojiData from 'unicode-emoji-json';
+import { ALL_EMOJIS } from '../../../../shared/constants';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
 import { SearchService } from '../../../../shared/services/search/search.service';
-import { MessagesService } from '../../services/messages/messages.service';
+import { MentionService } from '../../../../shared/services/mention/mention.service';
 
 @Component({
   selector: 'app-textarea-template',
@@ -14,103 +14,122 @@ import { MessagesService } from '../../services/messages/messages.service';
   styleUrl: './textarea-template.component.scss',
 })
 export class TextareaTemplateComponent {
-  private messagesService = inject(MessagesService);
   public searchService: SearchService = inject(SearchService);
+  private mentionService = inject(MentionService);
+
   public reactionMenuOpenInTextarea: boolean = false;
   public input: string = '';
   private taggedNames: string[] = [];
 
-  public emojis: any;
-  @Input() receiverId: string = '';
-  @Input() receiverName: string = '';
-  @Input() messages: any[] = [];
-  @Input() isChannelComponent: boolean = false;
-  @Input() placeholderText: string = 'Starte eine neue Nachricht';
-  @Input() receiverComponent: 'channel' | 'direct' | 'thread' | 'default' = 'default';
-  @Input() threadId: string = '';
+  public readonly emojis = ALL_EMOJIS;
+
+  public isChannelComponent = input<boolean>(false);
+  public placeholderText = input<string>('Starte eine neue Nachricht');
+
+  public send = output<string>();
+
+  private readonly dropdownNavKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
 
   /**
-   * Initializes the component by setting the emojis array
-   * from the keys of the imported emojiData object.
+   * Re-runs mention detection for the current caret position. Bound to both
+   * text-changing (input) and caret-only (click/keyup) events, so moving the
+   * caret in or out of a `@`/`#` token opens/closes the dropdown on its own.
    */
-  constructor() {
-    this.emojis = Object.keys(emojiData);
+  onCaretMoved(ta: HTMLTextAreaElement) {
+    this.searchService.observeInput(this.input, 'textarea', ta.selectionStart ?? this.input.length);
   }
 
-  onTagInserted(tagName: string) {
-    const query = this.searchService.searchQuery;
+  /**
+   * Wraps `onCaretMoved` for the (keyup) binding: while the dropdown is open,
+   * Up/Down/Enter/Escape are consumed by `onKeydown` for list navigation and
+   * must not also trigger a re-search here — that would reset the
+   * keyboard-highlighted suggestion back to index 0 on every keystroke.
+   */
+  onKeyup(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+    if (this.searchService.getListBoolean() && this.dropdownNavKeys.has(event.key)) return;
+    this.onCaretMoved(ta);
+  }
 
-    if (query && this.input.includes(query)) {
-      const symbol = query.charAt(0);
-      const fullTag = tagName.startsWith(symbol) ? tagName : symbol + tagName;
+  /**
+   * Splices a chosen mention tag into the input at the currently tracked
+   * `@`/`#` token, then refocuses the textarea right after the inserted tag
+   * so the user can keep typing (including starting another mention).
+   */
+  onTagInserted(tagName: string, ta: HTMLTextAreaElement) {
+    const range = this.searchService.getActiveTokenRange();
+    if (!range) return;
+    const symbol = this.searchService.isChannel() ? '#' : '@';
+    const { text, caret } = this.mentionService.insertTag(this.input, tagName, symbol, range.start, range.end);
+    this.input = text;
+    this.taggedNames.push(`${symbol}${tagName}`);
+    this.searchService.resetList();
 
-      this.input = this.input.replace(query, fullTag) + ' ';
-    } else {
-      this.input = `${tagName} `;
+    setTimeout(() => {
+      ta.focus();
+      ta.setSelectionRange(caret, caret);
+    });
+  }
+
+  /**
+   * Handles Enter/Arrow/Escape while the suggestion dropdown is open so it
+   * doesn't conflict with sending the message or moving the caret.
+   */
+  onKeydown(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+    if (!this.searchService.getListBoolean()) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        this.newMessage();
+      }
+      return;
     }
 
-    this.taggedNames.push(tagName);
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.searchService.moveHighlightedIndex(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.searchService.moveHighlightedIndex(-1);
+        break;
+      case 'Enter': {
+        event.preventDefault();
+        const element = this.searchService.getHighlightedElement();
+        if (element) this.onTagInserted(this.mentionService.resolveTagName(element), ta);
+        break;
+      }
+      case 'Escape':
+        event.preventDefault();
+        this.searchService.resetList();
+        break;
+    }
   }
 
   /**
-   * Sends a new message based on the current receiver component type.
-   * Calls the appropriate send method for 'direct', 'channel', or 'thread'.
+   * Inserts the `@`/`#` trigger at the caret position (icon buttons), then
+   * runs it through the normal detection so the dropdown opens consistently
+   * with typing the character directly.
+   */
+  insertTrigger(symbol: '@' | '#', ta: HTMLTextAreaElement) {
+    const pos = ta.selectionStart ?? this.input.length;
+    this.input = this.input.slice(0, pos) + symbol + this.input.slice(pos);
+    setTimeout(() => {
+      ta.focus();
+      ta.setSelectionRange(pos + 1, pos + 1);
+      this.onCaretMoved(ta);
+    });
+  }
+
+  /**
+   * Formats the current input and emits it to the parent, which decides
+   * how and where to send it.
    */
   newMessage(): void {
     if (!this.input.trim()) return;
-    const messageToSend = this.addMarkerSlashes(this.input);
-    switch (this.receiverComponent) {
-      case 'direct':
-        this.sendDirectMessage(messageToSend);
-        break;
-
-      case 'channel':
-        this.sendChannelMessage(messageToSend);
-        break;
-
-      case 'thread':
-        this.sendThreadMessage(messageToSend);
-        break;
-
-      default:
-        break;
-    }
+    const messageToSend = this.mentionService.formatMentionMarkers(this.input, this.taggedNames);
+    this.send.emit(messageToSend);
     this.input = '';
     this.taggedNames = [];
-  }
-
-  /**
-   * Appends "//" to each mention stored in `taggedNames`,
-   * but only for the first occurrence (if it doesn’t already end with "//").
-   */
-  private addMarkerSlashes(text: string): string {
-    let result = text;
-    for (const name of this.taggedNames) {
-      const re = new RegExp(`${name}(?!//)`);
-      result = result.replace(re, `${name}//`);
-    }
-    return result;
-  }
-
-  /**
-   * Sends a new message in the current thread.
-   */
-  sendThreadMessage(messageToSend: string) {
-    this.messagesService.sendThreadMessage(messageToSend, this.receiverId, this.threadId);
-  }
-
-  /**
-   * Sends a new direct Message.
-   */
-  sendDirectMessage(messageToSend: string): void {
-    this.messagesService.sendDirectMessage(messageToSend, this.receiverId);
-  }
-
-  /**
-   * Sends a new message in the current Channel.
-   */
-  sendChannelMessage(messageToSend: string): void {
-    this.messagesService.sendChannelMessage(messageToSend, this.receiverId);
   }
 
   /**
