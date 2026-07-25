@@ -31,10 +31,7 @@
     </div>
   } @else if (!navigationService.isAuthPage()) {
     <div class="user-menu">
-      <div
-        (click)="navigationService.isMobile() ? showMenuMobile() : showmenu()"
-        [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null"
-      >
+      <div (click)="onOpenMenu()" [matMenuTriggerFor]="!navigationService.isMobile ? beforeMenu : null">
         <span>{{ authService.currentUser()?.displayName }}</span>
         <img [src]="authService.currentUser()?.photoUrl" alt="Bild" />
         @if (!navigationService.isMobile()) {
@@ -42,7 +39,7 @@
         }
 
         <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-          <button (click)="openUserProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
+          <button (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
           <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
         </mat-menu>
       </div>

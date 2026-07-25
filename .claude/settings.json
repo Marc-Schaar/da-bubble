@@ -34,7 +34,11 @@
       "PowerShell(git checkout -b refactor/phase-7-components)",
       "PowerShell(git add src/app/features/app_chat/components/message/ src/app/features/app_chat/services/reactions/ src/app/features/app_chat/models/channel-message/ src/app/shared/constants.ts)",
       "Bash(git fetch *)",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "Bash(sed -i \"s|'../../../dialogs/dialog-receiver/dialog-receiver.component'|'../../../../shared/components/dialog-receiver/dialog-receiver.component'|; s|'../../../dialogs/user-menu/user-menu.component'|'../../../../shared/components/user-menu/user-menu.component'|\" features/app_channel/components/edit-channel/edit-channel.component.ts features/app_channel/components/add-member/add-member.component.ts features/app_chat/components/message/message-template.component.ts features/app_chat/components/chat-direct/chat-direct.component.ts features/app_chat/components/chat-header/chat-header.component.ts)",
+      "Bash(sed -i \"s|'../../../features/dialogs/user-profile/user-profile.component'|'../user-profile/user-profile.component'|; s|'../../../features/dialogs/user-menu/user-menu.component'|'../user-menu/user-menu.component'|\" shared/components/header/header.component.ts)",
+      "PowerShell(git add REFACTORING.md)",
+      "PowerShell(git push -u origin refactor/phase-8-structure 2>&1)"
     ]
   }
 }
