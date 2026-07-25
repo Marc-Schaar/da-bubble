@@ -18,11 +18,12 @@ import { ReactionContext, ReactionsService } from '../../services/reactions/reac
 import { MessagesService } from '../../services/messages/messages.service';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
+import { EmojiQuickPickerComponent } from './emoji-quick-picker/emoji-quick-picker.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent],
+  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +81,9 @@ export class MessageTemplateComponent {
   public hasReacted(emoji: string): boolean {
     return this.reactionsService.hasReacted(emoji, this.reactions());
   }
+
+  /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
+  public readonly isReactionSelected = (emoji: string): boolean => this.hasReacted(emoji);
 
   /**
    * Enables editing mode for a specific message.

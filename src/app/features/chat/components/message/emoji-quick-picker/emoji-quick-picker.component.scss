@@ -1,0 +1,34 @@
+:host {
+  display: contents;
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: unset;
+  white-space: nowrap;
+  transition:
+    all,
+    0.125s ease-in-out;
+  cursor: pointer;
+  color: black;
+}
+
+.btn-secundary {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  outline: none !important;
+
+  &:hover {
+    color: var(--dark-purple);
+    background-color: var(--bg-color);
+  }
+}
+
+.circle {
+  border-radius: 50%;
+}

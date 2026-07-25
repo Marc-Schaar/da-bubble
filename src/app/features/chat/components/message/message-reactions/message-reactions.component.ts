@@ -5,6 +5,7 @@ import { ChannelMessage } from '../../../models/channel-message/channel-message'
 import { ReactionsService, ReactionContext } from '../../../services/reactions/reactions.service';
 import { NavigationService } from '../../../../../shared/services/navigation/navigation.service';
 import { PRESELECTED_EMOJIS } from '../../../../../shared/constants';
+import { EmojiQuickPickerComponent } from '../emoji-quick-picker/emoji-quick-picker.component';
 
 /**
  * Renders the emoji reactions of a message (footer) including the
@@ -12,7 +13,7 @@ import { PRESELECTED_EMOJIS } from '../../../../../shared/constants';
  */
 @Component({
   selector: 'app-message-reactions',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, EmojiQuickPickerComponent],
   templateUrl: './message-reactions.component.html',
   styleUrl: './message-reactions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,4 +55,7 @@ export class MessageReactionsComponent {
     this.reactionsService.toggleReaction(this.message(), emoji, this.context());
     this.reactionMenuOpen.set(false);
   }
+
+  /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
+  public readonly isReactionSelected = (emoji: string): boolean => this.reactionsService.hasReacted(emoji, this.reactions());
 }
