@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { CONTACT_EMAIL } from '../../../shared/constants';
@@ -10,5 +11,11 @@ import { CONTACT_EMAIL } from '../../../shared/constants';
   styleUrl: './data-protection.component.scss',
 })
 export class DataprotectionComponent {
+  private location = inject(Location);
   protected readonly contactEmail = CONTACT_EMAIL;
+
+  /** Returns to whichever page linked here (login, register, main chat, …). */
+  public goBack() {
+    this.location.back();
+  }
 }
