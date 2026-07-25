@@ -9,6 +9,9 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
+import { isChannel } from '../../../../shared/utils/receiver.util';
+import { Channel } from '../../../channel/models/channel/channel';
+import { User } from '../../../auth/models/user/user';
 
 @Component({
   selector: 'app-newmessage',
@@ -22,15 +25,12 @@ export class NewmessageComponent {
   public searchService: SearchService = inject(SearchService);
   public authService: AuthService = inject(AuthService);
 
-  public currentReceiver: any = '';
+  public currentReceiver: Channel | User | null = null;
   private receiverType: 'channel' | 'direct' | null = null;
   private receiverId: string = 'null';
   public input: string = '';
 
-  /**
-   * ngOnInit lifecycle hook to load channels, users and set the current user.
-   */
-  async ngOnInit() {}
+  protected readonly isChannel = isChannel;
 
   /**
    * Sets the current receiver of the message, determines the receiver type (channel or direct),
@@ -38,22 +38,12 @@ export class NewmessageComponent {
    *
    * @param element - The receiver element, either a channel or a user.
    */
-  setReceiver(element: any): void {
+  setReceiver(element: Channel | User): void {
     this.currentReceiver = element;
-    this.receiverId = element.id;
+    this.receiverId = element.id!;
 
-    this.isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
+    isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
-  }
-
-  /**
-   * Determines whether the provided element is a channel based on its data structure.
-   *
-   * @param element - The element to check.
-   * @returns True if the element is a channel, false otherwise.
-   */
-  public isChannel(element: any): boolean {
-    return !!element && typeof element === 'object' && 'member' in element;
   }
 
   /**
@@ -71,7 +61,9 @@ export class NewmessageComponent {
    * @returns The name of the current receiver, or an empty string if not available.
    */
   public getReceiverName(): string {
-    return this.currentReceiver?.name || this.currentReceiver?.displayName || '';
+    const receiver = this.currentReceiver;
+    if (!receiver) return '';
+    return isChannel(receiver) ? receiver.name : receiver.displayName;
   }
 
   /**

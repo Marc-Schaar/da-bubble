@@ -1,31 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+import { RelativeDatePipe } from '../../../../shared/pipes/relative-date.pipe';
 
 @Component({
   selector: 'app-divider-template',
-  imports: [],
+  imports: [RelativeDatePipe],
   templateUrl: './divider-template.component.html',
   styleUrl: './divider-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerTemplateComponent {
   messageData = input.required<Date | any>();
-
-  formattedDate = computed(() => {
-    const raw = this.messageData();
-    if (!raw) return '';
-
-    const date = typeof raw.toDate === 'function' ? raw.toDate() : new Date(raw);
-
-    const today = new Date();
-    const isToday =
-      date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-
-    if (isToday) return 'Heute';
-
-    return date.toLocaleDateString('de-DE', {
-      weekday: 'long',
-      day: '2-digit',
-      month: 'long',
-    });
-  });
 }

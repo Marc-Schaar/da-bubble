@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { Channel } from '../../../features/channel/models/channel/channel';
 import { User } from '../../../features/auth/models/user/user';
-import { ProfileStatusComponent } from '../profile-status/profile-status.component';
+import { UserListItemComponent } from '../user-list-item/user-list-item.component';
+import { isChannel, isUser } from '../../utils/receiver.util';
 
 @Component({
   selector: 'app-search-result',
-  imports: [MatIcon, CommonModule, ProfileStatusComponent],
+  imports: [MatIcon, CommonModule, UserListItemComponent],
   templateUrl: './search-result.component.html',
   styleUrl: './search-result.component.scss',
 })
@@ -30,7 +31,7 @@ export class SearchResultComponent {
    * @param tagType - The tag symbol to use (e.g., '@' for user, '#' for channel).
    */
   public tagReceiver(receiverData: Channel | User, tagType: '@' | '#') {
-    const tagName = this.isChannel(receiverData) ? receiverData.name : receiverData.displayName;
+    const tagName = isChannel(receiverData) ? receiverData.name : receiverData.displayName;
 
     this.searchService.isDirectTag() ? this.tagInserted.emit(tagType + tagName) : this.tagInserted.emit(tagName);
 
@@ -43,10 +44,9 @@ export class SearchResultComponent {
    *
    * @param element - The selected receiver element (channel or user).
    */
-  public openReceiver(element: any) {
-    const isChannel = typeof element.online !== 'boolean';
-    this.searchService.isChannel.set(isChannel);
-    isChannel ? this.openChannel(element) : this.openUser(element);
+  public openReceiver(element: Channel | User) {
+    this.searchService.isChannel.set(isChannel(element));
+    isChannel(element) ? this.openChannel(element) : this.openUser(element);
   }
 
   /**
@@ -54,7 +54,7 @@ export class SearchResultComponent {
    *
    * @param element - The user element to open.
    */
-  private openUser(element: any) {
+  private openUser(element: User) {
     this.navigationService.selectDirectMessageRecipient(element.id);
     this.searchService.resetList();
   }
@@ -64,28 +64,21 @@ export class SearchResultComponent {
    *
    * @param element - The channel element to open.
    */
-  private openChannel(element: any) {
-    this.navigationService.selectChannel(element.id);
+  private openChannel(element: Channel) {
+    this.navigationService.selectChannel(element.id!);
     this.searchService.resetList();
   }
 
   /**
    * Sets the current receiver.
    */
-  setReceiver(element: any) {
+  setReceiver(element: Channel | User) {
     this.currentReceiver.emit(element);
     this.searchService.resetList();
   }
 
-  // Prüft, ob das Element ein Channel ist
-  isChannel(element: User | Channel): element is Channel {
-    return 'member' in element;
-  }
-
-  // Prüft, ob das Element ein User ist
-  isUser(element: User | Channel): element is User {
-    return 'displayName' in element;
-  }
+  protected readonly isChannel = isChannel;
+  protected readonly isUser = isUser;
 
   /**
    * Handles the click event on an element.
@@ -94,7 +87,7 @@ export class SearchResultComponent {
    *
    * @param element - The clicked element (user or channel).
    */
-  public handleClick(element: any) {
+  public handleClick(element: Channel | User) {
     switch (this.searchService.getSearchComponent()) {
       case 'header':
         this.openReceiver(element);
