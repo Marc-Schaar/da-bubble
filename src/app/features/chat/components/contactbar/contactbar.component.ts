@@ -29,13 +29,8 @@ export class ContactbarComponent implements OnInit {
   private dialog: MatDialog = inject(MatDialog);
   public router: Router = inject(Router);
 
-  public currentUser: any = [];
-  public currentlist: any[] = [];
-  public currentArray: any[] = [];
   isClicked = false;
   public input: string = '';
-  public currentLink: string = '';
-  public addChannelWindow: boolean = false;
 
   /**
    * Initializes the component by ensuring the shared user and channel
@@ -58,7 +53,7 @@ export class ContactbarComponent implements OnInit {
    * Opens the dialog to add a new channel.
    */
   public openAddChannel() {
-    const dialogRef = this.dialog.open(AddChannelComponent, {
+    this.dialog.open(AddChannelComponent, {
       width: '872px',
       maxWidth: '95vw',
       height: 'auto',
