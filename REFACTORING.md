@@ -1,6 +1,6 @@
 # Refactoring-Roadmap DA-Bubble
 
-Stand: 2026-07-25 · **Phasen 0–8 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt.
+Stand: 2026-07-25 · **Phasen 0–9 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR + Phase-9-Nachträge). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt. Phase 9 (Code-Review-Nachträge) hat 4 Funktionsbugs behoben und die verbliebenen strukturellen Duplikate aus dem Split bereinigt — siehe unten.
 
 Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. Jede Phase ist einzeln committbar und über die Smoke-Test-Checkliste (unten) manuell verifizierbar — es gibt kein Test-Sicherheitsnetz (alle `.spec.ts` sind ungepflegte CLI-Scaffolds).
 
@@ -185,3 +185,59 @@ Nach jeder Phase (mindestens nach jedem Merge) einmal komplett durchspielen — 
 
 - Datum: 2026-07-12, Branch `refactor-chat-navigation`, Commit `f43c006`
 - `ng build`: ❌ **schlägt fehl** — `NG1: Object is possibly 'null'` in `src/app/features/app_channel/components/add-member/add-member.component.html:39` (`channelService.currentChannel().name`, `currentChannel()` kann `null` sein). → Fix ist Schritt 0 von Phase 1; erst danach ist der Build als Verifikations-Werkzeug nutzbar.
+
+---
+
+## Phase 9 — Nachträge aus Code-Review (2026-07-25)
+
+**Ziel:** Nach Abschluss der Phasen 0–8 hat eine erneute Review (3 parallele Explore-Agents über `features/chat`, `shared/services` und `features/auth|channel` + `shared/components`) vier verbliebene Funktionsbugs sowie Restduplikate gefunden, die vom Strukturrefactor nicht abgedeckt waren. Reihenfolge: 9.1 (Bugs) → 9.2 (Duplikate) → 9.3 (mittel) → 9.4 (Cleanup); jeder Punkt einzeln committbar.
+
+### 9.1 Bugs (hohe Priorität)
+
+- [x] **reset-password fertig implementieren** — Reactive Form mit `PASSWORD_PATTERN`/dem `createXForm`-Muster aus `auth-forms.ts`, Validierung + Fehleranzeige aktivieren (aktuell auskommentiert), Firebase-Reset-Aufruf über `AuthService` kapseln statt direkt `getAuth`/`confirmPasswordReset` in der Komponente.
+  Dateien: `features/auth/components/reset-password/reset-password.component.ts`, `.html`, `features/auth/forms/auth-forms.ts`, `features/auth/services/auth/auth.service.ts`
+- [x] **Duplicate-User-Bug in add-member/edit-channel beheben** — lokale `addUserToSelection`/`onSearchInput` (1:1 kopiert, ohne Duplikat-Schutz) entfernen, stattdessen `channelService.addUserToSelection(user)` / `channelService.updateSearchQuery(value)` direkt binden.
+  Dateien: `features/channel/components/add-member/add-member.component.ts` (+`.html`), `edit-channel/edit-channel.component.ts` (+`.html`)
+- [x] **Auto-Scroll in chat-direct und chat-thread ergänzen** — Scroll-Logik aus `chat-channel` (`handleScroll()` + `effect()` auf `messagesService.messages()`) extrahieren, in allen drei Komponenten nutzen (chat-direct/chat-thread deklarieren `@ViewChild('chat')` bereits, rufen aber nie `scrollToBottom` auf).
+  Dateien: `chat-channel/chat-channel.component.ts`, `chat-direct/chat-direct.component.ts`, `chat-thread/chat-thread.component.ts`
+- [x] **hideList() in chat-direct verdrahten** — `SearchService` injizieren, `resetList()` aufrufen (analog `MainChatComponent.closeAll()`). Hinweis: `main-chat.component.html:1` bindet `(click)="closeAll()"` bereits auf `<main>`, das `chat-direct` umschließt — die lokale Bindung ist strenggenommen bereits redundant durch Event-Bubbling, wird aber trotzdem sinnvoll implementiert statt entfernt, für Konsistenz mit dem Klick-Handler-Namen und Robustheit gegen künftige `stopPropagation()`-Aufrufe.
+  Datei: `chat-direct/chat-direct.component.ts` (+`.html:5`)
+
+### 9.2 Strukturelle Duplikate
+
+- [x] **AuthService auf den Firestore-Split umstellen** — direkte `Firestore`-Injection/`doc`/`setDoc`/`updateDoc`/`onSnapshot`-Aufrufe entfernen; `addInDefaultChannel()` durch `fireService.addChannelMembers(...)` ersetzen (ist 1:1 `ChannelsApiService.addChannelMembers`); fehlende Schreibmethode (`createUser`) in `UsersApiService` ergänzen, `addInUserCollection`/`setCurrentUser`-Snapshot darüber laufen lassen.
+  Dateien: `features/auth/services/auth/auth.service.ts`, `shared/services/firebase/users-api.service.ts`, `channels-api.service.ts`
+- [x] **Reaction-Quick-Picker konsolidieren** — identischen `reactionContext()`/`context()`-Builder und Emoji-Grid (TS + HTML + SCSS dupliziert) aus `message-template` und `message-reactions` zusammenführen.
+  Dateien: `features/chat/components/message/message-template.component.ts` (+`.html`/`.scss`), `message/message-reactions/message-reactions.component.ts` (+`.html`/`.scss`)
+- [x] **Message-Ref-Auflösung zentralisieren** — identischer Thread-vs-Channel-Ternary in `MessagesService.updateMessageText` und `ReactionsService.getMessageRef` → eine Methode auf `MessagesApiService` (z. B. `getMessageRefForContext`).
+  Dateien: `features/chat/services/messages/messages.service.ts`, `services/reactions/reactions.service.ts`
+- [x] **Doc→Entity-Mapping vereinheitlichen** — generischer `toEntity<T>(id, data)`-Helper (id **nach** dem Spread, da 4 von 5 Stellen `id` davor spreaden und ein gleichnamiges Datenfeld die echte Doc-ID überschreiben würde).
+  Dateien: `channels-api.service.ts`, `users-api.service.ts`, `features/channel/services/channel/channel.service.ts` (`setActiveChannel`, `findChannelByName`), `shared/services/user/user-store.ts`
+- [x] **Conversation-ID-Aufbau zentralisieren** — `[a,b].sort()` + Template-String kommt zweimal in `MessagesService` vor (`subToConversationMessages`, `sendDirectMessage`) → ein `getConversationId(userA, userB)`-Helper.
+  Datei: `features/chat/services/messages/messages.service.ts`
+- [x] **Message/Thread-Pfade zentralisieren** — `MessagesApiService` um `getMessagesCollectionRef`/`getThreadCollectionRef` ergänzen, `MessagesService` nutzt diese statt Pfad-Strings selbst zu bauen und über den generischen `fireService.getCollectionRef` zu gehen.
+  Dateien: `shared/services/firebase/messages-api.service.ts`, `features/chat/services/messages/messages.service.ts`
+- [x] **checkChannelNameExists/findChannelByName zusammenführen** — gleiche Query zweimal (einmal korrekt in `ChannelsApiService`, einmal über den `getCollectionRef`-Escape-Hatch in `ChannelService`) → eine Implementierung in `ChannelsApiService`.
+  Dateien: `shared/services/firebase/channels-api.service.ts`, `features/channel/services/channel/channel.service.ts`
+- [x] **Error-Handling in den API-Services vereinheitlichen** — `channels-api.service.ts` fängt+rethrowt, `messages-api.service.ts` fängt gar nicht, `auth.service.ts` fängt ohne rethrow → kleiner `runWrite`-Helper für konsistentes Verhalten.
+  Dateien: `shared/services/firebase/*.ts`
+
+### 9.3 Mittel
+
+- [x] Formular-Fehleranzeige vereinheitlichen: Passwort-Regel-Diskrepanz behoben (register-Fehlertext sagte fälschlich "8 Zeichen" statt 6); `forgot-password` von `NgForm`/eigenem E-Mail-Regex auf Reactive Forms + `Validators.email` (neue `createForgotPasswordForm` in `auth-forms.ts`) migriert. Bewusst **kein** generischer `getFieldError`-Helper für login/register — die Fehlermeldungen sind pro Feld unterschiedlich, eine Abstraktion hätte hier nur Indirektion ohne echten Gewinn gebracht.
+- [x] Divider-Template-Logik (Datums-Trenner) in chat-thread ergänzt (`ChatService.isNewDay` gegen `parentMessageData` bzw. den vorherigen Reply verglichen), jetzt konsistent mit chat-channel/chat-direct.
+- [x] Dialog-API vereinheitlicht: `user-menu`/`user-profile` nutzen jetzt `MatDialogRef` statt CDK `DialogRef`.
+- [x] Timestamp→Date-Normalisierung zentralisiert in `shared/utils/timestamp.util.ts` (`toDateSafe`), genutzt von `relative-date.pipe.ts` und `base-message.ts`.
+- [x] `fire-service.service.ts`: `getDocRef`/`getCollectionRef`-Escape-Hatches durch die oben zentralisierten Methoden ersetzen, sodass Consumer keine Domänen-Pfade mehr selbst bauen. (Beide generischen Methoden konnten komplett entfernt werden — letzter Aufrufer war `channel.service.ts`, jetzt über `ChannelsApiService.subChannelDoc` gelöst.)
+
+**Risiko 9.1–9.3:** niedrig–mittel (isolierte, meist additive Änderungen). **Verifikation:** nach jedem Punkt `ng build`; gezielt Passwort-Reset-Flow, Mitglieder zu Channel hinzufügen (kein Duplikat in der Liste), Scroll-Verhalten in Direct/Thread bei neuer Nachricht, Reaktion setzen in Channel-Nachricht UND Thread-Antwort, Registrierung (Standardkanal-Beitritt).
+
+### 9.4 Cleanup (Dead Code / Imports)
+
+- [x] `chat-channel.component.ts`: unbenutzte `fireService`-Injection, `isMobile`, `showBackground`, `channels`, `channelInfo`, `addMemberInfoWindow`, `userId`, `currentUser`, `addMemberWindow` entfernt (inkl. des jetzt parameterlosen `openMemberWindow()`).
+- [x] `contactbar.component.ts`: unbenutzte `currentUser`, `currentlist`, `currentArray`, `currentLink`, `addChannelWindow` entfernt; unbenutzte `dialogRef`-Variable in `openAddChannel()` entfernt.
+- [x] Unbenutzte Imports: `computed` in `edit-channel.component.ts`, separater `NgClass`-Import in `add-channel.component.ts` entfernt.
+- [x] Auskommentierte Markup-Reste entfernt: `avatar-selection.component.html` (auth), `reset-password.component.html` (entfiel automatisch mit der Neuimplementierung).
+- [ ] Duplizierten `onMentionClick`-Wrapper (`message-template.component.ts`/`chat-thread.component.ts`) bewusst nicht extrahiert — zwei 3-zeilige Pass-through-Methoden in unterschiedlichem Kontext rechtfertigen keine eigene Direktive.
+
+**Risiko:** keins (reine Löschungen ohne Verhaltensänderung). **Verifikation:** `ng build` + kompletter Smoke-Test (siehe oben).
