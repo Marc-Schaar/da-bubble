@@ -21,12 +21,12 @@
       <li [ngClass]="{ reverse: parentMessageData?.name === this.authService.currentUser()?.displayName }" class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
-            <img src="{{ parentMessageData?.avatar || 'img/photoURL.png' }}" alt="{{ parentMessageData?.name }}" />
+            <img [src]="parentMessageData?.photoUrl" [alt]="parentMessageData?.name" />
           </div>
           <div class="name-time-message-container">
             <div class="name-time-container">
               <div class="name-container">{{ parentMessageData?.name }}</div>
-              <div class="time-container">{{ parentMessageData?.time }}</div>
+              <div class="time-container">{{ parentMessageData?.asDate | date: "HH:mm" }}</div>
             </div>
             <div class="message-container" [innerHTML]="parentMessageData?.message | linkify" (click)="onMentionClick($event)">
               {{ parentMessageData?.message }}

@@ -3,10 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { UserService } from '../../../../shared/services/user/shared.service';
@@ -19,6 +18,7 @@ import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 
 @Component({
   selector: 'app-direct-messages',
@@ -43,7 +43,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private readonly userStore = inject(UserStore);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   public readonly authService = inject(AuthService);
-  private readonly dialog = inject(MatDialog);
+  private readonly profileDialogService = inject(ProfileDialogService);
   public messagesService = inject(MessagesService);
   public chatService: ChatService = inject(ChatService);
   private readonly destroyRef = inject(DestroyRef);
@@ -100,11 +100,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
    * Displays the receiver's profile.
    */
   public showProfile() {
-    this.dialog.open(DialogReceiverComponent, {
-      data: this.currentReceiver(),
-      width: '400px',
-      panelClass: ['center-dialog'],
-    });
+    this.profileDialogService.open(this.currentReceiver());
   }
 
   public hideList() {}

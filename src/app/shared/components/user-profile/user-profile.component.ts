@@ -1,62 +1,34 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { getAuth, User, updateProfile } from 'firebase/auth';
-
 import { MatIcon } from '@angular/material/icon';
 import { DialogRef } from '@angular/cdk/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { AvatarSelectionComponent } from '../avatar-selection-dialog/avatar-selection.component';
-import { UserService } from '../../services/user/shared.service';
+import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { NavigationService } from '../../services/navigation/navigation.service';
+import { AuthService } from '../../../features/auth/services/auth/auth.service';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CommonModule, FormsModule, MatIcon],
+  imports: [FormsModule, MatIcon, DialogHeaderComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserProfileComponent implements OnInit {
-  newname: string = '';
+export class UserProfileComponent {
   @Input() menuTrigger!: MatMenuTrigger;
-  userService = inject(UserService);
-  navigationService = inject(NavigationService);
-  auth = getAuth();
-  private dialogRef = inject(DialogRef);
-  private dialog = inject(MatDialog);
 
-  user: User | null = null;
-  displayName: string | null = null;
-  email: string | null = null;
-  photoURL: string | null = null;
-  emailVerified: boolean = false;
-  uid: string | null = null;
-  modifyinfos = false;
-  selectedUsers: any[] = [];
+  protected readonly authService = inject(AuthService);
+  protected readonly navigationService = inject(NavigationService);
+  private readonly dialogRef = inject(DialogRef);
+  private readonly dialog = inject(MatDialog);
 
-  /**
-   * Constructor for SomeComponent. Initializes the component with the Firestore service for interacting with the Firestore database.
-   *
-   * @param firestore - Firestore service instance used to interact with the Firestore database.
-   */
-  constructor(public firestore: Firestore) {}
+  protected readonly user = this.authService.currentUser;
 
-  /**
-   * Lifecycle hook that is called when the component is initialized.
-   * It retrieves the current user information and sets the properties accordingly.
-   */
-  ngOnInit() {
-    this.user = this.auth.currentUser;
-    if (this.user) {
-      this.displayName = this.user.displayName;
-      this.email = this.user.email;
-      this.photoURL = this.user.photoURL;
-      this.emailVerified = this.user.emailVerified;
-      this.uid = this.user.uid;
-    }
-  }
+  newName = '';
+  modifyInfos = false;
+  protected pendingPhotoUrl: string | null = null;
 
   /**
    * Handles a click event, stops propagation if the target is not a menu trigger.
@@ -73,9 +45,10 @@ export class UserProfileComponent implements OnInit {
   /**
    * Enables the modification of user profile information by showing the input field to update the name.
    */
-  async modify() {
-    this.modifyinfos = true;
-    this.newname = this.user?.displayName ?? '';
+  modify() {
+    this.modifyInfos = true;
+    this.newName = this.user()?.displayName ?? '';
+    this.pendingPhotoUrl = this.user()?.photoUrl ?? null;
   }
 
   /**
@@ -89,37 +62,35 @@ export class UserProfileComponent implements OnInit {
    * Cancels the modification process and hides the input field for editing.
    */
   cancel() {
-    this.modifyinfos = false;
+    this.modifyInfos = false;
+    this.pendingPhotoUrl = null;
   }
 
   /**
-   * Saves changes made to the user's display name by updating the Firebase user profile.
+   * Saves changes made to the user's display name and avatar via AuthService.
    */
   async saveChanges() {
-    if (this.user && this.newname) {
-      try {
-        await updateProfile(this.user, { displayName: this.newname, photoURL: this.photoURL });
-        this.displayName = this.newname;
-        this.photoURL = this.photoURL;
-        this.modifyinfos = false;
-      } catch (error) {}
-    }
+    const current = this.user();
+    if (!current || !this.newName) return;
+
+    await this.authService.updateUserProfile(this.newName, this.pendingPhotoUrl ?? current.photoUrl);
+    this.modifyInfos = false;
   }
 
   /**
    * Opens the Avatar Selection dialog.
    * Passes the current user data to the dialog as input.
-   * After the dialog is closed, updates the user's photoURL if a new avatar was selected.
+   * After the dialog is closed, stages the new avatar for saving.
    */
   openAvatarSelection() {
     const dialogRef = this.dialog.open(AvatarSelectionComponent, {
-      data: { user: this.user },
+      data: { user: this.user() },
       hasBackdrop: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.photoURL = result;
+        this.pendingPhotoUrl = result;
       }
     });
   }

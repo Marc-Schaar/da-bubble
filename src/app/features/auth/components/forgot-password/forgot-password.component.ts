@@ -1,27 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-forgotpassword',
-  imports: [HeaderComponent, FooterComponent, FormsModule, CommonModule, RouterLink],
+  imports: [HeaderComponent, FooterComponent, FormsModule, RouterLink],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
 export class ForgotpasswordComponent {
+  private readonly authService = inject(AuthService);
+
   isOverlayActive = false;
   user: User | null = null;
   submitted = false;
-
-  auth = getAuth();
 
   /**
    * Handles the form submission, sends a password reset email and manages loading state.
@@ -29,12 +27,11 @@ export class ForgotpasswordComponent {
    */
   async onSubmit(emailform: NgForm) {
     this.isOverlayActive = true;
-    await sendPasswordResetEmail(this.auth, this.user!.email)
-      .then(() => {})
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    try {
+      await this.authService.sendPasswordReset(this.user!.email);
+    } catch {
+      // Kein sichtbarer Fehlerzustand im bisherigen UI vorgesehen; still scheitern.
+    }
     this.submitted = true;
     emailform.reset();
     setTimeout(() => {

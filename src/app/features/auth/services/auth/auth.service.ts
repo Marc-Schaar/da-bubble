@@ -4,7 +4,7 @@ import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPop
 
 import { arrayUnion, doc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
+import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword } from '@firebase/auth';
 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
@@ -254,6 +254,35 @@ export class AuthService {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  /**
+   * Sends a password-reset e-mail via Firebase Auth.
+   *
+   * @param email - Address to send the reset link to.
+   */
+  public async sendPasswordReset(email: string): Promise<void> {
+    await sendPasswordResetEmail(this.auth, email);
+  }
+
+  /**
+   * Updates the current user's display name and avatar in Firebase Auth,
+   * Firestore and the local UserStore signal, so every consumer stays in sync.
+   *
+   * @param displayName - The new display name.
+   * @param photoUrl - The new avatar URL.
+   */
+  public async updateUserProfile(displayName: string, photoUrl: string): Promise<void> {
+    const firebaseUser = this.auth.currentUser;
+    if (!firebaseUser) return;
+
+    await this.updateFirebaseProfile(firebaseUser, displayName, photoUrl);
+
+    const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+    await updateDoc(userDocRef, { displayName, photoUrl });
+
+    const current = this.currentUser();
+    this.userStore.setCurrentUser(current ? { ...current, displayName, photoUrl } : null);
   }
 
   private mapFirebaseUserToUser(firebaseUser: any, overrides?: Partial<User>): User {

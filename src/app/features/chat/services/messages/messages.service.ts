@@ -4,6 +4,7 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { DirectMessage } from '../../models/direct-message/direct-message';
 import { AuthService } from '../../../auth/services/auth/auth.service';
+import { ReactionContext } from '../reactions/reactions.service';
 
 @Injectable({
   providedIn: 'root',
@@ -42,14 +43,15 @@ export class MessagesService {
   }
 
   /**
-   * Fetches the parent message of a thread once.
+   * Fetches the parent message of a thread once, as a typed ChannelMessage
+   * so consumers can use `asDate`/`photoUrl` instead of raw Firestore fields.
    */
-  public async getParentMessage(channelId: string, messageId: string): Promise<any | null> {
+  public async getParentMessage(channelId: string, messageId: string): Promise<ChannelMessage | null> {
     const messageRef = this.fireService.getMessageRef(channelId, messageId);
     if (!messageRef) return null;
 
     const snap = await getDoc(messageRef);
-    return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+    return snap.exists() ? new ChannelMessage({ ...snap.data(), id: snap.id }) : null;
   }
 
   public subToConversationMessages(userA: string, userB: string): () => void {
@@ -86,6 +88,22 @@ export class MessagesService {
 
   private isChannelMessage(data: ChannelMessage | DirectMessage): boolean {
     return 'reaction' in data;
+  }
+
+  /**
+   * Updates a message's text — in its channel document, or in the reply's
+   * thread sub-document when the message belongs to a thread. Resolving
+   * the right Firestore ref used to be duplicated inside message-template.
+   */
+  public updateMessageText(messageId: string, text: string, context: ReactionContext): void {
+    const messageRef =
+      context.isThread && context.parentMessageId
+        ? this.fireService.getMessageThreadRef(context.channelId, context.parentMessageId, messageId)
+        : this.fireService.getMessageRef(context.channelId, messageId);
+
+    if (messageRef) {
+      this.fireService.updateMessage(messageRef, text);
+    }
   }
 
   public async sendChannelMessage(text: string, channelId: string) {

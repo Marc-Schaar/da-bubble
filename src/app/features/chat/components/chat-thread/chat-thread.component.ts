@@ -15,6 +15,7 @@ import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChannelService } from '../../../channel/services/channel/channel.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
+import { ChannelMessage } from '../../models/channel-message/channel-message';
 
 @Component({
   selector: 'app-thread',
@@ -40,16 +41,11 @@ export class ThreadComponent implements OnInit {
   public channelService: ChannelService = inject(ChannelService);
   private mentionService: MentionService = inject(MentionService);
   private readonly destroyRef = inject(DestroyRef);
-  public currentUser: any;
   public userId: string = '';
   public currentChannelId: string = '';
   public parentMessageId: string = '';
-  public inputEdit: string = '';
-  public parentMessageData: any = null;
-  public editingMessageId: number | null = null;
+  public parentMessageData: ChannelMessage | null = null;
   public listOpen: boolean = false;
-  public isEditing: boolean = false;
-  public reactions: any = [];
 
   /**
    * A function that will unsubscribe from the Firestore snapshot listener for messages.
@@ -69,36 +65,16 @@ export class ThreadComponent implements OnInit {
 
       this.getThreadParentMessage();
       this.getMessages();
-      this.currentUser = this.authService.currentUser();
     });
   }
 
   /**
-   * Fetches the parent message details for the thread.
+   * Fetches the parent message details for the thread via MessagesService.
    */
   private async getThreadParentMessage() {
-    if (this.parentMessageId) {
-      const data = await this.messagesService.getParentMessage(this.currentChannelId, this.parentMessageId);
-      if (data) this.setParentMessageData(data);
-    } else {
-      this.parentMessageData = null;
-    }
-  }
-
-  /**
-   * Sets the parent message data.
-   * @param data - The parent message data from Firestore.
-   */
-  private setParentMessageData(data: any) {
-    let parentMessage = data;
-    this.parentMessageData = {
-      id: this.parentMessageId,
-      ...parentMessage,
-      time: new Date(data['timestamp'].toDate()).toLocaleTimeString('de-DE', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-    };
+    this.parentMessageData = this.parentMessageId
+      ? await this.messagesService.getParentMessage(this.currentChannelId, this.parentMessageId)
+      : null;
   }
 
   /**

@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, computed, signal } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { User } from '../../../auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
-import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
+import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule, ProfileStatusComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
 })
 export class EditChannelComponent {
   private readonly userService = inject(UserService);
   private readonly navigationService = inject(NavigationService);
-  private readonly dialog = inject(MatDialog);
+  private readonly profileDialogService = inject(ProfileDialogService);
   private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
   public readonly channelService = inject(ChannelService);
 
@@ -141,11 +141,7 @@ export class EditChannelComponent {
   }
 
   public openProfileDialog(userData: User) {
-    this.dialog.open(DialogReceiverComponent, {
-      data: userData,
-      width: '400px',
-      panelClass: ['center-dialog'],
-    });
+    this.profileDialogService.open(userData);
     this.closeDialog();
   }
 

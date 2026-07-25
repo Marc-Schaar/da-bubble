@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
-import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { User } from '../../../auth/models/user/user';
 import { ChannelService } from '../../services/channel/channel.service';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
+import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 
 @Component({
   selector: 'app-add-member',
-  imports: [CommonModule, MatIcon, FormsModule, ProfileStatusComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })
 export class AddMemberComponent {
   public readonly authService: AuthService = inject(AuthService);
   public readonly channelService: ChannelService = inject(ChannelService);
-  private readonly dialog = inject(MatDialog);
+  private readonly profileDialogService = inject(ProfileDialogService);
 
   public readonly dialogRef = inject(MatDialogRef<AddMemberComponent>);
 
@@ -87,10 +87,6 @@ export class AddMemberComponent {
   }
 
   public openProfileDialog(userData: User) {
-    this.dialog.open(DialogReceiverComponent, {
-      data: userData,
-      width: '400px',
-      panelClass: ['center-dialog'],
-    });
+    this.profileDialogService.open(userData);
   }
 }

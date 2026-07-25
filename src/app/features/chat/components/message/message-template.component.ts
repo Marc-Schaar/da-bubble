@@ -1,16 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 
-import { MatDialog } from '@angular/material/dialog';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 
 import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 
-import { DialogReceiverComponent } from '../../../../shared/components/dialog-receiver/dialog-receiver.component';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { DirectMessage } from '../../models/direct-message/direct-message';
@@ -18,6 +15,8 @@ import { User } from '../../../auth/models/user/user';
 import { UserStore } from '../../../../shared/services/user/user-store';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ReactionContext, ReactionsService } from '../../services/reactions/reactions.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
 
@@ -29,10 +28,10 @@ import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateComponent {
-  private fireService: FireServiceService = inject(FireServiceService);
   public authService = inject(AuthService);
-  private dialog = inject(MatDialog);
   public navigationService: NavigationService = inject(NavigationService);
+  private readonly messagesService = inject(MessagesService);
+  private readonly profileDialogService = inject(ProfileDialogService);
   private userStore: UserStore = inject(UserStore);
   private mentionService: MentionService = inject(MentionService);
   public reactionsService: ReactionsService = inject(ReactionsService);
@@ -92,36 +91,15 @@ export class MessageTemplateComponent {
     this.inputEdit = message.message;
   }
 
-  public async updateMessage(message: ChannelMessage | DirectMessage) {
-    this.isThread() ? this.updateThreadMessage(message) : this.updateChannelMessage(message);
-  }
-
   /**
-   * Updates the message after editing.
+   * Saves the edited message text via MessagesService, which resolves
+   * whether this is a channel message or a thread reply.
    * @param message - The message to update.
    */
-  private updateThreadMessage(message: ChannelMessage | DirectMessage) {
-    let messageRef = this.fireService.getMessageThreadRef(this.currentChannelId(), this.parentMessageId(), message.id);
-    if (messageRef) {
-      this.isEditing = false;
-      try {
-        this.fireService.updateMessage(messageRef, this.inputEdit);
-        this.inputEdit = '';
-      } catch (error) {}
-    }
-  }
-
-  /**
-   * Updates the content of an edited message.
-   * @param message - The message to update
-   */
-  private updateChannelMessage(message: ChannelMessage | DirectMessage) {
-    let messageRef = this.fireService.getMessageRef(this.currentChannelId(), message.id);
-    if (messageRef) {
-      this.isEditing = false;
-      this.fireService.updateMessage(messageRef, this.inputEdit);
-      this.inputEdit = '';
-    }
+  public updateMessage(message: ChannelMessage | DirectMessage) {
+    this.messagesService.updateMessageText(message.id, this.inputEdit, this.reactionContext());
+    this.isEditing = false;
+    this.inputEdit = '';
   }
 
   /**
@@ -145,11 +123,7 @@ export class MessageTemplateComponent {
    */
   public async showProfile() {
     const receiverData = await this._getReceiverByName();
-    this.dialog.open(DialogReceiverComponent, {
-      data: receiverData,
-      width: '400px',
-      panelClass: ['center-dialog'],
-    });
+    this.profileDialogService.open(receiverData);
   }
 
   /**
