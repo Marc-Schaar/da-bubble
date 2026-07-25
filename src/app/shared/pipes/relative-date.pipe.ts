@@ -1,10 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { toDateSafe } from '../utils/timestamp.util';
 
 type FirestoreTimestampLike = { toDate: () => Date };
-
-function isFirestoreTimestamp(value: unknown): value is FirestoreTimestampLike {
-  return typeof value === 'object' && value !== null && typeof (value as FirestoreTimestampLike).toDate === 'function';
-}
 
 /**
  * Formats a Date/Firestore-Timestamp as a relative day label for message
@@ -17,7 +14,7 @@ function isFirestoreTimestamp(value: unknown): value is FirestoreTimestampLike {
 export class RelativeDatePipe implements PipeTransform {
   transform(value: Date | FirestoreTimestampLike | string | null | undefined): string {
     if (!value) return '';
-    const date = isFirestoreTimestamp(value) ? value.toDate() : new Date(value);
+    const date = toDateSafe(value);
 
     const today = new Date();
     const isToday =

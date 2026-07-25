@@ -1,4 +1,5 @@
 import { serverTimestamp } from '@angular/fire/firestore';
+import { toDateSafe } from '../../../../shared/utils/timestamp.util';
 
 export abstract class BaseMessage {
   id: string;
@@ -16,18 +17,7 @@ export abstract class BaseMessage {
   }
 
   get asDate(): Date {
-    if (!this.timestamp) return new Date();
-
-    if (typeof this.timestamp.toDate === 'function') {
-      return this.timestamp.toDate();
-    }
-
-    if (this.timestamp && typeof this.timestamp === 'object' && !('seconds' in this.timestamp)) {
-      return new Date();
-    }
-
-    const date = new Date(this.timestamp);
-    return isNaN(date.getTime()) ? new Date() : date;
+    return toDateSafe(this.timestamp);
   }
 
   protected getBaseJSON() {
