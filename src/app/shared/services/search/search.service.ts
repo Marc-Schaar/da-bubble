@@ -1,91 +1,93 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FireServiceService } from '../firebase/fire-service.service';
-import { Channel } from '../../../features/channel/models/channel/channel';
-import { User } from '../../../features/auth/models/user/user';
+import { SearchQueryService } from './search-query.service';
+import { SearchUiStateService } from './search-ui-state.service';
 
+/**
+ * Orchestriert Sucheingaben: liest/schreibt UI-Zustand über
+ * `SearchUiStateService` und ermittelt Treffer über `SearchQueryService`.
+ * Bleibt als einzige Fassade bestehen, die Komponenten injizieren.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
   private fireService: FireServiceService = inject(FireServiceService);
+  private uiState = inject(SearchUiStateService);
+  private queryService = inject(SearchQueryService);
 
-  private textareaListOpen: boolean = false;
-  private headerListOpen: boolean = false;
-  private newMessageListOpen: boolean = false;
-  public isChannel = signal<boolean | null>(false);
-  private isResultTrue: boolean = false;
-  private directTag: boolean = false;
-
-  private currentList: (User | Channel)[] = [];
   private tagType: 'channel' | 'user' | null = null;
-  private searchInComponent: 'header' | 'textarea' | 'newMessage' | null = null;
-  public searchQuery: string = '';
+
+  public get isChannel() {
+    return this.uiState.isChannel;
+  }
+
+  public get searchQuery(): string {
+    return this.uiState.searchQuery;
+  }
+
+  public set searchQuery(value: string) {
+    this.uiState.searchQuery = value;
+  }
 
   /**
    * Returns the current Search Component.
    */
   public getSearchComponent() {
-    return this.searchInComponent;
+    return this.uiState.getSearchComponent();
   }
 
   /**
    * Returns whether the textarea suggestion list is open.
    */
   public getListBoolean(): boolean {
-    return this.textareaListOpen;
+    return this.uiState.getListBoolean();
   }
 
   /**
    * Returns whether the header suggestion list is open.
    */
   public getHeaderListBoolean(): boolean {
-    return this.headerListOpen;
+    return this.uiState.getHeaderListBoolean();
   }
 
   /**
    * Returns whether the New Message Component suggestion list is open.
    */
   public getNewListBoolean(): boolean {
-    return this.newMessageListOpen;
+    return this.uiState.getNewListBoolean();
   }
 
   /**
    * Returns the current autocomplete result list.
    */
-  public getCurrentList(): (User | Channel)[] {
-    return this.currentList;
+  public getCurrentList() {
+    return this.uiState.getCurrentList();
   }
 
   /**
    * Returns whether this tag is a direct message tag.
-   *
-   * @returns {boolean} True if it is a direct message tag, false otherwise.
    */
   public isDirectTag(): boolean {
-    return this.directTag;
+    return this.uiState.isDirectTag();
   }
 
   /**
    * Sets whether this tag is a direct message tag.
-   *
-   * @param {boolean} isDirect - True if it should be marked as a direct message tag, false otherwise.
    */
-  public setIsDirectTag(boolean: boolean) {
-    this.directTag = boolean;
+  public setIsDirectTag(isDirect: boolean) {
+    this.uiState.setIsDirectTag(isDirect);
   }
 
-  /**
-   * Returns whether the result is true.
-   */
-  public setResult(boolean: boolean) {
-    this.isResultTrue = boolean;
+  public setResult(stopped: boolean) {
+    this.uiState.setResult(stopped);
   }
 
   /**
    * Closes the currently active suggestion list.
    */
   public closeList(): void {
-    this.searchInComponent === 'header' ? (this.headerListOpen = false) : (this.textareaListOpen = false);
+    this.uiState.closeList();
   }
 
   /**
@@ -105,18 +107,18 @@ export class SearchService {
   /**
    * Observes user input and determines whether to search for users or channels.
    * @param input - The input string entered by the user.
-   * @param searchInComponent - The context where the input comes from: 'textarea' or 'header'.
+   * @param searchInComponent - The context where the input comes from: 'textarea', 'header' or 'newMessage'.
    */
   public observeInput(input: string, searchInComponent: 'textarea' | 'header' | 'newMessage'): void {
-    if (this.isResultTrue) return;
-    this.headerListOpen = false;
-    this.textareaListOpen = false;
+    if (this.uiState.isResultStopped()) return;
+    this.uiState.setHeaderListOpen(false);
+    this.uiState.setTextareaListOpen(false);
     this.searchQuery = input;
-    this.searchInComponent = searchInComponent;
+    this.uiState.setSearchComponent(searchInComponent);
 
     this.getTagType(input);
     if (!input.trim()) this.closeList();
-    if (this.isResultTrue) {
+    if (this.uiState.isResultStopped()) {
       return;
     } else this.isNoTagSearch() ? this.searchWithoutTag() : this.searchWithTag();
   }
@@ -127,7 +129,7 @@ export class SearchService {
    */
   private isNoTagSearch() {
     return (
-      (this.searchInComponent === 'header' || this.searchInComponent === 'newMessage') &&
+      (this.uiState.getSearchComponent() === 'header' || this.uiState.getSearchComponent() === 'newMessage') &&
       this.tagType == null &&
       this.searchQuery.length > 0
     );
@@ -137,13 +139,13 @@ export class SearchService {
    * Handles search when no tag is used, searching for both users and channels.
    */
   private searchWithoutTag() {
-    let userResults = this.startSearch(this.searchQuery, 'user');
-    let channelResults = this.startSearch(this.searchQuery, 'channel');
-    this.currentList = [...userResults, ...channelResults];
-    this.textareaListOpen = false;
-    this.searchInComponent === 'header' ? (this.headerListOpen = true) : (this.headerListOpen = false);
-    this.searchInComponent === 'newMessage' ? (this.newMessageListOpen = true) : (this.newMessageListOpen = false);
-    this.isChannel.set(null);
+    let userResults = this.queryService.startSearch(this.searchQuery, 'user');
+    let channelResults = this.queryService.startSearch(this.searchQuery, 'channel');
+    this.uiState.setCurrentList([...userResults, ...channelResults]);
+    this.uiState.setTextareaListOpen(false);
+    this.uiState.setHeaderListOpen(this.uiState.getSearchComponent() === 'header');
+    this.uiState.setNewMessageListOpen(this.uiState.getSearchComponent() === 'newMessage');
+    this.uiState.isChannel.set(null);
   }
 
   /**
@@ -170,11 +172,11 @@ export class SearchService {
    */
   private caseChannel() {
     let searchInput: string | null = null;
-    this.isChannel.set(true);
+    this.uiState.isChannel.set(true);
     searchInput = this.searchQuery.split('#')[1];
-    this.currentList = this.startSearch(searchInput, 'channel');
+    this.uiState.setCurrentList(this.queryService.startSearch(searchInput, 'channel'));
 
-    this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    this.uiState.getSearchComponent() === 'textarea' ? this.uiState.setTextareaListOpen(true) : this.uiState.setHeaderListOpen(true);
     if (!searchInput) this.tagType = null;
   }
 
@@ -183,11 +185,11 @@ export class SearchService {
    */
   private caseUser() {
     let searchInput: string | null = null;
-    this.isChannel.set(false);
+    this.uiState.isChannel.set(false);
     searchInput = this.searchQuery.split('@')[1];
-    this.currentList = this.startSearch(searchInput, 'user');
+    this.uiState.setCurrentList(this.queryService.startSearch(searchInput, 'user'));
 
-    this.searchInComponent === 'textarea' ? (this.textareaListOpen = true) : (this.headerListOpen = true);
+    this.uiState.getSearchComponent() === 'textarea' ? this.uiState.setTextareaListOpen(true) : this.uiState.setHeaderListOpen(true);
     if (!searchInput) this.tagType = null;
   }
 
@@ -195,12 +197,7 @@ export class SearchService {
    * Resets the current suggestion list and UI flags.
    */
   public resetList() {
-    this.currentList = [];
-    this.isChannel.set(false);
-    this.textareaListOpen = false;
-    this.headerListOpen = false;
-    this.newMessageListOpen = false;
-    this.directTag = false;
+    this.uiState.resetList();
   }
 
   /**
@@ -213,74 +210,20 @@ export class SearchService {
   }
 
   /**
-   * Searches channel members by name.
-   * @param searchInput - The lowercase input string to search for.
-   * @param channelsToSearch - The list of channels to search within.
-   * @returns {string[]} A list of matching members.
-   */
-  private searchChannelMembersByName(searchInput: string, channelsToSearch: Channel[]): User[] {
-    const searchLower = searchInput.toLowerCase();
-    const memberIdsInChannels = new Set<string>();
-
-    channelsToSearch.forEach((channel) => {
-      const members = channel?.member || [];
-      members.forEach((member: { id: string }) => {
-        const id = typeof member === 'string' ? member : member.id;
-        if (id) memberIdsInChannels.add(id);
-      });
-    });
-    this.fireService.subAllUsers();
-    const allUsers: User[] = this.fireService.allUsers();
-
-    return allUsers.filter((user) => memberIdsInChannels.has(user.id) && user.displayName?.toLowerCase().includes(searchLower));
-  }
-
-  /**
-   * Searches channels by name.
-   * @param searchInput - The lowercase input string to search for.
-   * @param channelsToSearch - The list of channels to search within.
-   * @returns {Channel[]} A list of matching channels.
-   */
-  private searchChannel(searchInput: string, channelsToSearch: Channel[]): Channel[] {
-    return channelsToSearch.filter((channel: { name: string }) => channel.name.toLowerCase().includes(searchInput));
-  }
-
-  /**
-   * Starts a search based on the given input and search type (channel or user).
-   * @param input - The input string to search for.
-   * @param searchCollection - The type of entity to search for ('channel' or 'user').
-   * @returns {string[]} A list of matched results.
-   */
-  public startSearch(input: string, searchCollection?: 'channel' | 'user'): (Channel | User)[] {
-    this.fireService.subChannels();
-    let searchInput = input.trim()?.toLowerCase() || '';
-    let result: (Channel | User)[] = [];
-    const channelsToSearch = this.fireService.myChannels();
-
-    if (searchCollection === 'channel') {
-      result = this.searchChannel(searchInput, channelsToSearch);
-    } else if (searchCollection === 'user') {
-      result = this.searchChannelMembersByName(searchInput, channelsToSearch);
-    }
-
-    return result;
-  }
-
-  /**
    * Opens the appropriate autocomplete list based on the tag type ('@' or '#').
    * @param type - Optional preset string to determine the tag context.
    */
   public getList(type?: string): void {
-    this.textareaListOpen = true;
-    this.headerListOpen = false;
-    this.searchInComponent = 'textarea';
-    this.directTag = true;
+    this.uiState.setTextareaListOpen(true);
+    this.uiState.setHeaderListOpen(false);
+    this.uiState.setSearchComponent('textarea');
+    this.uiState.setIsDirectTag(true);
     if (type === '#') {
-      this.currentList = this.fireService.myChannels();
-      this.isChannel.set(true);
+      this.uiState.setCurrentList(this.fireService.myChannels());
+      this.uiState.isChannel.set(true);
     } else if (type === '@') {
-      this.currentList = this.fireService.allUsers();
-      this.isChannel.set(false);
+      this.uiState.setCurrentList(this.fireService.allUsers());
+      this.uiState.isChannel.set(false);
     }
   }
 }

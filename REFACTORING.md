@@ -1,6 +1,6 @@
 # Refactoring-Roadmap DA-Bubble
 
-Stand: 2026-07-12 · **Phasen 0–8 umgesetzt** (PRs #11, #13–#19 + Phase-8-PR). Offen aus den Phasen: FireService-interne Gliederung in `UsersApi`/`ChannelsApi`/`MessagesApi` (Phase 5) und SearchService-Trennung UI-State/Suchlogik (Phase 6) — bewusst auf Folge-PRs verschoben.
+Stand: 2026-07-25 · **Phasen 0–8 vollständig umgesetzt** (PRs #11, #13–#19 + Phase-8-PR). Die zwei zuvor verschobenen Punkte sind nachgezogen: FireService ist intern in `UsersApiService`/`ChannelsApiService`/`MessagesApiService` gegliedert (Fassade `FireServiceService` unverändert für alle Consumer), SearchService ist in `SearchUiStateService` (UI-Zustand), `SearchQueryService` (reine Suchlogik) und `SearchService` (Orchestrator-Fassade) getrennt.
 
 Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. Jede Phase ist einzeln committbar und über die Smoke-Test-Checkliste (unten) manuell verifizierbar — es gibt kein Test-Sicherheitsnetz (alle `.spec.ts` sind ungepflegte CLI-Scaffolds).
 
@@ -96,7 +96,7 @@ Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. 
 - `findUserByDisplayName(name)` / `findChannelByName(name)` in UserStore bzw. ChannelService (ersetzt die query/where-Duplikate in message-template Z.266–346, chat-thread Z.80–207)
 - Thread-Datenzugriff in MessagesService: `subscribeThread(channelId, messageId)`, `getParentMessage(...)` → Firestore-Inject in chat-thread entfällt
 - Reactions-Zugriffe (message-template Z.34, 266–275) in MessagesService oder neuen ReactionsService
-- FireService intern in `UsersApi`/`ChannelsApi`/`MessagesApi` gliedern (Fassade behalten, kein Big Bang); `myChannels`-Guest-Logik in ChannelService
+- [x] FireService intern in `UsersApi`/`ChannelsApi`/`MessagesApi` gliedern (Fassade behalten, kein Big Bang); `myChannels`-Guest-Logik in ChannelService
 
 **Risiko:** mittel (viele Aufrufstellen, aber reine Verschiebung). **Verifikation:** kompletter Smoke-Test; gezielt: Mention auf User UND Channel, Reaktion hinzufügen/entfernen, Thread mit >2 Antworten.
 
@@ -107,7 +107,7 @@ Diese Roadmap ist die Arbeitsgrundlage für die kommenden Refactoring-Sessions. 
 - `MentionService` extrahieren (`src/app/shared/services/mention/`): wortgleicher Code aus message-template + chat-thread; nach Phase 5 nur noch Dispatch-Logik
 - Doppelte avatar-selection konsolidieren: `app_auth/components/avatar-selection` (geroutet) vs. `dialogs/avatar-selection/avatar-selection` (nur von user-profile genutzt) → eine Komponente mit Kontext-Input
 - AuthService-SRP: FormBuilder-Factories (`createLoginForm`, `createRegisterForm`) in die Auth-Komponenten verschieben
-- SearchService trennen: UI-State (welche Liste offen) von der Suchlogik
+- [x] SearchService trennen: UI-State (welche Liste offen) von der Suchlogik
 
 **Risiko:** niedrig–mittel. **Verifikation:** Mentions in Channel-Nachricht UND Thread-Antwort; Avatar-Auswahl bei Registrierung und im Profil; Login/Registrierung/Passwort-Reset; Suche öffnen/schließen.
 
