@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, CollectionReference, doc, DocumentReference, Firestore } from '@angular/fire/firestore';
+import { CollectionReference, DocumentReference } from '@angular/fire/firestore';
+import { Channel } from '../../../features/channel/models/channel/channel';
 import { Reaction } from '../../../features/chat/models/channel-message/channel-message';
 import { User } from '../../../features/auth/models/user/user';
 import { ChannelsApiService } from './channels-api.service';
@@ -15,7 +16,6 @@ import { UsersApiService } from './users-api.service';
   providedIn: 'root',
 })
 export class FireServiceService {
-  private firestore: Firestore = inject(Firestore);
   private usersApi = inject(UsersApiService);
   private channelsApi = inject(ChannelsApiService);
   private messagesApi = inject(MessagesApiService);
@@ -32,6 +32,18 @@ export class FireServiceService {
     return this.usersApi.updateOnlineStatus(currentUser);
   }
 
+  async createUser(user: User) {
+    return this.usersApi.createUser(user);
+  }
+
+  async updateUser(userId: string, data: Partial<User>) {
+    return this.usersApi.updateUser(userId, data);
+  }
+
+  subUserDoc(userId: string, callback: (user: User | null) => void): () => void {
+    return this.usersApi.subUserDoc(userId, callback);
+  }
+
   subAllUsers(): void {
     this.usersApi.subAllUsers();
   }
@@ -40,25 +52,8 @@ export class FireServiceService {
     this.channelsApi.subChannels();
   }
 
-  /**
-   * Returns a reference to a specific document in Firestore.
-   *
-   * @param ref The collection name.
-   * @param id The document ID.
-   * @returns A DocumentReference or null if the ref or id is invalid.
-   */
-  getDocRef(ref: string, id: string): DocumentReference | null {
-    return ref && id ? doc(this.firestore, ref, id) : null;
-  }
-
-  /**
-   * Returns a reference to a specific collection in Firestore.
-   *
-   * @param ref The collection name.
-   * @returns A CollectionReference or null if the ref is invalid.
-   */
-  getCollectionRef(ref: string): CollectionReference | null {
-    return ref ? collection(this.firestore, ref) : null;
+  subChannelDoc(channelId: string, callback: (channel: Channel | null) => void): () => void {
+    return this.channelsApi.subChannelDoc(channelId, callback);
   }
 
   getMessageRef(channelId: string, messageId: string): DocumentReference | null {
@@ -67,6 +62,22 @@ export class FireServiceService {
 
   getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
     return this.messagesApi.getMessageThreadRef(channelId, messageId, threadMessageID);
+  }
+
+  getMessageRefForContext(channelId: string, messageId: string, parentMessageId?: string, isThread?: boolean): DocumentReference | null {
+    return this.messagesApi.getMessageRefForContext(channelId, messageId, parentMessageId, isThread);
+  }
+
+  getMessagesCollectionRef(channelId: string): CollectionReference | null {
+    return this.messagesApi.getMessagesCollectionRef(channelId);
+  }
+
+  getThreadCollectionRef(channelId: string, parentMessageId: string): CollectionReference | null {
+    return this.messagesApi.getThreadCollectionRef(channelId, parentMessageId);
+  }
+
+  getConversationMessagesCollectionRef(userId: string, conversationId: string): CollectionReference | null {
+    return this.messagesApi.getConversationMessagesCollectionRef(userId, conversationId);
   }
 
   updateMessage(ref: DocumentReference, value: string) {
@@ -81,14 +92,8 @@ export class FireServiceService {
     return this.messagesApi.postChannelMessage(channelId, data);
   }
 
-  public async postDirectMessage(
-    senderPath: string,
-    receiverPath: string,
-    senderId: string | undefined,
-    receiverId: string,
-    messageData: any,
-  ) {
-    return this.messagesApi.postDirectMessage(senderPath, receiverPath, senderId, receiverId, messageData);
+  public async postDirectMessage(senderId: string, receiverId: string, conversationId: string, messageData: any) {
+    return this.messagesApi.postDirectMessage(senderId, receiverId, conversationId, messageData);
   }
 
   public async postThreadMessage(channelId: string, parentMessageId: string, data: any) {
@@ -113,5 +118,9 @@ export class FireServiceService {
 
   public async checkChannelNameExists(name: string): Promise<boolean> {
     return this.channelsApi.checkChannelNameExists(name);
+  }
+
+  public async findChannelByName(name: string) {
+    return this.channelsApi.findChannelByName(name);
   }
 }

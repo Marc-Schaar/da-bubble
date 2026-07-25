@@ -18,7 +18,7 @@ export class MessagesService {
 
   public subToMessages(channelId: string | null) {
     if (!channelId) return () => {};
-    const messagesRef = this.fireService.getCollectionRef(`channels/${channelId}/messages`);
+    const messagesRef = this.fireService.getMessagesCollectionRef(channelId);
     if (!messagesRef) return () => {};
 
     const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -33,7 +33,7 @@ export class MessagesService {
    * @returns The unsubscribe function of the listener.
    */
   public subToThreadMessages(channelId: string, parentMessageId: string): () => void {
-    const threadRef = this.fireService.getCollectionRef(`channels/${channelId}/messages/${parentMessageId}/thread`);
+    const threadRef = this.fireService.getThreadCollectionRef(channelId, parentMessageId);
     if (!threadRef) return () => {};
 
     const threadQuery = query(threadRef, orderBy('timestamp', 'asc'));
@@ -58,10 +58,8 @@ export class MessagesService {
     const currentUserId = this.authService.currentUser()?.id;
     if (!currentUserId) return () => {};
 
-    const [uid1, uid2] = [userA, userB].sort();
-    const conversationId = `${uid1}_${uid2}`;
-
-    const messagesRef = this.fireService.getCollectionRef(`users/${currentUserId}/conversations/${conversationId}/messages`);
+    const conversationId = this.getConversationId(userA, userB);
+    const messagesRef = this.fireService.getConversationMessagesCollectionRef(currentUserId, conversationId);
 
     if (!messagesRef) return () => {};
 
@@ -92,18 +90,23 @@ export class MessagesService {
 
   /**
    * Updates a message's text — in its channel document, or in the reply's
-   * thread sub-document when the message belongs to a thread. Resolving
-   * the right Firestore ref used to be duplicated inside message-template.
+   * thread sub-document when the message belongs to a thread.
    */
   public updateMessageText(messageId: string, text: string, context: ReactionContext): void {
-    const messageRef =
-      context.isThread && context.parentMessageId
-        ? this.fireService.getMessageThreadRef(context.channelId, context.parentMessageId, messageId)
-        : this.fireService.getMessageRef(context.channelId, messageId);
+    const messageRef = this.fireService.getMessageRefForContext(context.channelId, messageId, context.parentMessageId, context.isThread);
 
     if (messageRef) {
       this.fireService.updateMessage(messageRef, text);
     }
+  }
+
+  /**
+   * Deterministic 1:1-conversation id: both participants' uids, sorted so
+   * either direction of the pair resolves to the same id.
+   */
+  private getConversationId(userA: string, userB: string): string {
+    const [uid1, uid2] = [userA, userB].sort();
+    return `${uid1}_${uid2}`;
   }
 
   public async sendChannelMessage(text: string, channelId: string) {
@@ -132,13 +135,9 @@ export class MessagesService {
       photoUrl: user?.photoUrl,
     });
 
-    const [uid1, uid2] = [currentUserId, receiverId].sort();
-    const conversationId = `${uid1}_${uid2}`;
+    const conversationId = this.getConversationId(currentUserId, receiverId);
 
-    const senderPath = `users/${currentUserId}/conversations/${conversationId}/messages`;
-    const receiverPath = `users/${receiverId}/conversations/${conversationId}/messages`;
-
-    await this.fireService.postDirectMessage(senderPath, receiverPath, currentUserId, receiverId, messageInstance.toJSON());
+    await this.fireService.postDirectMessage(currentUserId, receiverId, conversationId, messageInstance.toJSON());
   }
 
   public async sendThreadMessage(text: string, channelId: string, parentMessageId: string) {

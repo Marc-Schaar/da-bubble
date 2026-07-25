@@ -15,6 +15,8 @@ import {
 import { Channel } from '../../../features/channel/models/channel/channel';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
 import { UserStore } from '../user/user-store';
+import { toEntity } from '../../utils/firestore-entity.util';
+import { runWrite } from '../../utils/run-write.util';
 
 /**
  * Kapselt den Firestore-Zugriff auf die `channels`-Collection.
@@ -37,14 +39,19 @@ export class ChannelsApiService {
     const channelRef = collection(this.firestore, 'channels');
 
     this.unsubChannels = onSnapshot(channelRef, (snapshot) => {
-      const data = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as Channel,
-      );
+      const data = snapshot.docs.map((doc) => toEntity<Channel>(doc.id, doc.data()));
       this._allChannels.set(data);
+    });
+  }
+
+  /**
+   * Subscribes to live changes of a single channel document
+   * (the active channel, driven by the route param).
+   */
+  public subChannelDoc(channelId: string, callback: (channel: Channel | null) => void): () => void {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    return onSnapshot(channelRef, (snap) => {
+      callback(snap.exists() ? toEntity<Channel>(snap.id, snap.data()) : null);
     });
   }
 
@@ -64,61 +71,47 @@ export class ChannelsApiService {
   });
 
   async addChannel(data: any) {
-    try {
+    return runWrite(() => {
       const channelsRef = collection(this.firestore, 'channels');
-      return await addDoc(channelsRef, data);
-    } catch (error) {
-      console.error('Fehler beim Erstellen des Channels in Firestore:', error);
-      throw error;
-    }
+      return addDoc(channelsRef, data);
+    }, 'Fehler beim Erstellen des Channels in Firestore:');
   }
 
   async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
     if (!channelId) return;
 
     const channelRef = doc(this.firestore, 'channels', channelId);
-    try {
-      await updateDoc(channelRef, data);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Channel-Daten:', error);
-      throw error;
-    }
+    return runWrite(() => updateDoc(channelRef, data), 'Fehler beim Aktualisieren der Channel-Daten:');
   }
 
   async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
     if (!channelId || memberObjects.length === 0) return;
 
     const channelRef = doc(this.firestore, 'channels', channelId);
-    try {
-      await updateDoc(channelRef, {
-        member: arrayUnion(...memberObjects),
-      });
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen von Mitgliedern:', error);
-      throw error;
-    }
+    return runWrite(
+      () => updateDoc(channelRef, { member: arrayUnion(...memberObjects) }),
+      'Fehler beim Hinzufügen von Mitgliedern:',
+    );
   }
 
   public async leaveChannel(channelId: string, userId: string) {
     const channelRef = doc(this.firestore, 'channels', channelId);
-
-    try {
-      await updateDoc(channelRef, {
-        member: arrayRemove({ id: userId }),
-      });
-    } catch (error) {
-      console.error('Fehler beim Verlassen des Channels:', error);
-      throw error;
-    }
+    return runWrite(() => updateDoc(channelRef, { member: arrayRemove({ id: userId }) }), 'Fehler beim Verlassen des Channels:');
   }
 
   public async checkChannelNameExists(name: string): Promise<boolean> {
+    return (await this.findChannelByName(name)) !== null;
+  }
+
+  /**
+   * Looks up a channel document by its name (used for #mentions and the
+   * unique-name check when creating a channel).
+   */
+  public async findChannelByName(name: string): Promise<Channel | null> {
     const channelsRef = collection(this.firestore, 'channels');
-    const trimmedName = name.trim();
-
-    const q = query(channelsRef, where('name', '==', trimmedName));
-    const querySnapshot = await getDocs(q);
-
-    return !querySnapshot.empty;
+    const q = query(channelsRef, where('name', '==', name.trim()));
+    const snapshot = await getDocs(q);
+    const docSnap = snapshot.docs[0];
+    return docSnap ? toEntity<Channel>(docSnap.id, docSnap.data()) : null;
   }
 }

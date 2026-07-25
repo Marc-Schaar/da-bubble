@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { User } from '../../../features/auth/models/user/user';
+import { toEntity } from '../../utils/firestore-entity.util';
 
 /**
  * Holds the authenticated user's data. AuthService writes to it,
@@ -26,7 +27,7 @@ export class UserStore {
   public async getUserById(id: string): Promise<User | null> {
     if (!id) return null;
     const snap = await getDoc(doc(this.firestore, 'users', id));
-    return snap.exists() ? ({ ...(snap.data() as Omit<User, 'id'>), id: snap.id } as User) : null;
+    return snap.exists() ? toEntity<User>(snap.id, snap.data()) : null;
   }
 
   /**
@@ -37,6 +38,6 @@ export class UserStore {
     const q = query(usersRef, where('displayName', '==', displayName));
     const snapshot = await getDocs(q);
     const docSnap = snapshot.docs[0];
-    return docSnap ? ({ ...(docSnap.data() as Omit<User, 'id'>), id: docSnap.id } as User) : null;
+    return docSnap ? toEntity<User>(docSnap.id, docSnap.data()) : null;
   }
 }

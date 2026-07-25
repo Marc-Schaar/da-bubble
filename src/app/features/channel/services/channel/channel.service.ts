@@ -1,5 +1,4 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { User } from '../../../auth/models/user/user';
 import { AuthService } from '../../../auth/services/auth/auth.service';
@@ -104,11 +103,8 @@ export class ChannelService {
       return;
     }
 
-    const channelRef = this.fireService.getDocRef('channels', id);
-    if (!channelRef) return;
-
-    this.unsubCurrentChannel = onSnapshot(channelRef, (snap) => {
-      this.currentChannel.set(snap.exists() ? ({ id: snap.id, ...snap.data() } as Channel) : null);
+    this.unsubCurrentChannel = this.fireService.subChannelDoc(id, (channel) => {
+      this.currentChannel.set(channel);
     });
   }
 
@@ -177,13 +173,7 @@ export class ChannelService {
    * Looks up a channel document by its name (used for #mentions).
    */
   public async findChannelByName(name: string): Promise<Channel | null> {
-    const channelsRef = this.fireService.getCollectionRef('channels');
-    if (!channelsRef) return null;
-
-    const q = query(channelsRef, where('name', '==', name.trim()));
-    const snapshot = await getDocs(q);
-    const docSnap = snapshot.docs[0];
-    return docSnap ? ({ id: docSnap.id, ...docSnap.data() } as Channel) : null;
+    return this.fireService.findChannelByName(name);
   }
 
   public async leaveChannel() {
