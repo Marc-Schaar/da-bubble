@@ -1,112 +1,44 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import {
-  addDoc,
-  arrayRemove,
-  arrayUnion,
-  collection,
-  CollectionReference,
-  doc,
-  DocumentReference,
-  Firestore,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from '@angular/fire/firestore';
-import { ChannelMessage, Reaction } from '../../../features/chat/models/channel-message/channel-message';
+import { inject, Injectable } from '@angular/core';
+import { collection, CollectionReference, doc, DocumentReference, Firestore } from '@angular/fire/firestore';
+import { Reaction } from '../../../features/chat/models/channel-message/channel-message';
 import { User } from '../../../features/auth/models/user/user';
-import { Channel } from '../../../features/channel/models/channel/channel';
-import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../constants';
-import { UserStore } from '../user/user-store';
+import { ChannelsApiService } from './channels-api.service';
+import { MessagesApiService } from './messages-api.service';
+import { UsersApiService } from './users-api.service';
 
+/**
+ * Fassade über die Firestore-Zugriffsschicht. Bündelt `UsersApiService`,
+ * `ChannelsApiService` und `MessagesApiService` unter einer stabilen API,
+ * damit Consumer weiterhin nur einen Service injizieren müssen.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class FireServiceService {
   private firestore: Firestore = inject(Firestore);
-  private userStore = inject(UserStore);
-  public allUsers = signal<User[]>([]);
-  private _allChannels = signal<Channel[]>([]);
-  private unsubAllUsers?: () => void;
-  private unsubChannels?: () => void;
+  private usersApi = inject(UsersApiService);
+  private channelsApi = inject(ChannelsApiService);
+  private messagesApi = inject(MessagesApiService);
 
-  /**
-   * Updates the online status of the current user in Firestore.
-   *
-   * @param currentUser The user object containing the UID and online status.
-   */
-  async updateOnlineStatus(currentUser: User) {
-    if (currentUser.id) {
-      const userRef = doc(this.firestore, 'users', currentUser.id);
-      await updateDoc(userRef, {
-        online: currentUser.online,
-      });
-    }
+  public get allUsers() {
+    return this.usersApi.allUsers;
   }
 
-  /**
-   * Erstellt eine permanente Verbindung zur User-Collection.
-   * Jede Änderung (Login/Logout/Neuer User) triggert das Signal sofort.
-   * Idempotent: der Listener lebt für die App-Lebensdauer, weitere Aufrufe
-   * sind No-ops (vorher entstand pro Aufruf ein neuer Listener).
-   */
-  public subAllUsers(): void {
-    if (this.unsubAllUsers) return;
-    const usersCollection = collection(this.firestore, 'users');
-
-    this.unsubAllUsers = onSnapshot(
-      usersCollection,
-      (snapshot) => {
-        const users = snapshot.docs.map(
-          (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data(),
-            }) as User,
-        );
-        this.allUsers.set(users);
-      },
-      (error) => {
-        console.error('Fehler beim User-Streaming:', error);
-      },
-    );
+  public get myChannels() {
+    return this.channelsApi.myChannels;
   }
 
-  /**
-   * Startet den Echtzeit-Stream für alle Channels.
-   * Idempotent wie subAllUsers().
-   */
-  public subChannels(): void {
-    if (this.unsubChannels) return;
-    const channelRef = collection(this.firestore, 'channels');
-
-    this.unsubChannels = onSnapshot(channelRef, (snapshot) => {
-      const data = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as Channel,
-      );
-      this._allChannels.set(data);
-    });
+  updateOnlineStatus(currentUser: User) {
+    return this.usersApi.updateOnlineStatus(currentUser);
   }
 
-  public myChannels = computed(() => {
-    const channels: Channel[] = this._allChannels();
-    const currentUser = this.userStore.currentUser();
+  subAllUsers(): void {
+    this.usersApi.subAllUsers();
+  }
 
-    if (!currentUser) return [];
-
-    const isGuest = currentUser.email === GUEST_EMAIL;
-    return channels.filter((channel) => {
-      if (isGuest) {
-        return channel.id === DEFAULT_CHANNEL_ID || channel.createdBy === currentUser.id;
-      }
-      return channel.member.some((m: { id: string }) => m.id === currentUser.id);
-    });
-  });
+  subChannels(): void {
+    this.channelsApi.subChannels();
+  }
 
   /**
    * Returns a reference to a specific document in Firestore.
@@ -129,71 +61,24 @@ export class FireServiceService {
     return ref ? collection(this.firestore, ref) : null;
   }
 
-  /**
-   * Returns a reference to a specific message document in Firestore.
-   *
-   * @param channelId The ID of the channel.
-   * @param messageId The ID of the message.
-   * @returns A DocumentReference or null if the channelId or messageId is invalid.
-   */
   getMessageRef(channelId: string, messageId: string): DocumentReference | null {
-    return channelId && messageId ? this.getDocRef(`channels/${channelId}/messages`, messageId) : null;
+    return this.messagesApi.getMessageRef(channelId, messageId);
   }
 
-  /**
-   * Returns a reference to a specific thread message document in Firestore.
-   *
-   * @param channelId The ID of the channel.
-   * @param messageId The ID of the message.
-   * @param threadMessageID The ID of the thread message.
-   * @returns A DocumentReference or null if the channelId, messageId, or threadMessageID is invalid.
-   */
   getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
-    return channelId && messageId && threadMessageID
-      ? this.getDocRef(`channels/${channelId}/messages/${messageId}/thread`, threadMessageID)
-      : null;
+    return this.messagesApi.getMessageThreadRef(channelId, messageId, threadMessageID);
   }
 
-  /**
-   * Updates a message document in Firestore.
-   *
-   * @param ref The reference to the message document.
-   * @param value The updated message value.
-   * @returns A promise that resolves when the update is complete.
-   */
   updateMessage(ref: DocumentReference, value: string) {
-    return ref ? updateDoc(ref, { message: value }) : null;
+    return this.messagesApi.updateMessage(ref, value);
   }
 
-  /**
-   * Updates the reaction on a message in Firestore.
-   *
-   * @param ref The reference to the message document.
-   * @param value The updated reaction value.
-   * @returns A promise that resolves when the update is complete.
-   */
   updateReaction(ref: DocumentReference, value: Reaction[]) {
-    return ref ? updateDoc(ref, { reaction: value }) : null;
+    return this.messagesApi.updateReaction(ref, value);
   }
 
-  /**
-   * Sends a message to a specific channel.
-   *
-   * @param channelId The ID of the channel.
-   * @param messageObject The message object to be sent.
-   * @returns A promise that resolves when the message is sent.
-   */
   async postChannelMessage(channelId: string, data: any) {
-    const path = `channels/${channelId}/messages`;
-    const messagesRef = collection(this.firestore, path);
-
-    const messageDocRef = await addDoc(messagesRef, data);
-
-    await this.initializeThreadData(messageDocRef, data);
-  }
-
-  private async initializeThreadData(docRef: DocumentReference, messageObject: any) {
-    await updateDoc(docRef, new ChannelMessage(messageObject).toJSON());
+    return this.messagesApi.postChannelMessage(channelId, data);
   }
 
   public async postDirectMessage(
@@ -203,75 +88,30 @@ export class FireServiceService {
     receiverId: string,
     messageData: any,
   ) {
-    const senderRef = collection(this.firestore, senderPath);
-    const receiverRef = collection(this.firestore, receiverPath);
-
-    await Promise.all([addDoc(senderRef, messageData), senderId !== receiverId ? addDoc(receiverRef, messageData) : Promise.resolve()]);
+    return this.messagesApi.postDirectMessage(senderPath, receiverPath, senderId, receiverId, messageData);
   }
 
   public async postThreadMessage(channelId: string, parentMessageId: string, data: any) {
-    const path = `channels/${channelId}/messages/${parentMessageId}/thread`;
-    const threadRef = collection(this.firestore, path);
-
-    await addDoc(threadRef, data);
+    return this.messagesApi.postThreadMessage(channelId, parentMessageId, data);
   }
 
   async addChannel(data: any) {
-    try {
-      const channelsRef = collection(this.firestore, 'channels');
-      return await addDoc(channelsRef, data);
-    } catch (error) {
-      console.error('Fehler beim Erstellen des Channels in Firestore:', error);
-      throw error;
-    }
+    return this.channelsApi.addChannel(data);
   }
 
   async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
-    if (!channelId) return;
-
-    const channelRef = doc(this.firestore, 'channels', channelId);
-    try {
-      await updateDoc(channelRef, data);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren der Channel-Daten:', error);
-      throw error;
-    }
+    return this.channelsApi.updateChannelData(channelId, data);
   }
 
   async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
-    if (!channelId || memberObjects.length === 0) return;
-
-    const channelRef = doc(this.firestore, 'channels', channelId);
-    try {
-      await updateDoc(channelRef, {
-        member: arrayUnion(...memberObjects),
-      });
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen von Mitgliedern:', error);
-      throw error;
-    }
+    return this.channelsApi.addChannelMembers(channelId, memberObjects);
   }
 
   public async leaveChannel(channelId: string, userId: string) {
-    const channelRef = doc(this.firestore, 'channels', channelId);
-
-    try {
-      await updateDoc(channelRef, {
-        member: arrayRemove({ id: userId }),
-      });
-    } catch (error) {
-      console.error('Fehler beim Verlassen des Channels:', error);
-      throw error;
-    }
+    return this.channelsApi.leaveChannel(channelId, userId);
   }
 
   public async checkChannelNameExists(name: string): Promise<boolean> {
-    const channelsRef = collection(this.firestore, 'channels');
-    const trimmedName = name.trim();
-
-    const q = query(channelsRef, where('name', '==', trimmedName));
-    const querySnapshot = await getDocs(q);
-
-    return !querySnapshot.empty;
+    return this.channelsApi.checkChannelNameExists(name);
   }
 }
