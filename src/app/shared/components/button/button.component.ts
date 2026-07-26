@@ -1,6 +1,6 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'outline' | 'icon' | 'plain';
+export type ButtonVariant = 'primary' | 'secondary' | 'icon' | 'plain';
 
 @Component({
   selector: 'app-button',
@@ -10,7 +10,7 @@ export type ButtonVariant = 'primary' | 'outline' | 'icon' | 'plain';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.app-button--primary]': "variant() === 'primary'",
-    '[class.app-button--outline]': "variant() === 'outline'",
+    '[class.app-button--secondary]': "variant() === 'secondary'",
     '[class.app-button--icon]': "variant() === 'icon'",
     '[class.app-button--plain]': "variant() === 'plain'",
   },
