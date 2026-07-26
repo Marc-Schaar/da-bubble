@@ -57,8 +57,10 @@
       </div>
 
       <input
+        appInput
         name=""
         id="user-search-bar"
+        aria-label="Name eingeben"
         [ngModel]="channelService.userSearchQuery()"
         (ngModelChange)="channelService.userSearchQuery.set($event)"
         (input)="onSearchInput($event)"

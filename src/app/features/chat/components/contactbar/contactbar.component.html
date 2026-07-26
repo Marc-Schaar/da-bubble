@@ -26,11 +26,13 @@
       <div class="searchbar">
         <div class="input">
           <input
+            appInput
             (click)="isClicked = true"
             [(ngModel)]="input"
             (input)="searchService.observeInput(input, 'header')"
             type="text"
             placeholder="Gehe zu ..."
+            aria-label="Gehe zu ..."
             class="full-width"
           />
           <mat-icon>search</mat-icon>

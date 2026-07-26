@@ -7,10 +7,12 @@
       <h1 class="newText">Neue Nachricht</h1>
 
       <input
+        appInput
         [(ngModel)]="input"
         (input)="searchService.observeInput(input, 'newMessage')"
         type="text"
         placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse"
+        aria-label="An: #Channel, oder @jemand oder E-Mail-Adresse"
       />
     </div>
 

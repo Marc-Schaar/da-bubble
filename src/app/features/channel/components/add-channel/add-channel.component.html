@@ -108,7 +108,9 @@
           </ul>
 
           <input
+            appInput
             placeholder="Name eingeben"
+            aria-label="Name eingeben"
             [(ngModel)]="channelService.userSearchQuery"
             name="search"
             (focus)="showUserBar.set(true)"

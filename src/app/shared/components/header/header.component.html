@@ -12,11 +12,13 @@
     @if (!navigationService.isContactbarPage() && !navigationService.isMobile() && !navigationService.isAuthPage()) {
       <div class="input">
         <input
+          appInput
           [(ngModel)]="input"
           (input)="searchService.observeInput(input, 'header')"
           (click)="searchService.closeList()"
           type="text"
           placeholder="Devspace durchsuchen"
+          aria-label="Devspace durchsuchen"
           class="full-width"
         />
         <button appButton variant="icon" class="hover-to-dark-purple" type="button" aria-label="Suchen">

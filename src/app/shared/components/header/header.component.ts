@@ -18,10 +18,21 @@ import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
 import { ButtonDirective } from '../button/button.directive';
+import { InputDirective } from '../input/input.directive';
 
 @Component({
   selector: 'app-header',
-  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule, ButtonDirective],
+  imports: [
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    SearchResultComponent,
+    RouterModule,
+    ButtonDirective,
+    InputDirective,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

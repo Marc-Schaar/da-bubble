@@ -15,6 +15,7 @@ import { SearchService } from '../../../../shared/services/search/search.service
 import { AddChannelComponent } from '../../../channel/components/add-channel/add-channel.component';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
 
 @Component({
   selector: 'app-contactbar',
@@ -28,6 +29,7 @@ import { ButtonDirective } from '../../../../shared/components/button/button.dir
     RouterModule,
     UserListItemComponent,
     ButtonDirective,
+    InputDirective,
   ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',

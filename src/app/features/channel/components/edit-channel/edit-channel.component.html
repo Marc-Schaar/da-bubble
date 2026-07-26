@@ -15,8 +15,10 @@
       @if (channelNameEdit) {
         <div class="input-wrapper">
           <input
+            appInput
             type="text"
             name="channelname-input"
+            aria-label="Channelname"
             [(ngModel)]="tempName"
             placeholder="Channelname"
             (keyup.enter)="onEditChannelName()"
@@ -36,7 +38,14 @@
       </div>
 
       @if (channelDescriptionEdit) {
-        <textarea name="" id="changeDescriptionInput" [(ngModel)]="tempDescription" (keyup.enter)="onEditChannelDescription()"></textarea>
+        <textarea
+          appInput
+          name=""
+          id="changeDescriptionInput"
+          aria-label="Beschreibung"
+          [(ngModel)]="tempDescription"
+          (keyup.enter)="onEditChannelDescription()"
+        ></textarea>
       } @else {
         <div class="content--description">
           {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
@@ -103,7 +112,9 @@
 
       <div class="input-wrapper">
         <input
+          appInput
           class="user-search-bar"
+          aria-label="Name eingeben"
           [ngModel]="channelService.userSearchQuery()"
           (ngModelChange)="channelService.userSearchQuery.set($event)"
           (input)="onSearchInput($event)"
