@@ -2,30 +2,15 @@
   display: contents;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  margin-right: 1em;
-}
-
 section {
+  display: grid;
+  overflow: clip;
+  margin-right: 1rem;
+  padding: 2rem 1.875rem;
   height: calc(100svh - var(--header-offset));
   background-color: white;
   border-radius: 30px;
-  padding: 2rem 1.875rem;
   gap: 25px;
-}
-
-button {
-  transition: all 0.125s ease-in-out;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: black;
-  &:hover {
-    color: var(--dark-purple);
-  }
 }
 
 .headline {
@@ -57,6 +42,7 @@ button {
   gap: 25px;
   min-height: calc(100svh - 106px);
   overflow: auto;
+  height: 100%;
 }
 
 .dropdown {
