@@ -1,20 +1,22 @@
 <app-header></app-header>
-<div class="borderbox">
-  <div class="box">
-    <div>
-      <button appButton variant="icon" class="hover-to-dark-purple" type="button" (click)="goBack()">
-        <img src="img/arrow_back.png" alt="Zurück" />
-      </button>
-      <div>
-        <h1>Imprint</h1>
-        <p>Eugen Ferchow,Ioannis Karakasidis,Marc S.,</p>
-        <p>Sifnou 52</p>
-        <p>12351,Agia Barbara</p>
-      </div>
-      <div>
-        <h2>Contact:</h2>
-        <p>Email: {{ contactEmail }}</p>
-      </div>
-    </div>
+<section class="card">
+  <div class="card-header">
+    <button appButton variant="icon" type="button" (click)="goBack()">
+      <img src="img/arrow_back.png" alt="Zurück" />
+    </button>
+    <h1>Impressum</h1>
   </div>
-</div>
+
+  <main>
+    <address>
+      <p>
+        Eugen Ferchow, Ioannis Karakasidis, Marc Schaar<br />
+        Brehmstraße 11<br />
+        40239 Düsseldorf
+      </p>
+
+      <h2>Kontakt:</h2>
+      Email: <a href="mailto:{{ contactEmail }}">{{ contactEmail }}</a>
+    </address>
+  </main>
+</section>

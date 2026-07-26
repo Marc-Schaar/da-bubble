@@ -74,7 +74,7 @@ export class NavigationService {
     }
     this.isThreadOpen.set(url.includes('messageId='));
     const isAuth = url.includes('login') || url.includes('register');
-    const isContactbar = url.includes('contactbar');
+    const isContactbar = url.includes('contactbar'); // Hier ist der auslöser für den den Bug der login Page die suchleiste nur wenn nicht auf einer Auth seite
     const path = url.split('?')[0];
     const isMain = path === '/main' || path === '/main/';
     this.isAuthPage.set(isAuth);

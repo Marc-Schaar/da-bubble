@@ -1,7 +1,6 @@
-fix: thread länge wird nicht angezeigt
-fix: die actions ins der meassage teamplate schließen nicht sauber
+fix: die actions ins der meassage teamplate schließen nicht sauber nur noch der emoji pre selector
 test: test implementieren
-fix: contacbar scrollt zu spät
+fix: contacbar scrollt zu spät höhe vom container passt nicht
 refactor: buttons vereinheitlichen
 refactor: inputs vereinheitlichen
 refactor card header, card main, card footer komponenten
@@ -18,5 +17,10 @@ fix: im header wenn eigelogt kann man das menü nicht öffen nur das profil
 funktion decorator wie privat, public und readonly implementieren
 doc: docu erweitern
 feat: authguard erstellen
-fix: im impressum. datenschutz kommt man nicht über pfeil zurück
 refactor: datenschutz container ist komisch blocksatz
+fix: bei mehrmaligen klicken auf den mention button wird immer ein neus tag hinzugefügt aber es sollte dann schlißen und den tag entfernen wenn keine auswahl ist.
+fix beim klick auf die pre emoji button öffent auch das ander action menu der message
+fix: wenn emoji picker offen in texarea bei klick auf den tag auswahl menü wieder schließen von emoji
+refactor: keine button direktive sondern wirklich eine komponente
+refacor: auth header den anderen header seperat in zwei komponents
+feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt

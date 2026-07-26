@@ -4,85 +4,27 @@ app-header {
   max-width: 1920px;
 }
 
-.borderbox {
-  background-color: #eceefe;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  height: 88%;
-  @media (max-width: 429px) {
-    height: 90%;
-  }
-  .box {
-    max-width: 1920px;
-    width: 80%;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: #ffffff;
-    flex-direction: column;
-    padding: 48px 50px;
-    @media (max-width: 743px) {
-      height: unset;
-      width: 80%;
-    }
-    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
-      height: 92%;
-    }
-    @media (max-width: 400px) {
-      padding: 25px 25px;
-    }
-    @media (max-width: 370px) {
-      padding: 25px 8px;
-    }
-    > div:nth-child(1) {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 32px;
-      height: 100%;
-      overflow-y: scroll;
-      padding-right: 25px;
-      @media (max-width: 370px) {
-        padding-right: unset;
-      }
+:host {
+  display: grid;
+  height: 100svh;
+}
 
-      > div:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        text-align: left;
-        max-width: 800px;
-        > h1:nth-child(1) {
-          font-weight: 700;
-          font-size: 46px;
-          line-height: 55.2px;
-          color: #444df2;
-          @media (max-width: 600px) {
-            font-size: 1.5rem;
-          }
-        }
-      }
-      > div:nth-child(3) {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        > h2:nth-child(1) {
-          font-weight: 700;
-          font-size: 46px;
-          line-height: 55.2px;
-          color: #444df2;
-          @media (max-width: 600px) {
-            font-size: 1.5rem;
-          }
-        }
-        > span {
-          font-weight: 400;
-          font-size: 2rem;
-          color: black;
-        }
-      }
-    }
-  }
+main {
+  overflow: auto;
+}
+
+.card-header {
+  display: flex;
+}
+
+.card {
+  margin: 0 2rem 2rem;
+  display: flex;
+  max-width: 1920px;
+  border-radius: 30px;
+  background-color: #ffffff;
+  flex-direction: column;
+  padding: 48px 50px;
+  overflow: hidden;
+  text-align: justify;
 }
