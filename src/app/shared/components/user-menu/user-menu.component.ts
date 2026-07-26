@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
@@ -14,7 +15,7 @@ import { ButtonComponent } from '../button/button.component';
 })
 export class UserMenuComponent {
   private authService: AuthService = inject(AuthService);
-  private dialogRef = inject(MatDialogRef<UserMenuComponent>);
+  private bottomSheetRef = inject(MatBottomSheetRef<UserMenuComponent>);
   private dialog = inject(MatDialog);
 
   /**
@@ -29,6 +30,6 @@ export class UserMenuComponent {
    */
   logOut() {
     this.authService.logOut();
-    this.dialogRef.close();
+    this.bottomSheetRef.dismiss();
   }
 }

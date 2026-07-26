@@ -8,6 +8,10 @@ section {
 
 .main-chat-container {
   padding: 0 1em;
+
+  @media (width < 1024px) {
+    padding: 0;
+  }
 }
 
 .thread-container {

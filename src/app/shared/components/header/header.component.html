@@ -2,29 +2,31 @@
   <div class="logo-container">
     <a routerLink="/login"><img src="img/headerlogo.png" alt="" /></a>
   </div>
-  <div class="searchbar">
-    @if (searchService.getHeaderListBoolean()) {
-      <div class="tag-container">
-        <app-search-result [(input)]="input"></app-search-result>
-      </div>
-    }
+  @if (!navigationService.isMobile()) {
+    <div class="searchbar">
+      @if (searchService.getHeaderListBoolean()) {
+        <div class="tag-container">
+          <app-search-result [(input)]="input"></app-search-result>
+        </div>
+      }
 
-    @if (!navigationService.isContactbarPage() && !navigationService.isMobile() && !navigationService.isAuthPage()) {
-      <div class="input">
-        <app-input
-          appearance="filled"
-          [(ngModel)]="input"
-          (input)="searchService.observeInput(input, 'header')"
-          (click)="searchService.closeList()"
-          type="text"
-          placeholder="Devspace durchsuchen"
-          ariaLabel="Devspace durchsuchen"
-        >
-          <mat-icon appInputSuffix>search</mat-icon>
-        </app-input>
-      </div>
-    }
-  </div>
+      @if (!navigationService.isContactbarPage() && !navigationService.isMobile() && !navigationService.isAuthPage()) {
+        <div class="input">
+          <app-input
+            appearance="filled"
+            [(ngModel)]="input"
+            (input)="searchService.observeInput(input, 'header')"
+            (click)="searchService.closeList()"
+            type="text"
+            placeholder="Devspace durchsuchen"
+            ariaLabel="Devspace durchsuchen"
+          >
+            <mat-icon appInputSuffix>search</mat-icon>
+          </app-input>
+        </div>
+      }
+    </div>
+  }
 
   @if (navigationService.isAuthPage()) {
     <div class="signup">

@@ -12,6 +12,14 @@ section {
   background-color: white;
   border-radius: 30px;
   gap: 25px;
+
+  @media (width<1024px) {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 12px;
+    height: 100svh;
+    border-radius: 0;
+  }
 }
 
 .headline__container {
@@ -29,6 +37,17 @@ section {
       width: 60px;
       aspect-ratio: 1;
     }
+  }
+}
+
+.scroll__wrapper {
+  display: grid;
+  gap: 20px;
+  height: 100%;
+  overflow-y: auto;
+
+  @media (width < 1024px) {
+    padding: 0 16px;
   }
 }
 
@@ -102,6 +121,11 @@ section {
 
 .add__channel__btn {
   justify-content: center;
+
+  @media (max-width: 1023px) {
+    color: var(--dark-purple);
+    font-size: 17px;
+  }
 }
 
 .searchbar {
@@ -115,25 +139,6 @@ section {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-@media (max-width: 1023px) {
-  section {
-    flex: 1;
-    margin: 0;
-    padding: 0;
-    max-height: 100svh;
-    border-radius: 0;
-
-    app-header {
-      width: 100%;
-    }
-  }
-
-  .add__channel__btn {
-    color: var(--dark-purple);
-    font-size: 17px;
-  }
 }
 
 .add-message-btn-mobile {
@@ -197,4 +202,9 @@ section {
 .guest-msg-pos {
   bottom: -30px !important;
   left: -280% !important;
+}
+
+.search__title {
+  font-size: 1.125rem;
+  font-weight: 700;
 }
