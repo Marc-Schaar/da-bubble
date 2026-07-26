@@ -13,36 +13,49 @@
     <section>
       <div class="box">
         <mat-icon class="material-symbols-outlined">person</mat-icon>
-        <input name="displayName" type="text" formControlName="displayName" placeholder="Name und Nachname" />
+        <input
+          appInput
+          #displayNameField="appInput"
+          [invalid]="!!getDisplayNameError()"
+          name="displayName"
+          type="text"
+          formControlName="displayName"
+          placeholder="Name und Nachname"
+        />
       </div>
-      @if (
-        registerForm.get("displayName")?.invalid && (registerForm.get("displayName")?.touched || registerForm.get("displayName")?.dirty)
-      ) {
-        <span class="error">Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen</span>
-      }
+      <app-field-error [id]="displayNameField.id + '-error'" [message]="getDisplayNameError()" />
     </section>
 
     <section>
       <div class="box">
         <mat-icon class="material-symbols-outlined">mail</mat-icon>
-        <input name="email" type="email" formControlName="email" placeholder="beispielname@email.com" />
+        <input
+          appInput
+          #emailField="appInput"
+          [invalid]="!!getEmailError()"
+          name="email"
+          type="email"
+          formControlName="email"
+          placeholder="beispielname@email.com"
+        />
       </div>
-      @if (registerForm.get("email")?.invalid && (registerForm.get("email")?.touched || registerForm.get("email")?.dirty)) {
-        <span class="error">*Diese E-Mail-Adresse ist leider ungültig.</span>
-      }
+      <app-field-error [id]="emailField.id + '-error'" [message]="getEmailError()" />
     </section>
 
     <section>
       <div class="box">
         <mat-icon class="material-symbols-outlined">lock</mat-icon>
-        <input name="password" type="password" formControlName="password" placeholder="Passwort" />
+        <input
+          appInput
+          #passwordField="appInput"
+          [invalid]="!!getPasswordError()"
+          name="password"
+          type="password"
+          formControlName="password"
+          placeholder="Passwort"
+        />
       </div>
-      @if (registerForm.get("password")?.invalid && (registerForm.get("password")?.touched || registerForm.get("password")?.dirty)) {
-        <span class="error"
-          >Bitte geben Sie ein Passwort ein. Es muss mindestens 6 Zeichen lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine
-          Zahl enthalten.</span
-        >
-      }
+      <app-field-error [id]="passwordField.id + '-error'" [message]="getPasswordError()" />
     </section>
 
     <section class="legal-text">

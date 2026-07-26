@@ -13,6 +13,9 @@
         <label class="form__field__label" for="channelName">Channel-Name</label>
         <div class="form__field__input-wrapper form__field__input-wrapper--hash">
           <input
+            appInput
+            #channelNameField="appInput"
+            [invalid]="!!getChannelNameError()"
             class="form__input"
             id="channelName"
             type="text"
@@ -25,17 +28,7 @@
             <span class="form__status">Prüfe Verfügbarkeit...</span>
           }
 
-          @if (channelForm.get("name")?.errors?.["nameTaken"]) {
-            <span class="form__error">Dieser Name ist bereits vergeben.</span>
-          }
-
-          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["required"]) {
-            <span class="form__error">Name ist erforderlich.</span>
-          }
-
-          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["minlength"]) {
-            <span class="form__error">Mindestens 3 Zeichen erforderlich.</span>
-          }
+          <app-field-error [id]="channelNameField.id + '-error'" [message]="getChannelNameError()" />
         </div>
       </div>
 

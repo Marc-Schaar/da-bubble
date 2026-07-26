@@ -8,10 +8,12 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { AuthService } from '../../services/auth/auth.service';
 import { createForgotPasswordForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
 
 @Component({
   selector: 'app-forgotpassword',
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective],
+  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective, InputDirective, FieldErrorComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
@@ -44,5 +46,13 @@ export class ForgotpasswordComponent {
       this.isOverlayActive = false;
       this.submitted = false;
     }, 1500);
+  }
+
+  protected getEmailError(): string | null {
+    const control = this.forgotPasswordForm.controls['email'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return '*Diese E-Mail-Adresse ist leider ungültig.';
+    }
+    return null;
   }
 }

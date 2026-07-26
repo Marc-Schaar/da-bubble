@@ -8,11 +8,13 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
 
 @Component({
   selector: 'app-resetpassword',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective],
+  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective, InputDirective, FieldErrorComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
@@ -61,5 +63,21 @@ export class ResetpasswordComponent implements OnInit {
         this.isOverlayActive = false;
       }, 1500);
     }
+  }
+
+  protected getPasswordError(): string | null {
+    const control = this.resetPasswordForm.controls['password'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return 'Das Passwort muss mindestens 6 Zeichen lang sein und einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten.';
+    }
+    return null;
+  }
+
+  protected getPasswordConfirmError(): string | null {
+    const control = this.resetPasswordForm.controls['passwordConfirm'];
+    if (control.touched && this.resetPasswordForm.errors?.['passwordMismatch']) {
+      return 'Die Passwörter stimmen nicht überein.';
+    }
+    return null;
   }
 }

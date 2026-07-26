@@ -16,10 +16,22 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 import { User } from '../../../auth/models/user/user';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
 
 @Component({
   selector: 'app-add-channel',
-  imports: [CommonModule, FormsModule, MatRadioModule, MatIcon, ReactiveFormsModule, ProfileStatusComponent, ButtonDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatRadioModule,
+    MatIcon,
+    ReactiveFormsModule,
+    ProfileStatusComponent,
+    ButtonDirective,
+    InputDirective,
+    FieldErrorComponent,
+  ],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],
 })
@@ -117,5 +129,13 @@ export class AddChannelComponent {
 
   public closeDialog() {
     this.dialogRef.close();
+  }
+
+  protected getChannelNameError(): string | null {
+    const control = this.channelForm.controls.name;
+    if (control.errors?.['nameTaken']) return 'Dieser Name ist bereits vergeben.';
+    if (control.touched && control.errors?.['required']) return 'Name ist erforderlich.';
+    if (control.touched && control.errors?.['minlength']) return 'Mindestens 3 Zeichen erforderlich.';
+    return null;
   }
 }

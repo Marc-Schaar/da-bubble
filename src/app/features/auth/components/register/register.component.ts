@@ -6,10 +6,12 @@ import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createRegisterForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, MatIcon, RouterLink, ReactiveFormsModule, ButtonDirective],
+  imports: [FormsModule, MatIcon, RouterLink, ReactiveFormsModule, ButtonDirective, InputDirective, FieldErrorComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -25,5 +27,29 @@ export class RegisterComponent {
     }
     this.authService.setStep1Data(this.registerForm.getRawValue());
     this.navigationService.gotToAvatarSelection();
+  }
+
+  protected getDisplayNameError(): string | null {
+    const control = this.registerForm.controls['displayName'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return 'Bitte schreiben Sie einen Namen. Mindestens 5 Zeichen';
+    }
+    return null;
+  }
+
+  protected getEmailError(): string | null {
+    const control = this.registerForm.controls['email'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return '*Diese E-Mail-Adresse ist leider ungültig.';
+    }
+    return null;
+  }
+
+  protected getPasswordError(): string | null {
+    const control = this.registerForm.controls['password'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return 'Bitte geben Sie ein Passwort ein. Es muss mindestens 6 Zeichen lang sein, einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten.';
+    }
+    return null;
   }
 }
