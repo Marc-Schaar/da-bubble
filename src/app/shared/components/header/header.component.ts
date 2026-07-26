@@ -3,25 +3,35 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SearchResultComponent } from '../search-result/search-result.component';
 
-import { UserService } from '../../services/user/shared.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { SearchService } from '../../services/search/search.service';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
-import { filter } from 'rxjs';
 import { InputComponent } from '../input/input.component';
+import { ButtonComponent } from '../button/button.component';
+import { ProfileStatusComponent } from '../profile-status/profile-status.component';
 
 @Component({
   selector: 'app-header',
-  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule, InputComponent],
+  imports: [
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    SearchResultComponent,
+    RouterModule,
+    InputComponent,
+    ButtonComponent,
+    ProfileStatusComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -34,8 +44,6 @@ export class HeaderComponent {
   private bottomSheet = inject(MatBottomSheet);
   isProfileCard: boolean = false;
   public input: string = '';
-
-  private router = inject(Router);
 
   /**
    * Zentrale Methode, um die URL zu prüfen und das Signal zu setzen

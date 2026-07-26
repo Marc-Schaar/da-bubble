@@ -9,6 +9,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileStatusComponent {
-  photoUrl = input.required<string>();
+  photoUrl = input.required<string | undefined>();
   online = input<boolean>(false);
 }

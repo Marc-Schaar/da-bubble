@@ -2,7 +2,9 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: var(--contactbar-width) 1fr auto;
+  align-items: center;
   padding: 20px;
+  gap: 1em;
   width: 100%;
   max-width: 1920px;
 }
@@ -71,45 +73,61 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-left: 24px;
 
-  > div:nth-child(1) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  app-button.menu__triger__btn {
+    font-weight: 700;
+    font-size: 2rem;
 
-    img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      cursor: pointer;
-      @media (max-width: 1023px) {
-        width: 50px;
-        height: 50px;
-      }
+    ::ng-deep button {
+      gap: 1.25rem;
     }
 
-    > span:nth-child(1) {
-      font-weight: 700;
-      font-size: 32px;
-      color: #000000;
-      @media (max-width: 1023px) {
-        display: none;
-      }
+    @media (max-width: 1023px) {
+      display: none;
     }
   }
 }
 
 .input {
-  display: flex;
-  align-items: center;
-
   app-input {
     --app-input-bg: white;
     --app-input-radius: 42px;
-    --app-input-padding: 17.5px 20px 17.5px 45px;
-    --app-input-font-size: 26px;
+    --app-input-padding: 1.1rem 1ch 1.1rem 2.813rem;
+    --app-input-font-size: 1.5rem;
     flex: 1;
+    ::ng-deep {
+      .app-input__control {
+        outline: 1px solid var(--bg-color);
+        transition: all 0.125s ease-in-out;
+      }
+
+      .app-input__suffix {
+        padding-right: 2.813rem;
+        margin: 0;
+        color: var(--text-grey);
+      }
+    }
+
+    &:hover ::ng-deep {
+      .app-input__control {
+        outline: 1px solid var(--medium-purple);
+      }
+      .app-input__suffix {
+        color: var(--medium-purple);
+      }
+    }
+
+    &:focus-within {
+      ::ng-deep {
+        .app-input__control {
+          outline: 1px solid var(--dark-purple);
+        }
+
+        .app-input__suffix {
+          color: var(--dark-purple);
+        }
+      }
+    }
   }
 }
 
