@@ -6,13 +6,12 @@
     <div class="header gap-20">
       <h1 class="newText">Neue Nachricht</h1>
 
-      <input
-        appInput
+      <app-input
         [(ngModel)]="input"
         (input)="searchService.observeInput(input, 'newMessage')"
         type="text"
         placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse"
-        aria-label="An: #Channel, oder @jemand oder E-Mail-Adresse"
+        ariaLabel="An: #Channel, oder @jemand oder E-Mail-Adresse"
       />
     </div>
 

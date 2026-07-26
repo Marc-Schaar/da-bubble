@@ -167,19 +167,9 @@ button {
 }
 
 .input {
-  border-radius: 42px;
-  padding: 8px 24px;
-  background-color: #ffff;
-  outline: 1px solid var(--light-purple);
   display: flex;
   align-items: center;
-
-  input {
-    border: none;
-    outline: none;
-    font-size: 17px;
-    height: 32px;
-  }
+  gap: 8px;
 }
 
 .lists {

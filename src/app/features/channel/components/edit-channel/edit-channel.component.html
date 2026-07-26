@@ -13,17 +13,15 @@
         <button appButton variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</button>
       </div>
       @if (channelNameEdit) {
-        <div class="input-wrapper">
-          <input
-            appInput
-            type="text"
-            name="channelname-input"
-            aria-label="Channelname"
-            [(ngModel)]="tempName"
-            placeholder="Channelname"
-            (keyup.enter)="onEditChannelName()"
-          />
-        </div>
+        <app-input
+          prefixText="#"
+          type="text"
+          name="channelname-input"
+          ariaLabel="Channelname"
+          [(ngModel)]="tempName"
+          placeholder="Channelname"
+          (keyup.enter)="onEditChannelName()"
+        />
       } @else {
         <div># {{ channelService.currentChannel()?.name }}</div>
       }
@@ -38,14 +36,14 @@
       </div>
 
       @if (channelDescriptionEdit) {
-        <textarea
-          appInput
+        <app-input
+          multiline
           name=""
           id="changeDescriptionInput"
-          aria-label="Beschreibung"
+          ariaLabel="Beschreibung"
           [(ngModel)]="tempDescription"
           (keyup.enter)="onEditChannelDescription()"
-        ></textarea>
+        />
       } @else {
         <div class="content--description">
           {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
@@ -111,10 +109,8 @@
       }
 
       <div class="input-wrapper">
-        <input
-          appInput
-          class="user-search-bar"
-          aria-label="Name eingeben"
+        <app-input
+          ariaLabel="Name eingeben"
           [ngModel]="channelService.userSearchQuery()"
           (ngModelChange)="channelService.userSearchQuery.set($event)"
           (input)="onSearchInput($event)"

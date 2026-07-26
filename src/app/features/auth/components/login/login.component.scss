@@ -12,33 +12,6 @@
   }
 }
 
-.input-box {
-  position: relative;
-  width: 100%;
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-color);
-  border-radius: 100px;
-  color: var(--text-grey);
-
-  input {
-    border-radius: 100px;
-    font-size: 1rem;
-    width: 100%;
-    padding: 1.125em 0 1.125em 3.75em;
-    border: none;
-    outline: none;
-    background: none;
-  }
-  mat-icon {
-    position: absolute;
-    left: 20px;
-  }
-}
-
 .form {
   text-align: center;
   display: flex;

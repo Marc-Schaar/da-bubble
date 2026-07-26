@@ -2,26 +2,15 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createLoginForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
-import { InputDirective } from '../../../../shared/components/input/input.directive';
-import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    RouterLink,
-    MatDividerModule,
-    FormsModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    ButtonDirective,
-    InputDirective,
-    FieldErrorComponent,
-  ],
+  imports: [RouterLink, MatDividerModule, FormsModule, ReactiveFormsModule, ButtonDirective, InputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

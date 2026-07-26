@@ -16,22 +16,11 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 import { User } from '../../../auth/models/user/user';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
-import { InputDirective } from '../../../../shared/components/input/input.directive';
-import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-add-channel',
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatRadioModule,
-    MatIcon,
-    ReactiveFormsModule,
-    ProfileStatusComponent,
-    ButtonDirective,
-    InputDirective,
-    FieldErrorComponent,
-  ],
+  imports: [CommonModule, FormsModule, MatRadioModule, MatIcon, ReactiveFormsModule, ProfileStatusComponent, ButtonDirective, InputComponent],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],
 })

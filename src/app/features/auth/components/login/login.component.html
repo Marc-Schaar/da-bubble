@@ -5,36 +5,32 @@
   </header>
 
   <form class="input-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="loginForm">
-    <div class="full-width input-box">
-      <div class="full-width input-row">
-        <input
-          appInput
-          #emailField="appInput"
-          [invalid]="!!getEmailError()"
-          type="email"
-          name="email"
-          formControlName="email"
-          placeholder="beispielname@email.com"
-        />
-        <mat-icon class="material-symbols-outlined">email</mat-icon>
-      </div>
-      <app-field-error [id]="emailField.id + '-error'" [message]="getEmailError()" />
+    <div class="full-width">
+      <app-input
+        appearance="filled"
+        icon="email"
+        type="email"
+        name="email"
+        formControlName="email"
+        placeholder="beispielname@email.com"
+        ariaLabel="E-Mail-Adresse"
+        [invalid]="!!getEmailError()"
+        [errorMessage]="getEmailError()"
+      />
     </div>
 
-    <div class="full-width input-box">
-      <div class="full-width input-row">
-        <input
-          appInput
-          #passwordField="appInput"
-          [invalid]="!!getPasswordError()"
-          type="password"
-          name="password"
-          formControlName="password"
-          placeholder="Passwort"
-        />
-        <mat-icon class="material-symbols-outlined">lock</mat-icon>
-      </div>
-      <app-field-error [id]="passwordField.id + '-error'" [message]="getPasswordError()" />
+    <div class="full-width">
+      <app-input
+        appearance="filled"
+        icon="lock"
+        type="password"
+        name="password"
+        formControlName="password"
+        placeholder="Passwort"
+        ariaLabel="Passwort"
+        [invalid]="!!getPasswordError()"
+        [errorMessage]="getPasswordError()"
+      />
     </div>
   </form>
 

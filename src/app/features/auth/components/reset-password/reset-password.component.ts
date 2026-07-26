@@ -8,13 +8,12 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
 import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
-import { InputDirective } from '../../../../shared/components/input/input.directive';
-import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-resetpassword',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective, InputDirective, FieldErrorComponent],
+  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective, InputComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })

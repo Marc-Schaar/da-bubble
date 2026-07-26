@@ -11,25 +11,21 @@
     <form class="form" (ngSubmit)="onFirstStepSubmit()" [formGroup]="channelForm">
       <div class="form__field">
         <label class="form__field__label" for="channelName">Channel-Name</label>
-        <div class="form__field__input-wrapper form__field__input-wrapper--hash">
-          <input
-            appInput
-            #channelNameField="appInput"
-            [invalid]="!!getChannelNameError()"
-            class="form__input"
-            id="channelName"
-            type="text"
-            placeholder="z.B. Kooperationsprojekte"
-            formControlName="name"
-            name="channelName"
-          />
+        <app-input
+          prefixText="#"
+          id="channelName"
+          type="text"
+          placeholder="z.B. Kooperationsprojekte"
+          formControlName="name"
+          name="channelName"
+          ariaLabel="Channel-Name"
+          [invalid]="!!getChannelNameError()"
+          [errorMessage]="getChannelNameError()"
+        />
 
-          @if (channelForm.get("name")?.pending) {
-            <span class="form__status">Prüfe Verfügbarkeit...</span>
-          }
-
-          <app-field-error [id]="channelNameField.id + '-error'" [message]="getChannelNameError()" />
-        </div>
+        @if (channelForm.get("name")?.pending) {
+          <span class="form__status">Prüfe Verfügbarkeit...</span>
+        }
       </div>
 
       <div class="form__field">
@@ -107,15 +103,13 @@
             }
           </ul>
 
-          <input
-            appInput
+          <app-input
             placeholder="Name eingeben"
-            aria-label="Name eingeben"
+            ariaLabel="Name eingeben"
             [(ngModel)]="channelService.userSearchQuery"
             name="search"
-            (focus)="showUserBar.set(true)"
+            (focused)="showUserBar.set(true)"
             autocomplete="off"
-            class="choose-user__input"
           />
         </div>
       }

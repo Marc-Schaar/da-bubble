@@ -62,36 +62,10 @@
       align-items: center;
       cursor: pointer;
     }
-
-    &__input-wrapper {
-      position: relative;
-      width: 100%;
-
-      &--hash {
-        &::before {
-          content: "#";
-          position: absolute;
-          left: 20px;
-          top: 0;
-          transform: translateY(20%);
-          font-size: 1.5rem;
-          color: rgba(104, 104, 104, 1);
-          pointer-events: none;
-        }
-      }
-    }
   }
 
-  &__input,
   &__textarea {
     @extend %input-style;
-  }
-
-  &__input {
-    padding: 12px 20px 12px 40px;
-  }
-
-  &__textarea {
     padding: 20px;
     min-height: 60px;
     resize: none;
@@ -172,12 +146,6 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-  }
-
-  &__input {
-    padding: 10px;
-    margin-top: 12px;
-    @extend %input-style;
   }
 
   &__bar {

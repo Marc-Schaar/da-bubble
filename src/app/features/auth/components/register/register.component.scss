@@ -33,36 +33,6 @@
     gap: 5px;
   }
 
-  .box {
-    border-radius: 100px;
-    display: flex;
-    width: 100%;
-    align-items: center;
-    background-color: var(--bg-color);
-    color: var(--text-grey);
-    position: relative;
-
-    input {
-      padding: 1em 0 1em 3.75em;
-      border-radius: 100px;
-
-      border: none;
-      background: none;
-      font-size: 1rem;
-      font-weight: 500;
-      width: 100%;
-
-      &:focus-visible {
-        outline: unset;
-      }
-    }
-
-    mat-icon {
-      position: absolute;
-      left: 20px;
-    }
-  }
-
   .error {
     font-size: 14px;
     color: #ed1e79;

@@ -25,15 +25,14 @@
     @if (this.navigationService.isMobile() && navigationService.isContactbarPage()) {
       <div class="searchbar">
         <div class="input">
-          <input
-            appInput
+          <app-input
+            appearance="filled"
             (click)="isClicked = true"
             [(ngModel)]="input"
             (input)="searchService.observeInput(input, 'header')"
             type="text"
             placeholder="Gehe zu ..."
-            aria-label="Gehe zu ..."
-            class="full-width"
+            ariaLabel="Gehe zu ..."
           />
           <mat-icon>search</mat-icon>
         </div>

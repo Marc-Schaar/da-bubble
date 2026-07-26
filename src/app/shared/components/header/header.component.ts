@@ -17,22 +17,11 @@ import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
-import { ButtonDirective } from '../button/button.directive';
-import { InputDirective } from '../input/input.directive';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-header',
-  imports: [
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    CommonModule,
-    FormsModule,
-    SearchResultComponent,
-    RouterModule,
-    ButtonDirective,
-    InputDirective,
-  ],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule, InputComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

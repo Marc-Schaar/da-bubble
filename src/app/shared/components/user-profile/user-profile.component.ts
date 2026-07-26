@@ -8,11 +8,11 @@ import { DialogHeaderComponent } from '../dialog-header/dialog-header.component'
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { ButtonDirective } from '../button/button.directive';
-import { InputDirective } from '../input/input.directive';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [FormsModule, MatIcon, DialogHeaderComponent, ButtonDirective, InputDirective],
+  imports: [FormsModule, MatIcon, DialogHeaderComponent, ButtonDirective, InputComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

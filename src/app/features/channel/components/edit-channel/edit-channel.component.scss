@@ -139,47 +139,6 @@ button {
 
 .input-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 1px solid rgba(173, 176, 217, 1);
-  border-radius: 30px;
-  padding: 8px 16px;
-
-  &::before {
-    content: "#";
-    font-weight: 700;
-    margin-right: 8px;
-    font-size: 1.1rem;
-    pointer-events: none;
-  }
-
-  input {
-    border: none;
-    width: 100%;
-    padding: 8px 0;
-    font-size: 1.1rem;
-    &:focus-visible {
-      outline: none;
-    }
-  }
-}
-
-input,
-textarea {
-  border-radius: 30px;
-  border: 1px solid rgba(173, 176, 217, 1);
-  width: 100%;
-  padding: 20px;
-  field-sizing: content;
-  min-height: 1.25rem;
-  max-height: 200px;
-  &:hover {
-    border: 1px solid var(--medium-purple);
-  }
-  &:focus-visible {
-    border: 1px solid var(--dark-purple-text);
-  }
 }
 
 li {

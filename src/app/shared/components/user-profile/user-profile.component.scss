@@ -128,16 +128,6 @@ button {
         }
       }
     }
-    > div:nth-child(2) {
-      padding: 15px 20px;
-      border-radius: 30px;
-      border: 1px solid #adb0d9;
-      > input:nth-child(1) {
-        background: none;
-        outline: none;
-        border: none;
-      }
-    }
   }
   > div:nth-child(2) {
     display: flex;

@@ -13,7 +13,7 @@ import { isChannel } from '../../../../shared/utils/receiver.util';
 import { Channel } from '../../../channel/models/channel/channel';
 import { User } from '../../../auth/models/user/user';
 import { MessagesService } from '../../services/messages/messages.service';
-import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-newmessage',
@@ -24,7 +24,7 @@ import { InputDirective } from '../../../../shared/components/input/input.direct
     MatIconModule,
     ChatHeaderComponent,
     SearchResultComponent,
-    InputDirective,
+    InputComponent,
   ],
   templateUrl: './chat-new.component.html',
   styleUrl: './chat-new.component.scss',

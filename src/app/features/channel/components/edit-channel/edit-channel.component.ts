@@ -10,11 +10,11 @@ import { ChannelService } from '../../services/channel/channel.service';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
-import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonDirective, InputDirective],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonDirective, InputComponent],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
 })
