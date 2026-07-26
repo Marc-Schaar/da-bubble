@@ -4,7 +4,7 @@
 <main>
   <section (click)="hideList()">
     <div class="chat-header">
-      <button (click)="showProfile()">
+      <button appButton variant="plain" (click)="showProfile()">
         <app-profile-status [photoUrl]="currentReceiver()!.photoUrl" [online]="currentReceiver()!.online"></app-profile-status>
         {{ currentReceiver()?.displayName }}
       </button>
