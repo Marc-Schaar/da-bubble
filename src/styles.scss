@@ -54,6 +54,8 @@
 }
 
 * {
+  margin: 0;
+  padding: 0;
   scroll-behavior: smooth;
   box-sizing: border-box;
   @include custom-scrollbar();
@@ -61,9 +63,6 @@
 
 html,
 body {
-  margin: 0;
-
-  padding: 0;
   height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -73,15 +72,8 @@ body {
   font-family: Nunito, "Helvetica Neue", sans-serif;
   background-color: var(--bg-color);
 }
-h1,
-h2,
-h3,
-h4.h5.h5.h7 {
-  margin: 0;
-}
 
 h1 {
-  margin: 0;
   font-size: clamp(1.75rem, 5vw, 2.875rem);
 }
 
