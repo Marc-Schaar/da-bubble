@@ -4,6 +4,7 @@
 
 section {
   display: grid;
+  align-content: flex-start;
   overflow: clip;
   margin-right: 1rem;
   padding: 2rem 1.875rem;
@@ -13,36 +14,22 @@ section {
   gap: 25px;
 }
 
-.headline {
+.headline__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 60px;
 
-  > div {
-    width: 100%;
-    max-width: 250px;
+  &__logo__wrapper {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     gap: 15px;
 
-    > img {
+    &__logo {
       width: 60px;
-      height: 60px;
+      aspect-ratio: 1;
     }
   }
-}
-
-.contactbar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-  min-height: calc(100svh - 106px);
-  overflow: auto;
-  height: 100%;
 }
 
 .dropdown {
@@ -76,21 +63,18 @@ section {
     }
 
     &__item {
+      margin-left: 24px;
       &:first-child {
         margin-top: 20px;
       }
 
-      &:last-child {
-        margin-bottom: 20px;
-      }
       display: flex;
       align-items: center;
-      width: 100%;
       gap: 10px;
-      padding: 4px 20px;
+      padding: 0.375ch 1.25rem;
       cursor: pointer;
       transition: all 0.125s ease-in-out;
-      border-radius: 20px;
+      border-radius: 5ch;
       font-size: 1.125rem;
 
       &:hover {
@@ -112,41 +96,16 @@ section {
   }
 }
 
-.addButton {
-  padding: 3px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.125s ease-in-out;
-
-  &:hover {
-    background-color: var(--bg-color);
-    color: var(--dark-purple);
-  }
-}
-
 .rotate {
   transform: rotate(-90deg);
 }
 
-.addChannel {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 4px 10px;
-  font-size: 1.125rem;
-  cursor: pointer;
-  transition: all 0.125s ease-in-out;
-  &:hover {
-    color: var(--dark-purple);
-  }
-  @media (max-width: 1023px) {
-    align-self: baseline;
-    margin-left: 17px;
-  }
-}
-
 .pin-right-bottom-mobile {
   display: none;
+}
+
+.add__channel__btn {
+  justify-content: center;
 }
 
 .searchbar {
@@ -238,7 +197,7 @@ section {
     }
   }
 
-  .addChannel {
+  .add__channel__btn {
     color: var(--dark-purple);
     font-size: 17px;
   }
@@ -271,18 +230,6 @@ section {
   padding: 20px 21px;
 }
 
-@media (max-width: 1023px) {
-  main {
-    margin: 0;
-  }
-}
-
-@media (max-width: 500px) {
-  .contactbar {
-    padding: 0 40px;
-  }
-}
-
 .background {
   position: fixed;
   top: 0;
@@ -294,6 +241,7 @@ section {
 }
 
 .tooltip-cont {
+  display: contents;
   position: relative;
   align-self: baseline;
   .tooltip {

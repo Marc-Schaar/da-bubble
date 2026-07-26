@@ -1,11 +1,11 @@
-<section class="column align-center">
+<section>
   @if (navigationService.isMobile()) {
     <app-header></app-header>
   }
 
-  <div class="headline">
-    <div>
-      <img src="img/workspace-logo.svg" alt="" />
+  <div class="headline__container">
+    <div class="headline__container__logo__wrapper">
+      <img class="headline__container__logo__wrapper__logo" src="img/workspace-logo.svg" alt="" />
       <h2>Devspace</h2>
     </div>
     <app-button variant="icon" ariaLabel="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
@@ -44,72 +44,69 @@
     </div>
   }
   @if (!isClicked) {
-    <div class="contactbar">
-      <div class="dropdown">
-        <div class="dropdown__title">
-          <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
-            <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
-            <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
-            Channels
-          </app-button>
-
-          <div class="tooltip-cont">
-            <app-button variant="icon" ariaLabel="Channel hinzufügen" (click)="openAddChannel()">
-              <mat-icon>add</mat-icon>
-            </app-button>
-
-            <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-          </div>
-        </div>
-
-        <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
-          @for (channel of firestoreService.myChannels(); track channel.id) {
-            <li
-              class="dropdown__list__item"
-              (click)="navigationService.selectChannel(channel.id!)"
-              [class.active-link]="router.url.includes('channel/' + channel.id)"
-            >
-              <mat-icon class="material-symbols-outlined">tag</mat-icon>
-              <span>{{ channel.name }}</span>
-            </li>
-          } @empty {
-            No Channel found
-          }
-        </ul>
-      </div>
-      <div class="tooltip-cont">
-        <app-button variant="plain" class="addChannel" (click)="openAddChannel()">
-          <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
-          Channel hinzufügen
+    <div class="dropdown">
+      <div class="dropdown__title">
+        <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
+          <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
+          <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
+          Channels
         </app-button>
-        <span class="tooltip">Zugang für Gäste gesperrt</span>
-      </div>
 
-      <div class="dropdown">
-        <div class="dropdown__title">
-          <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
-            <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()">
-              arrow_drop_down</mat-icon
-            >
-            <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
-            Direktnachrichten
+        <div class="tooltip-cont">
+          <app-button variant="icon" ariaLabel="Channel hinzufügen" (click)="openAddChannel()">
+            <mat-icon>add</mat-icon>
           </app-button>
-        </div>
 
-        <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
-          @for (user of firestoreService.allUsers(); track user.id) {
-            <li
-              class="dropdown__list__item"
-              (click)="navigationService.selectDirectMessageRecipient(user.id)"
-              [class.active-link]="router.url.includes('direct/' + user.id)"
-            >
-              <app-user-list-item [user]="user"></app-user-list-item>
-            </li>
-          } @empty {
-            No User found
-          }
-        </ul>
+          <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
+        </div>
       </div>
+
+      <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
+        @for (channel of firestoreService.myChannels(); track channel.id) {
+          <li
+            class="dropdown__list__item"
+            (click)="navigationService.selectChannel(channel.id!)"
+            [class.active-link]="router.url.includes('channel/' + channel.id)"
+          >
+            <mat-icon class="material-symbols-outlined">tag</mat-icon>
+            <span>{{ channel.name }}</span>
+          </li>
+        } @empty {
+          No Channel found
+        }
+      </ul>
+    </div>
+
+    <div class="tooltip-cont">
+      <app-button variant="plain" class="add__channel__btn" (click)="openAddChannel()">
+        <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
+        Channel hinzufügen
+      </app-button>
+      <span class="tooltip">Zugang für Gäste gesperrt</span>
+    </div>
+
+    <div class="dropdown">
+      <div class="dropdown__title">
+        <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
+          <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()"> arrow_drop_down</mat-icon>
+          <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+          Direktnachrichten
+        </app-button>
+      </div>
+
+      <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
+        @for (user of firestoreService.allUsers(); track user.id) {
+          <li
+            class="dropdown__list__item"
+            (click)="navigationService.selectDirectMessageRecipient(user.id)"
+            [class.active-link]="router.url.includes('direct/' + user.id)"
+          >
+            <app-user-list-item [user]="user"></app-user-list-item>
+          </li>
+        } @empty {
+          No User found
+        }
+      </ul>
     </div>
   }
 </section>
