@@ -54,8 +54,6 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
   scroll-behavior: smooth;
   box-sizing: border-box;
   @include custom-scrollbar();
@@ -63,23 +61,36 @@
 
 html,
 body {
+  margin: 0;
+
+  padding: 0;
   height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
 body {
-  margin: 0;
   font-family: Nunito, "Helvetica Neue", sans-serif;
   background-color: var(--bg-color);
 }
+h1,
+h2,
+h3,
+h4.h5.h5.h7 {
+  margin: 0;
+}
 
 h1 {
+  margin: 0;
   font-size: clamp(1.75rem, 5vw, 2.875rem);
 }
 
 h2 {
   font-size: clamp(1.25rem, 2vw + 1rem, 2rem);
+}
+
+ul {
+  list-style: none;
 }
 
 .mdc-dialog__surface {
@@ -355,6 +366,10 @@ textarea {
 
 .input-invalid {
   outline: 1px solid #ed1e79 !important;
+}
+
+.card-footer {
+  padding: 25px;
 }
 
 button[appButton] {
