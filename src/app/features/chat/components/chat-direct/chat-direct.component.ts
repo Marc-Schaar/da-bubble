@@ -20,7 +20,7 @@ import { ChatService } from '../../services/chat/chat.service';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -34,7 +34,7 @@ import { ButtonDirective } from '../../../../shared/components/button/button.dir
     MessageTemplateComponent,
     ChatHeaderComponent,
     ProfileStatusComponent,
-    ButtonDirective,
+    ButtonComponent,
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',

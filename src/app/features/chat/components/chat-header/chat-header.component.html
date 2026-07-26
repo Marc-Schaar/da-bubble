@@ -1,12 +1,12 @@
 <header class="justify-sb full-width">
   <div class="align-center">
-    <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Zurück" (click)="handleBack()">
+    <app-button variant="icon" ariaLabel="Zurück" (click)="handleBack()">
       <mat-icon>arrow_back_ios</mat-icon>
-    </button>
+    </app-button>
     <img src="img/workspace-logo.svg" alt="Logo" />
   </div>
 
-  <button appButton variant="icon" aria-label="Benutzermenü öffnen" (click)="openUserMenu()">
+  <app-button variant="icon" ariaLabel="Benutzermenü öffnen" (click)="openUserMenu()">
     <img [src]="this.authService.currentUser()?.photoUrl" alt="this.authService.currentUser()?.displayName" />
-  </button>
+  </app-button>
 </header>

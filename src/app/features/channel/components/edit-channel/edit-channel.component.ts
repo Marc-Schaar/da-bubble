@@ -9,12 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonDirective, InputComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
 })

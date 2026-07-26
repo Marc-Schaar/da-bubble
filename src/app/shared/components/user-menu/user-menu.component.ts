@@ -4,11 +4,11 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
-import { ButtonDirective } from '../button/button.directive';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [MatIcon, ButtonDirective],
+  imports: [MatIcon, ButtonComponent],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
 })

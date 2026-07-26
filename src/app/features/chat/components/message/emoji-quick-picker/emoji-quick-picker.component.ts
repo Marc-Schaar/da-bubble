@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { ButtonDirective } from '../../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 
 /**
  * Renders the grid of preselected quick-reaction emoji buttons shared by
@@ -11,7 +11,7 @@ import { ButtonDirective } from '../../../../../shared/components/button/button.
  */
 @Component({
   selector: 'app-emoji-quick-picker',
-  imports: [CommonModule, ButtonDirective],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './emoji-quick-picker.component.html',
   styleUrl: './emoji-quick-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

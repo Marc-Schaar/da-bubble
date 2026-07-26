@@ -6,7 +6,7 @@ import { ReactionsService, ReactionContext } from '../../../services/reactions/r
 import { NavigationService } from '../../../../../shared/services/navigation/navigation.service';
 import { PRESELECTED_EMOJIS } from '../../../../../shared/constants';
 import { EmojiQuickPickerComponent } from '../emoji-quick-picker/emoji-quick-picker.component';
-import { ButtonDirective } from '../../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 
 /**
  * Renders the emoji reactions of a message (footer) including the
@@ -14,7 +14,7 @@ import { ButtonDirective } from '../../../../../shared/components/button/button.
  */
 @Component({
   selector: 'app-message-reactions',
-  imports: [CommonModule, MatIconModule, EmojiQuickPickerComponent, ButtonDirective],
+  imports: [CommonModule, MatIconModule, EmojiQuickPickerComponent, ButtonComponent],
   templateUrl: './message-reactions.component.html',
   styleUrl: './message-reactions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

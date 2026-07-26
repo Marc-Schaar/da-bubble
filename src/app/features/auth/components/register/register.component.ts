@@ -4,12 +4,12 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createRegisterForm } from '../../forms/auth-forms';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonDirective, InputComponent],
+  imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonComponent, InputComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

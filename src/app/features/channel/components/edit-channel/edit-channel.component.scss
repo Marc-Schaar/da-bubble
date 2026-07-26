@@ -46,6 +46,7 @@
 
   &--header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     font-size: 24px;
     font-weight: 700;
@@ -83,7 +84,7 @@
 .content {
   &--description {
     overflow-wrap: break-word;
-    overflow: scroll;
+    overflow-y: auto;
     max-height: 100px;
     font-size: 1rem;
   }
@@ -94,11 +95,6 @@
     font-size: 24px;
     color: var(--dark-purple-text);
   }
-}
-
-button {
-  background-color: unset;
-  border: none;
 }
 
 .save-btn {
@@ -112,18 +108,8 @@ button {
 }
 
 .exit-btn {
-  display: flex;
   place-self: end;
-  padding: 12px 25px 12px 25px;
-  background-color: var(--dark-purple);
-  border-radius: 25px;
-  color: white;
   font-size: 1.125rem;
-  font-weight: 700;
-
-  &:hover {
-    background-color: var(--medium-purple);
-  }
 }
 
 .line {
@@ -195,19 +181,9 @@ li {
   .submit-btn {
     width: 147px;
     height: 49px;
-    border-radius: 25px;
-    padding: 12px 25px 12px 25px;
-    background-color: var(--mat-sys-primary);
-    color: white;
-    border: none;
     gap: 10px;
-    cursor: pointer;
     place-self: end;
     font-size: 18px;
-
-    &:disabled {
-      background-color: rgba(104, 104, 104, 1) !important;
-    }
   }
 
   @media (max-width: 1023px) {

@@ -4,11 +4,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { User } from '../../../features/auth/models/user/user';
 import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
-import { ButtonDirective } from '../button/button.directive';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-dialog-receiver',
-  imports: [MatIconModule, DialogHeaderComponent, ButtonDirective],
+  imports: [MatIconModule, DialogHeaderComponent, ButtonComponent],
   templateUrl: './dialog-receiver.component.html',
   styleUrl: './dialog-receiver.component.scss',
 })

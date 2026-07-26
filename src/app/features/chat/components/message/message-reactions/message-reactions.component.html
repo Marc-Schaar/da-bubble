@@ -26,21 +26,19 @@
   }
 
   @if (hiddenCount() > 0 && !showAllReactions()) {
-    <button appButton variant="plain" class="emoji-box" (click)="showAllReactions.set(true)">{{ hiddenCount() }} weitere</button>
+    <app-button variant="plain" class="emoji-box" (click)="showAllReactions.set(true)">{{ hiddenCount() }} weitere</app-button>
   }
   @if (showAllReactions() && reactions().length > visibleLimit()) {
-    <button appButton variant="plain" class="emoji-box" (click)="showAllReactions.set(false)">Weniger anzeigen</button>
+    <app-button variant="plain" class="emoji-box" (click)="showAllReactions.set(false)">Weniger anzeigen</app-button>
   }
   @if (reactions().length > 0) {
-    <button
-      appButton
+    <app-button
       variant="icon"
-      class="hover-to-dark-purple"
-      aria-label="Reaktion hinzufügen"
+      ariaLabel="Reaktion hinzufügen"
       (click)="reactionMenuOpen.set(!reactionMenuOpen())"
     >
       <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
-    </button>
+    </app-button>
   }
 
   @if (reactionMenuOpen()) {

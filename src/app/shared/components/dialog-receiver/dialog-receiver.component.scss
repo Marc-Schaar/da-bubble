@@ -92,13 +92,6 @@ footer {
   display: contents;
 }
 
-.btn {
-  padding: 0.75em 1.563em;
-  background-color: var(--dark-purple);
-  color: white;
+app-button {
   place-self: center;
-  font-weight: 700;
-  &:hover {
-    background-color: var(--medium-purple);
-  }
 }

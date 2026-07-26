@@ -6,43 +6,39 @@
 >
   @if (!isEditing && channelType() !== "direct") {
     <div class="reaction-bar">
-      <button
-        appButton
+      <app-button
         variant="icon"
-        class="btn-secundary"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['checkMark']) }"
-        [attr.aria-label]="'Reaktion ' + preSelectedEmojis['checkMark']"
+        [ariaLabel]="'Reaktion ' + preSelectedEmojis['checkMark']"
         (click)="toggleReaction(preSelectedEmojis['checkMark'])"
       >
         {{ preSelectedEmojis["checkMark"] }}
-      </button>
-      <button
-        appButton
+      </app-button>
+      <app-button
         variant="icon"
-        class="btn-secundary"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['thumbsUp']) }"
-        [attr.aria-label]="'Reaktion ' + preSelectedEmojis['thumbsUp']"
+        [ariaLabel]="'Reaktion ' + preSelectedEmojis['thumbsUp']"
         (click)="toggleReaction(preSelectedEmojis['thumbsUp'])"
       >
         {{ preSelectedEmojis["thumbsUp"] }}
-      </button>
-      <button appButton variant="icon" class="btn-secundary" aria-label="Reaktion auswählen" (click)="this.reactionMenuOpen = !this.reactionMenuOpen">
+      </app-button>
+      <app-button variant="icon" ariaLabel="Reaktion auswählen" (click)="this.reactionMenuOpen = !this.reactionMenuOpen">
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
-      </button>
+      </app-button>
       @if (!isThread()) {
-        <button appButton variant="icon" class="btn-secundary" aria-label="Thread öffnen" (click)="openThread(message().id)">
+        <app-button variant="icon" ariaLabel="Thread öffnen" (click)="openThread(message().id)">
           <mat-icon class="material-symbols-outlined"> comment </mat-icon>
-        </button>
+        </app-button>
       }
 
       @if (isOwnMessage()) {
-        <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Nachrichtenmenü öffnen" (click)="this.menuOpen = !this.menuOpen">
+        <app-button variant="icon" ariaLabel="Nachrichtenmenü öffnen" (click)="this.menuOpen = !this.menuOpen">
           <mat-icon>more_vert</mat-icon>
-        </button>
+        </app-button>
       }
       @if (menuOpen && isOwnMessage()) {
         <div class="menu">
-          <button appButton variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</button>
+          <app-button variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</app-button>
         </div>
       }
       @if (reactionMenuOpen && isChannelMessage()) {
@@ -92,8 +88,8 @@
 
       <div class="action-container">
         <div class="d-flex gap-32">
-          <button appButton variant="outline" (click)="cancel()">Abbrechen</button>
-          <button appButton variant="primary" (click)="updateMessage(message())">Speichern</button>
+          <app-button variant="outline" (click)="cancel()">Abbrechen</app-button>
+          <app-button variant="primary" (click)="updateMessage(message())">Speichern</app-button>
         </div>
       </div>
     </div>

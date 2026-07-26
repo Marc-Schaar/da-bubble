@@ -14,7 +14,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { AddChannelComponent } from '../../../channel/components/add-channel/add-channel.component';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
@@ -28,7 +28,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
     SearchResultComponent,
     RouterModule,
     UserListItemComponent,
-    ButtonDirective,
+    ButtonComponent,
     InputComponent,
   ],
   templateUrl: './contactbar.component.html',

@@ -39,13 +39,13 @@
   <div class="divider">ODER</div>
 
   <section class="btn-container">
-    <button appButton variant="plain" class="btn btn-google" type="button" (click)="signinwithgoogle()">
+    <app-button variant="outline" class="btn-google" type="button" (click)="signinwithgoogle()">
       <img src="img/Google.png" alt="Google Logo" />
       Anmelden mit Google
-    </button>
+    </app-button>
     <div class="full-width justify-center gap-20 flex-wrap">
-      <button appButton variant="plain" type="submit" class="btn" [disabled]="this.authService.isLoading" form="loginForm">Anmelden</button
-      ><button appButton variant="plain" type="button" class="btn" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</button>
+      <app-button variant="outline" type="submit" [disabled]="this.authService.isLoading" form="loginForm">Anmelden</app-button
+      ><app-button variant="outline" type="button" [disabled]="this.authService.isLoading" (click)="guestLogin()">Gäste-Login</app-button>
     </div>
   </section>
 </main>

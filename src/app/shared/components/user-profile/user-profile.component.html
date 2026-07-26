@@ -10,13 +10,13 @@
       <div class="info-edit">
         <div class="name">{{ user()?.displayName }}</div>
         <div class="tooltip-cont">
-          <button appButton variant="plain" class="edit-btn" (click)="modify()">
+          <app-button variant="plain" class="edit-btn" (click)="modify()">
             @if (navigationService.isMobile()) {
               <mat-icon>edit</mat-icon>
             } @else {
               Bearbeiten
             }
-          </button>
+          </app-button>
           <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
         </div>
       </div>
@@ -46,9 +46,9 @@
         <div><app-input ariaLabel="Vollständiger Name" [(ngModel)]="newName" type="text" /></div>
       </div>
       <div class="btn-borders">
-        <div class="btn">
-          <button appButton variant="plain" (click)="cancel()">Abbrechen</button
-          ><button appButton variant="plain" (click)="saveChanges()">Speichern</button>
+        <div>
+          <app-button variant="outline" (click)="cancel()">Abbrechen</app-button
+          ><app-button variant="primary" (click)="saveChanges()">Speichern</app-button>
         </div>
       </div>
     </div>

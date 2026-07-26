@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { ButtonDirective } from '../button/button.directive';
+import { MatIcon } from '@angular/material/icon';
+import { ButtonComponent } from '../button/button.component';
 
 /**
  * Dumb dialog/profile-card header: a title and a close button.
@@ -8,7 +9,7 @@ import { ButtonDirective } from '../button/button.directive';
  */
 @Component({
   selector: 'app-dialog-header',
-  imports: [ButtonDirective],
+  imports: [ButtonComponent, MatIcon],
   templateUrl: './dialog-header.component.html',
   styleUrl: './dialog-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

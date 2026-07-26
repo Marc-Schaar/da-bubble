@@ -11,9 +11,9 @@
         <div class="channel-name-container"># {{ channelService.currentChannel()?.name }}</div>
       </div>
       @if (!navigationService.isMobile()) {
-        <button appButton variant="plain" (click)="closeThread()" class="close-button" aria-label="Thread schließen">
+        <app-button variant="plain" (click)="closeThread()" ariaLabel="Thread schließen">
           <mat-icon>close</mat-icon>
-        </button>
+        </app-button>
       }
     </div>
 

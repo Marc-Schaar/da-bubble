@@ -1,0 +1,72 @@
+:host {
+  display: inline-flex;
+}
+
+button {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: all 0.125s ease-in-out;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+:host(.app-button--primary) button {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  background-color: var(--dark-purple);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: var(--medium-purple);
+  }
+  &:disabled {
+    background-color: var(--text-grey);
+  }
+}
+
+:host(.app-button--outline) button {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  outline: 1px solid var(--medium-purple);
+  color: var(--medium-purple);
+
+  &:hover:not(:disabled) {
+    background-color: var(--medium-purple);
+    color: white;
+  }
+  &:disabled {
+    outline-color: var(--text-grey);
+    color: var(--text-grey);
+  }
+}
+
+:host(.app-button--icon) button {
+  padding: 8px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--bg-color);
+    color: var(--dark-purple);
+  }
+}
+
+:host(.app-button--plain) button {
+  &:hover:not(:disabled) {
+    color: var(--app-button-hover-color, var(--dark-purple));
+  }
+  &:disabled {
+    color: var(--text-grey);
+  }
+}

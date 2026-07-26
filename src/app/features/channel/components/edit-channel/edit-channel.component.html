@@ -1,16 +1,16 @@
 <div class="dialog-container">
   <header class="channel-header">
     # {{ channelService.currentChannel()?.name }}
-    <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialog()">
-      <img src="img/close.svg" alt="" />
-    </button>
+    <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </app-button>
   </header>
 
   <main class="main" (click)="closeUserBar()">
     <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit }">
       <div class="box--header">
         Channel-Name
-        <button appButton variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</button>
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</app-button>
       </div>
       @if (channelNameEdit) {
         <app-input
@@ -30,9 +30,9 @@
     <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit }">
       <div class="box--header">
         Beschreibung
-        <button appButton variant="plain" class="save-btn" (click)="onEditChannelDescription()">
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelDescription()">
           {{ !channelDescriptionEdit ? "Bearbeiten" : "Speichern" }}
-        </button>
+        </app-button>
       </div>
 
       @if (channelDescriptionEdit) {
@@ -69,16 +69,14 @@
           </li>
         }
 
-        <button
-          appButton
+        <app-button
           variant="plain"
           (click)="toogleAddMemberState()"
-          #addMemberMobileButton
           class="add-member-mobile-btn member-list--item"
         >
           <mat-icon class="material-symbols-outlined">person_add</mat-icon>
           Mitglieder hinzufügen
-        </button>
+        </app-button>
       </ul>
     </section>
 
@@ -87,24 +85,22 @@
 
       <header class="tooltip--header">
         Leute hinzufügen
-        <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="toogleAddMemberState()">
+        <app-button variant="plain" ariaLabel="Schließen" (click)="toogleAddMemberState()">
           <mat-icon>close</mat-icon>
-        </button>
+        </app-button>
       </header>
 
       @for (user of channelService.selectedUsers(); track user.id) {
         <div class="mini-profile-cont">
           <img class="user-img-mini" [src]="user.photoUrl" alt="" />
           {{ user.displayName }}
-          <button
-            appButton
+          <app-button
             variant="icon"
-            class="hover-to-dark-purple"
-            [attr.aria-label]="'Entfernen: ' + user.displayName"
+            [ariaLabel]="'Entfernen: ' + user.displayName"
             (click)="removeSelectedUser($index)"
           >
             <mat-icon>close</mat-icon>
-          </button>
+          </app-button>
         </div>
       }
 
@@ -130,10 +126,10 @@
         }
       </div>
 
-      <button appButton variant="plain" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+      <app-button variant="primary" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</app-button>
     </section>
 
-    <button appButton variant="plain" class="exit-btn" (click)="leaveChannel()">Channel verlassen</button>
+    <app-button variant="primary" class="exit-btn" (click)="leaveChannel()">Channel verlassen</app-button>
 
     @if (isAddMemberOpen) {
       <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>

@@ -102,16 +102,6 @@ button {
   }
 }
 
-.btn {
-  color: unset;
-  padding: 6px;
-
-  &:hover {
-    background-color: var(--bg-color);
-    color: var(--dark-purple);
-  }
-}
-
 .btn-send {
   color: var(--medium-purple);
 }

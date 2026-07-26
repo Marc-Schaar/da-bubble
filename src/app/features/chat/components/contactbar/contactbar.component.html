@@ -9,17 +9,17 @@
         <img src="img/workspace-logo.svg" alt="" />
         <h2>Devspace</h2>
       </div>
-      <button appButton variant="icon" aria-label="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
+      <app-button variant="icon" ariaLabel="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
         <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
-      </button>
+      </app-button>
     </div>
 
     @if (isClicked) {
       <div class="justify-sb full-width p-lr-16">
         <h2>Search</h2>
-        <button appButton variant="icon" aria-label="Suche schließen" (click)="isClicked = false">
+        <app-button variant="plain" ariaLabel="Suche schließen" (click)="isClicked = false">
           <mat-icon>close</mat-icon>
-        </button>
+        </app-button>
       </div>
     }
     @if (this.navigationService.isMobile() && navigationService.isContactbarPage()) {
@@ -48,16 +48,16 @@
       <div class="contactbar">
         <div class="dropdown">
           <div class="dropdown__title">
-            <button appButton variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
+            <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
               <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
               <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
               Channels
-            </button>
+            </app-button>
 
             <div class="tooltip-cont">
-              <button appButton variant="icon" class="align-center" aria-label="Channel hinzufügen" (click)="openAddChannel()">
+              <app-button variant="icon" ariaLabel="Channel hinzufügen" (click)="openAddChannel()">
                 <mat-icon>add</mat-icon>
-              </button>
+              </app-button>
 
               <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
             </div>
@@ -79,22 +79,22 @@
           </ul>
         </div>
         <div class="tooltip-cont">
-          <button appButton variant="plain" class="addChannel" (click)="openAddChannel()">
+          <app-button variant="plain" class="addChannel" (click)="openAddChannel()">
             <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
             Channel hinzufügen
-          </button>
+          </app-button>
           <span class="tooltip">Zugang für Gäste gesperrt</span>
         </div>
 
         <div class="dropdown">
           <div class="dropdown__title">
-            <button appButton variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
+            <app-button variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
               <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()">
                 arrow_drop_down</mat-icon
               >
               <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
               Direktnachrichten
-            </button>
+            </app-button>
           </div>
 
           <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
@@ -115,7 +115,7 @@
     }
   </section>
 
-  <button appButton variant="plain" class="add-message-btn-mobile" aria-label="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
+  <app-button variant="plain" class="add-message-btn-mobile" ariaLabel="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
     <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
-  </button>
+  </app-button>
 </main>

@@ -2,11 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AvatarPickerComponent } from '../avatar-picker/avatar-picker.component';
-import { ButtonDirective } from '../button/button.directive';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-avatar-selection',
-  imports: [MatIcon, AvatarPickerComponent, ButtonDirective],
+  imports: [MatIcon, AvatarPickerComponent, ButtonComponent],
   templateUrl: './avatar-selection.component.html',
   styleUrl: './avatar-selection.component.scss',
 })

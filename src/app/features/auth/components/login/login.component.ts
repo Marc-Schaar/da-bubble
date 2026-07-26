@@ -5,12 +5,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createLoginForm } from '../../forms/auth-forms';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, MatDividerModule, FormsModule, ReactiveFormsModule, ButtonDirective, InputComponent],
+  imports: [RouterLink, MatDividerModule, FormsModule, ReactiveFormsModule, ButtonComponent, InputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

@@ -20,11 +20,11 @@ import { ProfileDialogService } from '../../../../shared/services/profile-dialog
 import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
 import { EmojiQuickPickerComponent } from './emoji-quick-picker/emoji-quick-picker.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent, ButtonDirective],
+  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent, ButtonComponent],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

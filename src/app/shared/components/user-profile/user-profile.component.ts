@@ -7,12 +7,12 @@ import { AvatarSelectionComponent } from '../avatar-selection-dialog/avatar-sele
 import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
-import { ButtonDirective } from '../button/button.directive';
+import { ButtonComponent } from '../button/button.component';
 import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [FormsModule, MatIcon, DialogHeaderComponent, ButtonDirective, InputComponent],
+  imports: [FormsModule, MatIcon, DialogHeaderComponent, ButtonComponent, InputComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

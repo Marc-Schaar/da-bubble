@@ -88,18 +88,10 @@
         font-weight: 700;
       }
       .edit-btn {
-        cursor: pointer;
-        font-size: 1.25rem;
-        font-weight: 600;
         color: var(--dark-purple-text);
       }
     }
   }
-}
-
-button {
-  border: none;
-  background: none;
 }
 
 .section {
@@ -137,29 +129,10 @@ button {
 }
 
 .btn-borders {
-  > .btn {
-    width: 100%;
-  }
   > div:nth-child(1) {
     display: flex;
     justify-content: center;
     gap: 30px;
-    > button {
-      border-radius: 50px;
-      border: 1px solid #797ef3;
-      padding: 12px 25px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #444df2;
-      @media (max-width: 400px) {
-        font-size: 14px;
-      }
-      &:hover {
-        color: #ffffff;
-        background-color: #444df2;
-        cursor: pointer;
-      }
-    }
   }
 }
 
@@ -179,7 +152,9 @@ button {
     z-index: 10;
     bottom: 110%;
     right: 0;
-    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    transition:
+      opacity 0.15s ease-in-out,
+      visibility 0.15s ease-in-out;
     white-space: nowrap;
     font-size: 0.8rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);

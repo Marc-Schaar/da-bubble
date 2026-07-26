@@ -226,24 +226,6 @@ textarea {
   }
 }
 
-.hover-to-dark-purple {
-  transition: all 0.125s ease-in-out;
-  padding: 8px;
-  border-radius: 50%;
-
-  &:hover {
-    background-color: var(--bg-color);
-    mat-icon {
-      color: var(--dark-purple);
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--medium-purple);
-    outline-offset: 2px;
-  }
-}
-
 .bg-purple {
   background-color: var(--bg-color) !important;
 }
@@ -315,35 +297,6 @@ textarea {
   flex-wrap: wrap;
 }
 
-.btn {
-  cursor: pointer;
-  padding: 12px 25px;
-  border-radius: 50px;
-  transition: all 0.125s ease-in-out;
-  font-weight: 700;
-}
-
-.btn-outline {
-  outline: solid 1px var(--medium-purple) !important;
-  &:hover {
-    outline: 1px solid white;
-    background-color: var(--medium-purple);
-    color: white;
-  }
-}
-
-.btn-primary {
-  transition: all 0.125s ease-in-out;
-  background-color: var(--medium-purple);
-  color: white;
-
-  &:hover {
-    outline: solid 1px var(--medium-purple) !important;
-    color: black;
-    background-color: white;
-  }
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -358,19 +311,6 @@ textarea {
 
 .card-footer {
   padding: 25px;
-}
-
-button[appButton] {
-  font-family: inherit;
-  cursor: pointer;
-  background: none;
-  border: none;
-  color: inherit;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
 }
 
 .guest-btn {

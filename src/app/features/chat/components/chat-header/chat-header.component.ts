@@ -6,11 +6,11 @@ import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { UserMenuComponent } from '../../../../shared/components/user-menu/user-menu.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-chat-header',
-  imports: [MatIcon, ButtonDirective],
+  imports: [MatIcon, ButtonComponent],
   templateUrl: './chat-header.component.html',
   styleUrl: './chat-header.component.scss',
 })

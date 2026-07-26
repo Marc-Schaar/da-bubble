@@ -1,13 +1,11 @@
 @for (emoji of emojis(); track $index) {
-  <button
-    appButton
+  <app-button
     variant="icon"
-    class="btn-secundary circle"
     [ngClass]="{ 'bg-purple': isSelected()(emoji) }"
-    [attr.aria-label]="'Reaktion ' + emoji"
-    [attr.aria-pressed]="isSelected()(emoji)"
+    [ariaLabel]="'Reaktion ' + emoji"
+    [ariaPressed]="isSelected()(emoji)"
     (click)="pick.emit(emoji)"
   >
     {{ emoji }}
-  </button>
+  </app-button>
 }

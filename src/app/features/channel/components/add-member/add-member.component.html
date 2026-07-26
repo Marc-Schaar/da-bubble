@@ -2,9 +2,9 @@
   @if (!addMemberWindow) {
     <header class="header">
       Mitglieder
-      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <ul class="user__list">
@@ -15,16 +15,16 @@
       }
     </ul>
 
-    <button appButton variant="plain" class="add-member-btn" (click)="changeWindow()">
+    <app-button variant="plain" class="add-member-btn" (click)="changeWindow()">
       <mat-icon class="material-symbols-outlined">person_add</mat-icon>
       Mitglieder hinzufügen
-    </button>
+    </app-button>
   } @else {
     <header class="header">
       Leute hinzufügen
-      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <div class="channel-name"># {{ channelService.currentChannel()?.name }}</div>
@@ -72,6 +72,6 @@
       />
     </div>
 
-    <button appButton variant="plain" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+    <app-button variant="primary" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</app-button>
   }
 </main>

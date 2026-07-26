@@ -2,9 +2,9 @@
   <section class="add-channel-create">
     <header class="header">
       Channel erstellen
-      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
@@ -37,16 +37,16 @@
         <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
       </div>
 
-      <button appButton variant="plain" type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
+      <app-button variant="primary" type="submit" [disabled]="isSubmitting()">Erstellen</app-button>
     </form>
   </section>
 
   <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
     <header class="header">
       Leute hinzufügen
-      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialogAddMember()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialogAddMember()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <form class="form" (ngSubmit)="onFinalSubmit()">
@@ -79,15 +79,13 @@
               <li class="choose-user__item">
                 <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
                 {{ selectedUser?.displayName }}
-                <button
-                  appButton
+                <app-button
                   variant="icon"
-                  class="hover-to-dark-purple"
-                  [attr.aria-label]="'Entfernen: ' + selectedUser?.displayName"
+                  [ariaLabel]="'Entfernen: ' + selectedUser?.displayName"
                   (click)="channelService.removeUserFromSelection(index)"
                 >
                   <mat-icon>close</mat-icon>
-                </button>
+                </app-button>
               </li>
             }
 
@@ -114,7 +112,7 @@
         </div>
       }
 
-      <button appButton variant="plain" class="submit-btn" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</button>
+      <app-button variant="primary" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</app-button>
     </form>
   </section>
 </div>

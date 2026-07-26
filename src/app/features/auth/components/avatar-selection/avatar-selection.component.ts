@@ -4,11 +4,11 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { AvatarPickerComponent } from '../../../../shared/components/avatar-picker/avatar-picker.component';
 import { DEFAULT_AVATAR } from '../../../../shared/constants';
-import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-avatarselection',
-  imports: [CommonModule, RouterModule, AvatarPickerComponent, ButtonDirective],
+  imports: [CommonModule, RouterModule, AvatarPickerComponent, ButtonComponent],
   templateUrl: './avatar-selection.component.html',
   styleUrls: ['./avatar-selection.component.scss'],
 })

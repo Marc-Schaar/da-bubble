@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { CONTACT_EMAIL } from '../../../shared/constants';
-import { ButtonDirective } from '../../../shared/components/button/button.directive';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-imprint',
-  imports: [HeaderComponent, ButtonDirective],
+  imports: [HeaderComponent, ButtonComponent],
   templateUrl: './imprint.component.html',
   styleUrl: './imprint.component.scss',
 })
