@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ChannelMessage } from '../../../models/channel-message/channel-message';
 import { ReactionsService, ReactionContext } from '../../../services/reactions/reactions.service';
@@ -59,4 +59,10 @@ export class MessageReactionsComponent {
 
   /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
   public readonly isReactionSelected = (emoji: string): boolean => this.reactionsService.hasReacted(emoji, this.reactions());
+
+  /** Closes the quick-reaction menu on Escape, for keyboard users. */
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.reactionMenuOpen.set(false);
+  }
 }

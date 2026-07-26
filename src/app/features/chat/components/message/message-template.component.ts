@@ -161,4 +161,14 @@ export class MessageTemplateComponent {
       this.reactionMenuOpen = false;
     }
   }
+
+  /**
+   * Closes the actions/reaction menu on Escape, for keyboard users who
+   * opened it without a mouse to click outside with.
+   */
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.menuOpen = false;
+    this.reactionMenuOpen = false;
+  }
 }
