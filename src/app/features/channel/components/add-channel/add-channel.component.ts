@@ -15,10 +15,11 @@ import { FireServiceService } from '../../../../shared/services/firebase/fire-se
 
 import { User } from '../../../auth/models/user/user';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-add-channel',
-  imports: [CommonModule, FormsModule, MatRadioModule, MatIcon, ReactiveFormsModule, ProfileStatusComponent],
+  imports: [CommonModule, FormsModule, MatRadioModule, MatIcon, ReactiveFormsModule, ProfileStatusComponent, ButtonDirective],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],
 })

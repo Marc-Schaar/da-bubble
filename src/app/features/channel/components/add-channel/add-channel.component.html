@@ -2,7 +2,7 @@
   <section class="add-channel-create">
     <header class="header">
       Channel erstellen
-      <button (click)="closeDialog()">
+      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
       </button>
     </header>
@@ -48,14 +48,14 @@
         <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
+      <button appButton variant="plain" type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
     </form>
   </section>
 
   <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
     <header class="header">
       Leute hinzufügen
-      <button (click)="closeDialogAddMember()">
+      <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Schließen" (click)="closeDialogAddMember()">
         <mat-icon>close</mat-icon>
       </button>
     </header>
@@ -90,7 +90,13 @@
               <li class="choose-user__item">
                 <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
                 {{ selectedUser?.displayName }}
-                <button (click)="channelService.removeUserFromSelection(index)">
+                <button
+                  appButton
+                  variant="icon"
+                  class="hover-to-dark-purple"
+                  [attr.aria-label]="'Entfernen: ' + selectedUser?.displayName"
+                  (click)="channelService.removeUserFromSelection(index)"
+                >
                   <mat-icon>close</mat-icon>
                 </button>
               </li>
@@ -119,7 +125,7 @@
         </div>
       }
 
-      <button class="submit-btn" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</button>
+      <button appButton variant="plain" class="submit-btn" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</button>
     </form>
   </section>
 </div>
