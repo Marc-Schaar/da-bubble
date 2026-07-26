@@ -6,10 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createLoginForm } from '../../forms/auth-forms';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule, ReactiveFormsModule],
+  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule, ReactiveFormsModule, ButtonDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

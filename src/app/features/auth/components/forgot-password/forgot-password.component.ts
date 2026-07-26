@@ -7,10 +7,11 @@ import { HeaderComponent } from '../../../../shared/components/header/header.com
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { createForgotPasswordForm } from '../../forms/auth-forms';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-forgotpassword',
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink],
+  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonDirective],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
