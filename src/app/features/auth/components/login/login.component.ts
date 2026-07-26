@@ -7,10 +7,21 @@ import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createLoginForm } from '../../forms/auth-forms';
 import { ButtonDirective } from '../../../../shared/components/button/button.directive';
+import { InputDirective } from '../../../../shared/components/input/input.directive';
+import { FieldErrorComponent } from '../../../../shared/components/input/field-error.component';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, MatDividerModule, FormsModule, MatIconModule, ReactiveFormsModule, ButtonDirective],
+  imports: [
+    RouterLink,
+    MatDividerModule,
+    FormsModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    ButtonDirective,
+    InputDirective,
+    FieldErrorComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -39,5 +50,33 @@ export class LoginComponent {
 
   public guestLogin() {
     this.authService.loginAsGuest();
+  }
+
+  /**
+   * Current email validation message, or null while the field is valid
+   * or hasn't been touched yet.
+   */
+  protected getEmailError(): string | null {
+    const control = this.loginForm.controls['email'];
+    if (!control.invalid || !(control.touched || control.dirty)) return null;
+    if (control.errors?.['required']) return '*Bitte Email Adresse eingeben.';
+    if (control.errors?.['email']) return '*Diese E-Mail Adresse ist leider ungültig.';
+    return null;
+  }
+
+  /**
+   * Current password validation message, or null while the field is
+   * valid/untouched. Falls back to the server-side auth error once the
+   * field itself has no local validation error.
+   */
+  protected getPasswordError(): string | null {
+    const control = this.loginForm.controls['password'];
+    if (control.errors?.['required'] && (control.touched || control.dirty)) {
+      return '*Bitte Password eingeben ';
+    }
+    if (this.authService.errorMessage()) {
+      return '*Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. ';
+    }
+    return null;
   }
 }
