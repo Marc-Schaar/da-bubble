@@ -3,10 +3,11 @@ import { Location } from '@angular/common';
 
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { CONTACT_EMAIL } from '../../../shared/constants';
+import { ButtonDirective } from '../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-dataprotection',
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, ButtonDirective],
   templateUrl: './data-protection.component.html',
   styleUrl: './data-protection.component.scss',
 })
