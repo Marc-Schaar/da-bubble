@@ -1,16 +1,20 @@
+:host {
+  display: contents;
+}
+
 main {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  margin: 0 1em;
+  margin-right: 1em;
 }
 
 section {
   height: calc(100svh - var(--header-offset));
   background-color: white;
   border-radius: 30px;
-  padding: 2em 1.875em;
+  padding: 2rem 1.875rem;
   gap: 25px;
 }
 

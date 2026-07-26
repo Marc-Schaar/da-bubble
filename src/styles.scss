@@ -23,7 +23,7 @@
   --online: rgba(146, 200, 62, 1);
   --offline: rgba(128, 128, 128, 1);
 
-  --contactbar-width: 290px;
+  --contactbar-width: 340px;
   --header-offset: 130px;
   --mat-sys-label-large-size: 24px;
 }
@@ -78,7 +78,7 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.25rem, 2vw + 1rem, 2rem);
+  font-size: clamp(1.25rem, 2vw + 1rem, 1.5rem);
 }
 
 ul {
