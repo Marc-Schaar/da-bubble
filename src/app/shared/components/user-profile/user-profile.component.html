@@ -10,7 +10,7 @@
       <div class="info-edit">
         <div class="name">{{ user()?.displayName }}</div>
         <div class="tooltip-cont">
-          <button class="edit-btn" (click)="modify()">
+          <button appButton variant="plain" class="edit-btn" (click)="modify()">
             @if (navigationService.isMobile()) {
               <mat-icon>edit</mat-icon>
             } @else {
@@ -46,7 +46,10 @@
         <div><input #name="ngModel" [(ngModel)]="newName" type="text" /></div>
       </div>
       <div class="btn-borders">
-        <div class="btn"><button (click)="cancel()">Abbrechen</button><button (click)="saveChanges()">Speichern</button></div>
+        <div class="btn">
+          <button appButton variant="plain" (click)="cancel()">Abbrechen</button
+          ><button appButton variant="plain" (click)="saveChanges()">Speichern</button>
+        </div>
       </div>
     </div>
   }
