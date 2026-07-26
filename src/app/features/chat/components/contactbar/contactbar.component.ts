@@ -14,11 +14,21 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { AddChannelComponent } from '../../../channel/components/add-channel/add-channel.component';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-contactbar',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, MatIconModule, FormsModule, SearchResultComponent, RouterModule, UserListItemComponent],
+  imports: [
+    CommonModule,
+    HeaderComponent,
+    MatIconModule,
+    FormsModule,
+    SearchResultComponent,
+    RouterModule,
+    UserListItemComponent,
+    ButtonDirective,
+  ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
 })

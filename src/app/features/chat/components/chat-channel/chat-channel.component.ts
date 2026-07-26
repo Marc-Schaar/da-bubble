@@ -19,6 +19,7 @@ import { EditChannelComponent } from '../../../channel/components/edit-channel/e
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -33,6 +34,7 @@ import { ChatService } from '../../services/chat/chat.service';
     TextareaTemplateComponent,
     MessageTemplateComponent,
     ChatHeaderComponent,
+    ButtonDirective,
   ],
   templateUrl: './chat-channel.component.html',
   styleUrl: './chat-channel.component.scss',

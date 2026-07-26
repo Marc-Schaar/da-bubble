@@ -17,10 +17,11 @@ import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { filter } from 'rxjs';
+import { ButtonDirective } from '../button/button.directive';
 
 @Component({
   selector: 'app-header',
-  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, SearchResultComponent, RouterModule, ButtonDirective],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -31,7 +32,6 @@ export class HeaderComponent {
   public searchService: SearchService = inject(SearchService);
   private matDialog: MatDialog = inject(MatDialog);
   private bottomSheet = inject(MatBottomSheet);
-  showBackground: boolean = false;
   isProfileCard: boolean = false;
   public input: string = '';
 
@@ -55,7 +55,6 @@ export class HeaderComponent {
    */
   public onMenuClosed() {
     this.matDialog.closeAll();
-    this.showBackground = false;
   }
 
   /**

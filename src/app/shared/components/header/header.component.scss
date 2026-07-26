@@ -67,17 +67,6 @@
   position: relative;
 }
 
-.d-none {
-  display: none !important;
-}
-
-.d-none1 {
-  display: flex;
-  @media (max-width: 1206px) {
-    display: none !important;
-  }
-}
-
 .user-menu {
   display: flex;
   justify-content: flex-end;
@@ -135,11 +124,6 @@
       outline: none;
     }
   }
-  > button {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
 }
 
 .tag-container {
@@ -177,16 +161,6 @@
   border-radius: unset !important;
   max-width: 16px !important;
   max-height: 16px !important;
-}
-
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: #72727258;
-  z-index: 3;
 }
 
 @media (max-width: 1023px) {

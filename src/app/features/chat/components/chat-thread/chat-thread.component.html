@@ -11,7 +11,7 @@
         <div class="channel-name-container"># {{ channelService.currentChannel()?.name }}</div>
       </div>
       @if (!navigationService.isMobile()) {
-        <button (click)="closeThread()" class="close-button filter-hover-purple-3">
+        <button appButton variant="plain" (click)="closeThread()" class="close-button" aria-label="Thread schließen">
           <mat-icon>close</mat-icon>
         </button>
       }
@@ -60,11 +60,7 @@
     </div>
 
     <div class="card-footer" (mouseleave)="listOpen = false">
-      <app-textarea-template
-        [isChannelComponent]="true"
-        [placeholderText]="'Antworten...'"
-        (send)="onSend($event)"
-      ></app-textarea-template>
+      <app-textarea-template [isChannelComponent]="true" [placeholderText]="'Antworten...'" (send)="onSend($event)"></app-textarea-template>
     </div>
   </section>
 </main>

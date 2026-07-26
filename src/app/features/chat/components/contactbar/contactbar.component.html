@@ -9,7 +9,7 @@
         <img src="img/workspace-logo.svg" alt="" />
         <h2>Devspace</h2>
       </div>
-      <button (click)="this.navigationService.goToNewMessage()">
+      <button appButton variant="icon" aria-label="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
         <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
       </button>
     </div>
@@ -17,7 +17,7 @@
     @if (isClicked) {
       <div class="justify-sb full-width p-lr-16">
         <h2>Search</h2>
-        <button (click)="isClicked = false">
+        <button appButton variant="icon" aria-label="Suche schließen" (click)="isClicked = false">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -47,14 +47,14 @@
       <div class="contactbar">
         <div class="dropdown">
           <div class="dropdown__title">
-            <button class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
+            <button appButton variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('channels')">
               <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isChannelsOpen()"> arrow_drop_down</mat-icon>
               <mat-icon class="material-symbols-outlined">workspaces</mat-icon>
               Channels
             </button>
 
             <div class="tooltip-cont">
-              <button class="align-center" (click)="openAddChannel()">
+              <button appButton variant="icon" class="align-center" aria-label="Channel hinzufügen" (click)="openAddChannel()">
                 <mat-icon>add</mat-icon>
               </button>
 
@@ -78,7 +78,7 @@
           </ul>
         </div>
         <div class="tooltip-cont">
-          <button class="addChannel" (click)="openAddChannel()">
+          <button appButton variant="plain" class="addChannel" (click)="openAddChannel()">
             <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
             Channel hinzufügen
           </button>
@@ -87,7 +87,7 @@
 
         <div class="dropdown">
           <div class="dropdown__title">
-            <button class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
+            <button appButton variant="plain" class="d-flex align-center gap-10" (click)="toggleDropdown('directMessages')">
               <mat-icon class="material-symbols-outlined" [class.rotate]="navigationService.isDirectMessagesOpen()">
                 arrow_drop_down</mat-icon
               >
@@ -114,7 +114,7 @@
     }
   </section>
 
-  <button class="add-message-btn-mobile" (click)="this.navigationService.goToNewMessage()">
+  <button appButton variant="plain" class="add-message-btn-mobile" aria-label="Neue Nachricht" (click)="this.navigationService.goToNewMessage()">
     <mat-icon class="material-symbols-outlined">edit_square</mat-icon>
   </button>
 </main>

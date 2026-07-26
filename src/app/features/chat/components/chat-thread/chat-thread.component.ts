@@ -18,6 +18,7 @@ import { ChannelService } from '../../../channel/services/channel/channel.servic
 import { ChatService } from '../../services/chat/chat.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-thread',
@@ -30,6 +31,7 @@ import { ChannelMessage } from '../../models/channel-message/channel-message';
     TextareaTemplateComponent,
     MessageTemplateComponent,
     DividerTemplateComponent,
+    ButtonDirective,
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],

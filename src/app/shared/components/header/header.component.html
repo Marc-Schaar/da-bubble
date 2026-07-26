@@ -9,7 +9,7 @@
       </div>
     }
 
-    @if (!navigationService.isContactbarPage() && !navigationService.isMobile()) {
+    @if (!navigationService.isContactbarPage() && !navigationService.isMobile() && !navigationService.isAuthPage()) {
       <div class="input">
         <input
           [(ngModel)]="input"
@@ -19,7 +19,9 @@
           placeholder="Devspace durchsuchen"
           class="full-width"
         />
-        <button><img src="img/icons.png" alt="" /></button>
+        <button appButton variant="icon" class="hover-to-dark-purple" type="button" aria-label="Suchen">
+          <img src="img/icons.png" alt="" />
+        </button>
       </div>
     }
   </div>
@@ -46,7 +48,3 @@
     </div>
   }
 </main>
-
-@if (showBackground) {
-  <div (click)="onMenuClosed()" class="background"></div>
-}
