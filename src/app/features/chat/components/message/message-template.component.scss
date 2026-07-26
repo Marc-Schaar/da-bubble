@@ -247,12 +247,7 @@
 }
 
 button {
-  border: none;
-  outline: none;
-  background-color: unset;
   white-space: nowrap;
-  transition: all, 0.125s ease-in-out;
-  cursor: pointer;
   color: black;
 
   &:disabled {
@@ -276,18 +271,6 @@ button {
   }
   &:has(textarea:focus-visible) {
     outline: 1px solid var(--dark-purple);
-  }
-}
-
-.btn-primary {
-  transition: all 0.125s ease-in-out;
-  background-color: var(--medium-purple);
-  color: white;
-
-  &:hover {
-    outline: solid 1px var(--medium-purple) !important;
-    color: black;
-    background-color: white;
   }
 }
 

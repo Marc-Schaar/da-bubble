@@ -6,10 +6,11 @@ import { ALL_EMOJIS } from '../../../../shared/constants';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
+import { ButtonDirective } from '../../../../shared/components/button/button.directive';
 
 @Component({
   selector: 'app-textarea-template',
-  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent],
+  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent, ButtonDirective],
   templateUrl: './textarea-template.component.html',
   styleUrl: './textarea-template.component.scss',
 })

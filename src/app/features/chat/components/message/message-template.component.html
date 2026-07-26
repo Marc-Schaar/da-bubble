@@ -7,36 +7,42 @@
   @if (!isEditing && channelType() !== "direct") {
     <div class="reaction-bar">
       <button
+        appButton
+        variant="icon"
         class="btn-secundary"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['checkMark']) }"
+        [attr.aria-label]="'Reaktion ' + preSelectedEmojis['checkMark']"
         (click)="toggleReaction(preSelectedEmojis['checkMark'])"
       >
         {{ preSelectedEmojis["checkMark"] }}
       </button>
       <button
+        appButton
+        variant="icon"
         class="btn-secundary"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['thumbsUp']) }"
+        [attr.aria-label]="'Reaktion ' + preSelectedEmojis['thumbsUp']"
         (click)="toggleReaction(preSelectedEmojis['thumbsUp'])"
       >
         {{ preSelectedEmojis["thumbsUp"] }}
       </button>
-      <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="btn-secundary">
+      <button appButton variant="icon" class="btn-secundary" aria-label="Reaktion auswählen" (click)="this.reactionMenuOpen = !this.reactionMenuOpen">
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
       </button>
       @if (!isThread()) {
-        <button class="btn-secundary" (click)="openThread(message().id)">
+        <button appButton variant="icon" class="btn-secundary" aria-label="Thread öffnen" (click)="openThread(message().id)">
           <mat-icon class="material-symbols-outlined"> comment </mat-icon>
         </button>
       }
 
       @if (isOwnMessage()) {
-        <button class="hover-to-dark-purple" (click)="this.menuOpen = !this.menuOpen">
+        <button appButton variant="icon" class="hover-to-dark-purple" aria-label="Nachrichtenmenü öffnen" (click)="this.menuOpen = !this.menuOpen">
           <mat-icon>more_vert</mat-icon>
         </button>
       }
       @if (menuOpen && isOwnMessage()) {
         <div class="menu">
-          <button (click)="editMessage(message())">Nachricht bearbeiten</button>
+          <button appButton variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</button>
         </div>
       }
       @if (reactionMenuOpen && isChannelMessage()) {
@@ -86,8 +92,8 @@
 
       <div class="action-container">
         <div class="d-flex gap-32">
-          <button class="btn btn-outline" (click)="cancel()">Abbrechen</button>
-          <button class="btn btn-primary" (click)="updateMessage(message())">Speichern</button>
+          <button appButton variant="outline" (click)="cancel()">Abbrechen</button>
+          <button appButton variant="primary" (click)="updateMessage(message())">Speichern</button>
         </div>
       </div>
     </div>

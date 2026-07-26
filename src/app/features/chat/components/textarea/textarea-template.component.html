@@ -14,19 +14,25 @@
   <div class="action-container justify-sb">
     <div class="gap-10">
       @if (isChannelComponent()) {
-        <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()">
+        <button
+          appButton
+          variant="icon"
+          class="btn"
+          aria-label="Emoji einfügen"
+          (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()"
+        >
           <mat-icon>sentiment_satisfied</mat-icon>
         </button>
       }
 
-      <button class="btn" (click)="insertTrigger('@', ta); $event.stopPropagation()">
+      <button appButton variant="icon" class="btn" aria-label="Person erwähnen" (click)="insertTrigger('@', ta); $event.stopPropagation()">
         <mat-icon>alternate_email</mat-icon>
       </button>
-      <button class="btn" (click)="insertTrigger('#', ta); $event.stopPropagation()">
+      <button appButton variant="icon" class="btn" aria-label="Channel erwähnen" (click)="insertTrigger('#', ta); $event.stopPropagation()">
         <mat-icon>tag</mat-icon>
       </button>
     </div>
-    <button class="btn btn-send" [disabled]="input.trim() == ''" (click)="newMessage()">
+    <button appButton variant="icon" class="btn btn-send" aria-label="Nachricht senden" [disabled]="input.trim() == ''" (click)="newMessage()">
       <mat-icon>send</mat-icon>
     </button>
 

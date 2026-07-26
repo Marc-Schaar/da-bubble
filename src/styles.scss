@@ -234,6 +234,11 @@ textarea {
       color: var(--dark-purple);
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--medium-purple);
+    outline-offset: 2px;
+  }
 }
 
 .bg-purple {
@@ -333,6 +338,19 @@ textarea {
     outline: solid 1px var(--medium-purple) !important;
     color: black;
     background-color: white;
+  }
+}
+
+button[appButton] {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 
