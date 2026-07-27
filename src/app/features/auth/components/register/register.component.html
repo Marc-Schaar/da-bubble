@@ -1,7 +1,7 @@
 <main>
   <header class="header">
     <a routerLink="/login">
-      <img src="img/arrow_back.png" alt="" />
+      <img src="img/arrow_back.png" alt="Zurück zum Login" />
     </a>
 
     <div class="headline">
@@ -55,8 +55,8 @@
     <section class="legal-text">
       <label class="checkbox">
         <input formControlName="acceptTerms" type="checkbox" />
+        <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
       </label>
-      <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
     </section>
     @if (registerForm.get("acceptTerms")?.invalid && (registerForm.get("acceptTerms")?.touched || registerForm.get("acceptTerms")?.dirty)) {
       <span class="error"> agbs zustimmer.</span>

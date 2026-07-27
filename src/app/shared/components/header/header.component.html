@@ -1,6 +1,6 @@
 <main class="header">
   <div class="logo-container">
-    <a routerLink="/login"><img src="img/headerlogo.png" alt="" /></a>
+    <a routerLink="/login"><img src="img/headerlogo.png" alt="DABubble" /></a>
   </div>
   @if (!navigationService.isMobile()) {
     <div class="searchbar">
@@ -52,8 +52,8 @@
       </app-button>
 
       <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-        <button (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
-        <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
+        <button type="button" (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
+        <button type="button" (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
       </mat-menu>
     </div>
   }

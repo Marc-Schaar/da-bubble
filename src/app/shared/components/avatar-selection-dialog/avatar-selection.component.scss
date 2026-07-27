@@ -27,15 +27,6 @@ h1 {
   }
 }
 
-a {
-  color: black;
-  cursor: pointer;
-  transition: all 0.125s ease-in-out;
-  &:hover {
-    color: var(--dark-purple);
-  }
-}
-
 .profile-img {
   border-radius: 500px;
   width: 168px;
@@ -63,24 +54,6 @@ a {
       scale: 1.05;
       transition: all 0.125s ease-in-out;
     }
-  }
-}
-
-button {
-  align-self: last baseline;
-  background: unset;
-  border: unset;
-  cursor: pointer;
-  font-size: 1rem;
-  background-color: var(--dark-purple);
-  color: white;
-  font-weight: 600;
-  padding: 12px 25px;
-  border-radius: 25px;
-  transition: all 0.125s ease-in-out;
-
-  &:hover {
-    background-color: var(--medium-purple);
   }
 }
 
