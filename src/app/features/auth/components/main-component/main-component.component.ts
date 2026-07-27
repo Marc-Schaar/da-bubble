@@ -1,10 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { IntroComponent } from '../intro/intro.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
 
 @Component({
   selector: 'app-main-component',
@@ -13,9 +12,8 @@ import { UserService } from '../../../../shared/services/user/shared.service';
   styleUrl: './main-component.component.scss',
 })
 export class MainComponentComponent implements OnInit {
-  shareddata = inject(UserService);
   showIntro: boolean = true;
-  isOverlayActive = false;
+  public readonly isOverlayActive = false;
 
   /**
    * Lifecycle hook that is called when the component is initialized.

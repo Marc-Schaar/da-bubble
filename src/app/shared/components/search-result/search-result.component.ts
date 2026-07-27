@@ -16,9 +16,9 @@ import { isChannel, isUser } from '../../utils/receiver.util';
   styleUrl: './search-result.component.scss',
 })
 export class SearchResultComponent {
-  searchService: SearchService = inject(SearchService);
-  navigationService: NavigationService = inject(NavigationService);
-  private mentionService: MentionService = inject(MentionService);
+  public readonly searchService: SearchService = inject(SearchService);
+  private readonly navigationService: NavigationService = inject(NavigationService);
+  private readonly mentionService: MentionService = inject(MentionService);
 
   @Input() input: string = '';
   @Output() inputChange = new EventEmitter<string>();

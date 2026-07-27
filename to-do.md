@@ -9,7 +9,6 @@ mit figma abgleichen
 css aufräumen
 feat: notificationservice einrichten und komische is overlay active und so ein kram entfernen
 fix: im header wenn eigelogt kann man das menü nicht öffen nur das profil
-funktion decorator wie privat, public und readonly implementieren
 doc: docu erweitern
 feat: authguard erstellen
 fix: bei mehrmaligen klicken auf den mention button wird immer ein neus tag hinzugefügt aber es sollte dann schlißen und den tag entfernen wenn keine auswahl ist.
@@ -22,3 +21,4 @@ feat: eine car dkomponente erstellen oder container da dieses design mit den run
 Kontaktbar ist fertig überprüft
 Header auch bis auf den Such Result-container
 HTML-Attribute Sweep (alt/type/aria) fertig
+Private/public/readonly Modifier-Sweep fertig (kein eigenes Decorator-System)

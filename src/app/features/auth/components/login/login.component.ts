@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
-import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createLoginForm } from '../../forms/auth-forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
@@ -15,11 +14,9 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  disabled = true;
-  authService: AuthService = inject(AuthService);
-  navigationService: NavigationService = inject(NavigationService);
+  public readonly authService: AuthService = inject(AuthService);
 
-  public loginForm = createLoginForm(inject(FormBuilder));
+  public readonly loginForm = createLoginForm(inject(FormBuilder));
 
   /**
    * Signs in the user with email and password.

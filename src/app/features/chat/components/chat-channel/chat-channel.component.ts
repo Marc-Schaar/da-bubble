@@ -41,18 +41,18 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  userService: UserService = inject(UserService);
-  channelService: ChannelService = inject(ChannelService);
-  dialog = inject(MatDialog);
-  navigationService: NavigationService = inject(NavigationService);
-  messagesService: MessagesService = inject(MessagesService);
-  route: ActivatedRoute = inject(ActivatedRoute);
-  public chatService: ChatService = inject(ChatService);
+  private readonly userService: UserService = inject(UserService);
+  public readonly channelService: ChannelService = inject(ChannelService);
+  private readonly dialog = inject(MatDialog);
+  public readonly navigationService: NavigationService = inject(NavigationService);
+  public readonly messagesService: MessagesService = inject(MessagesService);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  public readonly chatService: ChatService = inject(ChatService);
   private readonly destroyRef = inject(DestroyRef);
 
-  public currentChannelId = signal<string | null>(null);
+  public readonly currentChannelId = signal<string | null>(null);
 
-  unsubMessages?: () => void;
+  private unsubMessages?: () => void;
 
   constructor() {
     effect(() => {
