@@ -18,10 +18,13 @@ export class SignInComponent {
 
   public readonly loginForm = createLoginForm(inject(FormBuilder));
 
+  private formSubmitted = false;
+
   /**
    * Signs in the user with email and password.
    */
   public async onSubmit() {
+    this.formSubmitted = true;
     if (this.loginForm.invalid) this.loginForm.markAllAsTouched();
     const payload = this.loginForm.getRawValue();
     await this.authService.logInWithEmailAndPassword(payload.email, payload.password);
@@ -35,29 +38,32 @@ export class SignInComponent {
   }
 
   public guestLogin() {
+    this.formSubmitted = false;
     this.authService.loginAsGuest();
   }
 
   /**
-   * Current email validation message, or null while the field is valid
-   * or hasn't been touched yet.
+   * Current email validation message. Only shown after a real submit
+   * attempt via onSubmit — guest login never sets formSubmitted, so it
+   * can't surface stray validation state from the login form.
    */
   protected getEmailError(): string | null {
+    if (!this.formSubmitted) return null;
     const control = this.loginForm.controls['email'];
-    if (!control.invalid || !(control.touched || control.dirty)) return null;
     if (control.errors?.['required']) return '*Bitte Email Adresse eingeben.';
     if (control.errors?.['email']) return '*Diese E-Mail Adresse ist leider ungültig.';
     return null;
   }
 
   /**
-   * Current password validation message, or null while the field is
-   * valid/untouched. Falls back to the server-side auth error once the
-   * field itself has no local validation error.
+   * Current password validation message, only shown after a real submit
+   * attempt via onSubmit. Falls back to the server-side auth error once
+   * the field itself has no local validation error.
    */
   protected getPasswordError(): string | null {
+    if (!this.formSubmitted) return null;
     const control = this.loginForm.controls['password'];
-    if (control.errors?.['required'] && (control.touched || control.dirty)) {
+    if (control.errors?.['required']) {
       return '*Bitte Password eingeben ';
     }
     if (this.authService.errorMessage()) {
