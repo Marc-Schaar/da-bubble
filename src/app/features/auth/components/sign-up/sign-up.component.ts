@@ -8,12 +8,12 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-sign-up',
   imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonComponent, InputComponent],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  templateUrl: './sign-up.component.html',
+  styleUrl: './sign-up.component.scss',
 })
-export class RegisterComponent {
+export class SignUpComponent {
   public authService: AuthService = inject(AuthService);
   private navigationService: NavigationService = inject(NavigationService);
   public registerForm = createRegisterForm(inject(FormBuilder));

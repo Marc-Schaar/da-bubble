@@ -7,12 +7,12 @@ import { DEFAULT_AVATAR } from '../../../../shared/constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
-  selector: 'app-avatarselection',
+  selector: 'app-avatar-selection',
   imports: [CommonModule, RouterModule, AvatarPickerComponent, ButtonComponent],
   templateUrl: './avatar-selection.component.html',
   styleUrls: ['./avatar-selection.component.scss'],
 })
-export class AvatarselectionComponent {
+export class AvatarSelectionComponent {
   public currentAvatar = signal<string>(DEFAULT_AVATAR);
 
   public readonly authService: AuthService = inject(AuthService);

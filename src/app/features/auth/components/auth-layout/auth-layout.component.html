@@ -1,0 +1,15 @@
+<main>
+  <app-header></app-header>
+
+  <section class="auth-card">
+    <router-outlet />
+  </section>
+
+  @if (navigationService.isMobile() && !navigationService.isSignUpPage()) {
+    <app-sign-up-box></app-sign-up-box>
+  }
+
+  <app-footer></app-footer>
+
+  <app-intro *ngIf="showIntro" id="intro"></app-intro>
+</main>

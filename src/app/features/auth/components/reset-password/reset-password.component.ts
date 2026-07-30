@@ -11,13 +11,13 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
-  selector: 'app-resetpassword',
+  selector: 'app-reset-password',
   standalone: true,
   imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
-export class ResetpasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);

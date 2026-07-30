@@ -11,12 +11,12 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
-  selector: 'app-forgotpassword',
+  selector: 'app-forgot-password',
   imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
-export class ForgotpasswordComponent {
+export class ForgotPasswordComponent {
   private readonly authService = inject(AuthService);
 
   isOverlayActive = false;

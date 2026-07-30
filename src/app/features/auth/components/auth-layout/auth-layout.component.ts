@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { IntroComponent } from '../intro/intro.component';
+import { SignUpBoxComponent } from '../sign-up-box/sign-up-box.component';
+import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 
 @Component({
-  selector: 'app-main-component',
-  imports: [CommonModule, HeaderComponent, FooterComponent, IntroComponent, RouterModule],
-  templateUrl: './main-component.component.html',
-  styleUrl: './main-component.component.scss',
+  selector: 'app-auth-layout',
+  imports: [CommonModule, HeaderComponent, FooterComponent, SignUpBoxComponent, IntroComponent, RouterModule],
+  templateUrl: './auth-layout.component.html',
+  styleUrl: './auth-layout.component.scss',
 })
-export class MainComponentComponent implements OnInit {
+export class AuthLayoutComponent implements OnInit {
+  public navigationService: NavigationService = inject(NavigationService);
   showIntro: boolean = true;
   public readonly isOverlayActive = false;
 

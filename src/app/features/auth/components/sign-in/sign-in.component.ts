@@ -8,12 +8,12 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-sign-in',
   imports: [RouterLink, MatDividerModule, FormsModule, ReactiveFormsModule, ButtonComponent, InputComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './sign-in.component.html',
+  styleUrl: './sign-in.component.scss',
 })
-export class LoginComponent {
+export class SignInComponent {
   public readonly authService: AuthService = inject(AuthService);
 
   public readonly loginForm = createLoginForm(inject(FormBuilder));
