@@ -1,0 +1,30 @@
+:host {
+  display: grid;
+
+  @media (width < 1024px) {
+    row-gap: 1.25rem;
+  }
+}
+
+a {
+  padding: 0.75rem 0.938rem;
+  color: var(--medium-purple);
+
+  @media (max-width: 1023px) {
+    border: 1px solid var(--medium-purple);
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    color: var(--dark-purple);
+    font-weight: 700;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.125s ease-in-out;
+
+    &:hover {
+      border: 1px solid var(--dark-purple);
+      color: var(--medium-purple);
+    }
+  }
+}

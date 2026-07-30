@@ -1,7 +1,8 @@
-<main class="header">
-  <div class="logo-container">
-    <a routerLink="/login"><img src="img/headerlogo.png" alt="DABubble" /></a>
-  </div>
+<header class="header">
+  <a class="logo" routerLink="/login">
+    <img src="img/headerlogo.png" alt="DABubble" />
+  </a>
+
   @if (!navigationService.isMobile()) {
     <div class="searchbar">
       @if (searchService.getHeaderListBoolean()) {
@@ -28,33 +29,34 @@
     </div>
   }
 
-  @if (navigationService.isAuthPage()) {
-    <div class="signup">
-      <p>Neu bei DABubble?</p>
-      <a routerLink="/register">Konto erstellen</a>
-    </div>
-  } @else if (!navigationService.isAuthPage()) {
-    <div class="user-menu">
-      <app-button
-        variant="plain"
-        class="menu__triger__btn"
-        (click)="onOpenMenu()"
-        [matMenuTriggerFor]="!navigationService.isMobile() ? beforeMenu : null"
-      >
-        <span>{{ authService.currentUser()?.displayName }}</span>
-        <app-profile-status
-          [photoUrl]="authService.currentUser()?.photoUrl"
-          [online]="authService.currentUser()!.online"
-        ></app-profile-status>
-        @if (!navigationService.isMobile()) {
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        }
-      </app-button>
+  @if (!navigationService.isLegal()) {
+    @if (navigationService.isAuthPage() && !navigationService.isMobile()) {
+      <app-sign-up-box></app-sign-up-box>
+    } @else if (!navigationService.isAuthPage()) {
+      <div class="user-menu">
+        <app-button
+          variant="plain"
+          class="menu__triger__btn"
+          (click)="onOpenMenu()"
+          [matMenuTriggerFor]="!navigationService.isMobile() ? beforeMenu : null"
+        >
+          <span>{{ authService.currentUser()?.displayName }}</span>
+          <app-profile-status
+            [photoUrl]="authService.currentUser()?.photoUrl"
+            [online]="authService.currentUser()?.online ?? false"
+          ></app-profile-status>
+          @if (!navigationService.isMobile()) {
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          }
+        </app-button>
 
-      <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-        <button type="button" (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
-        <button type="button" (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
-      </mat-menu>
-    </div>
+        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
+          <button type="button" (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
+            Profil
+          </button>
+          <button type="button" (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
+        </mat-menu>
+      </div>
+    }
   }
-</main>
+</header>

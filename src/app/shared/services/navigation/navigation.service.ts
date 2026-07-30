@@ -9,12 +9,14 @@ export class NavigationService {
   private router = inject(Router);
 
   public isAuthPage = signal<boolean>(true);
+  public isSignUpPage = signal<boolean>(false);
   public isContactbarPage = signal<boolean>(true);
   public isMainChat = signal<boolean>(true);
   public isMobile = signal<boolean>(this.checkScreenWidth());
   public isChannelsOpen = signal<boolean>(true); // Default offen
   public isDirectMessagesOpen = signal<boolean>(false);
   public isThreadOpen = signal<boolean>(false);
+  public isLegal = signal<boolean>(false);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -74,12 +76,16 @@ export class NavigationService {
     }
     this.isThreadOpen.set(url.includes('messageId='));
     const isAuth = url.includes('login') || url.includes('register');
-    const isContactbar = url.includes('contactbar'); // Hier ist der auslöser für den den Bug der login Page die suchleiste nur wenn nicht auf einer Auth seite
+    const signUp = url.includes('register');
+    const isContactbar = url.includes('contactbar');
     const path = url.split('?')[0];
     const isMain = path === '/main' || path === '/main/';
+    const isLegal = url.includes('Dataprotection') || url.includes('imprint');
     this.isAuthPage.set(isAuth);
+    this.isSignUpPage.set(signUp);
     this.isContactbarPage.set(isContactbar);
     this.isMainChat.set(isMain);
+    this.isLegal.set(isLegal);
   }
 
   public selectChannel(id: string) {

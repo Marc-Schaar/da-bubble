@@ -3,20 +3,17 @@
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  > a {
-    font-weight: 400;
-    font-size: 18px;
-    color: #797ef3;
-    text-decoration: none;
-    padding: 10px 15px;
-    &:hover {
-      border: 1px solid #adb0d9;
-      padding: 9px 14px;
-      border-radius: 30px;
-    }
 
-    @media screen and (height < 745px) {
-      padding: 5px;
+  a {
+    font-weight: 400;
+    color: var(--medium-purple);
+    padding: 10px 15px;
+    border-radius: 30px;
+    transition: all 0.125s ease-in-out;
+    outline: 1px solid transparent;
+    &:hover {
+      outline: 1px solid var(--light-purple);
+      color: var(--dark-purple);
     }
   }
 }

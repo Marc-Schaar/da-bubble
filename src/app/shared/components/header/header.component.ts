@@ -17,6 +17,7 @@ import { AuthService } from '../../../features/auth/services/auth/auth.service';
 import { InputComponent } from '../input/input.component';
 import { ButtonComponent } from '../button/button.component';
 import { ProfileStatusComponent } from '../profile-status/profile-status.component';
+import { SignUpBoxComponent } from '../../../features/auth/components/sign-up-box/sign-up-box.component';
 
 @Component({
   selector: 'app-header',
@@ -31,6 +32,7 @@ import { ProfileStatusComponent } from '../profile-status/profile-status.compone
     InputComponent,
     ButtonComponent,
     ProfileStatusComponent,
+    SignUpBoxComponent,
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],

@@ -1,3 +1,8 @@
+:host {
+  display: contents;
+  max-width: 1920px;
+}
+
 .header {
   display: grid;
   grid-template-rows: 1fr;
@@ -9,7 +14,7 @@
   max-width: 1920px;
 }
 
-.logo-container {
+.logo {
   grid-row: 1;
   grid-column: 1;
 }
@@ -27,37 +32,6 @@
 .header-login {
   display: flex;
   justify-content: center;
-}
-
-.signup {
-  height: 70px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-end;
-  flex-direction: column;
-
-  @media (max-width: 1023px) {
-    display: none;
-  }
-
-  > p:nth-child(1) {
-    font-weight: 400;
-    font-size: 18px;
-    color: #000000;
-    text-decoration: none;
-  }
-  > a:nth-child(2) {
-    font-weight: 400;
-    font-size: 18px;
-    color: #797ef3;
-    text-decoration: none;
-    padding: 10px 15px;
-    &:hover {
-      border: 1px solid #adb0d9;
-      padding: 9px 14px;
-      border-radius: 30px;
-    }
-  }
 }
 
 .logo-container {
