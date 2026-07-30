@@ -12,7 +12,6 @@ doc: docu erweitern
 feat: authguard erstellen
 refacor: auth header den anderen header seperat in zwei komponents
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
-bug: wenn man mobile im tread ist und zurück geht landet mann bei der contactbar und nicht beim chennel in dem man war
 refactor: dialog-receiver und user-prifle componeten sind ja sehr ähnlich mache daraus eine
 bug: im emjoi pre selektr ist die highligzted klasse ohne border radius
 bug: wennich mention @ offen habe ubnd auf # klicke sollte es nicht schließen sondern nur wechseln
@@ -24,3 +23,4 @@ HTML-Attribute Sweep (alt/type/aria) fertig
 Private/public/readonly Modifier-Sweep fertig (kein eigenes Decorator-System)
 Legals-Struktur (Impressum zentrierte Card, Datenschutz ohne Card + lila Headings) fertig
 Message-Actions/Emoji-Picker/Mention-Tag-Bugs behoben (Popup-Close, gegenseitiges Schließen, Mention-Toggle)
+Mobile Thread-Zurück-Bug behoben (schließt jetzt den Thread-Drawer statt zur Kontaktbar zu navigieren)

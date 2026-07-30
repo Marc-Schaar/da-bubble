@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -19,11 +19,20 @@ export class ChatHeaderComponent {
   private navigationService: NavigationService = inject(NavigationService);
   public authService = inject(AuthService);
 
+  /** Set by the thread drawer so back closes the thread instead of navigating away. */
+  public isThread = input<boolean>(false);
+
   /**
-   *Navigate Back to the Channel or to the Contactbar.
+   * Navigates back to the channel or to the contact bar — except inside the
+   * thread drawer, where it only closes the drawer so the channel/direct
+   * chat underneath stays put instead of being replaced by the contact bar.
    */
   public handleBack() {
-    this.navigationService.gotToChat();
+    if (this.isThread()) {
+      this.navigationService.toggleThread('close');
+    } else {
+      this.navigationService.gotToChat();
+    }
   }
 
   /**
