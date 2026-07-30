@@ -1,23 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { Location } from '@angular/common';
-
+import { Component } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { LegalHeaderComponent } from '../../../shared/components/legal-header/legal-header.component';
 import { CONTACT_EMAIL } from '../../../shared/constants';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dataprotection',
-  imports: [HeaderComponent, ButtonComponent, MatIconModule],
+  imports: [HeaderComponent, LegalHeaderComponent],
   templateUrl: './data-protection.component.html',
   styleUrl: './data-protection.component.scss',
 })
 export class DataprotectionComponent {
-  private location = inject(Location);
   protected readonly contactEmail = CONTACT_EMAIL;
-
-  /** Returns to whichever page linked here (login, register, main chat, …). */
-  public goBack() {
-    this.location.back();
-  }
 }

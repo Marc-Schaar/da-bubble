@@ -1,22 +1,19 @@
 <app-header></app-header>
-<section class="card">
-  <div class="card-header">
-    <app-button variant="icon" type="button" (click)="goBack()">
-      <img src="img/arrow_back.png" alt="Zurück" />
-    </app-button>
-    <h1>Impressum</h1>
-  </div>
+<div class="page">
+  <section class="card">
+    <app-legal-header heading="Impressum"></app-legal-header>
 
-  <main>
-    <address>
-      <p>
-        Eugen Ferchow, Ioannis Karakasidis, Marc Schaar<br />
-        Brehmstraße 11<br />
-        40239 Düsseldorf
-      </p>
+    <main>
+      <address>
+        <p>
+          Eugen Ferchow, Ioannis Karakasidis, Marc Schaar<br />
+          Brehmstraße 11<br />
+          40239 Düsseldorf
+        </p>
 
-      <h2>Kontakt:</h2>
-      Email: <a href="mailto:{{ contactEmail }}">{{ contactEmail }}</a>
-    </address>
-  </main>
-</section>
+        <h2>Kontakt:</h2>
+        Email: <a href="mailto:{{ contactEmail }}">{{ contactEmail }}</a>
+      </address>
+    </main>
+  </section>
+</div>

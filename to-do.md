@@ -2,7 +2,6 @@ fix: die actions ins der meassage teamplate schließen nicht sauber nur noch der
 test: test implementieren
 refactor card header, card main, card footer komponenten
 feat: barrierefreiheit
-refactor: legals anpassen
 refactor: performance
 refactor: lazy loading
 mit figma abgleichen
@@ -22,3 +21,4 @@ Kontaktbar ist fertig überprüft
 Header auch bis auf den Such Result-container
 HTML-Attribute Sweep (alt/type/aria) fertig
 Private/public/readonly Modifier-Sweep fertig (kein eigenes Decorator-System)
+Legals-Struktur (Impressum zentrierte Card, Datenschutz ohne Card + lila Headings) fertig

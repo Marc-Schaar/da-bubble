@@ -9,22 +9,25 @@ app-header {
   height: 100svh;
 }
 
-main {
-  overflow: auto;
-}
-
-.card-header {
+.page {
+  overflow-y: auto;
+  padding: 0 2rem 2rem;
   display: flex;
-}
-
-.card {
-  margin: 0 2rem 2rem;
-  display: flex;
-  max-width: 1920px;
-  border-radius: 30px;
-  background-color: #ffffff;
   flex-direction: column;
-  padding: 48px 50px;
-  overflow: hidden;
-  text-align: justify;
+  gap: 24px;
+}
+
+main {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+app-legal-header {
+  --legal-header-title-color: var(--dark-purple);
+}
+
+h4 {
+  color: var(--dark-purple);
 }
