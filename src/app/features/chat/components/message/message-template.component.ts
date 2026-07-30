@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
@@ -37,7 +37,11 @@ export class MessageTemplateComponent {
   private userStore: UserStore = inject(UserStore);
   private mentionService: MentionService = inject(MentionService);
   public reactionsService: ReactionsService = inject(ReactionsService);
-  private elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+
+  @ViewChild('menuBtn', { read: ElementRef }) private menuBtn?: ElementRef<HTMLElement>;
+  @ViewChild('menuPopup', { read: ElementRef }) private menuPopup?: ElementRef<HTMLElement>;
+  @ViewChild('reactionBtn', { read: ElementRef }) private reactionBtn?: ElementRef<HTMLElement>;
+  @ViewChild('reactionPopup', { read: ElementRef }) private reactionPopup?: ElementRef<HTMLElement>;
 
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
@@ -86,6 +90,24 @@ export class MessageTemplateComponent {
 
   /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
   public readonly isReactionSelected = (emoji: string): boolean => this.hasReacted(emoji);
+
+  /**
+   * Toggles the own-message edit menu, closing the reaction quick-picker
+   * so only one popup is ever open at a time.
+   */
+  public toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+    if (this.menuOpen) this.reactionMenuOpen = false;
+  }
+
+  /**
+   * Toggles the reaction quick-picker, closing the edit menu so only one
+   * popup is ever open at a time.
+   */
+  public toggleReactionMenu(): void {
+    this.reactionMenuOpen = !this.reactionMenuOpen;
+    if (this.reactionMenuOpen) this.menuOpen = false;
+  }
 
   /**
    * Enables editing mode for a specific message.
@@ -149,15 +171,22 @@ export class MessageTemplateComponent {
   }
 
   /**
-   * Closes the actions/reaction menu on any click outside this message —
-   * `mouseleave` alone missed touch input and clicks that pass over the
-   * absolutely positioned menu on the way out.
+   * Closes each popup individually on any click outside its own toggle
+   * button and popup content — clicking elsewhere in the same message row
+   * (avatar, name, other action buttons) now closes an open popup instead
+   * of being treated as "inside".
    */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (!this.menuOpen && !this.reactionMenuOpen) return;
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+    const target = event.target as Node;
+    if (this.menuOpen && !this.menuBtn?.nativeElement.contains(target) && !this.menuPopup?.nativeElement.contains(target)) {
       this.menuOpen = false;
+    }
+    if (
+      this.reactionMenuOpen &&
+      !this.reactionBtn?.nativeElement.contains(target) &&
+      !this.reactionPopup?.nativeElement.contains(target)
+    ) {
       this.reactionMenuOpen = false;
     }
   }

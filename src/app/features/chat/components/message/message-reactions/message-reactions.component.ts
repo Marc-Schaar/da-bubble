@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, HostListener, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input, signal, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ChannelMessage } from '../../../models/channel-message/channel-message';
 import { ReactionsService, ReactionContext } from '../../../services/reactions/reactions.service';
@@ -22,6 +22,9 @@ import { ButtonComponent } from '../../../../../shared/components/button/button.
 export class MessageReactionsComponent {
   public readonly reactionsService = inject(ReactionsService);
   public readonly navigationService = inject(NavigationService);
+
+  @ViewChild('reactionBtn', { read: ElementRef }) private reactionBtn?: ElementRef<HTMLElement>;
+  @ViewChild('reactionPopup', { read: ElementRef }) private reactionPopup?: ElementRef<HTMLElement>;
 
   public message = input.required<ChannelMessage>();
   public currentChannelId = input<string>('');
@@ -64,5 +67,15 @@ export class MessageReactionsComponent {
   @HostListener('document:keydown.escape')
   onEscape() {
     this.reactionMenuOpen.set(false);
+  }
+
+  /** Closes the quick-reaction menu on any click outside its button/popup. */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.reactionMenuOpen()) return;
+    const target = event.target as Node;
+    if (!this.reactionBtn?.nativeElement.contains(target) && !this.reactionPopup?.nativeElement.contains(target)) {
+      this.reactionMenuOpen.set(false);
+    }
   }
 }

@@ -1,4 +1,4 @@
-<div class="emoji-container">
+<div class="emoji-container" (mouseleave)="reactionMenuOpen.set(false)">
   @for (reaction of visibleReactions(); track reaction.emoji) {
     @let names = reactionsService.getReactionNamesForEmoji(reaction.emoji, reactions());
     <div
@@ -33,6 +33,7 @@
   }
   @if (reactions().length > 0) {
     <app-button
+      #reactionBtn
       variant="icon"
       ariaLabel="Reaktion hinzufügen"
       (click)="reactionMenuOpen.set(!reactionMenuOpen())"
@@ -42,7 +43,7 @@
   }
 
   @if (reactionMenuOpen()) {
-    <div class="reaction-menu">
+    <div #reactionPopup class="reaction-menu">
       <app-emoji-quick-picker [emojis]="preSelectedEmojiList" [isSelected]="isReactionSelected" (pick)="toggle($event)"></app-emoji-quick-picker>
     </div>
   }

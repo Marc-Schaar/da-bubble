@@ -5,7 +5,7 @@
   }"
 >
   @if (!isEditing && channelType() !== "direct") {
-    <div class="reaction-bar">
+    <div class="reaction-bar" (mouseleave)="menuOpen = false; reactionMenuOpen = false">
       <app-button
         variant="icon"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['checkMark']) }"
@@ -22,7 +22,7 @@
       >
         {{ preSelectedEmojis["thumbsUp"] }}
       </app-button>
-      <app-button variant="icon" ariaLabel="Reaktion auswählen" (click)="this.reactionMenuOpen = !this.reactionMenuOpen">
+      <app-button #reactionBtn variant="icon" ariaLabel="Reaktion auswählen" (click)="toggleReactionMenu()">
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
       </app-button>
       @if (!isThread()) {
@@ -32,17 +32,17 @@
       }
 
       @if (isOwnMessage()) {
-        <app-button variant="icon" ariaLabel="Nachrichtenmenü öffnen" (click)="this.menuOpen = !this.menuOpen">
+        <app-button #menuBtn variant="icon" ariaLabel="Nachrichtenmenü öffnen" (click)="toggleMenu()">
           <mat-icon>more_vert</mat-icon>
         </app-button>
       }
       @if (menuOpen && isOwnMessage()) {
-        <div class="menu">
+        <div #menuPopup class="menu">
           <app-button variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</app-button>
         </div>
       }
       @if (reactionMenuOpen && isChannelMessage()) {
-        <div class="reaction-menu">
+        <div #reactionPopup class="reaction-menu">
           <app-emoji-quick-picker
             [emojis]="preSelectedEmojiList"
             [isSelected]="isReactionSelected"

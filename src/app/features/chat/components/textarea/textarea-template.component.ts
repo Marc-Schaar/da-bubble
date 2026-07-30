@@ -109,9 +109,23 @@ export class TextareaTemplateComponent {
   /**
    * Inserts the `@`/`#` trigger at the caret position (icon buttons), then
    * runs it through the normal detection so the dropdown opens consistently
-   * with typing the character directly.
+   * with typing the character directly. If the suggestion dropdown is
+   * already open from a previous, unresolved trigger, this instead closes
+   * it and removes that unconfirmed token, so repeated clicks toggle
+   * rather than stacking up trigger characters.
    */
   insertTrigger(symbol: '@' | '#', ta: HTMLTextAreaElement) {
+    if (this.searchService.getListBoolean()) {
+      const range = this.searchService.getActiveTokenRange();
+      if (range) {
+        this.input = this.input.slice(0, range.start) + this.input.slice(range.end);
+      }
+      this.searchService.resetList();
+      setTimeout(() => ta.focus());
+      return;
+    }
+
+    this.reactionMenuOpenInTextarea = false;
     const pos = ta.selectionStart ?? this.input.length;
     this.input = this.input.slice(0, pos) + symbol + this.input.slice(pos);
     setTimeout(() => {
