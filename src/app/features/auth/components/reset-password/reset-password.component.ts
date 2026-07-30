@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { HeaderUserMenuComponent } from '../../../../shared/components/header-user-menu/header-user-menu.component';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
@@ -13,7 +14,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
+  imports: [HeaderComponent, HeaderUserMenuComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })

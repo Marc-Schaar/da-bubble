@@ -1,0 +1,18 @@
+:host {
+  display: contents;
+}
+
+app-button.menu__triger__btn {
+  font-weight: 700;
+  font-size: 2rem;
+
+  ::ng-deep button {
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 1023px) {
+    span {
+      display: none;
+    }
+  }
+}

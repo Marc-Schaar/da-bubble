@@ -1,5 +1,9 @@
 <main>
-  <app-header></app-header>
+  <app-header>
+    @if (!navigationService.isMobile()) {
+      <app-sign-up-box headerActions></app-sign-up-box>
+    }
+  </app-header>
 
   <section class="auth-card">
     <router-outlet />

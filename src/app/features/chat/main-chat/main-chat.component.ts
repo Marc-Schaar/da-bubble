@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { HeaderSearchComponent } from '../../../shared/components/header-search/header-search.component';
+import { HeaderUserMenuComponent } from '../../../shared/components/header-user-menu/header-user-menu.component';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../shared/services/search/search.service';
 import { UserService } from '../../../shared/services/user/shared.service';
@@ -26,6 +28,8 @@ import { ContactbarComponent } from '../components/contactbar/contactbar.compone
     ThreadComponent,
     RouterModule,
     HeaderComponent,
+    HeaderSearchComponent,
+    HeaderUserMenuComponent,
     ContactbarComponent,
   ],
   templateUrl: './main-chat.component.html',

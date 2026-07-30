@@ -1,6 +1,8 @@
 <section>
   @if (navigationService.isMobile()) {
-    <app-header></app-header>
+    <app-header>
+      <app-header-user-menu headerActions></app-header-user-menu>
+    </app-header>
     @if (isClicked) {
       <div class="justify-sb full-width p-lr-16">
         <span class="search__title">Search</span>

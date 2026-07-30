@@ -1,0 +1,59 @@
+:host {
+  display: contents;
+}
+
+.input {
+  app-input {
+    --app-input-bg: white;
+    --app-input-radius: 42px;
+    --app-input-padding: 1.1rem 1ch 1.1rem 2.813rem;
+    --app-input-font-size: 1.5rem;
+    flex: 1;
+    ::ng-deep {
+      .app-input__control {
+        outline: 1px solid var(--bg-color);
+        transition: all 0.125s ease-in-out;
+      }
+
+      .app-input__suffix {
+        padding-right: 2.813rem;
+        margin: 0;
+        color: var(--text-grey);
+      }
+    }
+
+    &:hover ::ng-deep {
+      .app-input__control {
+        outline: 1px solid var(--medium-purple);
+      }
+      .app-input__suffix {
+        color: var(--medium-purple);
+      }
+    }
+
+    &:focus-within {
+      ::ng-deep {
+        .app-input__control {
+          outline: 1px solid var(--dark-purple);
+        }
+
+        .app-input__suffix {
+          color: var(--dark-purple);
+        }
+      }
+    }
+  }
+}
+
+.tag-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 54px;
+  outline: 1px solid var(--light-purple);
+  border-radius: 0 20px 20px 20px;
+  padding: 20px 21px;
+  background-color: white;
+  z-index: 99;
+  box-shadow: 4px 4px 7px 0px rgba(0, 0, 0, 0.2);
+}

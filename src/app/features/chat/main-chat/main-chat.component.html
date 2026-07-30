@@ -1,6 +1,9 @@
 <main (click)="closeAll()">
   @if (!navigationService.isMobile()) {
-    <app-header></app-header>
+    <app-header>
+      <app-header-search headerSearch></app-header-search>
+      <app-header-user-menu headerActions></app-header-user-menu>
+    </app-header>
   }
 
   <div class="main-chat-container">

@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { HeaderUserMenuComponent } from '../../../../shared/components/header-user-menu/header-user-menu.component';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
@@ -23,6 +24,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   imports: [
     CommonModule,
     HeaderComponent,
+    HeaderUserMenuComponent,
     MatIconModule,
     FormsModule,
     SearchResultComponent,

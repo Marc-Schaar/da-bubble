@@ -3,60 +3,11 @@
     <img src="img/headerlogo.png" alt="DABubble" />
   </a>
 
-  @if (!navigationService.isMobile()) {
-    <div class="searchbar">
-      @if (searchService.getHeaderListBoolean()) {
-        <div class="tag-container">
-          <app-search-result [(input)]="input"></app-search-result>
-        </div>
-      }
+  <div class="searchbar">
+    <ng-content select="[headerSearch]"></ng-content>
+  </div>
 
-      @if (!navigationService.isContactbarPage() && !navigationService.isMobile() && !navigationService.isAuthPage()) {
-        <div class="input">
-          <app-input
-            appearance="filled"
-            [(ngModel)]="input"
-            (input)="searchService.observeInput(input, 'header')"
-            (click)="searchService.closeList()"
-            type="text"
-            placeholder="Devspace durchsuchen"
-            ariaLabel="Devspace durchsuchen"
-          >
-            <mat-icon appInputSuffix>search</mat-icon>
-          </app-input>
-        </div>
-      }
-    </div>
-  }
-
-  @if (!navigationService.isLegal()) {
-    @if (navigationService.isAuthPage() && !navigationService.isMobile()) {
-      <app-sign-up-box></app-sign-up-box>
-    } @else if (!navigationService.isAuthPage()) {
-      <div class="user-menu">
-        <app-button
-          variant="plain"
-          class="menu__triger__btn"
-          (click)="onOpenMenu()"
-          [matMenuTriggerFor]="!navigationService.isMobile() ? beforeMenu : null"
-        >
-          <span>{{ authService.currentUser()?.displayName }}</span>
-          <app-profile-status
-            [photoUrl]="authService.currentUser()?.photoUrl"
-            [online]="authService.currentUser()?.online ?? false"
-          ></app-profile-status>
-          @if (!navigationService.isMobile()) {
-            <mat-icon>keyboard_arrow_down</mat-icon>
-          }
-        </app-button>
-
-        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-          <button type="button" (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">
-            Profil
-          </button>
-          <button type="button" (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
-        </mat-menu>
-      </div>
-    }
-  }
+  <div class="user-menu">
+    <ng-content select="[headerActions]"></ng-content>
+  </div>
 </header>

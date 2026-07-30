@@ -1,0 +1,19 @@
+@if (searchService.getHeaderListBoolean()) {
+  <div class="tag-container">
+    <app-search-result [(input)]="input"></app-search-result>
+  </div>
+}
+
+<div class="input">
+  <app-input
+    appearance="filled"
+    [(ngModel)]="input"
+    (input)="searchService.observeInput(input, 'header')"
+    (click)="searchService.closeList()"
+    type="text"
+    placeholder="Devspace durchsuchen"
+    ariaLabel="Devspace durchsuchen"
+  >
+    <mat-icon appInputSuffix>search</mat-icon>
+  </app-input>
+</div>
