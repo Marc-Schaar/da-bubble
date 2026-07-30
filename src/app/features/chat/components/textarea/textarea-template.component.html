@@ -23,10 +23,20 @@
         </app-button>
       }
 
-      <app-button variant="icon" ariaLabel="Person erwähnen" (click)="insertTrigger('@', ta); $event.stopPropagation()">
+      <app-button
+        variant="icon"
+        class="mention-anchor-at"
+        ariaLabel="Person erwähnen"
+        (click)="insertTrigger('@', ta); $event.stopPropagation()"
+      >
         <mat-icon>alternate_email</mat-icon>
       </app-button>
-      <app-button variant="icon" ariaLabel="Channel erwähnen" (click)="insertTrigger('#', ta); $event.stopPropagation()">
+      <app-button
+        variant="icon"
+        class="mention-anchor-channel"
+        ariaLabel="Channel erwähnen"
+        (click)="insertTrigger('#', ta); $event.stopPropagation()"
+      >
         <mat-icon>tag</mat-icon>
       </app-button>
     </div>
@@ -35,7 +45,7 @@
     </app-button>
 
     @if (searchService.getListBoolean()) {
-      <div class="tag-container">
+      <div class="tag-container" [class.tag-container--channel]="searchService.isChannel()">
         <app-search-result [input]="input" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
       </div>
     }

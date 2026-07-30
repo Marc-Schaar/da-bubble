@@ -42,6 +42,14 @@ button {
   }
 }
 
+.mention-anchor-at {
+  anchor-name: --mention-anchor-at;
+}
+
+.mention-anchor-channel {
+  anchor-name: --mention-anchor-channel;
+}
+
 .tag-container {
   position: absolute;
   left: 20%;
@@ -56,6 +64,21 @@ button {
   @media screen and (width< 1024px) {
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  // Anchors to the "@" button; falls back to the centered position above in browsers without anchor-positioning support.
+  @supports (position-anchor: --mention-anchor-at) {
+    position-anchor: --mention-anchor-at;
+    left: anchor(center);
+    bottom: anchor(top);
+    margin-bottom: 8px;
+    transform: none;
+  }
+
+  &--channel {
+    @supports (position-anchor: --mention-anchor-channel) {
+      position-anchor: --mention-anchor-channel;
+    }
   }
 }
 
