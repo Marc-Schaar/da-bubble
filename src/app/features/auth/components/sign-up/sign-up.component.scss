@@ -1,3 +1,8 @@
+:host {
+  display: grid;
+  place-items: center;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -6,15 +11,13 @@
 
 .headline {
   h1 {
-    font-weight: 700;
-    font-size: clamp(1.75rem, 5vw, 2.875rem);
     color: var(--dark-purple);
   }
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  width: 100%;
   @media only screen and (max-width: 1023px) {
     gap: 10px;
   }
