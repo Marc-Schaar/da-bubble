@@ -16,6 +16,9 @@ section {
 
 .thread-container {
   width: 33%;
+  @media (width< 1024px) {
+    width: 100%;
+  }
 }
 
 .mat-drawer.mat-drawer-side {

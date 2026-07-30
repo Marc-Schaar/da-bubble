@@ -192,6 +192,10 @@ app-footer {
   margin-top: unset !important;
 }
 
+.cdk-global-scrollblock {
+  overflow-y: auto;
+}
+
 .menu-box-btn {
   width: 140px !important;
   text-align: center !important;

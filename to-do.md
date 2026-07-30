@@ -15,6 +15,7 @@ fix beim klick auf die pre emoji button öffent auch das ander action menu der m
 fix: wenn emoji picker offen in texarea bei klick auf den tag auswahl menü wieder schließen von emoji
 refacor: auth header den anderen header seperat in zwei komponents
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
+bug: wenn man mobile im tread ist und zurück geht landet mann bei der contactbar und nicht beim chennel in dem man war
 
 /// DONE ///
 Kontaktbar ist fertig überprüft
