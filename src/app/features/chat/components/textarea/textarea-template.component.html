@@ -17,7 +17,7 @@
         <app-button
           variant="icon"
           ariaLabel="Emoji einfügen"
-          (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()"
+          (click)="toggleEmojiPicker(); $event.stopPropagation()"
         >
           <mat-icon>sentiment_satisfied</mat-icon>
         </app-button>

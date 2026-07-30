@@ -62,6 +62,10 @@ button {
   }
 }
 
+:host(.app-button--icon.bg-purple) {
+  border-radius: 50%;
+}
+
 :host(.app-button--plain) button {
   &:hover:not(:disabled) {
     color: var(--app-button-hover-color, var(--dark-purple));

@@ -110,16 +110,28 @@ export class TextareaTemplateComponent {
    * Inserts the `@`/`#` trigger at the caret position (icon buttons), then
    * runs it through the normal detection so the dropdown opens consistently
    * with typing the character directly. If the suggestion dropdown is
-   * already open from a previous, unresolved trigger, this instead closes
-   * it and removes that unconfirmed token, so repeated clicks toggle
-   * rather than stacking up trigger characters.
+   * already open from a previous, unresolved trigger of the *same* symbol,
+   * this instead closes it and removes that unconfirmed token, so repeated
+   * clicks toggle rather than stacking up trigger characters. If it's open
+   * for the *other* symbol, the trigger character is swapped in place and
+   * the search re-run, so switching between `@`/`#` just switches instead
+   * of closing.
    */
   insertTrigger(symbol: '@' | '#', ta: HTMLTextAreaElement) {
     if (this.searchService.getListBoolean()) {
       const range = this.searchService.getActiveTokenRange();
-      if (range) {
-        this.input = this.input.slice(0, range.start) + this.input.slice(range.end);
+      const activeIsChannel = this.searchService.isChannel();
+      if (range && activeIsChannel !== null && activeIsChannel !== (symbol === '#')) {
+        this.input = this.input.slice(0, range.start) + symbol + this.input.slice(range.start + 1);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(range.end, range.end);
+          this.onCaretMoved(ta);
+        });
+        return;
       }
+
+      this.removeActiveToken();
       this.searchService.resetList();
       setTimeout(() => ta.focus());
       return;
@@ -133,6 +145,18 @@ export class TextareaTemplateComponent {
       ta.setSelectionRange(pos + 1, pos + 1);
       this.onCaretMoved(ta);
     });
+  }
+
+  /**
+   * Removes the currently active, unconfirmed `@`/`#` token from the input
+   * (e.g. when its suggestion dropdown is closed without picking anything),
+   * so an abandoned mention doesn't leave a stray trigger character behind.
+   */
+  private removeActiveToken(): void {
+    const range = this.searchService.getActiveTokenRange();
+    if (range) {
+      this.input = this.input.slice(0, range.start) + this.input.slice(range.end);
+    }
   }
 
   /**
@@ -153,5 +177,18 @@ export class TextareaTemplateComponent {
    */
   public addEmoji(emoji: string) {
     this.input += emoji;
+  }
+
+  /**
+   * Toggles the emoji picker, closing the mention/tag suggestion list (and
+   * removing its unconfirmed trigger token, if any) so only one popup is
+   * open at a time and no abandoned `@`/`#` is left behind.
+   */
+  public toggleEmojiPicker(): void {
+    this.reactionMenuOpenInTextarea = !this.reactionMenuOpenInTextarea;
+    if (this.reactionMenuOpenInTextarea && this.searchService.getListBoolean()) {
+      this.removeActiveToken();
+      this.searchService.resetList();
+    }
   }
 }

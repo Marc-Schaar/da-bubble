@@ -1,4 +1,3 @@
-fix: die actions ins der meassage teamplate schließen nicht sauber nur noch der emoji pre selector
 test: test implementieren
 refactor card header, card main, card footer komponenten
 feat: barrierefreiheit
@@ -13,8 +12,6 @@ feat: authguard erstellen
 refacor: auth header den anderen header seperat in zwei komponents
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
 refactor: dialog-receiver und user-prifle componeten sind ja sehr ähnlich mache daraus eine
-bug: im emjoi pre selektr ist die highligzted klasse ohne border radius
-bug: wennich mention @ offen habe ubnd auf # klicke sollte es nicht schließen sondern nur wechseln
 
 /// DONE ///
 Kontaktbar ist fertig überprüft
@@ -24,3 +21,5 @@ Private/public/readonly Modifier-Sweep fertig (kein eigenes Decorator-System)
 Legals-Struktur (Impressum zentrierte Card, Datenschutz ohne Card + lila Headings) fertig
 Message-Actions/Emoji-Picker/Mention-Tag-Bugs behoben (Popup-Close, gegenseitiges Schließen, Mention-Toggle)
 Mobile Thread-Zurück-Bug behoben (schließt jetzt den Thread-Drawer statt zur Kontaktbar zu navigieren)
+Emoji-Preselector: bg-purple (highlighted) Button jetzt mit border-radius
+Mention-Toggle: Wechsel zwischen @ und # bei offenem Dropdown wechselt jetzt statt zu schließen; Klick auf Emoji-Button schließt jetzt offenes Mention-Dropdown und öffnet Emoji-Picker
