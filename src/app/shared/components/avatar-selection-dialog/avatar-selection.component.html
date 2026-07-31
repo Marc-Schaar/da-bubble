@@ -1,10 +1,10 @@
 <div class="card">
-  <div class="headline">
+  <header class="headline">
     <app-button variant="plain" type="button" ariaLabel="Schließen" (click)="onClose()">
       <mat-icon>close</mat-icon>
     </app-button>
     <h1>Wähle deinen Avatar</h1>
-  </div>
+  </header>
 
   <img class="profile-img" [src]="selectedAvatar()" alt="Avatar Bild" />
   <p class="name">{{ data?.user?.displayName }}</p>
