@@ -88,18 +88,20 @@
                 </app-button>
               </li>
             }
+          </ul>
 
-            @if (channelService.filteredUsers().length > 0) {
-              <ul class="choose-user__bar">
-                @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
-                  <li class="choose-user__bar__item" (click)="onSelectUser(user)">
+          @if (channelService.filteredUsers().length > 0) {
+            <ul class="choose-user__bar">
+              @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
+                <li class="choose-user__bar__item">
+                  <button type="button" class="choose-user__bar__btn" (click)="onSelectUser(user)">
                     <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
                     {{ user.displayName }}
-                  </li>
-                }
-              </ul>
-            }
-          </ul>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
 
           <app-input
             placeholder="Name eingeben"

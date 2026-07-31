@@ -161,6 +161,15 @@
         background-color: var(--bg-color);
       }
     }
+
+    &__btn {
+      display: contents;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+    }
   }
 }
 
