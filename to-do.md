@@ -1,5 +1,4 @@
 refactor: performance
-refactor: lazy loading
 feat: barrierefreiheit
 test: test implementieren
 doc: docu erweitern
@@ -144,6 +143,7 @@ Defines teletype text
 <wbr>	Defines a possible line-break
 
 /// DONE ///
+Lazy Loading umgesetzt: alle Top-Level- und Child-Routes in app.routes.ts von component: auf loadComponent: (dynamic import) umgestellt (Auth-Layout + Login/Register/Avatar/Forgot-/Reset-Password, Main-Chat + Channel/Direct/New-Message, Imprint, Dataprotection); dadurch eigene JS-Chunks pro Route statt allem im Initial-Bundle. In app.config.ts zusätzlich withPreloading(PreloadAllModules) ergänzt, damit die Chunks nach dem ersten Laden im Idle nachgeladen werden, sowie die bislang importierte aber ungenutzte withComponentInputBinding() aktiviert. Build verifiziert (ng build --configuration production): Initial-Bundle klar kleiner, ~15 separate Lazy-Chunks (u.a. main-chat-component, chat-channel-component, auth-layout-component, sign-in-component etc.)
 CardComponent (wiederverwendbarer Container mit runden Ecken, card-header/card-main/card-footer per ng-content-Slots) sowie eigene CardHeaderComponent erstellt und in chat-channel, chat-direct, chat-thread und contactbar eingesetzt; dabei jeweils die lokal duplizierte .card/.card-header-SCSS entfernt
 AuthGuard überprüft: wartet korrekt auf ersten onAuthStateChanged-Callback (kein Race-Condition-Risiko beim Reload), unsubscribed sauber, schützt main-Route inkl. aller Kind-Routen; keine Änderung nötig
 Reverse Guard (GuestGuard) ergänzt: bereits angemeldete Nutzer werden von login/register/register-avatar/forgot-password/reset-password automatisch zu /main umgeleitet
