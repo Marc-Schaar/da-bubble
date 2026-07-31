@@ -62,6 +62,19 @@
   }
 }
 
+.cross-mini-btn {
+  display: flex;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cross-mini {
+  width: 20px;
+  height: 20px;
+}
+
 ///////////
 ///
 .submit-btn {
@@ -97,9 +110,19 @@
       background-color: var(--bg-color);
     }
   }
+
+  &__btn {
+    display: contents;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
 }
 
 .channel-name {
+  margin: 0;
   font-size: 1.25rem;
   color: var(--medium-purple);
   @media (max-width: 1023px) {

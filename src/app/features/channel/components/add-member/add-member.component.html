@@ -9,8 +9,10 @@
 
     <ul class="user__list">
       @for (member of channelService.enrichedMembers(); track $index) {
-        <li (click)="openProfileDialog(member)" class="user__list__item">
-          <app-user-list-item [user]="member" [currentUserId]="authService.currentUser()?.id ?? null"></app-user-list-item>
+        <li class="user__list__item">
+          <button type="button" class="user__list__btn" (click)="openProfileDialog(member)">
+            <app-user-list-item [user]="member" [currentUserId]="authService.currentUser()?.id ?? null"></app-user-list-item>
+          </button>
         </li>
       }
     </ul>
@@ -27,7 +29,7 @@
       </app-button>
     </header>
 
-    <div class="channel-name"># {{ channelService.currentChannel()?.name }}</div>
+    <p class="channel-name"># {{ channelService.currentChannel()?.name }}</p>
 
     <div class="input-wrapper">
       <div class="input-cont">
@@ -38,15 +40,19 @@
 
               {{ selectedUser.displayName }}
 
-              <img (click)="channelService.removeUserFromSelection(index)" src="img/close.svg" alt="Auswahl entfernen" class="cross-mini" />
+              <button type="button" class="cross-mini-btn" aria-label="Auswahl entfernen" (click)="channelService.removeUserFromSelection(index)">
+                <img src="img/close.svg" alt="" class="cross-mini" />
+              </button>
             </li>
           }
 
           @if (this.channelService.filteredUsers().length > 0) {
             <ul class="choose-user-bar user__list">
               @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
-                <li class="user__list__item" (click)="addUserToSelection(user)">
-                  <app-user-list-item [user]="user"></app-user-list-item>
+                <li class="user__list__item">
+                  <button type="button" class="user__list__btn" (click)="addUserToSelection(user)">
+                    <app-user-list-item [user]="user"></app-user-list-item>
+                  </button>
                 </li>
               } @empty {
                 <p>Kein User hinzufügbar oder bereits alle hinzugefügt</p>
