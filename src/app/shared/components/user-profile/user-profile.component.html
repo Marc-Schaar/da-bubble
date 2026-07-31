@@ -1,14 +1,20 @@
 <div class="profile-main-cont" [class.receiver]="!isOwnProfile" (click)="handleClick($event)">
   <app-dialog-header title="Profil" (closed)="closeMenu()"></app-dialog-header>
 
-  <div (click)="isOwnProfile && modifyInfos() ? openAvatarSelection() : null" class="picture-cont" [class.editable]="isOwnProfile">
+  <button
+    type="button"
+    class="picture-cont"
+    [class.editable]="isOwnProfile"
+    [attr.aria-label]="isOwnProfile ? 'Profilbild ändern' : null"
+    (click)="isOwnProfile && modifyInfos() ? openAvatarSelection() : null"
+  >
     <img [src]="pendingPhotoUrl() ?? user()?.photoUrl" alt="" />
-  </div>
+  </button>
 
   @if (!modifyInfos()) {
     <div class="discription-cont">
       <div class="info-edit">
-        <div class="name">{{ user()?.displayName }}</div>
+        <p class="name">{{ user()?.displayName }}</p>
         @if (isOwnProfile) {
           <app-guest-lock-tooltip>
             <app-button variant="plain" class="edit-btn" [disabled]="authService.isGuest()" (click)="modify()">
@@ -23,11 +29,11 @@
       </div>
       <div class="status-cont">
         @if (isOwnProfile || user()?.online) {
-          <div class="circle online"></div>
-          <div class="status online">Aktiv</div>
+          <div class="circle online" aria-hidden="true"></div>
+          <p class="status online">Aktiv</p>
         } @else {
-          <div class="circle offline"></div>
-          <div class="status offline">Abwesend</div>
+          <div class="circle offline" aria-hidden="true"></div>
+          <p class="status offline">Abwesend</p>
         }
       </div>
     </div>
@@ -35,10 +41,12 @@
     <div class="contact-cont">
       <div class="contact-row">
         <div class="envelope"><img src="img/mail.png" alt="" /></div>
-        <div class="contact">
-          <p class="email">Email-Adresse</p>
-          <div class="email-route">{{ user()?.email }}</div>
-        </div>
+        <dl class="contact">
+          <dt class="email">Email-Adresse</dt>
+          <dd>
+            <a href="mailto:{{ user()?.email }}" class="email-route">{{ user()?.email }}</a>
+          </dd>
+        </dl>
       </div>
     </div>
 
