@@ -16,7 +16,6 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 export class AuthLayoutComponent implements OnInit {
   public navigationService: NavigationService = inject(NavigationService);
   showIntro: boolean = true;
-  public readonly isOverlayActive = false;
 
   /**
    * Lifecycle hook that is called when the component is initialized.
