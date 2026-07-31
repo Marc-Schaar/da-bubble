@@ -1,5 +1,13 @@
 <div class="avatar-picker">
   @for (avatar of avatars; track avatar) {
-    <img [src]="avatar" [alt]="avatar" (click)="selected.set(avatar)" [class.selected]="selected() === avatar" />
+    <button
+      type="button"
+      class="avatar-option"
+      [class.selected]="selected() === avatar"
+      [attr.aria-pressed]="selected() === avatar"
+      (click)="selected.set(avatar)"
+    >
+      <img [src]="avatar" [alt]="avatar" />
+    </button>
   }
 </div>
