@@ -291,8 +291,8 @@ Nach jeder Phase (mindestens nach jedem Merge) einmal komplett durchspielen — 
 
 ### 10.4 Infrastruktur & Performance
 
-- [ ] **NotificationService einführen, `isOverlayActive` ablösen** — aktuell kein zentraler Service vorhanden; `isOverlayActive` ist ein lokales Boolean-Flag pro Komponente für eine Overlay-Übergangsanimation im Auth-Flow (nicht Notifications im eigentlichen Sinn). Neuen `NotificationService` (Toasts/Snackbar) bauen und dabei prüfen, ob die drei Stellen durch denselben Mechanismus ersetzt werden oder als reines Auth-UI-Detail bestehen bleiben.
-  Dateien: `features/auth/components/reset-password/`, `forgot-password/`, `main-component/`
+- [x] **NotificationService einführen, `isOverlayActive` ablösen** — `NotificationService` (Signal-basierter Toast-Store, `providedIn: 'root'`) eingeführt, gerendert über `ToastContainerComponent` einmalig im App-Root (`app.component.html`). Toasts für Registrierung, Login (inkl. Gast-Login), Passwort-vergessen/-geändert und Profil-Update verdrahtet. `isOverlayActive`-Bild-Overlay in `forgot-password`/`reset-password` ersatzlos entfernt (`Versendet.png`/`Anmeldung.png` gelöscht) — Ladezustand läuft jetzt über ein lokales `isSubmitting`-Flag pro Komponente, das an das bestehende `[loading]`-Input von `app-button` gebunden ist, kein eigener Overlay-Komponente nötig.
+  Dateien: `shared/services/notification/`, `shared/components/toast-container/`, `features/auth/components/reset-password/`, `forgot-password/`
 - [ ] **AuthGuard erweitern** — Guard existiert bereits (`src/core/auth.guard.ts`, aktiv auf dem `main`-Routenbaum via `app.routes.ts:37`); prüfen, ob weitere Routen (z. B. Auth-Seiten selbst gegen bereits eingeloggte User) einen inversen Guard brauchen.
 - [ ] **Lazy Loading** — `app.routes.ts` lädt aktuell alle Components eager (`component:` statt `loadComponent:`); Feature-Bereiche (`auth`, `chat`, `legal`) auf `loadComponent`/`loadChildren` umstellen.
 - [ ] **Performance** — nach Lazy Loading: Bundle-Analyse (`ng build --stats-json` + Analyzer), OnPush-Stand aus Phase 7 prüfen, fehlende `trackBy` auf `*ngFor`-Schleifen suchen.
