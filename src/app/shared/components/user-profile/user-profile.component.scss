@@ -19,7 +19,7 @@
   .contact-cont {
     display: flex;
     flex-direction: column;
-    > div:nth-child(1) {
+    .contact-row {
       display: flex;
       gap: 20px;
     }

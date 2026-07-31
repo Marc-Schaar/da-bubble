@@ -22,7 +22,13 @@
             <div class="member-img-cont">
               @for (member of channelService.enrichedMembers(); track member.id + $index; let i = $index) {
                 @if (i < 3) {
-                  <img class="avatar" [src]="member.photoUrl" alt="Name" />
+                  <img
+                    class="avatar"
+                    [class.avatar--stack-2]="i === 1"
+                    [class.avatar--stack-3]="i === 2"
+                    [src]="member.photoUrl"
+                    alt="Name"
+                  />
                 }
               }
             </div>

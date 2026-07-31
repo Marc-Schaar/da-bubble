@@ -7,8 +7,8 @@ mit figma abgleichen
 doc: docu erweitern
 authguard überprüfen
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
-refactor: enfterne alle div:nth-child selektoren und nutze echte css klassen, entferen auch untötie divs,
 refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
+refactor: header der card in chanel, direct und thread als eine komponente
 
 html atribute : <!--...--> Defines a comment
 
@@ -165,3 +165,4 @@ NotificationService (Signal-basierter Toast-Store, eigene ToastContainerComponen
 Bugfix: "zweimal auf Speichern klicken" in user-profile – modifyInfos/newName/pendingPhotoUrl waren normale Felder in einer OnPush-Komponente, die nach einem await auf Firebase/Firestore (läuft oft außerhalb der Angular-Zone) mutiert wurden, daher rendert erst der nächste Klick den bereits aktuellen State nach; auf Signals umgestellt
 Bugfix: Tooltip bei gesperrten Gast-Buttons (v.a. "Channel hinzufügen") erschien nicht – contactbar.component.scss hatte `display: contents` UND `position: relative` auf .tooltip-cont; display:contents erzeugt keine eigene Box, wodurch position:relative wirkungslos war und sich das absolut positionierte Tooltip relativ zum falschen Vorfahren platzierte. display:contents entfernt, jetzt wie in chat-channel/user-profile ein normaler Block
 Guest-Lock-Tooltip-Markup/CSS (chat-channel, contactbar, user-profile – 3x fast identisch dupliziert) in gemeinsame GuestLockTooltipComponent extrahiert; Positionierung pro Stelle via CSS-Custom-Properties (--tooltip-\*) überschreibbar, da Angular-View-Encapsulation direkte Selektor-Regeln von außen nicht erreicht (gleiches Muster wie schon bei legal-header)
+div:nth-child-Selektoren entfernt (styles.scss .menu-box, user-profile .contact-cont, sign-in, reset-password, forgot-password, chat-channel-Avatar-Stack) und durch echte CSS-Klassen ersetzt; dabei mehrere tote Regeln aufgedeckt und gelöscht, die wegen Angular-View-Encapsulation und Tag-Mismatch (app-button/app-input statt button/div) nie gegriffen hatten (button:nth-child, h1/span:nth-child, .box > div:nth-child in reset-password), sowie unnötige verschachtelte Wrapper-Divs um h1/span in reset- und forgot-password entfernt

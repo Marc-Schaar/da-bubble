@@ -56,16 +56,6 @@
     display: flex;
   }
 
-  > div:nth-child(2) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
-      gap: 0px;
-    }
-  }
-
   .btn-container {
     height: 100%;
     width: 100%;

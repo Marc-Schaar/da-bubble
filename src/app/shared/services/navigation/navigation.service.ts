@@ -17,6 +17,7 @@ export class NavigationService {
   public isDirectMessagesOpen = signal<boolean>(false);
   public isThreadOpen = signal<boolean>(false);
   public isLegal = signal<boolean>(false);
+  public isPasswordPage = signal<boolean>(false);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -81,11 +82,13 @@ export class NavigationService {
     const path = url.split('?')[0];
     const isMain = path === '/main' || path === '/main/';
     const isLegal = url.includes('Dataprotection') || url.includes('imprint');
+    const isPasswordPage = url.includes('forgot-password') || url.includes('resetpassword');
     this.isAuthPage.set(isAuth);
     this.isSignUpPage.set(signUp);
     this.isContactbarPage.set(isContactbar);
     this.isMainChat.set(isMain);
     this.isLegal.set(isLegal);
+    this.isPasswordPage.set(isPasswordPage);
   }
 
   public selectChannel(id: string) {

@@ -23,6 +23,8 @@ export const routes: Routes = [
       { path: 'login', component: SignInComponent },
       { path: 'register', component: SignUpComponent },
       { path: 'register/avatar', component: AvatarSelectionComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'resetpassword', component: ResetPasswordComponent },
     ],
   },
 
@@ -37,8 +39,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
-  { path: 'forgotpassword', component: ForgotPasswordComponent },
-  { path: 'resetpassword', component: ResetPasswordComponent },
   { path: 'imprint', component: ImprintComponent },
   { path: 'Dataprotection', component: DataprotectionComponent },
 ];

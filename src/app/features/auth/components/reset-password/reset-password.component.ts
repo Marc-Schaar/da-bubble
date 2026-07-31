@@ -3,9 +3,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { HeaderUserMenuComponent } from '../../../../shared/components/header-user-menu/header-user-menu.component';
-import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -15,15 +12,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [
-    HeaderComponent,
-    HeaderUserMenuComponent,
-    FooterComponent,
-    ReactiveFormsModule,
-    RouterLink,
-    ButtonComponent,
-    InputComponent,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
@@ -56,11 +45,15 @@ export class ResetPasswordComponent implements OnInit {
    * Confirms the new password with Firebase Auth and redirects to the login page.
    */
   async onSubmit() {
-    if (this.resetPasswordForm.invalid) {
+    if (this.resetPasswordForm.invalid && this.isCodeValid) {
       this.resetPasswordForm.markAllAsTouched();
       return;
     }
 
+    if (!this.isCodeValid) {
+      this.router.navigate(['/forgot-password']);
+      return;
+    }
     this.isSubmitting = true;
     try {
       await this.authService.confirmPasswordReset(this.resetCode, this.resetPasswordForm.getRawValue().password);

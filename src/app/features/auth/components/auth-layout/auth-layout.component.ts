@@ -23,6 +23,11 @@ export class AuthLayoutComponent implements OnInit {
    * Sets the dashboard and login properties of the shared service and hides the intro element after 4 seconds.
    */
   ngOnInit(): void {
+    if (this.navigationService.isPasswordPage()) {
+      this.showIntro = false;
+      return;
+    }
+
     const showIntroStored = localStorage.getItem('showIntro');
     if (showIntroStored === 'false') {
       this.showIntro = false;
