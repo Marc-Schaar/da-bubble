@@ -1,6 +1,7 @@
-<div class="toast-stack">
+<div class="toast-stack" role="status" aria-live="polite">
   @for (toast of toasts(); track toast.id) {
-    <div
+    <button
+      type="button"
       class="toast"
       [class.toast--success]="toast.variant === 'success'"
       [class.toast--error]="toast.variant === 'error'"
@@ -9,6 +10,6 @@
       (animationend)="onAnimationEnd(toast)"
     >
       {{ toast.message }}
-    </div>
+    </button>
   }
 </div>
