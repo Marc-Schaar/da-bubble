@@ -1,10 +1,5 @@
-refactor: das css des intros wirk sehr komplex und unötig aufgebläht
 refactor: performance
 refactor: lazy loading
-refactor: userservice umbennen oder andere lösung
-refactor: alle images oder svg durch mat icon ersetzten und die jeweilige datei löschen
-fix: beim öffen von sign-up stehen schon werte im form durch autocomplte oder sowas
-fix: wenn ich in der userprofil ansicht bin und am editieren und die avatrpicker offenhabe und dann über dfem backrop schliße bleibt der avatrpicker offen
 feat: barrierefreiheit
 test: test implementieren
 doc: docu erweitern
