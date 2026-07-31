@@ -18,11 +18,11 @@
     </app-card-header>
 
     <ul card-main class="chatbox-container" #chat>
-      @if (parentMessageData) {
+      @if (parentMessageData()) {
         <li>
           <app-message-template
-            [message]="parentMessageData"
-            [currentChannelId]="currentChannelId"
+            [message]="parentMessageData()!"
+            [currentChannelId]="currentChannelId()"
             [isThread]="true"
             [showActions]="false"
           ></app-message-template>
@@ -35,7 +35,7 @@
       </li>
 
       @for (message of messagesService.threadMessages(); track message.id; let i = $index) {
-        @if (chatService.isNewDay(message, i === 0 ? parentMessageData : messagesService.threadMessages()[i - 1])) {
+        @if (chatService.isNewDay(message, i === 0 ? parentMessageData() : messagesService.threadMessages()[i - 1])) {
           <li>
             <app-divider-template [messageData]="message.timestamp"></app-divider-template>
           </li>
@@ -43,8 +43,8 @@
         <li>
           <app-message-template
             [message]="message"
-            [currentChannelId]="currentChannelId"
-            [parentMessageId]="parentMessageId"
+            [currentChannelId]="currentChannelId()"
+            [parentMessageId]="parentMessageId()"
             [isThread]="true"
           ></app-message-template>
         </li>

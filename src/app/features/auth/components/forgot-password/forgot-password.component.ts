@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -15,12 +15,13 @@ import { NotificationService } from '../../../../shared/services/notification/no
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordComponent {
   private readonly authService = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
 
-  isSubmitting = false;
+  isSubmitting = signal(false);
 
   public forgotPasswordForm = createForgotPasswordForm(inject(FormBuilder));
 
@@ -33,7 +34,7 @@ export class ForgotPasswordComponent {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     try {
       await this.authService.sendPasswordReset(this.forgotPasswordForm.getRawValue().email);
       this.notificationService.success('E-Mail gesendet');
@@ -41,7 +42,7 @@ export class ForgotPasswordComponent {
     } catch {
       this.notificationService.error('E-Mail konnte nicht gesendet werden.');
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 

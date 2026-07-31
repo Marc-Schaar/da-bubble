@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, effect, untracked, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, effect, untracked, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -42,6 +42,7 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;

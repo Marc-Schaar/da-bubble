@@ -7,12 +7,12 @@
   </header>
 
   <main class="main" (click)="closeUserBar()">
-    <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit }">
+    <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit() }">
       <div class="box--header">
         Channel-Name
-        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</app-button>
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit() ? "Speichern" : "Bearbeiten" }}</app-button>
       </div>
-      @if (channelNameEdit) {
+      @if (channelNameEdit()) {
         <app-input
           prefixText="#"
           type="text"
@@ -27,15 +27,15 @@
       }
     </section>
 
-    <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit }">
+    <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit() }">
       <div class="box--header">
         Beschreibung
         <app-button variant="plain" class="save-btn" (click)="onEditChannelDescription()">
-          {{ !channelDescriptionEdit ? "Bearbeiten" : "Speichern" }}
+          {{ !channelDescriptionEdit() ? "Bearbeiten" : "Speichern" }}
         </app-button>
       </div>
 
-      @if (channelDescriptionEdit) {
+      @if (channelDescriptionEdit()) {
         <app-input
           multiline
           name=""
@@ -82,7 +82,7 @@
       </ul>
     </section>
 
-    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen }">
+    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen() }">
       <div class="tooltip--line"></div>
 
       <header class="tooltip--header">
@@ -94,7 +94,7 @@
 
       @for (user of channelService.selectedUsers(); track user.id) {
         <div class="mini-profile-cont">
-          <img class="user-img-mini" [src]="user.photoUrl" alt="" />
+          <img class="user-img-mini" [src]="user.photoUrl" alt="" loading="lazy" />
           {{ user.displayName }}
           <app-button
             variant="icon"
@@ -135,7 +135,7 @@
 
     <app-button variant="primary" class="exit-btn" (click)="leaveChannel()">Channel verlassen</app-button>
 
-    @if (isAddMemberOpen) {
+    @if (isAddMemberOpen()) {
       <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>
     }
   </main>

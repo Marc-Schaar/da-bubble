@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -45,6 +45,7 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
   ],
   templateUrl: './chat-channel.component.html',
   styleUrl: './chat-channel.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;

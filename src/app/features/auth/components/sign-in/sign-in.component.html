@@ -43,8 +43,8 @@
       variant="secondary"
       class="btn-google"
       type="button"
-      [disabled]="this.authService.isLoading"
-      [loading]="this.authService.isLoading"
+      [disabled]="this.authService.isLoading()"
+      [loading]="this.authService.isLoading()"
       (click)="signinwithgoogle()"
     >
       <img src="img/Google.png" alt="Google Logo" />
@@ -54,16 +54,16 @@
       <app-button
         variant="primary"
         type="submit"
-        [disabled]="this.authService.isLoading"
-        [loading]="this.authService.isLoading"
+        [disabled]="this.authService.isLoading()"
+        [loading]="this.authService.isLoading()"
         form="loginForm"
         >Anmelden</app-button
       >
       <app-button
         variant="secondary"
         type="button"
-        [disabled]="this.authService.isLoading"
-        [loading]="this.authService.isLoading"
+        [disabled]="this.authService.isLoading()"
+        [loading]="this.authService.isLoading()"
         (click)="guestLogin()"
         >Gäste-Login</app-button
       >

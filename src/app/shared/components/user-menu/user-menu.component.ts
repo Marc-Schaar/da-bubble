@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
@@ -12,6 +12,7 @@ import { ButtonComponent } from '../button/button.component';
   imports: [MatIcon, ButtonComponent],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserMenuComponent {
   private authService: AuthService = inject(AuthService);

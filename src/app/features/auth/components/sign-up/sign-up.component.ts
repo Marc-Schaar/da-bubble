@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -13,6 +13,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignUpComponent {
   public authService: AuthService = inject(AuthService);

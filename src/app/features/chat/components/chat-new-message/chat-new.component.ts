@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -27,6 +27,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   ],
   templateUrl: './chat-new.component.html',
   styleUrl: './chat-new.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewmessageComponent {
   public navigationService: NavigationService = inject(NavigationService);

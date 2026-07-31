@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AvatarPickerComponent } from '../avatar-picker/avatar-picker.component';
@@ -9,6 +9,7 @@ import { ButtonComponent } from '../button/button.component';
   imports: [MatIcon, AvatarPickerComponent, ButtonComponent],
   templateUrl: './avatar-selection.component.html',
   styleUrl: './avatar-selection.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarSelectionComponent {
   public readonly dialogRef = inject(MatDialogRef<AvatarSelectionComponent>);

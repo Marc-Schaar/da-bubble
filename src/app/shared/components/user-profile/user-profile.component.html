@@ -8,7 +8,7 @@
     [attr.aria-label]="isOwnProfile ? 'Profilbild ändern' : null"
     (click)="isOwnProfile && modifyInfos() ? openAvatarSelection() : null"
   >
-    <img [src]="pendingPhotoUrl() ?? user()?.photoUrl" alt="" />
+    <img [src]="pendingPhotoUrl() ?? user()?.photoUrl" alt="" loading="lazy" />
   </button>
 
   @if (!modifyInfos()) {

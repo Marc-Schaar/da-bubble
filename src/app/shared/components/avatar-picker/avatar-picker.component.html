@@ -7,7 +7,7 @@
       [attr.aria-pressed]="selected() === avatar"
       (click)="selected.set(avatar)"
     >
-      <img [src]="avatar" [alt]="avatar" />
+      <img [src]="avatar" [alt]="avatar" loading="lazy" />
     </button>
   }
 </div>

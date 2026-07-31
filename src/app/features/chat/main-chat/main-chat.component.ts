@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -33,6 +33,7 @@ import { ContactbarComponent } from '../components/contactbar/contactbar.compone
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainChatComponent {
   @ViewChild('drawer') drawer!: MatDrawer;

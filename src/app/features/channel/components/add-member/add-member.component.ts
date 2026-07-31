@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { AuthService } from '../../../auth/services/auth/auth.service';
@@ -17,6 +17,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddMemberComponent {
   public readonly authService: AuthService = inject(AuthService);

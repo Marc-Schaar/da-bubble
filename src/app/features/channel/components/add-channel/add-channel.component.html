@@ -77,7 +77,7 @@
           <ul class="choose-user__list">
             @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
               <li class="choose-user__item">
-                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
+                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" loading="lazy" />
                 {{ selectedUser?.displayName }}
                 <app-button
                   variant="icon"

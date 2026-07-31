@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,6 +11,7 @@ import { InputComponent } from '../input/input.component';
   imports: [FormsModule, MatIconModule, SearchResultComponent, InputComponent],
   templateUrl: './header-search.component.html',
   styleUrl: './header-search.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderSearchComponent {
   public searchService: SearchService = inject(SearchService);

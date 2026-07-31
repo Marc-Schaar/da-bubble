@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonComponent } from '../button/button.component';
@@ -8,6 +8,7 @@ import { ButtonComponent } from '../button/button.component';
   imports: [MatIconModule, ButtonComponent],
   templateUrl: './legal-header.component.html',
   styleUrl: './legal-header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LegalHeaderComponent {
   public readonly heading = input.required<string>();

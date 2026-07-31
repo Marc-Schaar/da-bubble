@@ -36,7 +36,7 @@
         <ul class="input-cont__list">
           @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
             <li class="mini-profile">
-              <img class="mini-profile__img" [src]="selectedUser.photoUrl" alt="" />
+              <img class="mini-profile__img" [src]="selectedUser.photoUrl" alt="" loading="lazy" />
 
               {{ selectedUser.displayName }}
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -40,6 +40,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
   ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactbarComponent implements OnInit {
   public firestoreService = inject(FireServiceService);

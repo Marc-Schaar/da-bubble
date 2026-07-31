@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
@@ -32,6 +32,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
   ],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddChannelComponent {
   public readonly channelService: ChannelService = inject(ChannelService);

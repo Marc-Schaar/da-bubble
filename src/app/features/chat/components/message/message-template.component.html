@@ -53,7 +53,7 @@
     </div>
   }
 
-  <img [src]="message().photoUrl" alt="Avatar" />
+  <img [src]="message().photoUrl" alt="Avatar" loading="lazy" />
 
   @if (!isEditing) {
     <section class="content-container">

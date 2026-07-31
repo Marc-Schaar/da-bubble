@@ -18,8 +18,8 @@
   <app-button
     variant="plain"
     type="button"
-    [disabled]="authService.isLoading"
-    [loading]="authService.isLoading"
+    [disabled]="authService.isLoading()"
+    [loading]="authService.isLoading()"
     (click)="onSubmit()"
     >Weiter</app-button
   >

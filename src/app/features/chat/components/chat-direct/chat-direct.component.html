@@ -23,7 +23,7 @@
       } @empty {
         <li class="startContainer">
           <div class="userContainer">
-            <img [src]="currentReceiver()?.photoUrl" alt="" />
+            <img [src]="currentReceiver()?.photoUrl" alt="" loading="lazy" />
             <span>{{ currentReceiver()?.displayName }}</span>
           </div>
           <div class="welcomeText">

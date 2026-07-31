@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
@@ -12,6 +12,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
   imports: [CommonModule, HeaderComponent, FooterComponent, SignUpBoxComponent, IntroComponent, RouterModule],
   templateUrl: './auth-layout.component.html',
   styleUrl: './auth-layout.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthLayoutComponent implements OnInit {
   public navigationService: NavigationService = inject(NavigationService);

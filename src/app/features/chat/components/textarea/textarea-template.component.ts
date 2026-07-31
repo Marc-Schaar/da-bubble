@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ALL_EMOJIS } from '../../../../shared/constants';
@@ -13,6 +13,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent, ButtonComponent],
   templateUrl: './textarea-template.component.html',
   styleUrl: './textarea-template.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextareaTemplateComponent {
   public searchService: SearchService = inject(SearchService);

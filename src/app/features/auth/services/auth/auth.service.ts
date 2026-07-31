@@ -30,7 +30,7 @@ export class AuthService {
   private notificationService = inject(NotificationService);
   private googleAuthProvider = new GoogleAuthProvider();
 
-  isLoading = false;
+  isLoading = signal(false);
 
   public errorMessage = signal<string | null>(null);
 
@@ -57,7 +57,7 @@ export class AuthService {
     const data = this.tempUserData();
     if (!data) return this.handleRegError('Keine Daten gefunden');
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
       const firebaseUser = userCredential.user;
@@ -76,7 +76,7 @@ export class AuthService {
     } catch (error) {
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -132,7 +132,7 @@ export class AuthService {
    * @param password - User's password
    */
   public async logInWithEmailAndPassword(email: string, password: string) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
       this.notificationService.success('Anmelden');
@@ -140,7 +140,7 @@ export class AuthService {
     } catch (error) {
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -151,7 +151,7 @@ export class AuthService {
    * Sets an error flag on failure.
    */
   public async logInWithGoogle() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const result = await signInWithPopup(this.auth, this.googleAuthProvider);
       if (result) {
@@ -171,7 +171,7 @@ export class AuthService {
       }
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -181,7 +181,7 @@ export class AuthService {
    * Sets loading state and logs errors if any occur.
    */
   public async loginAsGuest() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     const GUEST_PW = 'Gast1234';
 
     try {
@@ -199,7 +199,7 @@ export class AuthService {
         this.handleRegError(error);
       }
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -243,7 +243,7 @@ export class AuthService {
    * Updates online status, deletes anonymous user data, and redirects to the login page.
    */
   public async logOut() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const user = this.currentUser();
       if (user) {
@@ -254,7 +254,7 @@ export class AuthService {
     } catch (error) {
       console.error('Logout Fehler:', error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 

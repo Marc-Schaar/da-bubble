@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
   imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
   private readonly authService = inject(AuthService);
@@ -23,8 +24,8 @@ export class ResetPasswordComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  public isSubmitting = false;
-  public isCodeValid = true;
+  public isSubmitting = signal(false);
+  public isCodeValid = signal(true);
   public resetCode = '';
 
   public resetPasswordForm = createResetPasswordForm(inject(FormBuilder));
@@ -38,7 +39,7 @@ export class ResetPasswordComponent implements OnInit {
     try {
       await this.authService.verifyPasswordResetCode(this.resetCode);
     } catch {
-      this.isCodeValid = false;
+      this.isCodeValid.set(false);
     }
   }
 
@@ -46,25 +47,25 @@ export class ResetPasswordComponent implements OnInit {
    * Confirms the new password with Firebase Auth and redirects to the login page.
    */
   async onSubmit() {
-    if (this.resetPasswordForm.invalid && this.isCodeValid) {
+    if (this.resetPasswordForm.invalid && this.isCodeValid()) {
       this.resetPasswordForm.markAllAsTouched();
       return;
     }
 
-    if (!this.isCodeValid) {
+    if (!this.isCodeValid()) {
       this.router.navigate(['/forgot-password']);
       return;
     }
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     try {
       await this.authService.confirmPasswordReset(this.resetCode, this.resetPasswordForm.getRawValue().password);
       this.notificationService.success('Passwort geändert');
       this.resetPasswordForm.reset();
       setTimeout(() => this.router.navigate(['/']), 1500);
     } catch {
-      this.isCodeValid = false;
+      this.isCodeValid.set(false);
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 

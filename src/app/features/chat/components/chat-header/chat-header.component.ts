@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -12,6 +12,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   imports: [MatIcon, ButtonComponent],
   templateUrl: './chat-header.component.html',
   styleUrl: './chat-header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatHeaderComponent {
   private bottomSheet = inject(MatBottomSheet);

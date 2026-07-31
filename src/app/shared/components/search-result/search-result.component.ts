@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { MentionService } from '../../services/mention/mention.service';
 import { MatIcon } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { isChannel, isUser } from '../../utils/receiver.util';
   imports: [MatIcon, CommonModule, UserListItemComponent],
   templateUrl: './search-result.component.html',
   styleUrl: './search-result.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchResultComponent {
   public readonly searchService: SearchService = inject(SearchService);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ import { ProfileStatusComponent } from '../profile-status/profile-status.compone
   imports: [MatMenuModule, MatIconModule, ButtonComponent, ProfileStatusComponent],
   templateUrl: './header-user-menu.component.html',
   styleUrl: './header-user-menu.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderUserMenuComponent {
   public authService: AuthService = inject(AuthService);

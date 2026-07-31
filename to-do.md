@@ -1,146 +1,10 @@
 refactor: performance
+refactor: chat service aufkösen , scroll servie auch dnke eine uitls fumtion ziuts auch
+
 feat: barrierefreiheit
 test: test implementieren
 doc: docu erweitern
 mit figma abgleichen
-
-html atribute : <!--...--> Defines a comment
-
-<!DOCTYPE> 	Defines the document type
-
-<a> Defines a hyperlink
-<abbr> Defines an abbreviation or an acronym
-<acronym> Not supported in HTML5. Use <abbr> instead.
-Defines an acronym
-
-<address>	Defines contact information for the author/owner of a document
-<applet>	Not supported in HTML5. Use <embed> or <object> instead.
-Defines an embedded applet
-<area>	Defines an area inside an image map
-<article>	Defines an article
-<aside>	Defines content aside from the page content
-<audio>	Defines embedded sound content
-<b>	Defines bold text
-<base>	Specifies the base URL/target for all relative URLs in a document
-<basefont>	Not supported in HTML5. Use CSS instead.
-Specifies a default color, size, and font for all text in a document
-<bdi>	Isolates a part of text that might be formatted in a different direction from other text outside it
-<bdo>	Overrides the current text direction
-<big>	Not supported in HTML5. Use CSS instead.
-Defines big text
-<blockquote>	Defines a section that is quoted from another source
-<body>	Defines the document's body
-<br>	Defines a single line break
-<button>	Defines a clickable button
-<canvas>	Used to draw graphics, on the fly, via scripting (usually JavaScript)
-<caption>	Defines a table caption
-<center>	Not supported in HTML5. Use CSS instead.
-Defines centered text
-<cite>	Defines the title of a work
-<code>	Defines a piece of computer code
-<col>	Specifies column properties for each column within a <colgroup> element 
-<colgroup>	Specifies a group of one or more columns in a table for formatting
-<data>	Adds a machine-readable translation of a given content
-<datalist>	Specifies a list of pre-defined options for input controls
-<dd>	Defines a description/value of a term in a description list
-<del>	Defines text that has been deleted from a document
-<details>	Defines additional details that the user can view or hide
-<dfn>	Specifies a term that is going to be defined within the content
-<dialog>	Defines a dialog box or window
-<dir>	Not supported in HTML5. Use <ul> instead.
-Defines a directory list
-<div>	Defines a section in a document
-<dl>	Defines a description list
-<dt>	Defines a term/name in a description list
-<em>	Defines emphasized text 
-<embed>	Defines a container for an external application
-<fieldset>	Groups related elements in a form
-<figcaption>	Defines a caption for a <figure> element
-<figure>	Specifies self-contained content
-<font>	Not supported in HTML5. Use CSS instead.
-Defines font, color, and size for text
-<footer>	Defines a footer for a document or section
-<form>	Defines an HTML form for user input
-<frame>	Not supported in HTML5.
-Defines a window (a frame) in a frameset
-<frameset>	Not supported in HTML5.
-Defines a set of frames
-<h1> to <h6>	Defines HTML headings
-<head>	Contains metadata/information for the document
-<header>	Defines a header for a document or section
-<hgroup>	Defines a header and related content
-<hr>	Defines a thematic change in the content
-<html>	Defines the root of an HTML document
-<i>	Defines a part of text in an alternate voice or mood
-<iframe>	Defines an inline frame
-<img>	Defines an image
-<input>	Defines an input control
-<ins>	Defines a text that has been inserted into a document
-<kbd>	Defines keyboard input
-<label>	Defines a label for an <input> element
-<legend>	Defines a caption for a <fieldset> element
-<li>	Defines a list item
-<link>	Defines the relationship between a document and an external resource (most used to link to style sheets)
-<main>	Specifies the main content of a document
-<map>	Defines an image map
-<mark>	Defines marked/highlighted text
-<menu>	Defines an unordered list
-<meta>	Defines metadata about an HTML document
-<meter>	Defines a scalar measurement within a known range (a gauge)
-<nav>	Defines navigation links
-<noframes>	Not supported in HTML5.
-Defines an alternate content for users that do not support frames
-<noscript>	Defines an alternate content for users that do not support client-side scripts
-<object>	Defines a container for an external application
-<ol>	Defines an ordered list
-<optgroup>	Defines a group of related options in a drop-down list
-<option>	Defines an option in a drop-down list
-<output>	Defines the result of a calculation
-<p>	Defines a paragraph
-<param>	Defines a parameter for an object
-<picture>	Defines a container for multiple image resources
-<pre>	Defines preformatted text
-<progress>	Represents the progress of a task
-<q>	Defines a short quotation
-<rp>	Defines what to show in browsers that do not support ruby annotations
-<rt>	Defines an explanation/pronunciation of characters (for East Asian typography)
-<ruby>	Defines a ruby annotation (for East Asian typography)
-<s>	Defines text that is no longer correct
-<samp>	Defines sample output from a computer program
-<script>	Defines a client-side script
-<search>	Defines a search section
-<section>	Defines a section in a document
-<select>	Defines a drop-down list
-<small>	Defines smaller text
-<source>	Defines multiple media resources for media elements (<video> and <audio>)
-<span>	Defines a section in a document
-<strike>	Not supported in HTML5. Use <del> or <s> instead.
-Defines strikethrough text
-<strong>	Defines important text
-<style>	Defines style information for a document
-<sub>	Defines subscripted text
-<summary>	Defines a visible heading for a <details> element
-<sup>	Defines superscripted text
-<svg>	Defines a container for SVG graphics
-<table>	Defines a table
-<tbody>	Groups the body content in a table
-<td>	Defines a cell in a table
-<template>	Defines a container for content that should be hidden when the page loads
-<textarea>	Defines a multiline input control (text area)
-<tfoot>	Groups the footer content in a table
-<th>	Defines a header cell in a table
-<thead>	Groups the header content in a table
-<time>	Defines a specific time (or datetime)
-<title>	Defines a title for the document
-<tr>	Defines a row in a table
-<track>	Defines text tracks for media elements (<video> and <audio>)
-<tt>	Not supported in HTML5. Use CSS instead.
-Defines teletype text
-<u>	Defines some text that is unarticulated and styled differently from normal text
-<ul>	Defines an unordered list
-<var>	Defines a variable
-<video>	Defines embedded video content
-<wbr>	Defines a possible line-break
 
 /// DONE ///
 Lazy Loading umgesetzt: alle Top-Level- und Child-Routes in app.routes.ts von component: auf loadComponent: (dynamic import) umgestellt (Auth-Layout + Login/Register/Avatar/Forgot-/Reset-Password, Main-Chat + Channel/Direct/New-Message, Imprint, Dataprotection); dadurch eigene JS-Chunks pro Route statt allem im Initial-Bundle. In app.config.ts zusätzlich withPreloading(PreloadAllModules) ergänzt, damit die Chunks nach dem ersten Laden im Idle nachgeladen werden, sowie die bislang importierte aber ungenutzte withComponentInputBinding() aktiviert. Build verifiziert (ng build --configuration production): Initial-Bundle klar kleiner, ~15 separate Lazy-Chunks (u.a. main-chat-component, chat-channel-component, auth-layout-component, sign-in-component etc.)
@@ -166,3 +30,4 @@ Guest-Lock-Tooltip-Markup/CSS (chat-channel, contactbar, user-profile – 3x fas
 div:nth-child-Selektoren entfernt (styles.scss .menu-box, user-profile .contact-cont, sign-in, reset-password, forgot-password, chat-channel-Avatar-Stack) und durch echte CSS-Klassen ersetzt; dabei mehrere tote Regeln aufgedeckt und gelöscht, die wegen Angular-View-Encapsulation und Tag-Mismatch (app-button/app-input statt button/div) nie gegriffen hatten (button:nth-child, h1/span:nth-child, .box > div:nth-child in reset-password), sowie unnötige verschachtelte Wrapper-Divs um h1/span in reset- und forgot-password entfernt
 chat-thread an chat-channel angeglichen: Parent-Message im Thread wurde bisher per Hand dupliziertem Markup gerendert (eigenes Avatar/Name/Zeit/Message-HTML, eigenes .background-color-effect-SCSS) statt wie jede andere Nachricht app-message-template zu nutzen; li lag zudem direkt in einem div statt in einem ul (ungültiges HTML). Jetzt rendert app-message-template auch die Parent-Message (neuer [showActions]-Input blendet dafür Reaction-Bar/Editier-Menü aus, da für die Parent-Message nicht gewünscht); komplette Nachrichtenliste liegt in einem einzigen ul>li, dupliziertes SCSS entfernt, dadurch wurden AuthService/MentionService/LinkifyPipe in chat-thread.component.ts ungenutzt und ebenfalls entfernt. Zusätzlich zeigt message-template die "X Antworten"-Fußzeile jetzt nicht mehr bei isThread=true, da im Thread bereits eine eigene Antworten-Anzeige existiert und die Fußzeile sonst auf sich selbst verlinkt hätte
 HTML-Struktur-Refactor über alle ~44 Komponenten durchgeführt (Punkt "vereinfache die html struktur und nutze die richtigen html selektoren" abgeschlossen): intro (div/span-Soup → section + p, toter span-Selektor gefixt), user-profile (Body → p/dl, Avatar-Div → button), user-menu (bare div/span-Selektoren → Klassen, tote "button {}"-Regel durch Tag-Mismatch gefixt), avatar-picker/toast-container/message-reactions/search-result/add-channel/add-member (klickbare div/span/li/img → button, dabei mehrfach dieselbe tote-CSS-Ursache gefunden: "button {}"-Regeln, die wegen Angular-View-Encapsulation nie ein literales <button> im eigenen Template trafen, weil nur app-button verwendet wurde – greifen jetzt), header-search/search-result (@empty-Text lag direkt in <ul>, ungültiges HTML, jetzt in <li>), add-channel (<ul> lag ungültig direkt in einem anderen <ul> statt in einem <li>, als Geschwister-Liste verschoben), sign-up (section-Overuse pro Formularfeld → div), forgot-password/reset-password/legal-header/avatar-selection-dialog (Header-Wrapper-Divs → header), chat-channel/chat-new/message-template/textarea-template/main-chat (klickbare Header-Controls, Autoren-Name, Antworten-Link, Emoji-Auswahl, aside-Klick → button bzw. button innerhalb des aside statt auf dem Landmark selbst), profile-status (div → span, da button nur Phrasing-Content erlaubt und profile-status u.a. innerhalb app-button/neuen button-Wrappern verwendet wird). divider-template bewusst unverändert gelassen (kein natives Element für "Trenner mit zentriertem Label" vorhanden)
+Lazy Loading der Routen war schon erledigt (s.o.); übrige Performance-Refactors jetzt nachgezogen: alle bisher fehlenden 29 von 44 Standalone-Komponenten auf changeDetection: ChangeDetectionStrategy.OnPush umgestellt (State war fast überall schon signal-basiert). Vorher per Analyse geprüft, welche Komponenten dabei unbemerkt einfrieren würden (State-Mutation außerhalb eines eigenen Template-Events, z.B. in einem subscribe-Callback oder nach einem await) – betraf AuthService.isLoading (plain boolean, jetzt Signal; behob sign-in und auth/avatar-selection), SearchUiStateService.currentList/highlightedIndex (jetzt Signals; behob search-result), sowie lokale plain-field-State in chat-thread (currentChannelId/parentMessageId/parentMessageData), edit-channel (channelNameEdit/channelDescriptionEdit/isAddMemberOpen), forgot-password (isSubmitting) und reset-password (isSubmitting/isCodeValid), die jeweils zuerst auf Signals umgestellt wurden, bevor OnPush ergänzt wurde. Zusätzlich loading="lazy" auf Avatar-<img>-Tags in Listen/Grids ergänzt (message-template, chat-channel-Avatar-Stack, chat-direct, edit-channel/add-member/add-channel-Mitgliederauswahl, avatar-picker, avatar-selection-dialog, user-profile, profile-status – deckt darüber auch die member-list-Avatare in edit-channel/add-member/add-channel ab, da die über UserListItemComponent→ProfileStatusComponent laufen); Logos/eigener Avatar im Header bewusst eager gelassen. *ngFor/@for-track und .subscribe()-Cleanup waren bei der Untersuchung bereits sauber (keine Änderung nötig). Build verifiziert (ng build --configuration production)

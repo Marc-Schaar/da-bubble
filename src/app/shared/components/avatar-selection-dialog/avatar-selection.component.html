@@ -6,7 +6,7 @@
     <h1>Wähle deinen Avatar</h1>
   </header>
 
-  <img class="profile-img" [src]="selectedAvatar()" alt="Avatar Bild" />
+  <img class="profile-img" [src]="selectedAvatar()" alt="Avatar Bild" loading="lazy" />
   <p class="name">{{ data?.user?.displayName }}</p>
 
   <p class="align-base">Aus der Liste wählen</p>

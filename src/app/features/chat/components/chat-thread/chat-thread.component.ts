@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, effect, inject, OnInit, untracked, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, effect, inject, OnInit, signal, untracked, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -35,20 +35,20 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
   private route: ActivatedRoute = inject(ActivatedRoute);
   public messagesService: MessagesService = inject(MessagesService);
-  public scrollService: ScrollService = inject(ScrollService);
+  private scrollService: ScrollService = inject(ScrollService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
   public chatService: ChatService = inject(ChatService);
   private readonly destroyRef = inject(DestroyRef);
-  public userId: string = '';
-  public currentChannelId: string = '';
-  public parentMessageId: string = '';
-  public parentMessageData: ChannelMessage | null = null;
+  public currentChannelId = signal('');
+  public parentMessageId = signal('');
+  public parentMessageData = signal<ChannelMessage | null>(null);
   public listOpen: boolean = false;
 
   constructor() {
@@ -74,9 +74,8 @@ export class ThreadComponent implements OnInit {
    */
   async ngOnInit() {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
-      this.currentChannelId = params['receiverId'] || '';
-      this.userId = params['currentUserId'] || '';
-      this.parentMessageId = params['messageId'] || '';
+      this.currentChannelId.set(params['receiverId'] || '');
+      this.parentMessageId.set(params['messageId'] || '');
 
       this.getThreadParentMessage();
       this.getMessages();
@@ -87,9 +86,9 @@ export class ThreadComponent implements OnInit {
    * Fetches the parent message details for the thread via MessagesService.
    */
   private async getThreadParentMessage() {
-    this.parentMessageData = this.parentMessageId
-      ? await this.messagesService.getParentMessage(this.currentChannelId, this.parentMessageId)
-      : null;
+    this.parentMessageData.set(
+      this.parentMessageId() ? await this.messagesService.getParentMessage(this.currentChannelId(), this.parentMessageId()) : null,
+    );
   }
 
   /**
@@ -99,8 +98,8 @@ export class ThreadComponent implements OnInit {
     this.unsubMessages?.();
     this.unsubMessages = undefined;
 
-    if (this.parentMessageId) {
-      this.unsubMessages = this.messagesService.subToThreadMessages(this.currentChannelId, this.parentMessageId);
+    if (this.parentMessageId()) {
+      this.unsubMessages = this.messagesService.subToThreadMessages(this.currentChannelId(), this.parentMessageId());
     } else {
       this.messagesService.threadMessages.set([]);
     }
@@ -110,7 +109,7 @@ export class ThreadComponent implements OnInit {
    * Sends a new reply to the current thread.
    */
   onSend(text: string) {
-    this.messagesService.sendThreadMessage(text, this.currentChannelId, this.parentMessageId);
+    this.messagesService.sendThreadMessage(text, this.currentChannelId(), this.parentMessageId());
   }
 
   /**

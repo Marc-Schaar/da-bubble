@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { User } from '../../../auth/models/user/user';
@@ -17,6 +17,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
   imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditChannelComponent {
   private readonly notificationService: NotificationService = inject(NotificationService);
@@ -25,11 +26,11 @@ export class EditChannelComponent {
   private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
   public readonly channelService = inject(ChannelService);
 
-  public channelNameEdit: boolean = false;
-  public channelDescriptionEdit: boolean = false;
+  public channelNameEdit = signal(false);
+  public channelDescriptionEdit = signal(false);
   public tempName = signal('');
   public tempDescription = signal('');
-  public isAddMemberOpen: boolean = false;
+  public isAddMemberOpen = signal(false);
   public showUserBar: boolean = false;
 
   constructor() {
@@ -58,7 +59,7 @@ export class EditChannelComponent {
       await this.channelService.addMembers(channelId, usersToAdd);
 
       this.channelService.selectedUsers.set([]);
-      this.isAddMemberOpen = false;
+      this.isAddMemberOpen.set(false);
       this.notificationService.success('User hinzugefügt');
     } catch (error) {
       this.notificationService.error('Fehler beim Hinzufügen');
@@ -70,9 +71,9 @@ export class EditChannelComponent {
 
     if (!channel || !channel.id) return;
 
-    if (!this.channelNameEdit) {
+    if (!this.channelNameEdit()) {
       this.tempName.set(channel.name);
-      this.channelNameEdit = true;
+      this.channelNameEdit.set(true);
     } else {
       const cleanedName = this.tempName().trim();
 
@@ -84,7 +85,7 @@ export class EditChannelComponent {
           this.notificationService.error('Fehler beim Speichern');
         }
       }
-      this.channelNameEdit = false;
+      this.channelNameEdit.set(false);
     }
   }
 
@@ -92,9 +93,9 @@ export class EditChannelComponent {
     const channel = this.channelService.currentChannel();
     if (!channel || !channel.id) return;
 
-    if (!this.channelDescriptionEdit) {
+    if (!this.channelDescriptionEdit()) {
       this.tempDescription.set(channel?.description || '');
-      this.channelDescriptionEdit = true;
+      this.channelDescriptionEdit.set(true);
     } else {
       if (this.tempDescription() !== channel?.description) {
         try {
@@ -102,7 +103,7 @@ export class EditChannelComponent {
           this.notificationService.success('Beschreibung aktualisiert');
         } catch (e) {}
       }
-      this.channelDescriptionEdit = false;
+      this.channelDescriptionEdit.set(false);
     }
   }
 
@@ -126,7 +127,7 @@ export class EditChannelComponent {
   }
 
   public toogleAddMemberState() {
-    this.isAddMemberOpen = !this.isAddMemberOpen;
+    this.isAddMemberOpen.update((open) => !open);
   }
 
   /**
