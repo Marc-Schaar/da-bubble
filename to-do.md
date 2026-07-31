@@ -4,11 +4,7 @@ refactor: performance
 refactor: lazy loading
 mit figma abgleichen
 doc: docu erweitern
-feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
 refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
-refactor card header, card main, card footer komponenten
-refactor: header der card in chanel, direct und thread als eine komponente
-refcator: threadmessages ählich wie channelmessages?
 
 html atribute : <!--...--> Defines a comment
 
@@ -149,6 +145,7 @@ Defines teletype text
 <wbr>	Defines a possible line-break
 
 /// DONE ///
+CardComponent (wiederverwendbarer Container mit runden Ecken, card-header/card-main/card-footer per ng-content-Slots) sowie eigene CardHeaderComponent erstellt und in chat-channel, chat-direct, chat-thread und contactbar eingesetzt; dabei jeweils die lokal duplizierte .card/.card-header-SCSS entfernt
 AuthGuard überprüft: wartet korrekt auf ersten onAuthStateChanged-Callback (kein Race-Condition-Risiko beim Reload), unsubscribed sauber, schützt main-Route inkl. aller Kind-Routen; keine Änderung nötig
 Reverse Guard (GuestGuard) ergänzt: bereits angemeldete Nutzer werden von login/register/register-avatar/forgot-password/reset-password automatisch zu /main umgeleitet
 Kontaktbar ist fertig überprüft
@@ -168,3 +165,4 @@ Bugfix: "zweimal auf Speichern klicken" in user-profile – modifyInfos/newName/
 Bugfix: Tooltip bei gesperrten Gast-Buttons (v.a. "Channel hinzufügen") erschien nicht – contactbar.component.scss hatte `display: contents` UND `position: relative` auf .tooltip-cont; display:contents erzeugt keine eigene Box, wodurch position:relative wirkungslos war und sich das absolut positionierte Tooltip relativ zum falschen Vorfahren platzierte. display:contents entfernt, jetzt wie in chat-channel/user-profile ein normaler Block
 Guest-Lock-Tooltip-Markup/CSS (chat-channel, contactbar, user-profile – 3x fast identisch dupliziert) in gemeinsame GuestLockTooltipComponent extrahiert; Positionierung pro Stelle via CSS-Custom-Properties (--tooltip-\*) überschreibbar, da Angular-View-Encapsulation direkte Selektor-Regeln von außen nicht erreicht (gleiches Muster wie schon bei legal-header)
 div:nth-child-Selektoren entfernt (styles.scss .menu-box, user-profile .contact-cont, sign-in, reset-password, forgot-password, chat-channel-Avatar-Stack) und durch echte CSS-Klassen ersetzt; dabei mehrere tote Regeln aufgedeckt und gelöscht, die wegen Angular-View-Encapsulation und Tag-Mismatch (app-button/app-input statt button/div) nie gegriffen hatten (button:nth-child, h1/span:nth-child, .box > div:nth-child in reset-password), sowie unnötige verschachtelte Wrapper-Divs um h1/span in reset- und forgot-password entfernt
+chat-thread an chat-channel angeglichen: Parent-Message im Thread wurde bisher per Hand dupliziertem Markup gerendert (eigenes Avatar/Name/Zeit/Message-HTML, eigenes .background-color-effect-SCSS) statt wie jede andere Nachricht app-message-template zu nutzen; li lag zudem direkt in einem div statt in einem ul (ungültiges HTML). Jetzt rendert app-message-template auch die Parent-Message (neuer [showActions]-Input blendet dafür Reaction-Bar/Editier-Menü aus, da für die Parent-Message nicht gewünscht); komplette Nachrichtenliste liegt in einem einzigen ul>li, dupliziertes SCSS entfernt, dadurch wurden AuthService/MentionService/LinkifyPipe in chat-thread.component.ts ungenutzt und ebenfalls entfernt. Zusätzlich zeigt message-template die "X Antworten"-Fußzeile jetzt nicht mehr bei isThread=true, da im Thread bereits eine eigene Antworten-Anzeige existiert und die Fußzeile sonst auf sich selbst verlinkt hätte

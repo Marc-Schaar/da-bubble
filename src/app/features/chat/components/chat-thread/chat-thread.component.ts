@@ -9,14 +9,11 @@ import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../services/messages/messages.service';
 import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
-import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChannelService } from '../../../channel/services/channel/channel.service';
 import { ChatService } from '../../services/chat/chat.service';
-import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -29,7 +26,6 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
     FormsModule,
     MatIconModule,
     ChatHeaderComponent,
-    LinkifyPipe,
     TextareaTemplateComponent,
     MessageTemplateComponent,
     DividerTemplateComponent,
@@ -45,11 +41,9 @@ export class ThreadComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
   public messagesService: MessagesService = inject(MessagesService);
   public userService: UserService = inject(UserService);
-  public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
   public chatService: ChatService = inject(ChatService);
-  private mentionService: MentionService = inject(MentionService);
   private readonly destroyRef = inject(DestroyRef);
   public userId: string = '';
   public currentChannelId: string = '';
@@ -124,13 +118,6 @@ export class ThreadComponent implements OnInit {
    */
   public closeThread() {
     this.navigationService.toggleThread('close');
-  }
-
-  /**
-   * Delegates clicks inside the rendered message to the MentionService.
-   */
-  onMentionClick(event: MouseEvent | TouchEvent) {
-    this.mentionService.handleMentionClick(event);
   }
 
   ngOnDestroy(): void {

@@ -4,7 +4,7 @@
     reverse: isOwnMessage(),
   }"
 >
-  @if (!isEditing && channelType() !== "direct") {
+  @if (!isEditing && channelType() !== "direct" && showActions()) {
     <div class="reaction-bar" (mouseleave)="menuOpen = false; reactionMenuOpen = false">
       <app-button
         variant="icon"
@@ -65,7 +65,7 @@
       <p class="message-main" [innerHTML]="message().message | linkify" (click)="onMentionClick($event)"></p>
 
       <footer class="message-footer gap-20">
-        @if ($any(message()).thread?.length > 0) {
+        @if (!isThread() && $any(message()).thread?.length > 0) {
           <div class="d-flex gap-20 flex-wrap">
             <span class="cursor-pointer answer-btn" (click)="openThread(message().id)">{{ $any(message()).thread?.length }} Antworten</span>
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>

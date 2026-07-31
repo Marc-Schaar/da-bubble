@@ -55,6 +55,7 @@ export class MessageTemplateComponent {
   parentMessageId = input<string>('');
   isThread = input<boolean>(false);
   channelType = input<'direct' | 'channel' | 'thread' | null>(null);
+  showActions = input<boolean>(true);
 
   isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
 
