@@ -41,14 +41,12 @@
 </main>
 
 @if (!navigationService.isMobile()) {
-  <aside (click)="toogleContactbar()" class="navbar-toggle-container">
-    <span>Workspacemenü {{ barOpen() ? "öffnen" : "schließen" }}</span>
-    <span [ngStyle]="{ transform: barOpen() ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined">
-      left_panel_open
-    </span>
+  <aside class="navbar-toggle-container">
+    <button type="button" (click)="toogleContactbar()" class="navbar-toggle-btn">
+      <span>Workspacemenü {{ barOpen() ? "öffnen" : "schließen" }}</span>
+      <span [ngStyle]="{ transform: barOpen() ? 'rotate(90deg)' : 'rotate(-90deg)' }" class="material-symbols-outlined">
+        left_panel_open
+      </span>
+    </button>
   </aside>
-}
-
-@if (userService.feedbackMessage(); as feedback) {
-  <div class="feedback-cont">{{ feedback }}</div>
 }
