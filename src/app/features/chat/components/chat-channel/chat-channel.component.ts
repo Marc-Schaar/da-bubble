@@ -12,13 +12,13 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { AddMemberComponent } from '../../../channel/components/add-member/add-member.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
-import { ScrollService } from '../../../../shared/services/scroll/scroll.service';
+import { scrollToBottomIfNear } from '../../../../shared/utils/scroll.util';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
 import { EditChannelComponent } from '../../../channel/components/edit-channel/edit-channel.component';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
-import { ChatService } from '../../services/chat/chat.service';
+import { isNewDay } from '../../../../shared/utils/chat.util';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
@@ -49,13 +49,12 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  private readonly scrollService: ScrollService = inject(ScrollService);
   public readonly channelService: ChannelService = inject(ChannelService);
   private readonly dialog = inject(MatDialog);
   public readonly navigationService: NavigationService = inject(NavigationService);
   public readonly messagesService: MessagesService = inject(MessagesService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  public readonly chatService: ChatService = inject(ChatService);
+  public readonly isNewDay = isNewDay;
   public readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -97,7 +96,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   private handleScroll() {
-    this.scrollService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+    scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
   }
 
   /**

@@ -83,7 +83,7 @@
 
     <ul card-main class="chat-content gap-10" #chatContent>
       @for (message of this.messagesService.messages(); track message.id; let i = $index) {
-        @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
+        @if (i === 0 || this.isNewDay(message, this.messagesService.messages()[i - 1])) {
           <li>
             <app-divider-template [messageData]="message.timestamp"></app-divider-template>
           </li>

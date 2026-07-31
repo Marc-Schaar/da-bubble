@@ -35,7 +35,7 @@
       </li>
 
       @for (message of messagesService.threadMessages(); track message.id; let i = $index) {
-        @if (chatService.isNewDay(message, i === 0 ? parentMessageData() : messagesService.threadMessages()[i - 1])) {
+        @if (isNewDay(message, i === 0 ? parentMessageData() : messagesService.threadMessages()[i - 1])) {
           <li>
             <app-divider-template [messageData]="message.timestamp"></app-divider-template>
           </li>

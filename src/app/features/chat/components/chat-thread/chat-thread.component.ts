@@ -7,13 +7,13 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../services/messages/messages.service';
-import { ScrollService } from '../../../../shared/services/scroll/scroll.service';
+import { scrollToBottomIfNear } from '../../../../shared/utils/scroll.util';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChannelService } from '../../../channel/services/channel/channel.service';
-import { ChatService } from '../../services/chat/chat.service';
+import { isNewDay } from '../../../../shared/utils/chat.util';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -41,10 +41,9 @@ export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
   private route: ActivatedRoute = inject(ActivatedRoute);
   public messagesService: MessagesService = inject(MessagesService);
-  private scrollService: ScrollService = inject(ScrollService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
-  public chatService: ChatService = inject(ChatService);
+  public readonly isNewDay = isNewDay;
   private readonly destroyRef = inject(DestroyRef);
   public currentChannelId = signal('');
   public parentMessageId = signal('');
@@ -56,7 +55,7 @@ export class ThreadComponent implements OnInit {
       const messages = this.messagesService.threadMessages();
       untracked(() => {
         if (messages.length > 0) {
-          this.scrollService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+          scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
         }
       });
     });
