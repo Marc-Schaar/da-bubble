@@ -74,6 +74,14 @@
           border-radius: 35px;
         }
       }
+      &--btn {
+        display: contents;
+        border: none;
+        background: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+      }
     }
     @media (max-width: 1023px) {
       display: flex;
@@ -81,8 +89,13 @@
   }
 }
 
+.channel-name-display {
+  margin: 0;
+}
+
 .content {
   &--description {
+    margin: 0;
     overflow-wrap: break-word;
     overflow-y: auto;
     max-height: 100px;
@@ -91,6 +104,16 @@
 }
 
 .creator {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
   &--name {
     font-size: 24px;
     color: var(--dark-purple-text);
@@ -217,6 +240,15 @@ li {
     &:hover {
       background-color: var(--bg-color);
     }
+  }
+
+  .user-select-btn {
+    display: contents;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
   }
 }
 

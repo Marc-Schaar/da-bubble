@@ -23,7 +23,7 @@
           (keyup.enter)="onEditChannelName()"
         />
       } @else {
-        <div># {{ channelService.currentChannel()?.name }}</div>
+        <p class="channel-name-display"># {{ channelService.currentChannel()?.name }}</p>
       }
     </section>
 
@@ -45,18 +45,18 @@
           (keyup.enter)="onEditChannelDescription()"
         />
       } @else {
-        <div class="content--description">
+        <p class="content--description">
           {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
-        </div>
+        </p>
       }
 
       <div class="line"></div>
-      <div class="creator">
-        Erstellt von
-        <div class="creator--name">
+      <dl class="creator">
+        <dt>Erstellt von</dt>
+        <dd class="creator--name">
           {{ channelService.currentChannel()?.createdBy }}
-        </div>
-      </div>
+        </dd>
+      </dl>
     </section>
 
     <section class="box box--list">
@@ -64,8 +64,10 @@
 
       <ul class="member-list">
         @for (member of channelService.enrichedMembers(); track $index) {
-          <li (click)="openProfileDialog(member)" class="member-list--item">
-            <app-user-list-item [user]="member"></app-user-list-item>
+          <li class="member-list--item">
+            <button type="button" class="member-list--btn" (click)="openProfileDialog(member)">
+              <app-user-list-item [user]="member"></app-user-list-item>
+            </button>
           </li>
         }
 
@@ -116,8 +118,10 @@
         @if (showUserBar) {
           <ul class="choose-user-bar" #chooseUserBar>
             @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
-              <li class="user-select-cont" (click)="addUserToSelection(user)">
-                <app-user-list-item [user]="user"></app-user-list-item>
+              <li class="user-select-cont">
+                <button type="button" class="user-select-btn" (click)="addUserToSelection(user)">
+                  <app-user-list-item [user]="user"></app-user-list-item>
+                </button>
               </li>
             } @empty {
               <li>Keine Nutzer verfügbar</li>
