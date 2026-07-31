@@ -2,8 +2,8 @@
   <app-chat-header [isThread]="true"></app-chat-header>
 }
 <main>
-  <section>
-    <div class="thread-channel-close-button-container">
+  <app-card>
+    <app-card-header card-header>
       <div class="thread-channel-container">
         <div class="thread-container">
           <p>Thread</p>
@@ -15,9 +15,9 @@
           <mat-icon>close</mat-icon>
         </app-button>
       }
-    </div>
+    </app-card-header>
 
-    <div class="chatbox-container" #chat>
+    <div card-main class="chatbox-container" #chat>
       <li [ngClass]="{ reverse: parentMessageData?.name === this.authService.currentUser()?.displayName }" class="background-color-effect">
         <div class="user-message-container">
           <div class="user-profile-avatar-container">
@@ -59,8 +59,8 @@
       </ul>
     </div>
 
-    <div class="card-footer" (mouseleave)="listOpen = false">
+    <div card-footer class="card-footer" (mouseleave)="listOpen = false">
       <app-textarea-template [isChannelComponent]="true" [placeholderText]="'Antworten...'" (send)="onSend($event)"></app-textarea-template>
     </div>
-  </section>
+  </app-card>
 </main>

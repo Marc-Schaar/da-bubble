@@ -2,15 +2,15 @@
   <app-chat-header></app-chat-header>
 }
 <main>
-  <section (click)="hideList()">
-    <div class="chat-header">
+  <app-card (click)="hideList()">
+    <app-card-header card-header>
       <app-button variant="plain" (click)="showProfile()">
         <app-profile-status [photoUrl]="currentReceiver()!.photoUrl" [online]="currentReceiver()!.online"></app-profile-status>
         {{ currentReceiver()?.displayName }}
       </app-button>
-    </div>
+    </app-card-header>
 
-    <ul class="chat-content" #chat>
+    <ul card-main class="chat-content" #chat>
       @for (message of this.messagesService.messages(); track message.id; let i = $index) {
         @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
           <li>
@@ -43,12 +43,12 @@
       }
     </ul>
 
-    <footer class="card-footer">
+    <footer card-footer class="card-footer">
       <app-textarea-template
         [isChannelComponent]="false"
         [placeholderText]="'Nachricht an @' + currentReceiver()?.displayName"
         (send)="onSend($event)"
       ></app-textarea-template>
     </footer>
-  </section>
+  </app-card>
 </main>

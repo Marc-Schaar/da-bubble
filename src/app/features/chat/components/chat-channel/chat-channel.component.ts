@@ -22,6 +22,8 @@ import { ChatService } from '../../services/chat/chat.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CardHeaderComponent } from '../../../../shared/components/card-header/card-header.component';
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -38,6 +40,8 @@ import { GuestLockTooltipComponent } from '../../../../shared/components/guest-l
     ChatHeaderComponent,
     ButtonComponent,
     GuestLockTooltipComponent,
+    CardComponent,
+    CardHeaderComponent,
   ],
   templateUrl: './chat-channel.component.html',
   styleUrl: './chat-channel.component.scss',

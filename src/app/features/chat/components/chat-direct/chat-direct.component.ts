@@ -21,6 +21,8 @@ import { ProfileStatusComponent } from '../../../../shared/components/profile-st
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CardHeaderComponent } from '../../../../shared/components/card-header/card-header.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -35,6 +37,8 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
     ChatHeaderComponent,
     ProfileStatusComponent,
     ButtonComponent,
+    CardComponent,
+    CardHeaderComponent,
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',

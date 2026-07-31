@@ -19,6 +19,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
 
 @Component({
   selector: 'app-contactbar',
@@ -35,6 +36,7 @@ import { GuestLockTooltipComponent } from '../../../../shared/components/guest-l
     ButtonComponent,
     InputComponent,
     GuestLockTooltipComponent,
+    CardComponent,
   ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',

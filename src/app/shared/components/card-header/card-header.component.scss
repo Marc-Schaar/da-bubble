@@ -1,0 +1,25 @@
+:host {
+  display: contents;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 32px 45px 20px 45px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.08);
+
+  ::ng-deep app-guest-lock-tooltip {
+    display: flex;
+  }
+}
+
+@media (width < 1024px) {
+  .card-header {
+    padding: 10px 16px;
+  }
+}

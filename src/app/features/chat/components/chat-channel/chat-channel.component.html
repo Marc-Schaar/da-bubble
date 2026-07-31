@@ -3,8 +3,8 @@
 }
 
 <main>
-  <div class="card">
-    <section class="card-header">
+  <app-card>
+    <app-card-header card-header>
       <app-guest-lock-tooltip [mobilePosition]="true">
         <div
           class="addChannel align-center hover-bg cursor-pointer"
@@ -71,9 +71,9 @@
           </app-button>
         </app-guest-lock-tooltip>
       </div>
-    </section>
+    </app-card-header>
 
-    <ul class="chat-content gap-10" #chatContent>
+    <ul card-main class="chat-content gap-10" #chatContent>
       @for (message of this.messagesService.messages(); track message.id; let i = $index) {
         @if (i === 0 || this.chatService.isNewDay(message, this.messagesService.messages()[i - 1])) {
           <li>
@@ -87,12 +87,12 @@
       }
     </ul>
 
-    <section class="card-footer">
+    <section card-footer class="card-footer">
       <app-textarea-template
         [isChannelComponent]="true"
         [placeholderText]="'Nachricht an #' + (channelService.currentChannel()?.name || '')"
         (send)="onSend($event)"
       ></app-textarea-template>
     </section>
-  </div>
+  </app-card>
 </main>

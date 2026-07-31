@@ -19,6 +19,8 @@ import { ChatService } from '../../services/chat/chat.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CardHeaderComponent } from '../../../../shared/components/card-header/card-header.component';
 
 @Component({
   selector: 'app-thread',
@@ -32,6 +34,8 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
     MessageTemplateComponent,
     DividerTemplateComponent,
     ButtonComponent,
+    CardComponent,
+    CardHeaderComponent,
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],

@@ -1,5 +1,4 @@
 test: test implementieren
-refactor card header, card main, card footer komponenten
 feat: barrierefreiheit
 refactor: performance
 refactor: lazy loading
@@ -7,7 +6,9 @@ mit figma abgleichen
 doc: docu erweitern
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
 refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
+refactor card header, card main, card footer komponenten
 refactor: header der card in chanel, direct und thread als eine komponente
+refcator: threadmessages ählich wie channelmessages?
 
 html atribute : <!--...--> Defines a comment
 
