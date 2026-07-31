@@ -47,8 +47,9 @@
           moveAfterShrinkMobile 500ms ease-in-out 3000ms 1 normal forwards; 
           left: 45px;       
         }
-        span {
+        .project-name-text {
           position: inherit;
+          margin: 0;
           color: white;
           font-size: 44px;
           right: 200px;
