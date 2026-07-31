@@ -6,7 +6,7 @@
     <img src="img/workspace-logo.svg" alt="Logo" />
   </div>
 
-  <app-button variant="icon" ariaLabel="Benutzermenü öffnen" (click)="openUserMenu()">
+  <app-button variant="plain" ariaLabel="Benutzermenü öffnen" (click)="openUserMenu()">
     <img [src]="this.authService.currentUser()?.photoUrl" alt="this.authService.currentUser()?.displayName" />
   </app-button>
 </header>
