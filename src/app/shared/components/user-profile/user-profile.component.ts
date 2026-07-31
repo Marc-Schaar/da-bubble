@@ -43,6 +43,15 @@ export class UserProfileComponent {
   modifyInfos = signal(false);
   protected pendingPhotoUrl = signal<string | null>(null);
   protected isSaving = signal(false);
+  private avatarDialogRef?: MatDialogRef<AvatarSelectionComponent>;
+
+  constructor() {
+    // The avatar-selection dialog opens with hasBackdrop:false so it doesn't
+    // double-darken the screen on top of this dialog's own backdrop. That
+    // means a backdrop click only reaches this dialog, closing it without
+    // ever telling the still-open avatar picker to close — close it here.
+    this.dialogRef.afterClosed().subscribe(() => this.avatarDialogRef?.close());
+  }
 
   /**
    * Handles a click event, stops propagation if the target is not a menu trigger.
@@ -105,12 +114,13 @@ export class UserProfileComponent {
    * After the dialog is closed, stages the new avatar for saving.
    */
   openAvatarSelection() {
-    const dialogRef = this.dialog.open(AvatarSelectionComponent, {
+    this.avatarDialogRef = this.dialog.open(AvatarSelectionComponent, {
       data: { user: this.user() },
       hasBackdrop: false,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    this.avatarDialogRef.afterClosed().subscribe((result) => {
+      this.avatarDialogRef = undefined;
       if (result) {
         this.pendingPhotoUrl.set(result);
       }
