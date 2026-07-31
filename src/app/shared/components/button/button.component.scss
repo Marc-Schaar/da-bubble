@@ -4,11 +4,11 @@
 
 button {
   all: unset;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-sizing: border-box;
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -17,6 +17,33 @@ button {
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+  }
+
+  .content {
+    display: contents;
+  }
+}
+
+.content--hidden {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: app-button-spin 0.6s linear infinite;
+}
+
+@keyframes app-button-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 

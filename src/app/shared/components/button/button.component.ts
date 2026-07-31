@@ -19,6 +19,7 @@ export class ButtonComponent {
   variant = input<ButtonVariant>('primary');
   type = input<'button' | 'submit'>('button');
   disabled = input(false, { transform: booleanAttribute });
+  loading = input(false, { transform: booleanAttribute });
   ariaLabel = input<string | null>(null);
   ariaPressed = input<boolean | null>(null);
   form = input<string | null>(null);

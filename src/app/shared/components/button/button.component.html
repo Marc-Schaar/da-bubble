@@ -1,9 +1,15 @@
 <button
   [type]="type()"
-  [disabled]="disabled()"
+  [disabled]="disabled() || loading()"
   [attr.aria-label]="ariaLabel()"
   [attr.aria-pressed]="ariaPressed()"
+  [attr.aria-busy]="loading()"
   [attr.form]="form()"
 >
-  <ng-content></ng-content>
+  @if (loading()) {
+    <span class="spinner" aria-hidden="true"></span>
+  }
+  <span class="content" [class.content--hidden]="loading()">
+    <ng-content></ng-content>
+  </span>
 </button>

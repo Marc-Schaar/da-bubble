@@ -15,5 +15,12 @@
 </main>
 
 <footer class="footer">
-  <app-button variant="plain" type="button" (click)="onSubmit()">Weiter</app-button>
+  <app-button
+    variant="plain"
+    type="button"
+    [disabled]="authService.isLoading"
+    [loading]="authService.isLoading"
+    (click)="onSubmit()"
+    >Weiter</app-button
+  >
 </footer>
