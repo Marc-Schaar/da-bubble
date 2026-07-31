@@ -1,22 +1,26 @@
 <ul>
   @for (element of searchService.getCurrentList(); track $index) {
-    <li [class.highlighted]="$index === searchService.getHighlightedIndex()" (click)="handleClick(element)">
-      @if (isChannel(element)) {
-        <div><mat-icon>tag</mat-icon></div>
-        {{ element.name }}
-      } @else if (isUser(element)) {
-        <app-user-list-item [user]="element"></app-user-list-item>
-      }
+    <li [class.highlighted]="$index === searchService.getHighlightedIndex()">
+      <button type="button" class="result-btn" (click)="handleClick(element)">
+        @if (isChannel(element)) {
+          <mat-icon>tag</mat-icon>
+          {{ element.name }}
+        } @else if (isUser(element)) {
+          <app-user-list-item [user]="element"></app-user-list-item>
+        }
+      </button>
     </li>
   } @empty {
-    Kein
-    @if (searchService.isChannel() === true) {
-      Channel
-    } @else if (searchService.isChannel() === false) {
-      Nutzer
-    } @else {
-      Eintrag
-    }
-    gefunden
+    <li class="empty-state">
+      Kein
+      @if (searchService.isChannel() === true) {
+        Channel
+      } @else if (searchService.isChannel() === false) {
+        Nutzer
+      } @else {
+        Eintrag
+      }
+      gefunden
+    </li>
   }
 </ul>

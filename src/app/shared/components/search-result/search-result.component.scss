@@ -8,13 +8,27 @@ ul {
 
 li {
   list-style: none;
+}
+
+.result-btn {
+  width: 100%;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   border-radius: 1.5em;
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 4px 20px;
-  &:hover,
-  &.highlighted {
-    background-color: var(--bg-color);
-  }
+}
+
+li:hover .result-btn,
+li.highlighted .result-btn {
+  background-color: var(--bg-color);
+}
+
+.empty-state {
+  padding: 4px 20px;
 }
