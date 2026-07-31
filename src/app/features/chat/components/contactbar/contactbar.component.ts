@@ -17,6 +17,8 @@ import { AddChannelComponent } from '../../../channel/components/add-channel/add
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
+import { AuthService } from '../../../auth/services/auth/auth.service';
+import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
 
 @Component({
   selector: 'app-contactbar',
@@ -32,6 +34,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
     UserListItemComponent,
     ButtonComponent,
     InputComponent,
+    GuestLockTooltipComponent,
   ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
@@ -42,6 +45,7 @@ export class ContactbarComponent implements OnInit {
   public searchService: SearchService = inject(SearchService);
   private dialog: MatDialog = inject(MatDialog);
   public router: Router = inject(Router);
+  public authService = inject(AuthService);
 
   isClicked = false;
   public input: string = '';
@@ -67,6 +71,7 @@ export class ContactbarComponent implements OnInit {
    * Opens the dialog to add a new channel.
    */
   public openAddChannel() {
+    if (this.authService.isGuest()) return;
     this.dialog.open(AddChannelComponent, {
       width: '872px',
       maxWidth: '95vw',

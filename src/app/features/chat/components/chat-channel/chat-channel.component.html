@@ -5,17 +5,20 @@
 <main>
   <div class="card">
     <section class="card-header">
-      <div class="tooltip-cont">
-        <div class="addChannel" class="align-center hover-bg cursor-pointer" (click)="openChannelInfo()">
+      <app-guest-lock-tooltip [mobilePosition]="true">
+        <div
+          class="addChannel align-center hover-bg cursor-pointer"
+          [class.guest-locked]="authService.isGuest()"
+          (click)="openChannelInfo()"
+        >
           # {{ channelService.currentChannel()?.name }}
           <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
         </div>
-        <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-      </div>
+      </app-guest-lock-tooltip>
 
       <div class="align-center gap-10">
-        <div class="tooltip-cont">
-          <div class="avatar-container hover-bg" (click)="openMemberWindow()">
+        <app-guest-lock-tooltip>
+          <div class="avatar-container hover-bg" [class.guest-locked]="authService.isGuest()" (click)="openMemberWindow()">
             <div class="member-img-cont">
               @for (member of channelService.enrichedMembers(); track member.id + $index; let i = $index) {
                 @if (i < 3) {
@@ -27,16 +30,15 @@
               <span>{{ channelService.currentChannel()?.member?.length }}</span>
             }
           </div>
+        </app-guest-lock-tooltip>
 
-          <span class="tooltip">Zugang für Gäste gesperrt</span>
-        </div>
-
-        <div class="tooltip-cont">
+        <app-guest-lock-tooltip>
           <app-button
             variant="plain"
             class="btn-add-member"
             title="Zugang für Gäste gespeert"
             ariaLabel="Mitglieder anzeigen"
+            [disabled]="authService.isGuest()"
             (click)="openMemberWindow()"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,6 +53,7 @@
             class="btn-add-member-mobile"
             title="Zugang für Gäste gespeert"
             ariaLabel="Mitglieder anzeigen"
+            [disabled]="authService.isGuest()"
             (click)="openMemberWindow()"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,8 +63,7 @@
               />
             </svg>
           </app-button>
-          <span class="tooltip">Zugang für Gäste gesperrt</span>
-        </div>
+        </app-guest-lock-tooltip>
       </div>
     </section>
 

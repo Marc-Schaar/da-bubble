@@ -20,6 +20,8 @@ import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChatService } from '../../services/chat/chat.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthService } from '../../../auth/services/auth/auth.service';
+import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
 @Component({
   selector: 'app-chat-content',
   imports: [
@@ -35,6 +37,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
     MessageTemplateComponent,
     ChatHeaderComponent,
     ButtonComponent,
+    GuestLockTooltipComponent,
   ],
   templateUrl: './chat-channel.component.html',
   styleUrl: './chat-channel.component.scss',
@@ -48,6 +51,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   public readonly messagesService: MessagesService = inject(MessagesService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   public readonly chatService: ChatService = inject(ChatService);
+  public readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly currentChannelId = signal<string | null>(null);
@@ -102,6 +106,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Opens the dialog to view or edit channel information.
    */
   openChannelInfo() {
+    if (this.authService.isGuest()) return;
     this.dialog.open(EditChannelComponent, {
       position: { top: '200px' },
       width: '872px',
@@ -115,6 +120,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
    * Opens the dialog to add members to the channel.
    */
   openMemberWindow() {
+    if (this.authService.isGuest()) return;
     this.dialog.open(AddMemberComponent, {
       width: 'auto',
       maxWidth: '95vw',

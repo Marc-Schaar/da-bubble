@@ -54,13 +54,11 @@
             Channels
           </app-button>
 
-          <div class="tooltip-cont">
-            <app-button variant="icon" ariaLabel="Channel hinzufügen" (click)="openAddChannel()">
+          <app-guest-lock-tooltip [mobilePosition]="true">
+            <app-button variant="icon" ariaLabel="Channel hinzufügen" [disabled]="authService.isGuest()" (click)="openAddChannel()">
               <mat-icon>add</mat-icon>
             </app-button>
-
-            <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-          </div>
+          </app-guest-lock-tooltip>
         </div>
 
         <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
@@ -79,13 +77,12 @@
         </ul>
       </div>
 
-      <div class="tooltip-cont">
-        <app-button variant="plain" class="add__channel__btn" (click)="openAddChannel()">
+      <app-guest-lock-tooltip>
+        <app-button variant="plain" class="add__channel__btn" [disabled]="authService.isGuest()" (click)="openAddChannel()">
           <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
           Channel hinzufügen
         </app-button>
-        <span class="tooltip">Zugang für Gäste gesperrt</span>
-      </div>
+      </app-guest-lock-tooltip>
 
       <div class="dropdown">
         <div class="dropdown__title">
