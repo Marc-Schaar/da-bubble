@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../services/messages/messages.service';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { ScrollService } from '../../../../shared/services/scroll/scroll.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
@@ -40,7 +40,7 @@ export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
   private route: ActivatedRoute = inject(ActivatedRoute);
   public messagesService: MessagesService = inject(MessagesService);
-  public userService: UserService = inject(UserService);
+  public scrollService: ScrollService = inject(ScrollService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
   public chatService: ChatService = inject(ChatService);
@@ -56,7 +56,7 @@ export class ThreadComponent implements OnInit {
       const messages = this.messagesService.threadMessages();
       untracked(() => {
         if (messages.length > 0) {
-          this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+          this.scrollService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
         }
       });
     });

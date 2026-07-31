@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { User } from '../../../auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';

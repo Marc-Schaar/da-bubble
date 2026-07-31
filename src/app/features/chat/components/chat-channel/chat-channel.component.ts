@@ -12,7 +12,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { AddMemberComponent } from '../../../channel/components/add-member/add-member.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { ScrollService } from '../../../../shared/services/scroll/scroll.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { MessagesService } from '../../services/messages/messages.service';
 import { EditChannelComponent } from '../../../channel/components/edit-channel/edit-channel.component';
@@ -48,7 +48,7 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
 })
 export class ChatContentComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
-  private readonly userService: UserService = inject(UserService);
+  private readonly scrollService: ScrollService = inject(ScrollService);
   public readonly channelService: ChannelService = inject(ChannelService);
   private readonly dialog = inject(MatDialog);
   public readonly navigationService: NavigationService = inject(NavigationService);
@@ -96,7 +96,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
   }
 
   private handleScroll() {
-    this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+    this.scrollService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
   }
 
   /**

@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { ScrollService } from '../../../../shared/services/scroll/scroll.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { UserStore } from '../../../../shared/services/user/user-store';
 import { MessagesService } from '../../services/messages/messages.service';
@@ -45,7 +45,7 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
-  public readonly userService = inject(UserService);
+  public readonly scrollService = inject(ScrollService);
   public readonly navigationService = inject(NavigationService);
   private readonly userStore = inject(UserStore);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
@@ -65,7 +65,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       const messages = this.messagesService.messages();
       untracked(() => {
         if (messages.length > 0) {
-          this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+          this.scrollService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
         }
       });
     });
