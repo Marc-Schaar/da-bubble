@@ -10,20 +10,30 @@ import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [HeaderComponent, HeaderUserMenuComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
+  imports: [
+    HeaderComponent,
+    HeaderUserMenuComponent,
+    FooterComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    ButtonComponent,
+    InputComponent,
+  ],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
 export class ResetPasswordComponent implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  public isOverlayActive = false;
+  public isSubmitting = false;
   public isCodeValid = true;
   public resetCode = '';
 
@@ -51,17 +61,16 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    this.isOverlayActive = true;
+    this.isSubmitting = true;
     try {
       await this.authService.confirmPasswordReset(this.resetCode, this.resetPasswordForm.getRawValue().password);
+      this.notificationService.success('Passwort geändert');
       this.resetPasswordForm.reset();
       setTimeout(() => this.router.navigate(['/']), 1500);
     } catch {
       this.isCodeValid = false;
     } finally {
-      setTimeout(() => {
-        this.isOverlayActive = false;
-      }, 1500);
+      this.isSubmitting = false;
     }
   }
 

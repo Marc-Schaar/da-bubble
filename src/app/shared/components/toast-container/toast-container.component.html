@@ -1,0 +1,14 @@
+<div class="toast-stack">
+  @for (toast of toasts(); track toast.id) {
+    <div
+      class="toast"
+      [class.toast--success]="toast.variant === 'success'"
+      [class.toast--error]="toast.variant === 'error'"
+      [class.toast--leaving]="toast.leaving"
+      (click)="dismiss(toast.id)"
+      (animationend)="onAnimationEnd(toast)"
+    >
+      {{ toast.message }}
+    </div>
+  }
+</div>

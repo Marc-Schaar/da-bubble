@@ -10,18 +10,27 @@ import { AuthService } from '../../services/auth/auth.service';
 import { createForgotPasswordForm } from '../../forms/auth-forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [HeaderComponent, HeaderUserMenuComponent, FooterComponent, ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
+  imports: [
+    HeaderComponent,
+    HeaderUserMenuComponent,
+    FooterComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    ButtonComponent,
+    InputComponent,
+  ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
   private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
 
-  isOverlayActive = false;
-  submitted = false;
+  isSubmitting = false;
 
   public forgotPasswordForm = createForgotPasswordForm(inject(FormBuilder));
 
@@ -34,18 +43,16 @@ export class ForgotPasswordComponent {
       return;
     }
 
-    this.isOverlayActive = true;
+    this.isSubmitting = true;
     try {
       await this.authService.sendPasswordReset(this.forgotPasswordForm.getRawValue().email);
+      this.notificationService.success('E-Mail gesendet');
+      this.forgotPasswordForm.reset();
     } catch {
-      // Kein sichtbarer Fehlerzustand im bisherigen UI vorgesehen; still scheitern.
+      this.notificationService.error('E-Mail konnte nicht gesendet werden.');
+    } finally {
+      this.isSubmitting = false;
     }
-    this.submitted = true;
-    this.forgotPasswordForm.reset();
-    setTimeout(() => {
-      this.isOverlayActive = false;
-      this.submitted = false;
-    }, 1500);
   }
 
   protected getEmailError(): string | null {

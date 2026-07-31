@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import {
   Auth,
@@ -16,6 +16,7 @@ import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { UserStore } from '../../../../shared/services/user/user-store';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import { RegisterData, User } from '../../models/user/user';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../../../shared/constants';
 
@@ -26,6 +27,7 @@ export class AuthService {
   private auth: Auth = inject(Auth);
   private navigationService: NavigationService = inject(NavigationService);
   private fireService = inject(FireServiceService);
+  private notificationService = inject(NotificationService);
   private googleAuthProvider = new GoogleAuthProvider();
 
   isLoading = false;
@@ -36,6 +38,7 @@ export class AuthService {
 
   private userStore = inject(UserStore);
   public currentUser = this.userStore.currentUser;
+  public readonly isGuest = computed(() => this.currentUser()?.email === GUEST_EMAIL);
   private unsubUserDoc?: () => void;
 
   constructor() {
@@ -92,6 +95,7 @@ export class AuthService {
 
   private finalizeRegistration() {
     this.tempUserData.set(null);
+    this.notificationService.success('Konto erfolgreich erstellt!');
     this.navigationService.gotToChat();
   }
 
@@ -131,6 +135,7 @@ export class AuthService {
     this.isLoading = true;
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
+      this.notificationService.success('Anmelden');
       this.navigationService.gotToChat();
     } catch (error) {
       this.handleRegError(error);
@@ -157,6 +162,7 @@ export class AuthService {
         const userData = this.mapFirebaseUserToUser(result.user);
         await this.addInUserCollection(userData);
         await this.addInDefaultChannel(userData);
+        this.notificationService.success('Anmelden');
         this.navigationService.gotToChat();
       }
     } catch (error: any) {
@@ -207,6 +213,7 @@ export class AuthService {
     });
 
     await this.addInUserCollection(guestData);
+    this.notificationService.success('Anmelden');
     this.navigationService.gotToChat();
   }
 
