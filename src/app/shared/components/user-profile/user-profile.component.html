@@ -1,28 +1,34 @@
-<div class="profile-main-cont" (click)="handleClick($event)">
+<div class="profile-main-cont" [class.receiver]="!isOwnProfile" (click)="handleClick($event)">
   <app-dialog-header title="Profil" (closed)="closeMenu()"></app-dialog-header>
 
-  <div (click)="modifyInfos ? openAvatarSelection() : null" class="picture-cont">
-    <img [src]="pendingPhotoUrl ?? user()?.photoUrl" alt="" />
+  <div (click)="isOwnProfile && modifyInfos() ? openAvatarSelection() : null" class="picture-cont" [class.editable]="isOwnProfile">
+    <img [src]="pendingPhotoUrl() ?? user()?.photoUrl" alt="" />
   </div>
 
-  @if (!modifyInfos) {
+  @if (!modifyInfos()) {
     <div class="discription-cont">
       <div class="info-edit">
         <div class="name">{{ user()?.displayName }}</div>
-        <div class="tooltip-cont">
-          <app-button variant="plain" class="edit-btn" (click)="modify()">
-            @if (navigationService.isMobile()) {
-              <mat-icon>edit</mat-icon>
-            } @else {
-              Bearbeiten
-            }
-          </app-button>
-          <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-        </div>
+        @if (isOwnProfile) {
+          <app-guest-lock-tooltip>
+            <app-button variant="plain" class="edit-btn" [disabled]="authService.isGuest()" (click)="modify()">
+              @if (navigationService.isMobile()) {
+                <mat-icon>edit</mat-icon>
+              } @else {
+                Bearbeiten
+              }
+            </app-button>
+          </app-guest-lock-tooltip>
+        }
       </div>
       <div class="status-cont">
-        <div class="circle"></div>
-        <div class="status">Aktiv</div>
+        @if (isOwnProfile || user()?.online) {
+          <div class="circle online"></div>
+          <div class="status online">Aktiv</div>
+        } @else {
+          <div class="circle offline"></div>
+          <div class="status offline">Abwesend</div>
+        }
       </div>
     </div>
 
@@ -35,22 +41,28 @@
         </div>
       </div>
     </div>
+
+    @if (!isOwnProfile) {
+      <section>
+        <app-button variant="primary" (click)="openChat()" class="align-center gap-10">
+          <mat-icon class="material-symbols-outlined">mode_comment</mat-icon>
+          Nachricht
+        </app-button>
+      </section>
+    }
   } @else {
     <div class="section">
-      <div>
-        <div>
-          <div><img src="img/account_circle.png" alt="" /></div>
-          <div><span>Vollständiger Name</span></div>
-        </div>
+      <p class="name-row">
+        <img src="img/account_circle.png" alt="" />
+        Vollständiger Name
+      </p>
 
-        <div><app-input ariaLabel="Vollständiger Name" [(ngModel)]="newName" type="text" /></div>
-      </div>
-      <div class="btn-borders">
-        <div>
-          <app-button variant="secondary" (click)="cancel()">Abbrechen</app-button
-          ><app-button variant="primary" (click)="saveChanges()">Speichern</app-button>
-        </div>
-      </div>
+      <app-input ariaLabel="Vollständiger Name" [ngModel]="newName()" (ngModelChange)="newName.set($event)" type="text" />
+    </div>
+
+    <div class="action-btn">
+      <app-button variant="secondary" [disabled]="isSaving()" (click)="cancel()">Abbrechen</app-button>
+      <app-button variant="primary" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveChanges()">Speichern</app-button>
     </div>
   }
 </div>
