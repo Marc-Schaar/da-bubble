@@ -58,7 +58,7 @@
   @if (!isEditing) {
     <section class="content-container">
       <header class="message-header gap-20">
-        <b (click)="showProfile()" class="font-size-18 cursor-pointer">{{ message().name }}</b>
+        <button type="button" (click)="showProfile()" class="message-author font-size-18 cursor-pointer">{{ message().name }}</button>
         <span class="font-size-14">{{ message().asDate | date: "HH:mm" }} Uhr</span>
       </header>
 
@@ -67,7 +67,9 @@
       <footer class="message-footer gap-20">
         @if (!isThread() && $any(message()).thread?.length > 0) {
           <div class="d-flex gap-20 flex-wrap">
-            <span class="cursor-pointer answer-btn" (click)="openThread(message().id)">{{ $any(message()).thread?.length }} Antworten</span>
+            <button type="button" class="cursor-pointer answer-btn" (click)="openThread(message().id)">
+              {{ $any(message()).thread?.length }} Antworten
+            </button>
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>
           </div>
         }
