@@ -11,6 +11,7 @@ import { UserListItemComponent } from '../../../../shared/components/user-list-i
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-channel-edit',
@@ -19,7 +20,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   styleUrl: './edit-channel.component.scss',
 })
 export class EditChannelComponent {
-  private readonly userService = inject(UserService);
+  private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly navigationService = inject(NavigationService);
   private readonly profileDialogService = inject(ProfileDialogService);
   private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
@@ -59,9 +60,9 @@ export class EditChannelComponent {
 
       this.channelService.selectedUsers.set([]);
       this.isAddMemberOpen = false;
-      this.userService.showFeedback('User hinzugefügt');
+      this.notificationService.success('User hinzugefügt');
     } catch (error) {
-      this.userService.showFeedback('Fehler beim Hinzufügen');
+      this.notificationService.error('Fehler beim Hinzufügen');
     }
   }
 
@@ -79,9 +80,9 @@ export class EditChannelComponent {
       if (cleanedName && cleanedName !== channel.name) {
         try {
           await this.channelService.updateName(channel.id, cleanedName);
-          this.userService.showFeedback('Name aktualisiert');
+          this.notificationService.success('Name aktualisiert');
         } catch (e) {
-          this.userService.showFeedback('Fehler beim Speichern');
+          this.notificationService.error('Fehler beim Speichern');
         }
       }
       this.channelNameEdit = false;
@@ -99,7 +100,7 @@ export class EditChannelComponent {
       if (this.tempDescription() !== channel?.description) {
         try {
           await this.channelService.updateDescription(channel?.id, this.tempDescription());
-          this.userService.showFeedback('Beschreibung aktualisiert');
+          this.notificationService.success('Beschreibung aktualisiert');
         } catch (e) {}
       }
       this.channelDescriptionEdit = false;
@@ -110,10 +111,10 @@ export class EditChannelComponent {
     try {
       await this.channelService.leaveChannel();
       this.dialogRef.close();
-      this.userService.showFeedback('Channel verlassen');
+      this.notificationService.success('Channel verlassen');
       this.navigationService.goToNewMessage();
     } catch (error) {
-      this.userService.showFeedback('Fehler beim Verlassen des Channels');
+      this.notificationService.error('Fehler beim Verlassen des Channels');
     }
   }
 

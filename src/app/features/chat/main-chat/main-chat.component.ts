@@ -11,7 +11,6 @@ import { HeaderSearchComponent } from '../../../shared/components/header-search/
 import { HeaderUserMenuComponent } from '../../../shared/components/header-user-menu/header-user-menu.component';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../shared/services/search/search.service';
-import { UserService } from '../../../shared/services/user/shared.service';
 import { RouterModule } from '@angular/router';
 import { ThreadComponent } from '../components/chat-thread/chat-thread.component';
 import { ContactbarComponent } from '../components/contactbar/contactbar.component';
@@ -39,7 +38,6 @@ export class MainChatComponent {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('drawerContactbar') drawerContactbar!: MatDrawer;
   public readonly navigationService: NavigationService = inject(NavigationService);
-  public readonly userService: UserService = inject(UserService);
   private searchService: SearchService = inject(SearchService);
 
   public barOpen = signal<boolean>(true);

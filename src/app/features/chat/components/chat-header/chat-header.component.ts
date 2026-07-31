@@ -2,7 +2,6 @@ import { Component, inject, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { UserMenuComponent } from '../../../../shared/components/user-menu/user-menu.component';
 import { AuthService } from '../../../auth/services/auth/auth.service';

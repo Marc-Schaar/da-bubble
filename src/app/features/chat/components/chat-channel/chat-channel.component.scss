@@ -54,10 +54,18 @@ button {
   outline: none;
   background-color: unset;
   white-space: nowrap;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 6px 10px;
   transition:
     all,
     0.125s ease-in-out;
   cursor: pointer;
+
+  mat-icon {
+    margin-left: 10px;
+  }
 
   &:disabled {
     mat-icon {
@@ -106,16 +114,6 @@ button {
   }
 }
 
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: #72727258;
-  z-index: 1000;
-}
-
 .app-add-member-container {
   position: fixed;
   top: 50%;
@@ -127,4 +125,3 @@ button {
 .btn-add-member-mobile {
   display: none !important;
 }
-
