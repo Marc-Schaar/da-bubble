@@ -10,47 +10,41 @@
 </section>
 
 <form class="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <div>
-    <app-input
-      appearance="filled"
-      icon="person"
-      name="displayName"
-      type="text"
-      formControlName="displayName"
-      placeholder="Name und Nachname"
-      ariaLabel="Name und Nachname"
-      [invalid]="!!getDisplayNameError()"
-      [errorMessage]="getDisplayNameError()"
-    />
-  </div>
+  <app-input
+    appearance="filled"
+    icon="person"
+    name="displayName"
+    type="text"
+    formControlName="displayName"
+    placeholder="Name und Nachname"
+    ariaLabel="Name und Nachname"
+    [invalid]="!!getDisplayNameError()"
+    [errorMessage]="getDisplayNameError()"
+  />
 
-  <div>
-    <app-input
-      appearance="filled"
-      icon="mail"
-      name="email"
-      type="email"
-      formControlName="email"
-      placeholder="beispielname@email.com"
-      ariaLabel="E-Mail-Adresse"
-      [invalid]="!!getEmailError()"
-      [errorMessage]="getEmailError()"
-    />
-  </div>
+  <app-input
+    appearance="filled"
+    icon="mail"
+    name="email"
+    type="email"
+    formControlName="email"
+    placeholder="beispielname@email.com"
+    ariaLabel="E-Mail-Adresse"
+    [invalid]="!!getEmailError()"
+    [errorMessage]="getEmailError()"
+  />
 
-  <div>
-    <app-input
-      appearance="filled"
-      icon="lock"
-      name="password"
-      type="password"
-      formControlName="password"
-      placeholder="Passwort"
-      ariaLabel="Passwort"
-      [invalid]="!!getPasswordError()"
-      [errorMessage]="getPasswordError()"
-    />
-  </div>
+  <app-input
+    appearance="filled"
+    icon="lock"
+    name="password"
+    type="password"
+    formControlName="password"
+    placeholder="Passwort"
+    ariaLabel="Passwort"
+    [invalid]="!!getPasswordError()"
+    [errorMessage]="getPasswordError()"
+  />
 
   <div class="legal-text">
     <label class="checkbox">
@@ -59,7 +53,7 @@
     </label>
   </div>
   @if (registerForm.get("acceptTerms")?.invalid && (registerForm.get("acceptTerms")?.touched || registerForm.get("acceptTerms")?.dirty)) {
-    <span class="error"> agbs zustimmer.</span>
+    <span class="error">Du musst den Bedingungen zustimmen.</span>
   }
-  <app-button variant="plain" type="submit">Weiter</app-button>
+  <app-button class="form-action-btn" variant="primary" type="submit">Weiter</app-button>
 </form>
