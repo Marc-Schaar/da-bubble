@@ -10,7 +10,7 @@
 </section>
 
 <form class="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <section>
+  <div>
     <app-input
       appearance="filled"
       icon="person"
@@ -22,9 +22,9 @@
       [invalid]="!!getDisplayNameError()"
       [errorMessage]="getDisplayNameError()"
     />
-  </section>
+  </div>
 
-  <section>
+  <div>
     <app-input
       appearance="filled"
       icon="mail"
@@ -36,9 +36,9 @@
       [invalid]="!!getEmailError()"
       [errorMessage]="getEmailError()"
     />
-  </section>
+  </div>
 
-  <section>
+  <div>
     <app-input
       appearance="filled"
       icon="lock"
@@ -50,14 +50,14 @@
       [invalid]="!!getPasswordError()"
       [errorMessage]="getPasswordError()"
     />
-  </section>
+  </div>
 
-  <section class="legal-text">
+  <div class="legal-text">
     <label class="checkbox">
       <input formControlName="acceptTerms" type="checkbox" />
       <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
     </label>
-  </section>
+  </div>
   @if (registerForm.get("acceptTerms")?.invalid && (registerForm.get("acceptTerms")?.touched || registerForm.get("acceptTerms")?.dirty)) {
     <span class="error"> agbs zustimmer.</span>
   }
