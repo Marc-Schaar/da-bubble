@@ -13,9 +13,12 @@
   justify-content: center;
   gap: 10px;
   padding: 5px 10px;
+  border: none;
   outline: 1px solid var(--light-purple);
   border-radius: 20px;
   background-color: white;
+  font: inherit;
+  cursor: pointer;
   --app-button-hover-color: var(--medium-purple);
 
   &:hover {

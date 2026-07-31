@@ -1,17 +1,19 @@
 <div class="emoji-container" (mouseleave)="reactionMenuOpen.set(false)">
   @for (reaction of visibleReactions(); track reaction.emoji) {
     @let names = reactionsService.getReactionNamesForEmoji(reaction.emoji, reactions());
-    <div
+    <button
+      type="button"
       (click)="toggle(reaction.emoji)"
       [ngClass]="{ 'bg-purple': reactionsService.hasReacted(reaction.emoji, reactions()) }"
+      [attr.aria-pressed]="reactionsService.hasReacted(reaction.emoji, reactions())"
       class="emoji-box"
     >
       <span>{{ reaction.emoji }}</span>
       <span>{{ reactionsService.countEmoji(reaction.emoji, reactions()) }}</span>
-      <div class="reaction-from-dialog">
+      <span class="reaction-from-dialog">
         <span>{{ reaction.emoji }}</span>
         @for (name of names; track $index) {
-          <h3 class="font-weight-700">{{ name }}</h3>
+          <strong class="font-weight-700">{{ name }}</strong>
         }
         @if (names.length > 1) {
           <span>haben</span>
@@ -21,8 +23,8 @@
           <span>hat</span>
         }
         <span> reagiert</span>
-      </div>
-    </div>
+      </span>
+    </button>
   }
 
   @if (hiddenCount() > 0 && !showAllReactions()) {
