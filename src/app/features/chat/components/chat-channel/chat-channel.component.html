@@ -6,19 +6,26 @@
   <app-card>
     <app-card-header card-header>
       <app-guest-lock-tooltip [mobilePosition]="true">
-        <div
+        <button
+          type="button"
           class="addChannel align-center hover-bg cursor-pointer"
           [class.guest-locked]="authService.isGuest()"
           (click)="openChannelInfo()"
         >
           # {{ channelService.currentChannel()?.name }}
           <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
-        </div>
+        </button>
       </app-guest-lock-tooltip>
 
       <div class="align-center gap-10">
         <app-guest-lock-tooltip>
-          <div class="avatar-container hover-bg" [class.guest-locked]="authService.isGuest()" (click)="openMemberWindow()">
+          <button
+            type="button"
+            class="avatar-container hover-bg"
+            [class.guest-locked]="authService.isGuest()"
+            aria-label="Mitglieder anzeigen"
+            (click)="openMemberWindow()"
+          >
             <div class="member-img-cont">
               @for (member of channelService.enrichedMembers(); track member.id + $index; let i = $index) {
                 @if (i < 3) {
@@ -35,7 +42,7 @@
             @if (channelService.currentChannel()?.member?.length) {
               <span>{{ channelService.currentChannel()?.member?.length }}</span>
             }
-          </div>
+          </button>
         </app-guest-lock-tooltip>
 
         <app-guest-lock-tooltip>
