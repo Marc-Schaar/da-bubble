@@ -107,6 +107,10 @@ button {
 
   > .emoji {
     display: inline-block;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
     width: 32px;
     height: 32px;
     font-size: 1.25rem;

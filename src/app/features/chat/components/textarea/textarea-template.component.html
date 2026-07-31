@@ -53,9 +53,9 @@
       <div class="reaction-menu">
         <div class="scroll-container">
           @for (emoji of emojis; track $index) {
-            <span (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
+            <button type="button" (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
               {{ emoji }}
-            </span>
+            </button>
           }
         </div>
       </div>
