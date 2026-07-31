@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 import { AuthService } from '../../services/auth/auth.service';
 import { createResetPasswordForm } from '../../forms/auth-forms';
@@ -12,7 +13,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })

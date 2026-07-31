@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { createForgotPasswordForm } from '../../forms/auth-forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -11,7 +12,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })

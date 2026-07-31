@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { createRegisterForm } from '../../forms/auth-forms';
@@ -9,7 +10,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 
 @Component({
   selector: 'app-sign-up',
-  imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonComponent, InputComponent],
+  imports: [FormsModule, RouterLink, ReactiveFormsModule, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })
