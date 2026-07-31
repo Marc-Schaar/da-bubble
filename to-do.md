@@ -5,7 +5,9 @@ refactor: lazy loading
 mit figma abgleichen
 doc: docu erweitern
 refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
-
+refactor: das css des intros wirk sehr komplex und unötig aufgebläht
+fix: wenn ich in der userprofil ansicht bin und am editieren und die avatrpicker offenhabe und dann über dfem backrop schliße bleibt der avatrpicker offen
+fix: beim öffen von sign-up stehen schon werte im form durch autocomplte oder sowas
 html atribute : <!--...--> Defines a comment
 
 <!DOCTYPE> 	Defines the document type
