@@ -3,7 +3,7 @@
 }
 <main>
   <section>
-    <div class="header gap-20">
+    <header class="header gap-20">
       <h1 class="newText">Neue Nachricht</h1>
 
       <app-input
@@ -13,19 +13,19 @@
         placeholder="An: #Channel, oder @jemand oder E-Mail-Adresse"
         ariaLabel="An: #Channel, oder @jemand oder E-Mail-Adresse"
       />
-    </div>
+    </header>
 
     @if (searchService.getNewListBoolean()) {
       <div class="tag-container">
-        <app-search-result [(input)]="input" (currentReceiver)="setReceiver($event)">></app-search-result>
+        <app-search-result [(input)]="input" (currentReceiver)="setReceiver($event)"></app-search-result>
       </div>
     }
 
-    <div class="card-footer">
+    <footer class="card-footer">
       <app-textarea-template
         [placeholderText]="'Starte eine Nachricht an: ' + (getReceiverName() || '...')"
         (send)="onSend($event)"
       ></app-textarea-template>
-    </div>
+    </footer>
   </section>
 </main>
