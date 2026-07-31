@@ -1,13 +1,15 @@
-test: test implementieren
-feat: barrierefreiheit
+refactor: das css des intros wirk sehr komplex und unötig aufgebläht
 refactor: performance
 refactor: lazy loading
-mit figma abgleichen
-doc: docu erweitern
-refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
-refactor: das css des intros wirk sehr komplex und unötig aufgebläht
-fix: wenn ich in der userprofil ansicht bin und am editieren und die avatrpicker offenhabe und dann über dfem backrop schliße bleibt der avatrpicker offen
+refactor: userservice umbennen oder andere lösung
+refactor: alle images oder svg durch mat icon ersetzten und die jeweilige datei löschen
 fix: beim öffen von sign-up stehen schon werte im form durch autocomplte oder sowas
+fix: wenn ich in der userprofil ansicht bin und am editieren und die avatrpicker offenhabe und dann über dfem backrop schliße bleibt der avatrpicker offen
+feat: barrierefreiheit
+test: test implementieren
+doc: docu erweitern
+mit figma abgleichen
+
 html atribute : <!--...--> Defines a comment
 
 <!DOCTYPE> 	Defines the document type
@@ -168,3 +170,4 @@ Bugfix: Tooltip bei gesperrten Gast-Buttons (v.a. "Channel hinzufügen") erschie
 Guest-Lock-Tooltip-Markup/CSS (chat-channel, contactbar, user-profile – 3x fast identisch dupliziert) in gemeinsame GuestLockTooltipComponent extrahiert; Positionierung pro Stelle via CSS-Custom-Properties (--tooltip-\*) überschreibbar, da Angular-View-Encapsulation direkte Selektor-Regeln von außen nicht erreicht (gleiches Muster wie schon bei legal-header)
 div:nth-child-Selektoren entfernt (styles.scss .menu-box, user-profile .contact-cont, sign-in, reset-password, forgot-password, chat-channel-Avatar-Stack) und durch echte CSS-Klassen ersetzt; dabei mehrere tote Regeln aufgedeckt und gelöscht, die wegen Angular-View-Encapsulation und Tag-Mismatch (app-button/app-input statt button/div) nie gegriffen hatten (button:nth-child, h1/span:nth-child, .box > div:nth-child in reset-password), sowie unnötige verschachtelte Wrapper-Divs um h1/span in reset- und forgot-password entfernt
 chat-thread an chat-channel angeglichen: Parent-Message im Thread wurde bisher per Hand dupliziertem Markup gerendert (eigenes Avatar/Name/Zeit/Message-HTML, eigenes .background-color-effect-SCSS) statt wie jede andere Nachricht app-message-template zu nutzen; li lag zudem direkt in einem div statt in einem ul (ungültiges HTML). Jetzt rendert app-message-template auch die Parent-Message (neuer [showActions]-Input blendet dafür Reaction-Bar/Editier-Menü aus, da für die Parent-Message nicht gewünscht); komplette Nachrichtenliste liegt in einem einzigen ul>li, dupliziertes SCSS entfernt, dadurch wurden AuthService/MentionService/LinkifyPipe in chat-thread.component.ts ungenutzt und ebenfalls entfernt. Zusätzlich zeigt message-template die "X Antworten"-Fußzeile jetzt nicht mehr bei isThread=true, da im Thread bereits eine eigene Antworten-Anzeige existiert und die Fußzeile sonst auf sich selbst verlinkt hätte
+HTML-Struktur-Refactor über alle ~44 Komponenten durchgeführt (Punkt "vereinfache die html struktur und nutze die richtigen html selektoren" abgeschlossen): intro (div/span-Soup → section + p, toter span-Selektor gefixt), user-profile (Body → p/dl, Avatar-Div → button), user-menu (bare div/span-Selektoren → Klassen, tote "button {}"-Regel durch Tag-Mismatch gefixt), avatar-picker/toast-container/message-reactions/search-result/add-channel/add-member (klickbare div/span/li/img → button, dabei mehrfach dieselbe tote-CSS-Ursache gefunden: "button {}"-Regeln, die wegen Angular-View-Encapsulation nie ein literales <button> im eigenen Template trafen, weil nur app-button verwendet wurde – greifen jetzt), header-search/search-result (@empty-Text lag direkt in <ul>, ungültiges HTML, jetzt in <li>), add-channel (<ul> lag ungültig direkt in einem anderen <ul> statt in einem <li>, als Geschwister-Liste verschoben), sign-up (section-Overuse pro Formularfeld → div), forgot-password/reset-password/legal-header/avatar-selection-dialog (Header-Wrapper-Divs → header), chat-channel/chat-new/message-template/textarea-template/main-chat (klickbare Header-Controls, Autoren-Name, Antworten-Link, Emoji-Auswahl, aside-Klick → button bzw. button innerhalb des aside statt auf dem Landmark selbst), profile-status (div → span, da button nur Phrasing-Content erlaubt und profile-status u.a. innerhalb app-button/neuen button-Wrappern verwendet wird). divider-template bewusst unverändert gelassen (kein natives Element für "Trenner mit zentriertem Label" vorhanden)
