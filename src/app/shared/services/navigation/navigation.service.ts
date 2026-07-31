@@ -82,7 +82,7 @@ export class NavigationService {
     const path = url.split('?')[0];
     const isMain = path === '/main' || path === '/main/';
     const isLegal = url.includes('Dataprotection') || url.includes('imprint');
-    const isPasswordPage = url.includes('forgot-password') || url.includes('resetpassword');
+    const isPasswordPage = url.includes('forgot-password') || url.includes('reset-password');
     this.isAuthPage.set(isAuth);
     this.isSignUpPage.set(signUp);
     this.isContactbarPage.set(isContactbar);

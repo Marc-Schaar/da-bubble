@@ -5,7 +5,6 @@ refactor: performance
 refactor: lazy loading
 mit figma abgleichen
 doc: docu erweitern
-authguard überprüfen
 feat: eine car dkomponente erstellen oder container da dieses design mit den runden eck sehr oft vorkommt
 refachtor: vereinfache die html struktur und nutze die richtigen html selektoren
 refactor: header der card in chanel, direct und thread als eine komponente
@@ -149,6 +148,8 @@ Defines teletype text
 <wbr>	Defines a possible line-break
 
 /// DONE ///
+AuthGuard überprüft: wartet korrekt auf ersten onAuthStateChanged-Callback (kein Race-Condition-Risiko beim Reload), unsubscribed sauber, schützt main-Route inkl. aller Kind-Routen; keine Änderung nötig
+Reverse Guard (GuestGuard) ergänzt: bereits angemeldete Nutzer werden von login/register/register-avatar/forgot-password/reset-password automatisch zu /main umgeleitet
 Kontaktbar ist fertig überprüft
 Header auch bis auf den Such Result-container
 HTML-Attribute Sweep (alt/type/aria) fertig

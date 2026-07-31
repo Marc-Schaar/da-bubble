@@ -13,18 +13,20 @@ import { SignInComponent } from '../app/features/auth/components/sign-in/sign-in
 import { SignUpComponent } from '../app/features/auth/components/sign-up/sign-up.component';
 import { AvatarSelectionComponent } from '../app/features/auth/components/avatar-selection/avatar-selection.component';
 import { authGuard } from './auth.guard';
+import { noAuthGuard } from './no-auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
+    canActivate: [noAuthGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: SignInComponent },
       { path: 'register', component: SignUpComponent },
       { path: 'register/avatar', component: AvatarSelectionComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'resetpassword', component: ResetPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
     ],
   },
 
