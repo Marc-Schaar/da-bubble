@@ -29,17 +29,20 @@
       gap: 15px;
       margin: 0;
 
+      dd {
+        margin: 0;
+      }
+
       .email {
         margin: 0;
         font-size: 20px;
         font-weight: 700;
       }
       .email-route {
-        margin: 0;
         font-size: 18px;
-
         font-weight: 500;
         color: var(--blue-email-color);
+        text-decoration: none;
       }
     }
   }
