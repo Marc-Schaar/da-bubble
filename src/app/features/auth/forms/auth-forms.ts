@@ -12,16 +12,25 @@ function basicAuthFields() {
   };
 }
 
+/**
+ * Creates the login form group for the sign-in screen.
+ */
 export function createLoginForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group(basicAuthFields());
 }
 
+/**
+ * Creates the forgot-password form group used to request a password reset.
+ */
 export function createForgotPasswordForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
   });
 }
 
+/**
+ * Creates the registration form group used when a new user signs up.
+ */
 export function createRegisterForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group({
     ...basicAuthFields(),
@@ -31,12 +40,18 @@ export function createRegisterForm(formBuilder: FormBuilder): FormGroup {
   });
 }
 
+/**
+ * Validates that password and password confirmation fields contain the same value.
+ */
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
   const passwordConfirm = group.get('passwordConfirm')?.value;
   return password === passwordConfirm ? null : { passwordMismatch: true };
 }
 
+/**
+ * Creates the reset-password form group and attaches the password match validator.
+ */
 export function createResetPasswordForm(formBuilder: FormBuilder): FormGroup {
   return formBuilder.group(
     {

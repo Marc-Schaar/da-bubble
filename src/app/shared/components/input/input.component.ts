@@ -53,31 +53,52 @@ export class InputComponent implements ControlValueAccessor {
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
+  /**
+   * Writes a value from the outside form model into the component.
+   */
   writeValue(value: string): void {
     this.value.set(value ?? '');
   }
 
+  /**
+   * Registers the callback to call when the control value changes.
+   */
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
+  /**
+   * Registers the callback to call when the control is touched.
+   */
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
+  /**
+   * Enables or disables the input based on the form state.
+   */
   setDisabledState(isDisabled: boolean): void {
     this.formDisabled.set(isDisabled);
   }
 
+  /**
+   * Handles user input events and propagates the changed value.
+   */
   onInput(value: string): void {
     this.value.set(value);
     this.onChange(value);
   }
 
+  /**
+   * Marks the control as touched when it loses focus.
+   */
   onBlur(): void {
     this.onTouched();
   }
 
+  /**
+   * Emits focus events for the host input element.
+   */
   onFocus(event: FocusEvent): void {
     this.focused.emit(event);
   }

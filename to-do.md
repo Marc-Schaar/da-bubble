@@ -1,6 +1,4 @@
-feat: barrierefreiheit
-test: test implementieren
-doc: docu erweitern
+test: tests implementieren
 mit figma abgleichen
 
 /// DONE ///
@@ -35,3 +33,6 @@ Bugfix: "New Message" – Nachricht konnte gesendet werden, bevor ein Empfänger
 Bugfix: Contactbar – Fokus auf Channel-/User-Listeneinträgen war nicht erkennbar. .dropdown**list**btn nutzt display:contents (kein eigener Box, kein nativer Fokusring), einzige Reaktion war eine mit :hover geteilte Regel (:has(.dropdown**list**btn:focus-visible)), die optisch nicht als Fokusindikator auffiel. Eigene :has(...)-Regel mit sichtbarem outline (gleiches Muster wie schon in chat-channel.component.scss) ergänzt
 Bugfix: Klick auf das Logo zeigte nur eine leere Ansicht mit Header – Logo verlinkte hart auf /login; bei bereits eingeloggten Nutzern fängt der noAuthGuard das ab und navigiert zu /main, das aber keine Default-Kind-Route hatte (nur channel/:id, direct/:id, new-message), wodurch der router-outlet leer blieb. HeaderComponent verlinkt jetzt je nach AuthService.currentUser() dynamisch auf /main oder /login; zusätzlich redirectTo: 'new-message' als Default-Child von main in app.routes.ts ergänzt, falls /main direkt aufgerufen wird
 Bugfix: Textarea zeigte zwei Fokus-Ringe gleichzeitig (einen um die Textarea selbst, einen um den abgerundeten .input-container-Wrapper) – die lokale Regel textarea:focus-visible { outline: none; } in textarea-template.component.scss konkurrierte mit der globalen textarea:focus-visible-Regel in styles.scss. Lokale Regel auf .input-container textarea:focus-visible { outline: none !important; } verschärft, damit nur noch der Wrapper-Rahmen sichtbar bleibt
+Barrierefreiheit-Runde 1: chat-new (Empfänger-Suche als combobox mit role="listbox"/aria-activedescendant, Senden ohne gewählten Empfänger blockiert) und textarea-template (Mention-/Emoji-Dropdown als combobox-Pattern statt reiner div-Liste, Focus-Trap ergänzt) umgesetzt
+Barrierefreiheit-Runde 2: Message-Actions/Emoji-Picker (message-template, message-reactions) nutzen jetzt Focus-Trap fürs Menü sowie aria-expanded an den Trigger-Buttons statt nur visuellem Toggle
+Barrierefreiheit-Runde 3: chat-channel (Landmark-Struktur korrigiert, Fokus-Handling für geöffnete Dialoge ergänzt), chat-direct/chat-thread/chat-header (doppelte <main>-Landmarks durch <section> ersetzt, da <main> nur einmal pro Seite erlaubt ist), main-chat (Skip-to-Content-Link plus Landmark-Rollen für den Chat-Grundriss) sowie edit-channel/add-channel (Focus-Trap für die Mitglieder-hinzufügen-Flyouts verdrahtet)

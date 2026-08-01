@@ -67,15 +67,27 @@ export class MessageTemplateComponent {
   channelType = input<'direct' | 'channel' | 'thread' | null>(null);
   showActions = input<boolean>(true);
 
+  /**
+   * Whether the rendered message is a channel message.
+   */
   isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
 
+  /**
+   * Whether the rendered message was sent by the current user.
+   */
   isOwnMessage = computed(() => this.message().name === this.authService.currentUser()?.displayName);
 
+  /**
+   * The active reaction list for the message, or an empty array for direct messages.
+   */
   reactions = computed(() => {
     const msg = this.message();
     return msg instanceof ChannelMessage ? msg.reaction : [];
   });
 
+  /**
+   * Builds a reaction context object for the currently displayed message.
+   */
   private reactionContext(): ReactionContext {
     return {
       channelId: this.currentChannelId(),
@@ -95,11 +107,16 @@ export class MessageTemplateComponent {
     }
   }
 
+  /**
+   * Checks whether the current user has reacted with the given emoji.
+   */
   public hasReacted(emoji: string): boolean {
     return this.reactionsService.hasReacted(emoji, this.reactions());
   }
 
-  /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
+  /**
+   * Bound reference for EmojiQuickPickerComponent's isSelected input.
+   */
   public readonly isReactionSelected = (emoji: string): boolean => this.hasReacted(emoji);
 
   /**
@@ -193,13 +210,8 @@ export class MessageTemplateComponent {
     if (this.menuOpen && !this.menuBtn?.nativeElement.contains(target) && !this.menuPopup?.nativeElement.contains(target)) {
       this.menuOpen = false;
     }
-    if (
-      this.reactionMenuOpen &&
-      !this.reactionBtn?.nativeElement.contains(target) &&
-      !this.reactionPopup?.nativeElement.contains(target)
-    ) {
+    if (this.reactionMenuOpen && !this.reactionBtn?.nativeElement.contains(target) && !this.reactionPopup?.nativeElement.contains(target)) {
       this.reactionMenuOpen = false;
     }
   }
-
 }
