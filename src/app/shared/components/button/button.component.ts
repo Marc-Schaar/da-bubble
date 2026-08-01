@@ -13,6 +13,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'icon' | 'plain';
     '[class.app-button--secondary]': "variant() === 'secondary'",
     '[class.app-button--icon]': "variant() === 'icon'",
     '[class.app-button--plain]': "variant() === 'plain'",
+    '[class.app-button--aria-disabled]': 'ariaDisabled()',
   },
 })
 export class ButtonComponent {
@@ -22,5 +23,15 @@ export class ButtonComponent {
   loading = input(false, { transform: booleanAttribute });
   ariaLabel = input<string | null>(null);
   ariaPressed = input<boolean | null>(null);
+  ariaExpanded = input<boolean | null>(null);
+  ariaHaspopup = input<string | null>(null);
+  /** Keeps the button focusable/announced (unlike native `disabled`) while still blocking activation — for controls that must remain reachable to explain why they're unavailable, e.g. via a tooltip. */
+  ariaDisabled = input(false, { transform: booleanAttribute });
   form = input<string | null>(null);
+
+  onClick(event: MouseEvent): void {
+    if (this.ariaDisabled()) {
+      event.stopPropagation();
+    }
+  }
 }

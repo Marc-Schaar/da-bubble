@@ -39,6 +39,10 @@ export class InputComponent implements ControlValueAccessor {
   invalid = input(false, { transform: booleanAttribute });
   errorMessage = input<string | null>(null);
   disabledAttr = input(false, { alias: 'disabled', transform: booleanAttribute });
+  role = input<string | null>(null);
+  ariaExpanded = input<boolean | null>(null);
+  ariaControls = input<string | null>(null);
+  ariaActivedescendant = input<string | null>(null);
 
   focused = output<FocusEvent>();
 
