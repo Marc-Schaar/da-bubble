@@ -6,7 +6,8 @@
   position: relative;
   align-self: baseline;
 
-  &.guest-locked:hover .tooltip {
+  &.guest-locked:hover .tooltip,
+  &.guest-locked:focus-within .tooltip {
     visibility: visible;
     opacity: 1;
   }

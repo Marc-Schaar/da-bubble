@@ -13,7 +13,8 @@
     cursor: pointer;
     transition: transform 0.125s ease-in-out;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       transform: scale(1.1);
     }
 
@@ -21,8 +22,14 @@
       transform: scale(1.1);
     }
 
-    &:hover:not(.selected) {
+    &:hover:not(.selected),
+    &:focus-visible:not(.selected) {
       opacity: 0.8;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--dark-purple-text);
+      outline-offset: 2px;
     }
 
     img {

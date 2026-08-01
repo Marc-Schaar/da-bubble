@@ -10,9 +10,14 @@
     border-radius: 30px;
     transition: all 0.125s ease-in-out;
     outline: 1px solid transparent;
-    &:hover {
+    &:hover,
+    &:focus-visible {
       outline: 1px solid var(--light-purple);
       color: var(--dark-purple);
+    }
+    &:focus-visible {
+      outline-width: 2px;
+      outline-color: var(--dark-purple-text);
     }
   }
 }
