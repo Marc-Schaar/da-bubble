@@ -1,7 +1,7 @@
 <div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
     #ta
-    (keydown)="onKeydown($event, ta)"
+    (keydown)="onKeydown($event)"
     (click)="onCaretMoved(ta)"
     (keyup)="onKeyup($event, ta)"
     (input)="onCaretMoved(ta)"
@@ -9,6 +9,10 @@
     rows="3"
     [name]="input"
     [placeholder]="placeholderText()"
+    role="combobox"
+    [attr.aria-expanded]="searchService.getListBoolean()"
+    [attr.aria-controls]="listboxId"
+    [attr.aria-activedescendant]="activeDescendantId()"
   ></textarea>
 
   <div class="action-container justify-sb">
@@ -17,6 +21,8 @@
         <app-button
           variant="icon"
           ariaLabel="Emoji einfügen"
+          [ariaExpanded]="reactionMenuOpenInTextarea"
+          ariaHaspopup="true"
           (click)="toggleEmojiPicker(); $event.stopPropagation()"
         >
           <mat-icon>sentiment_satisfied</mat-icon>
@@ -40,20 +46,25 @@
         <mat-icon>tag</mat-icon>
       </app-button>
     </div>
-    <app-button variant="icon" class="btn-send" ariaLabel="Nachricht senden" [disabled]="input.trim() == ''" (click)="newMessage()">
+    <app-button variant="icon" class="btn-send" ariaLabel="Nachricht senden" [disabled]="disabled() || input.trim() == ''" (click)="newMessage()">
       <mat-icon>send</mat-icon>
     </app-button>
 
     @if (searchService.getListBoolean()) {
       <div class="tag-container" [class.tag-container--channel]="searchService.isChannel()">
-        <app-search-result [input]="input" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
+        <app-search-result [input]="input" [listboxId]="listboxId" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
       </div>
     }
     @if (reactionMenuOpenInTextarea) {
-      <div class="reaction-menu">
+      <div class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpenInTextarea = false">
         <div class="scroll-container">
           @for (emoji of emojis; track $index) {
-            <button type="button" (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
+            <button
+              type="button"
+              (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false"
+              class="emoji"
+              [attr.aria-label]="'Emoji ' + emoji + ' einfügen'"
+            >
               {{ emoji }}
             </button>
           }

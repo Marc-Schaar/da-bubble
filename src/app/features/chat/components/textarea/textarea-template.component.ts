@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ALL_EMOJIS } from '../../../../shared/constants';
@@ -7,10 +7,13 @@ import { SearchResultComponent } from '../../../../shared/components/search-resu
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
+
+let textareaInstanceUid = 0;
 
 @Component({
   selector: 'app-textarea-template',
-  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent, ButtonComponent],
+  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent, ButtonComponent, FocusTrapPanelDirective],
   templateUrl: './textarea-template.component.html',
   styleUrl: './textarea-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +30,16 @@ export class TextareaTemplateComponent {
 
   public isChannelComponent = input<boolean>(false);
   public placeholderText = input<string>('Starte eine neue Nachricht');
+  public disabled = input<boolean>(false);
 
   public send = output<string>();
 
   private readonly dropdownNavKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+
+  @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+
+  /** Unique per instance since a channel textarea and a thread-reply textarea can be mounted at once. */
+  protected readonly listboxId = `textarea-mention-listbox-${textareaInstanceUid++}`;
 
   /**
    * Re-runs mention detection for the current caret position. Bound to both
@@ -76,7 +85,7 @@ export class TextareaTemplateComponent {
    * Handles Enter/Arrow/Escape while the suggestion dropdown is open so it
    * doesn't conflict with sending the message or moving the caret.
    */
-  onKeydown(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+  onKeydown(event: KeyboardEvent) {
     if (!this.searchService.getListBoolean()) {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
@@ -85,26 +94,12 @@ export class TextareaTemplateComponent {
       return;
     }
 
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        this.searchService.moveHighlightedIndex(1);
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        this.searchService.moveHighlightedIndex(-1);
-        break;
-      case 'Enter': {
-        event.preventDefault();
-        const element = this.searchService.getHighlightedElement();
-        if (element) this.onTagInserted(this.mentionService.resolveTagName(element), ta);
-        break;
-      }
-      case 'Escape':
-        event.preventDefault();
-        this.searchService.resetList();
-        break;
-    }
+    this.searchService.handleDropdownKeydown(event, () => this.searchResultRef?.selectHighlighted());
+  }
+
+  protected activeDescendantId(): string | null {
+    const index = this.searchService.getHighlightedIndex();
+    return this.searchService.getListBoolean() && index >= 0 ? `${this.listboxId}-option-${index}` : null;
   }
 
   /**
@@ -165,7 +160,7 @@ export class TextareaTemplateComponent {
    * how and where to send it.
    */
   newMessage(): void {
-    if (!this.input.trim()) return;
+    if (this.disabled() || !this.input.trim()) return;
     const messageToSend = this.mentionService.formatMentionMarkers(this.input, this.taggedNames);
     this.send.emit(messageToSend);
     this.input = '';

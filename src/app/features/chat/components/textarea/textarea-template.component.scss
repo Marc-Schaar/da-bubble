@@ -15,6 +15,10 @@
   }
 }
 
+.input-container textarea:focus-visible {
+  outline: none !important;
+}
+
 .action-container {
   display: flex;
   align-items: center;
