@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Input, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { MentionService } from '../../services/mention/mention.service';
 import { MatIcon } from '@angular/material/icon';
@@ -25,6 +25,9 @@ export class SearchResultComponent {
   @Output() inputChange = new EventEmitter<string>();
   @Output() tagInserted = new EventEmitter<string>();
   @Output() currentReceiver = new EventEmitter<any>();
+
+  /** Id of the rendered `role="listbox"` — callers pass a fixed, per-usage-unique string so their paired input can reference it via aria-controls/aria-activedescendant. */
+  public readonly listboxId = input<string>('search-result-listbox');
 
   /**
    * Tags a receiver (user or channel) by emitting its display name; the
@@ -101,5 +104,11 @@ export class SearchResultComponent {
       default:
         break;
     }
+  }
+
+  /** Dispatches the currently keyboard-highlighted item exactly as a click on it would — for Enter-to-select in the paired input's keydown handling. */
+  public selectHighlighted(): void {
+    const element = this.searchService.getHighlightedElement();
+    if (element) this.handleClick(element);
   }
 }

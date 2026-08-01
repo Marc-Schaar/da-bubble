@@ -1,7 +1,12 @@
-<ul>
+<ul [id]="listboxId()" role="listbox">
   @for (element of searchService.getCurrentList(); track $index) {
-    <li [class.highlighted]="$index === searchService.getHighlightedIndex()">
-      <button type="button" class="result-btn" (click)="handleClick(element)">
+    <li
+      [id]="listboxId() + '-option-' + $index"
+      role="option"
+      [attr.aria-selected]="$index === searchService.getHighlightedIndex()"
+      [class.highlighted]="$index === searchService.getHighlightedIndex()"
+    >
+      <button type="button" class="result-btn" tabindex="-1" (click)="handleClick(element)">
         @if (isChannel(element)) {
           <mat-icon>tag</mat-icon>
           {{ element.name }}
@@ -11,7 +16,7 @@
       </button>
     </li>
   } @empty {
-    <li class="empty-state">
+    <li class="empty-state" role="presentation">
       Kein
       @if (searchService.isChannel() === true) {
         Channel

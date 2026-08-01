@@ -183,4 +183,34 @@ export class SearchService {
   public resetList() {
     this.uiState.resetList();
   }
+
+  /**
+   * Shared Arrow/Enter/Escape handling for any input paired with a
+   * suggestion dropdown. `onEnter` is caller-supplied since what "select
+   * the highlighted item" means differs (tag insertion vs. navigation vs.
+   * setting a receiver) — callers typically pass the dropdown's own
+   * `selectHighlighted()`. Only call this while the caller's own list is
+   * open; it does not check that itself since it has no way to know which
+   * of header/textarea/newMessage list applies to the caller.
+   */
+  public handleDropdownKeydown(event: KeyboardEvent, onEnter: () => void): void {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.moveHighlightedIndex(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.moveHighlightedIndex(-1);
+        break;
+      case 'Enter':
+        event.preventDefault();
+        onEnter();
+        break;
+      case 'Escape':
+        event.preventDefault();
+        this.resetList();
+        break;
+    }
+  }
 }
