@@ -117,6 +117,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh',
       panelClass: ['fullscreen'],
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: `Channel # ${this.channelService.currentChannel()?.name ?? ''} bearbeiten`,
     });
   }
 
@@ -132,6 +135,9 @@ export class ChatContentComponent implements OnInit, OnDestroy {
       height: '413px',
       panelClass: ['add-member-dialog', 'transparent-dialog-bg'],
       position: { top: '200px', right: '150px' },
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Mitglieder hinzufügen',
     });
   }
 

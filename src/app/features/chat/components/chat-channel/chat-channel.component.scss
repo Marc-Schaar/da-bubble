@@ -1,11 +1,11 @@
-main {
+section {
   height: 100%;
-  display: grid;
+  display: flex;
   min-height: 100vh;
 }
 
 span {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 
@@ -46,7 +46,7 @@ span {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 16px 0;
-  height: 100%;
+  flex: 1;
 }
 
 button {
@@ -72,6 +72,12 @@ button {
       color: var(--light-purple);
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 }
 
 .medium-purple {
@@ -84,16 +90,8 @@ button {
   }
 }
 
-.font-size-14 {
-  font-size: 14px;
-}
-
-.font-size-18 {
-  font-size: 18px;
-}
-
 @media (max-width: 1023px) {
-  main {
+  section {
     margin-right: 0;
   }
 

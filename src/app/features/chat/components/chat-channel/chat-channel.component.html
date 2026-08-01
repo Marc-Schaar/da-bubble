@@ -2,7 +2,7 @@
   <app-chat-header></app-chat-header>
 }
 
-<main>
+<section>
   <app-card>
     <app-card-header card-header>
       <app-guest-lock-tooltip [mobilePosition]="true">
@@ -50,9 +50,9 @@
           <app-button
             variant="plain"
             class="btn-add-member"
-            title="Zugang für Gäste gespeert"
+            title="Zugang für Gäste gesperrt"
             ariaLabel="Mitglieder anzeigen"
-            [disabled]="authService.isGuest()"
+            [ariaDisabled]="authService.isGuest()"
             (click)="openMemberWindow()"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,9 +65,9 @@
           <app-button
             variant="plain"
             class="btn-add-member-mobile"
-            title="Zugang für Gäste gespeert"
+            title="Zugang für Gäste gesperrt"
             ariaLabel="Mitglieder anzeigen"
-            [disabled]="authService.isGuest()"
+            [ariaDisabled]="authService.isGuest()"
             (click)="openMemberWindow()"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,12 +95,12 @@
       }
     </ul>
 
-    <section card-footer class="card-footer">
+    <footer card-footer class="card-footer">
       <app-textarea-template
         [isChannelComponent]="true"
         [placeholderText]="'Nachricht an #' + (channelService.currentChannel()?.name || '')"
         (send)="onSend($event)"
       ></app-textarea-template>
-    </section>
+    </footer>
   </app-card>
-</main>
+</section>
