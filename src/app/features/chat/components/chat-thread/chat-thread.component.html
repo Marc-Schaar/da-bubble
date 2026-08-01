@@ -1,7 +1,7 @@
 @if (this.navigationService.isMobile()) {
   <app-chat-header [isThread]="true"></app-chat-header>
 }
-<main>
+<section>
   <app-card>
     <app-card-header card-header>
       <div class="thread-channel-container">
@@ -55,4 +55,4 @@
       <app-textarea-template [isChannelComponent]="true" [placeholderText]="'Antworten...'" (send)="onSend($event)"></app-textarea-template>
     </div>
   </app-card>
-</main>
+</section>

@@ -1,4 +1,4 @@
-main {
+section {
   display: flex;
   height: 100%;
   min-height: 100vh;
@@ -32,7 +32,7 @@ main {
   }
 
   > span {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 600;
   }
 }
@@ -40,12 +40,12 @@ main {
 .welcomeText {
   a {
     color: var(--dark-purple-text);
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
   p {
     color: #686868;
-    font-size: 18px;
+    font-size: 1.125rem;
 
     > span {
       font-weight: 700;
@@ -61,7 +61,7 @@ main {
 }
 
 @media (max-width: 1023px) {
-  main {
+  section {
     margin: 0;
   }
 

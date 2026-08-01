@@ -1,4 +1,4 @@
-main {
+section {
   display: flex;
   height: 100%;
   margin-left: 1em;
@@ -12,7 +12,7 @@ main {
 
   .channel-name-container {
     margin-left: 8px;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--medium-purple);
   }
 }
@@ -20,7 +20,7 @@ main {
 .thread-container {
   p {
     font-weight: 700;
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 
@@ -31,7 +31,7 @@ main {
   align-items: center;
   justify-content: space-between;
   margin-left: 24px;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--light-purple);
 
   .line-container {
@@ -68,7 +68,7 @@ button {
 
 h3 {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 1.125rem;
   white-space: nowrap;
 }
 .flex-wrap {
@@ -80,7 +80,7 @@ h3 {
 }
 
 @media (max-width: 1023px) {
-  main {
+  section {
     margin: 0;
   }
 }

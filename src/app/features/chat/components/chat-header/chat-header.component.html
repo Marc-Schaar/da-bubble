@@ -7,6 +7,6 @@
   </div>
 
   <app-button variant="plain" ariaLabel="Benutzermenü öffnen" (click)="openUserMenu()">
-    <img [src]="this.authService.currentUser()?.photoUrl" alt="this.authService.currentUser()?.displayName" />
+    <img [src]="this.authService.currentUser()?.photoUrl" [alt]="authService.currentUser()?.displayName ?? 'Profilbild'" />
   </app-button>
 </header>

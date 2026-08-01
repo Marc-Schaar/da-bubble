@@ -1,7 +1,7 @@
 @if (this.navigationService.isMobile()) {
   <app-chat-header></app-chat-header>
 }
-<main>
+<section>
   <app-card (click)="hideList()">
     <app-card-header card-header>
       <app-button variant="plain" (click)="showProfile()">
@@ -51,4 +51,4 @@
       ></app-textarea-template>
     </footer>
   </app-card>
-</main>
+</section>
