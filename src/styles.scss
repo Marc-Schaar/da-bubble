@@ -63,6 +63,12 @@
   }
 }
 
+@mixin focus-ring {
+  outline: 2px solid var(--dark-purple-text);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 // ---------------------------------------------------------------------------
 // Base element resets
 // ---------------------------------------------------------------------------
@@ -99,6 +105,14 @@ ul {
   list-style: none;
 }
 
+button:focus-visible {
+  @include focus-ring;
+}
+
+a:focus-visible {
+  @include focus-ring;
+}
+
 a {
   text-decoration: none;
 }
@@ -108,13 +122,13 @@ textarea {
   resize: none;
   background: transparent;
   font-family: "Nunito";
-  font-size: 18px;
+  font-size: 1.125rem;
   &::-webkit-resizer {
     display: none;
   }
 
   &:focus-visible {
-    outline: none;
+    @include focus-ring;
   }
 }
 
@@ -124,6 +138,14 @@ textarea {
     "wght" 400,
     "GRAD" 0,
     "opsz" 24;
+}
+
+.font-size-14 {
+  font-size: 0.875rem;
+}
+
+.font-size-18 {
+  font-size: 1.125rem;
 }
 
 // ---------------------------------------------------------------------------
@@ -182,6 +204,12 @@ textarea {
   padding: 10px 45px;
   &:hover {
     background-color: #eceefe !important;
+    border-radius: 30px !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: -2px;
     border-radius: 30px !important;
   }
 }

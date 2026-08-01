@@ -26,7 +26,9 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      AOS.init();
+      AOS.init({
+        disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      });
     }
   }
 }
