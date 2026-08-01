@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -41,6 +41,21 @@ export class NewmessageComponent {
   public input: string = '';
 
   protected readonly isChannel = isChannel;
+
+  @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+
+  protected readonly listboxId = 'chat-new-receiver-listbox';
+
+  /** Arrow/Enter/Escape navigation for the receiver suggestion dropdown; only active while it's actually open. */
+  protected onSearchKeydown(event: KeyboardEvent): void {
+    if (!this.searchService.getNewListBoolean()) return;
+    this.searchService.handleDropdownKeydown(event, () => this.searchResultRef?.selectHighlighted());
+  }
+
+  protected activeDescendantId(): string | null {
+    const index = this.searchService.getHighlightedIndex();
+    return this.searchService.getNewListBoolean() && index >= 0 ? `${this.listboxId}-option-${index}` : null;
+  }
 
   /**
    * Sets the current receiver of the message, determines the receiver type (channel or direct),
