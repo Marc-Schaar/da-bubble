@@ -20,6 +20,9 @@ export class ProfileDialogService {
     this.dialog.open(UserProfileComponent, {
       data: user,
       panelClass: ['center-dialog'],
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: `Profil von ${user.displayName}`,
     });
   }
 }

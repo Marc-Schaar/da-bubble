@@ -23,7 +23,11 @@ export class UserMenuComponent {
    * Opens the user profile in a modal dialog.
    */
   showProfile() {
-    this.dialog.open(UserProfileComponent);
+    this.dialog.open(UserProfileComponent, {
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Eigenes Profil',
+    });
   }
 
   /**

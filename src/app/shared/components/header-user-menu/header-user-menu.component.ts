@@ -30,6 +30,9 @@ export class HeaderUserMenuComponent {
   public showProfile() {
     this.matDialog.open(UserProfileComponent, {
       panelClass: 'user-profile-dialog-bottom-left',
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Eigenes Profil',
     });
   }
 

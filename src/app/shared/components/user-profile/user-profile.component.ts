@@ -117,6 +117,9 @@ export class UserProfileComponent {
     this.avatarDialogRef = this.dialog.open(AvatarSelectionComponent, {
       data: { user: this.user() },
       hasBackdrop: false,
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Avatar auswählen',
     });
 
     this.avatarDialogRef.afterClosed().subscribe((result) => {

@@ -17,7 +17,7 @@
         <p class="name">{{ user()?.displayName }}</p>
         @if (isOwnProfile) {
           <app-guest-lock-tooltip>
-            <app-button variant="plain" class="edit-btn" [disabled]="authService.isGuest()" (click)="modify()">
+            <app-button variant="plain" class="edit-btn" [ariaDisabled]="authService.isGuest()" (click)="modify()">
               @if (navigationService.isMobile()) {
                 <mat-icon>edit</mat-icon>
               } @else {
