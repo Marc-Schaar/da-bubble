@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { AuthService } from '../../../auth/services/auth/auth.service';
@@ -9,12 +9,15 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-add-member',
-  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddMemberComponent {
   public readonly authService: AuthService = inject(AuthService);

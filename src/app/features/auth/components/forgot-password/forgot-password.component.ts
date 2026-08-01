@@ -1,24 +1,27 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterLink } from '@angular/router';
-import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { createForgotPasswordForm } from '../../forms/auth-forms';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
-  selector: 'app-forgotpassword',
-  imports: [HeaderComponent, FooterComponent, ReactiveFormsModule, RouterLink],
+  selector: 'app-forgot-password',
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, InputComponent, MatIcon],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForgotpasswordComponent {
+export class ForgotPasswordComponent {
   private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
 
-  isOverlayActive = false;
-  submitted = false;
+  isSubmitting = signal(false);
 
   public forgotPasswordForm = createForgotPasswordForm(inject(FormBuilder));
 
@@ -31,17 +34,23 @@ export class ForgotpasswordComponent {
       return;
     }
 
-    this.isOverlayActive = true;
+    this.isSubmitting.set(true);
     try {
       await this.authService.sendPasswordReset(this.forgotPasswordForm.getRawValue().email);
+      this.notificationService.success('E-Mail gesendet');
+      this.forgotPasswordForm.reset();
     } catch {
-      // Kein sichtbarer Fehlerzustand im bisherigen UI vorgesehen; still scheitern.
+      this.notificationService.error('E-Mail konnte nicht gesendet werden.');
+    } finally {
+      this.isSubmitting.set(false);
     }
-    this.submitted = true;
-    this.forgotPasswordForm.reset();
-    setTimeout(() => {
-      this.isOverlayActive = false;
-      this.submitted = false;
-    }, 1500);
+  }
+
+  protected getEmailError(): string | null {
+    const control = this.forgotPasswordForm.controls['email'];
+    if (control.invalid && (control.touched || control.dirty)) {
+      return '*Diese E-Mail-Adresse ist leider ungültig.';
+    }
+    return null;
   }
 }

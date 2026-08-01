@@ -1,9 +1,17 @@
+// Timing shared by the intro animations, named once to avoid repeating the
+// same magic numbers across every keyframe/animation declaration below.
+$duration-fade: 1000ms;
+$duration-step: 500ms;
+$delay-shift: 1000ms;
+$delay-expand: 1800ms;
+$delay-shrink: 3000ms;
+
 .main {
   height: 100vh;
   width: 100%;
   background: linear-gradient(1.46deg, #313ae6 1.22%, #797ef3 98.76%) !important;
   opacity: 1;
-  animation: changeOpacity 1000ms ease-in-out 3000ms 1 normal forwards;
+  animation: changeOpacity $duration-fade ease-in-out $delay-shrink 1 normal forwards;
   .intro {
     display: flex;
     align-items: center;
@@ -12,19 +20,16 @@
     left: 50%;
     height: 184px;
     transform: translate(-50%, -50%);
-    animation: moveLogo 500ms ease-in-out 3000ms 1 normal forwards;
+    animation: moveLogo $duration-step ease-in-out $delay-shrink 1 normal forwards;
     @media (max-width: 1023px) {
-       animation: moveLogoMobile 500ms ease-in-out 3000ms 1 normal forwards;
+       animation: moveLogoMobile $duration-step ease-in-out $delay-shrink 1 normal forwards;
     }
     .logo-img {
-      animation: moveSide 500ms ease-in-out 1000ms 1 normal forwards;
-      @media (max-width: 1023px) {
-        animation: moveSideMobile 500ms ease-in-out 1000ms 1 normal forwards;
-      }
+      animation: moveSide $duration-step ease-in-out $delay-shift 1 normal forwards;
       img {
-        animation: changeSize 500ms ease-in-out 3000ms 1 normal forwards;
+        animation: changeSize $duration-fade ease-in-out $delay-shrink 1 normal forwards;
         @media (max-width: 1023px) {
-          animation: changeSizeMobile 500ms ease-in-out 3000ms 1 normal forwards;
+          animation: changeSizeMobile $duration-fade ease-in-out $delay-shrink 1 normal forwards;
           width: 70px;
           height: 70px;
         }
@@ -40,20 +45,21 @@
         height: 70px;
         display: flex;
         align-items: center;
-        animation: encrease 500ms ease-in-out 1800ms 1 normal forwards, moveAfterShrink 500ms ease-in-out 3000ms 1 normal forwards;
+        animation: encrease $duration-step ease-in-out $delay-expand 1 normal forwards, moveAfterShrink $duration-step ease-in-out $delay-shrink 1 normal forwards;
         @media (max-width: 1023px) {
           animation:
-          encreaseMobile 500ms ease-in-out 1800ms 1 normal forwards,
-          moveAfterShrinkMobile 500ms ease-in-out 3000ms 1 normal forwards; 
-          left: 45px;       
+          encreaseMobile $duration-step ease-in-out $delay-expand 1 normal forwards,
+          moveAfterShrinkMobile $duration-step ease-in-out $delay-shrink 1 normal forwards;
+          left: 45px;
         }
-        span {
+        .project-name-text {
           position: inherit;
+          margin: 0;
           color: white;
-          font-size: 44px;
+          font-size: 2.75rem;
           right: 200px;
           @media (max-width: 1023px) {
-           font-size: 24px;
+           font-size: 1.5rem;
            right: 188px;
           }
         }
@@ -66,14 +72,6 @@
   display: none;
 }
 
-@keyframes showName {
-  0% {
-    right: 200px;
-  }
-  100% {
-    right: 0px;
-  }
-}
 @keyframes moveAfterShrink {
   0% {
     left: 130px;
@@ -110,20 +108,10 @@
   }
   100% {
     top: 150px;
-
   }
 }
 
 @keyframes moveSide {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(-50%, 0);
-  }
-}
-
-@keyframes moveSideMobile {
   0% {
     transform: translate(0, 0);
   }

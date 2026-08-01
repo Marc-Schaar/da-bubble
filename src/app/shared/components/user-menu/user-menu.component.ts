@@ -1,26 +1,33 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../features/auth/services/auth/auth.service';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [MatIcon],
+  imports: [MatIcon, ButtonComponent],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserMenuComponent {
   private authService: AuthService = inject(AuthService);
-  private dialogRef = inject(MatDialogRef<UserMenuComponent>);
+  private bottomSheetRef = inject(MatBottomSheetRef<UserMenuComponent>);
   private dialog = inject(MatDialog);
 
   /**
    * Opens the user profile in a modal dialog.
    */
   showProfile() {
-    this.dialog.open(UserProfileComponent);
+    this.dialog.open(UserProfileComponent, {
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Eigenes Profil',
+    });
   }
 
   /**
@@ -28,6 +35,6 @@ export class UserMenuComponent {
    */
   logOut() {
     this.authService.logOut();
-    this.dialogRef.close();
+    this.bottomSheetRef.dismiss();
   }
 }

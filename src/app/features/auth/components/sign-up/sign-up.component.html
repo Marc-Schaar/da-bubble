@@ -1,0 +1,62 @@
+<section class="header">
+  <a routerLink="/login" aria-label="Zurück zum Login">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+
+  <div class="headline">
+    <h1>Konto erstellen</h1>
+    <span>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</span>
+  </div>
+</section>
+
+<form class="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <app-input
+    appearance="filled"
+    icon="person"
+    name="displayName"
+    type="text"
+    autocomplete="name"
+    formControlName="displayName"
+    placeholder="Name und Nachname"
+    ariaLabel="Name und Nachname"
+    [invalid]="!!getDisplayNameError()"
+    [errorMessage]="getDisplayNameError()"
+  />
+
+  <app-input
+    appearance="filled"
+    icon="mail"
+    name="email"
+    type="email"
+    autocomplete="email"
+    formControlName="email"
+    placeholder="beispielname@email.com"
+    ariaLabel="E-Mail-Adresse"
+    [invalid]="!!getEmailError()"
+    [errorMessage]="getEmailError()"
+  />
+
+  <app-input
+    appearance="filled"
+    icon="lock"
+    name="password"
+    type="password"
+    autocomplete="new-password"
+    formControlName="password"
+    placeholder="Passwort"
+    ariaLabel="Passwort"
+    [invalid]="!!getPasswordError()"
+    [errorMessage]="getPasswordError()"
+  />
+
+  <div class="legal-text">
+    <label class="checkbox">
+      <input formControlName="acceptTerms" type="checkbox" />
+      <span>Ich stimme der<a routerLink="/Dataprotection"> Datenschutzerklärung </a>zu.</span>
+    </label>
+  </div>
+  @if (registerForm.get("acceptTerms")?.invalid && (registerForm.get("acceptTerms")?.touched || registerForm.get("acceptTerms")?.dirty)) {
+    <span class="error">Du musst den Bedingungen zustimmen.</span>
+  }
+  <app-button class="form-action-btn" variant="primary" type="submit">Weiter</app-button>
+</form>

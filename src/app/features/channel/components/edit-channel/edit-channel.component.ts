@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { User } from '../../../auth/models/user/user';
 import { MatIcon } from '@angular/material/icon';
@@ -9,25 +8,30 @@ import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel/channel.service';
 import { UserListItemComponent } from '../../../../shared/components/user-list-item/user-list-item.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent, FocusTrapPanelDirective],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditChannelComponent {
-  private readonly userService = inject(UserService);
+  private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly navigationService = inject(NavigationService);
   private readonly profileDialogService = inject(ProfileDialogService);
   private readonly dialogRef: MatDialogRef<EditChannelComponent> = inject(MatDialogRef<EditChannelComponent>);
   public readonly channelService = inject(ChannelService);
 
-  public channelNameEdit: boolean = false;
-  public channelDescriptionEdit: boolean = false;
+  public channelNameEdit = signal(false);
+  public channelDescriptionEdit = signal(false);
   public tempName = signal('');
   public tempDescription = signal('');
-  public isAddMemberOpen: boolean = false;
+  public isAddMemberOpen = signal(false);
   public showUserBar: boolean = false;
 
   constructor() {
@@ -56,10 +60,10 @@ export class EditChannelComponent {
       await this.channelService.addMembers(channelId, usersToAdd);
 
       this.channelService.selectedUsers.set([]);
-      this.isAddMemberOpen = false;
-      this.userService.showFeedback('User hinzugefügt');
+      this.isAddMemberOpen.set(false);
+      this.notificationService.success('User hinzugefügt');
     } catch (error) {
-      this.userService.showFeedback('Fehler beim Hinzufügen');
+      this.notificationService.error('Fehler beim Hinzufügen');
     }
   }
 
@@ -68,21 +72,21 @@ export class EditChannelComponent {
 
     if (!channel || !channel.id) return;
 
-    if (!this.channelNameEdit) {
+    if (!this.channelNameEdit()) {
       this.tempName.set(channel.name);
-      this.channelNameEdit = true;
+      this.channelNameEdit.set(true);
     } else {
       const cleanedName = this.tempName().trim();
 
       if (cleanedName && cleanedName !== channel.name) {
         try {
           await this.channelService.updateName(channel.id, cleanedName);
-          this.userService.showFeedback('Name aktualisiert');
+          this.notificationService.success('Name aktualisiert');
         } catch (e) {
-          this.userService.showFeedback('Fehler beim Speichern');
+          this.notificationService.error('Fehler beim Speichern');
         }
       }
-      this.channelNameEdit = false;
+      this.channelNameEdit.set(false);
     }
   }
 
@@ -90,17 +94,17 @@ export class EditChannelComponent {
     const channel = this.channelService.currentChannel();
     if (!channel || !channel.id) return;
 
-    if (!this.channelDescriptionEdit) {
+    if (!this.channelDescriptionEdit()) {
       this.tempDescription.set(channel?.description || '');
-      this.channelDescriptionEdit = true;
+      this.channelDescriptionEdit.set(true);
     } else {
       if (this.tempDescription() !== channel?.description) {
         try {
           await this.channelService.updateDescription(channel?.id, this.tempDescription());
-          this.userService.showFeedback('Beschreibung aktualisiert');
+          this.notificationService.success('Beschreibung aktualisiert');
         } catch (e) {}
       }
-      this.channelDescriptionEdit = false;
+      this.channelDescriptionEdit.set(false);
     }
   }
 
@@ -108,10 +112,10 @@ export class EditChannelComponent {
     try {
       await this.channelService.leaveChannel();
       this.dialogRef.close();
-      this.userService.showFeedback('Channel verlassen');
+      this.notificationService.success('Channel verlassen');
       this.navigationService.goToNewMessage();
     } catch (error) {
-      this.userService.showFeedback('Fehler beim Verlassen des Channels');
+      this.notificationService.error('Fehler beim Verlassen des Channels');
     }
   }
 
@@ -124,7 +128,7 @@ export class EditChannelComponent {
   }
 
   public toogleAddMemberState() {
-    this.isAddMemberOpen = !this.isAddMemberOpen;
+    this.isAddMemberOpen.update((open) => !open);
   }
 
   /**

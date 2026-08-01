@@ -15,7 +15,7 @@
 .channel-header {
   display: flex;
   justify-content: space-between;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
   align-items: center;
   @media (max-width: 1023px) {
@@ -46,8 +46,9 @@
 
   &--header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
   }
 
@@ -63,15 +64,29 @@
     .member-list {
       overflow: auto;
       &--item {
+        padding: 0.5ch;
         margin: 10px 0;
         display: flex;
         align-items: center;
         gap: 16px;
         cursor: pointer;
-        &:hover {
+        &:hover,
+        &:has(.member-list--btn:focus-visible) {
           background-color: var(--bg-color);
           border-radius: 35px;
         }
+        &:has(.member-list--btn:focus-visible) {
+          outline: 2px solid var(--dark-purple-text);
+          outline-offset: 2px;
+        }
+      }
+      &--btn {
+        display: contents;
+        border: none;
+        background: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
       }
     }
     @media (max-width: 1023px) {
@@ -80,25 +95,35 @@
   }
 }
 
+.channel-name-display {
+  margin: 0;
+}
+
 .content {
   &--description {
+    margin: 0;
     overflow-wrap: break-word;
-    overflow: scroll;
+    overflow-y: auto;
     max-height: 100px;
     font-size: 1rem;
   }
 }
 
 .creator {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
   &--name {
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--dark-purple-text);
   }
-}
-
-button {
-  background-color: unset;
-  border: none;
 }
 
 .save-btn {
@@ -112,18 +137,8 @@ button {
 }
 
 .exit-btn {
-  display: flex;
   place-self: end;
-  padding: 12px 25px 12px 25px;
-  background-color: var(--dark-purple);
-  border-radius: 25px;
-  color: white;
   font-size: 1.125rem;
-  font-weight: 700;
-
-  &:hover {
-    background-color: var(--medium-purple);
-  }
 }
 
 .line {
@@ -139,47 +154,6 @@ button {
 
 .input-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 1px solid rgba(173, 176, 217, 1);
-  border-radius: 30px;
-  padding: 8px 16px;
-
-  &::before {
-    content: "#";
-    font-weight: 700;
-    margin-right: 8px;
-    font-size: 1.1rem;
-    pointer-events: none;
-  }
-
-  input {
-    border: none;
-    width: 100%;
-    padding: 8px 0;
-    font-size: 1.1rem;
-    &:focus-visible {
-      outline: none;
-    }
-  }
-}
-
-input,
-textarea {
-  border-radius: 30px;
-  border: 1px solid rgba(173, 176, 217, 1);
-  width: 100%;
-  padding: 20px;
-  field-sizing: content;
-  min-height: 1.25rem;
-  max-height: 200px;
-  &:hover {
-    border: 1px solid var(--medium-purple);
-  }
-  &:focus-visible {
-    border: 1px solid var(--dark-purple-text);
-  }
 }
 
 li {
@@ -191,10 +165,13 @@ li {
   gap: 12px;
   align-items: center;
   justify-content: center;
+  background-color: var(--bg-color);
+  border-radius: 8px;
+  padding: 8px;
 }
 
 .tooltip {
-  display: none;
+  display: flex;
   height: 398px;
   box-shadow: 0px -3px 10px 0px rgba(0, 0, 0, 0.2);
   flex-direction: column;
@@ -207,14 +184,12 @@ li {
   background: white;
   gap: 16px;
   transition: transform 0.3s ease-in-out;
-  transform: translateY(100%);
+  transform: translateY(150%);
   position: fixed;
-  @media (max-width: 1023px) {
-    display: flex;
-  }
+  z-index: 3;
 
   &__open {
-    transform: translateY(0%);
+    transform: translateY(30%);
   }
 
   &--line {
@@ -229,31 +204,16 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
   }
 
   .submit-btn {
     width: 147px;
     height: 49px;
-    border-radius: 25px;
-    padding: 12px 25px 12px 25px;
-    background-color: var(--mat-sys-primary);
-    color: white;
-    border: none;
     gap: 10px;
-    cursor: pointer;
     place-self: end;
-    font-size: 18px;
-
-    &:disabled {
-      background-color: rgba(104, 104, 104, 1) !important;
-    }
-  }
-
-  @media (max-width: 1023px) {
-    flex-direction: column;
-    z-index: 3;
+    font-size: 1.125rem;
   }
 }
 
@@ -279,9 +239,24 @@ li {
       position: absolute;
     }
     cursor: pointer;
-    &:hover {
+    &:hover,
+    &:has(.user-select-btn:focus-visible) {
       background-color: var(--bg-color);
     }
+    &:has(.user-select-btn:focus-visible) {
+      outline: 2px solid var(--dark-purple-text);
+      outline-offset: 2px;
+      border-radius: 30px;
+    }
+  }
+
+  .user-select-btn {
+    display: contents;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
   }
 }
 

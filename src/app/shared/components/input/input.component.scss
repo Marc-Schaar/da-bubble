@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  width: 100%;
+
+  --app-input-radius: 30px;
+  --app-input-padding: 0.875em 1.25em;
+  --app-input-bg: transparent;
+  --app-input-border: 1px solid var(--light-purple);
+  --app-input-font-size: 1rem;
+}
+
+:host(.app-input--filled) {
+  --app-input-bg: var(--bg-color);
+  --app-input-border: none;
+  --app-input-radius: 100px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.app-input__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--app-input-radius);
+  background-color: var(--app-input-bg);
+  border: var(--app-input-border);
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--medium-purple);
+  }
+  &:focus-within {
+    border-color: var(--dark-purple-text);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: var(--app-input-padding);
+    font-size: var(--app-input-font-size);
+    font-family: inherit;
+    color: inherit;
+    border: none;
+    outline: none;
+    background: none;
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      -webkit-text-fill-color: inherit;
+      box-shadow: 0 0 0 1000px var(--app-input-bg) inset;
+      transition: background-color 9999s ease-in-out 0s;
+    }
+  }
+
+  textarea {
+    resize: none;
+    field-sizing: content;
+    min-height: 1.25rem;
+    max-height: 200px;
+  }
+}
+
+:host(.app-input--invalid) .app-input__control {
+  border-color: #ed1e79;
+  border-width: 1px;
+  border-style: solid;
+}
+
+:host(.app-input--disabled) .app-input__control {
+  opacity: 0.6;
+}
+
+.app-input__icon {
+  position: absolute;
+  left: 1.25em;
+  pointer-events: none;
+
+  ~ input,
+  ~ textarea {
+    padding-left: 3.75em;
+  }
+}
+
+.app-input__prefix {
+  padding-left: 1.25em;
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+
+  ~ input,
+  ~ textarea {
+    padding-left: 0.5em;
+  }
+}
+
+.app-input__suffix {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 0.75em;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.app-input__error {
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 19.1px;
+  color: #ed1e79;
+}

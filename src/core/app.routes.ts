@@ -1,44 +1,73 @@
 import { Routes } from '@angular/router';
-import { ImprintComponent } from '../app/features/legal/imprint/imprint.component';
-import { DataprotectionComponent } from '../app/features/legal/data-protection/data-protection.component';
-import { MainComponentComponent } from '../app/features/auth/components/main-component/main-component.component';
-import { ForgotpasswordComponent } from '../app/features/auth/components/forgot-password/forgot-password.component';
-import { ResetpasswordComponent } from '../app/features/auth/components/reset-password/reset-password.component';
-import { MainChatComponent } from '../app/features/chat/main-chat/main-chat.component';
-import { ChatContentComponent } from '../app/features/chat/components/chat-channel/chat-channel.component';
-import { DirectmessagesComponent } from '../app/features/chat/components/chat-direct/chat-direct.component';
-import { NewmessageComponent } from '../app/features/chat/components/chat-new-message/chat-new.component';
-
-import { LoginComponent } from '../app/features/auth/components/login/login.component';
-import { RegisterComponent } from '../app/features/auth/components/register/register.component';
-import { AvatarselectionComponent } from '../app/features/auth/components/avatar-selection/avatar-selection.component';
 import { authGuard } from './auth.guard';
+import { noAuthGuard } from './no-auth.guard';
 
+/**
+ * Application route definitions with lazy-loaded components and route guards.
+ */
 export const routes: Routes = [
   {
     path: '',
-    component: MainComponentComponent,
+    loadComponent: () => import('../app/features/auth/components/auth-layout/auth-layout.component').then((m) => m.AuthLayoutComponent),
+    canActivate: [noAuthGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'register/avatar', component: AvatarselectionComponent },
+      {
+        path: 'login',
+        loadComponent: () => import('../app/features/auth/components/sign-in/sign-in.component').then((m) => m.SignInComponent),
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('../app/features/auth/components/sign-up/sign-up.component').then((m) => m.SignUpComponent),
+      },
+      {
+        path: 'register/avatar',
+        loadComponent: () =>
+          import('../app/features/auth/components/avatar-selection/avatar-selection.component').then((m) => m.AvatarSelectionComponent),
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('../app/features/auth/components/forgot-password/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () =>
+          import('../app/features/auth/components/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent),
+      },
     ],
   },
 
   {
     path: 'main',
-    component: MainChatComponent,
+    loadComponent: () => import('../app/features/chat/main-chat/main-chat.component').then((m) => m.MainChatComponent),
     children: [
-      { path: 'channel/:id', component: ChatContentComponent },
-      { path: 'direct/:id', component: DirectmessagesComponent },
-      { path: 'new-message', component: NewmessageComponent },
+      { path: '', redirectTo: 'new-message', pathMatch: 'full' },
+      {
+        path: 'channel/:id',
+        loadComponent: () =>
+          import('../app/features/chat/components/chat-channel/chat-channel.component').then((m) => m.ChatContentComponent),
+      },
+      {
+        path: 'direct/:id',
+        loadComponent: () =>
+          import('../app/features/chat/components/chat-direct/chat-direct.component').then((m) => m.DirectmessagesComponent),
+      },
+      {
+        path: 'new-message',
+        loadComponent: () =>
+          import('../app/features/chat/components/chat-new-message/chat-new.component').then((m) => m.NewmessageComponent),
+      },
     ],
     canActivate: [authGuard],
   },
 
-  { path: 'forgotpassword', component: ForgotpasswordComponent },
-  { path: 'resetpassword', component: ResetpasswordComponent },
-  { path: 'imprint', component: ImprintComponent },
-  { path: 'Dataprotection', component: DataprotectionComponent },
+  {
+    path: 'imprint',
+    loadComponent: () => import('../app/features/legal/imprint/imprint.component').then((m) => m.ImprintComponent),
+  },
+  {
+    path: 'Dataprotection',
+    loadComponent: () => import('../app/features/legal/data-protection/data-protection.component').then((m) => m.DataprotectionComponent),
+  },
 ];

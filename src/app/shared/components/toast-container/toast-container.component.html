@@ -1,0 +1,15 @@
+<div class="toast-stack" role="status" aria-live="polite">
+  @for (toast of toasts(); track toast.id) {
+    <button
+      type="button"
+      class="toast"
+      [class.toast--success]="toast.variant === 'success'"
+      [class.toast--error]="toast.variant === 'error'"
+      [class.toast--leaving]="toast.leaving"
+      (click)="dismiss(toast.id)"
+      (animationend)="onAnimationEnd(toast)"
+    >
+      {{ toast.message }}
+    </button>
+  }
+</div>

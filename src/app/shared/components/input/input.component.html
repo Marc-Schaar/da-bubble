@@ -1,0 +1,56 @@
+@if (label()) {
+  <label [for]="id()">{{ label() }}</label>
+}
+<div class="app-input__control">
+  @if (icon()) {
+    <mat-icon class="app-input__icon material-symbols-outlined">{{ icon() }}</mat-icon>
+  }
+  @if (prefixText()) {
+    <span class="app-input__prefix">{{ prefixText() }}</span>
+  }
+  @if (multiline()) {
+    <textarea
+      [id]="id()"
+      [attr.name]="name()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-invalid]="invalid() ? true : null"
+      [attr.aria-describedby]="invalid() ? id() + '-error' : null"
+      [attr.role]="role()"
+      [attr.aria-expanded]="ariaExpanded()"
+      [attr.aria-controls]="ariaControls()"
+      [attr.aria-activedescendant]="ariaActivedescendant()"
+      [placeholder]="placeholder()"
+      [disabled]="disabled()"
+      [value]="value()"
+      (input)="onInput($any($event.target).value)"
+      (blur)="onBlur()"
+      (focus)="onFocus($event)"
+    ></textarea>
+  } @else {
+    <input
+      [id]="id()"
+      [type]="type()"
+      [attr.name]="name()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-invalid]="invalid() ? true : null"
+      [attr.aria-describedby]="invalid() ? id() + '-error' : null"
+      [attr.role]="role()"
+      [attr.aria-expanded]="ariaExpanded()"
+      [attr.aria-controls]="ariaControls()"
+      [attr.aria-activedescendant]="ariaActivedescendant()"
+      [placeholder]="placeholder()"
+      [disabled]="disabled()"
+      [value]="value()"
+      (input)="onInput($any($event.target).value)"
+      (blur)="onBlur()"
+      (focus)="onFocus($event)"
+    />
+  }
+  <span class="app-input__suffix">
+    <ng-content select="[appInputSuffix]"></ng-content>
+  </span>
+</div>
+@if (invalid() && errorMessage()) {
+  <span class="app-input__error" [id]="id() + '-error'" role="alert">{{ errorMessage() }}</span>
+}

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
@@ -10,21 +10,35 @@ import { MatRadioModule } from '@angular/material/radio';
 
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { ChannelService } from '../../services/channel/channel.service';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 
 import { User } from '../../../auth/models/user/user';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { InputComponent } from '../../../../shared/components/input/input.component';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-add-channel',
-  imports: [CommonModule, FormsModule, MatRadioModule, MatIcon, ReactiveFormsModule, ProfileStatusComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatRadioModule,
+    MatIcon,
+    ReactiveFormsModule,
+    ProfileStatusComponent,
+    ButtonComponent,
+    InputComponent,
+    FocusTrapPanelDirective,
+  ],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddChannelComponent {
   public readonly channelService: ChannelService = inject(ChannelService);
-  private readonly userService: UserService = inject(UserService);
+  private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly fireService: FireServiceService = inject(FireServiceService);
   private readonly authService: AuthService = inject(AuthService);
   private readonly dialogRef: MatDialogRef<AddChannelComponent> = inject(MatDialogRef);
@@ -97,13 +111,13 @@ export class AddChannelComponent {
         createdAt: new Date(),
       });
 
-      this.userService.showFeedback('Channel erfolgreich erstellt');
+      this.notificationService.success('Channel erfolgreich erstellt');
       this.closeDialog();
       this.channelForm.reset();
       this.channelService.resetSelection();
     } catch (error) {
       console.error(error);
-      this.userService.showFeedback('Fehler beim Erstellen');
+      this.notificationService.error('Fehler beim Erstellen');
     } finally {
       this.isSubmitting.set(false);
     }
@@ -116,5 +130,13 @@ export class AddChannelComponent {
 
   public closeDialog() {
     this.dialogRef.close();
+  }
+
+  protected getChannelNameError(): string | null {
+    const control = this.channelForm.controls.name;
+    if (control.errors?.['nameTaken']) return 'Dieser Name ist bereits vergeben.';
+    if (control.touched && control.errors?.['required']) return 'Name ist erforderlich.';
+    if (control.touched && control.errors?.['minlength']) return 'Mindestens 3 Zeichen erforderlich.';
+    return null;
   }
 }

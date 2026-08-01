@@ -1,5 +1,12 @@
+/**
+ * A minimal type guard for Firestore Timestamp-like values, used internally
+ * by `toDateSafe` when converting various date representations.
+ */
 type FirestoreTimestampLike = { toDate: () => Date };
 
+/**
+ * Checks whether a value looks like a Firestore Timestamp object.
+ */
 function isFirestoreTimestamp(value: unknown): value is FirestoreTimestampLike {
   return typeof value === 'object' && value !== null && typeof (value as FirestoreTimestampLike).toDate === 'function';
 }

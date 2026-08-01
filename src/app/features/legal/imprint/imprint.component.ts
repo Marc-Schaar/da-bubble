@@ -1,20 +1,15 @@
-import { Component, inject } from '@angular/core';
-import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { LegalHeaderComponent } from '../../../shared/components/legal-header/legal-header.component';
 import { CONTACT_EMAIL } from '../../../shared/constants';
 
 @Component({
   selector: 'app-imprint',
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, LegalHeaderComponent],
   templateUrl: './imprint.component.html',
   styleUrl: './imprint.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImprintComponent {
-  private location = inject(Location);
   protected readonly contactEmail = CONTACT_EMAIL;
-
-  /** Returns to whichever page linked here (login, register, main chat, …). */
-  public goBack() {
-    this.location.back();
-  }
 }

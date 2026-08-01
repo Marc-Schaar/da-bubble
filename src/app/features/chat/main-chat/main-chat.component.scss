@@ -1,3 +1,28 @@
+.main {
+  justify-items: center;
+  max-width: 1440px;
+
+  @media (width < 1024px) {
+    justify-items: initial;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 8px;
+  z-index: 1000;
+  padding: 8px 16px;
+  background: var(--dark-purple);
+  color: white;
+  border-radius: 0 0 8px 8px;
+  transition: top 0.15s ease-in-out;
+
+  &:focus-visible {
+    top: 0;
+  }
+}
+
 section {
   height: 100vh;
   background: var(--bg-color);
@@ -6,8 +31,19 @@ section {
   max-width: 1920px;
 }
 
+.main-chat-container {
+  padding: 0 1em;
+
+  @media (width < 1024px) {
+    padding: 0;
+  }
+}
+
 .thread-container {
   width: 33%;
+  @media (width< 1024px) {
+    width: 100%;
+  }
 }
 
 .mat-drawer.mat-drawer-side {
@@ -24,42 +60,6 @@ section {
   border-radius: unset;
 }
 
-.dark-background {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.2);
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  pointer-events: none;
-}
-
-.feedback-cont {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  font-size: 24px;
-  font-weight: 700;
-  background-color: var(--medium-purple);
-  border-radius: 30px;
-  padding: 15px;
-  color: white;
-}
-
-.chat-background-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 900;
-}
-
 .navbar-toggle-container {
   position: fixed;
   bottom: 10%;
@@ -72,14 +72,17 @@ section {
   align-items: center;
   background-color: white;
   padding: 1.438em 0.875em;
-  cursor: pointer;
   z-index: 2;
   font-size: 1.25rem;
   font-weight: 500;
 }
 
-@media screen and (max-width: 1280px) {
-  .contactbar-container {
-    width: 30%;
-  }
+.navbar-toggle-btn {
+  display: contents;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }

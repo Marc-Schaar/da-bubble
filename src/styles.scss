@@ -23,10 +23,20 @@
   --online: rgba(146, 200, 62, 1);
   --offline: rgba(128, 128, 128, 1);
 
-  --contactbar-width: 290px;
+  --contactbar-width: 340px;
   --header-offset: 130px;
   --mat-sys-label-large-size: 24px;
 }
+
+@media (max-width: 1023px) {
+  :root {
+    --header-offset: 80px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Mixins
+// ---------------------------------------------------------------------------
 
 @mixin custom-scrollbar($width: 4px, $thumb-color: var(--medium-purple), $track-color: white) {
   scrollbar-width: thin;
@@ -53,6 +63,16 @@
   }
 }
 
+@mixin focus-ring {
+  outline: 2px solid var(--dark-purple-text);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+// ---------------------------------------------------------------------------
+// Base element resets
+// ---------------------------------------------------------------------------
+
 * {
   margin: 0;
   padding: 0;
@@ -69,7 +89,6 @@ body {
 }
 
 body {
-  margin: 0;
   font-family: Nunito, "Helvetica Neue", sans-serif;
   background-color: var(--bg-color);
 }
@@ -79,40 +98,122 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.25rem, 2vw + 1rem, 2rem);
+  font-size: clamp(1.25rem, 2vw + 1rem, 1.5rem);
 }
+
+ul {
+  list-style: none;
+}
+
+button:focus-visible {
+  @include focus-ring;
+}
+
+a:focus-visible {
+  @include focus-ring;
+}
+
+a {
+  text-decoration: none;
+}
+
+textarea {
+  border: none;
+  resize: none;
+  background: transparent;
+  font-family: "Nunito";
+  font-size: 1.125rem;
+  &::-webkit-resizer {
+    display: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.font-size-14 {
+  font-size: 0.875rem;
+}
+
+.font-size-18 {
+  font-size: 1.125rem;
+}
+
+// ---------------------------------------------------------------------------
+// Material / CDK dialog, menu & overlay overrides
+// ---------------------------------------------------------------------------
 
 .mdc-dialog__surface {
   background-color: rgba(0, 0, 0, 0) !important;
 }
 
-app-header {
-  display: flex;
-  justify-content: center;
-}
-
-app-footer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.mat-mdc-dialog-surface {
+  border-radius: 0 !important;
+  @media (max-width: 440px) {
+    overflow: hidden !important;
+  }
 }
 
 .mat-mdc-menu-panel {
   max-width: unset !important;
 }
 
+.mat-drawer.mat-drawer-side {
+  z-index: 0;
+}
+
+.mat-bottom-sheet-container {
+  border-radius: 20px 20px 0 0;
+  background-color: white;
+  padding: 0 !important ;
+}
+
+.cdk-overlay-pane {
+  position: absolute !important;
+  margin-top: unset !important;
+}
+
+.cdk-global-scrollblock {
+  overflow-y: auto !important;
+}
+
 .menu-box {
   border-radius: 30px !important;
   padding: 30px !important;
   background-color: #ffffff !important;
-  > div:nth-child(1) {
+  .mat-mdc-menu-content {
     display: flex !important;
     flex-direction: column !important;
     gap: 15px !important;
     align-items: center !important;
   }
 }
+
+.menu-box-btn {
+  width: 140px !important;
+  text-align: center !important;
+  padding: 10px 45px;
+  &:hover {
+    background-color: #eceefe !important;
+    border-radius: 30px !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: -2px;
+    border-radius: 30px !important;
+  }
+}
+
 .add-member-dialog {
   position: absolute;
   top: 15%;
@@ -137,38 +238,6 @@ app-footer {
   }
 }
 
-.center-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.mat-mdc-dialog-surface {
-  border-radius: 0 !important;
-  @media (max-width: 440px) {
-    overflow: hidden !important;
-  }
-}
-
-.mat-drawer.mat-drawer-side {
-  z-index: 0;
-}
-
-.material-symbols-outlined {
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
-}
-
-.mat-bottom-sheet-container {
-  border-radius: 20px 20px 0 0;
-  background-color: white;
-  padding: 0 !important ;
-}
-
 .fullscreen.cdk-overlay-pane {
   margin: unset !important;
   @media (max-width: 1023px) {
@@ -189,87 +258,29 @@ app-footer {
   }
 }
 
-.cdk-overlay-pane {
-  position: absolute !important;
-  margin-top: unset !important;
+.center-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.menu-box-btn {
-  width: 140px !important;
-  text-align: center !important;
-  padding: 10px 45px;
-  &:hover {
-    background-color: #eceefe !important;
-    border-radius: 30px !important;
-  }
+.user-profile-dialog-bottom-left {
+  position: fixed !important;
+  top: 75px !important;
+  right: 20px !important;
+  margin: 0 !important;
+  height: auto;
+  border-radius: 12px;
+  z-index: 1000;
 }
 
-a {
-  text-decoration: none;
-}
+// ---------------------------------------------------------------------------
+// Layout & spacing utility classes
+// ---------------------------------------------------------------------------
 
-textarea {
-  border: none;
-  resize: none;
-  background: transparent;
-  font-family: "Nunito";
-  font-size: 18px;
-  &::-webkit-resizer {
-    display: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-  }
-}
-
-.hover-to-dark-purple {
-  transition: all 0.125s ease-in-out;
-  padding: 8px;
-  border-radius: 50%;
-
-  &:hover {
-    background-color: var(--bg-color);
-    mat-icon {
-      color: var(--dark-purple);
-    }
-  }
-}
-
-.bg-purple {
-  background-color: var(--bg-color) !important;
-}
-
-.hover-bg {
-  padding: 8px 10px;
-  border-radius: 30px;
-  transition: all 0.125s ease-in-out;
-  &:hover {
-    background-color: var(--bg-color);
-  }
-}
-
-.position-absolute {
-  position: absolute;
-}
-
-.gap-10 {
-  gap: 10px;
-}
-
-.gap-20 {
-  gap: 20px;
-}
-
-.gap-32 {
-  gap: 32px;
-}
 .d-flex {
   display: flex;
-}
-.column {
-  display: flex;
-  flex-direction: column;
 }
 
 .full-width {
@@ -299,50 +310,53 @@ textarea {
   align-items: center;
 }
 
-.curser-pointer {
-  cursor: pointer;
-}
-
 .flex-wrap {
   flex-wrap: wrap;
 }
 
-.btn {
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.gap-32 {
+  gap: 32px;
+}
+
+.card-footer {
+  padding: 25px;
+}
+
+// ---------------------------------------------------------------------------
+// Interaction & state utility classes
+// ---------------------------------------------------------------------------
+
+.cursor-pointer {
   cursor: pointer;
-  padding: 12px 25px;
-  border-radius: 50px;
+}
+
+.guest-locked {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}
+
+.hover-bg {
+  padding: 8px 10px;
+  border-radius: 30px;
   transition: all 0.125s ease-in-out;
-  font-weight: 700;
-}
-
-.btn-outline {
-  outline: solid 1px var(--medium-purple) !important;
   &:hover {
-    outline: 1px solid white;
-    background-color: var(--medium-purple);
-    color: white;
+    background-color: var(--bg-color);
+  }
+  &.guest-locked:hover {
+    background-color: transparent;
   }
 }
 
-.btn-primary {
-  transition: all 0.125s ease-in-out;
-  background-color: var(--medium-purple);
-  color: white;
-
-  &:hover {
-    outline: solid 1px var(--medium-purple) !important;
-    color: black;
-    background-color: white;
-  }
-}
-
-.guest-btn {
-  color: rgba(0, 0, 0, 0.1) !important;
-
-  &:hover {
-    color: rgba(0, 0, 0, 0.1);
-  }
-  cursor: no-drop !important;
+.bg-purple {
+  background-color: var(--bg-color) !important;
 }
 
 .tag-btn {
@@ -359,6 +373,10 @@ textarea {
     color: var(--dark-purple);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Animations
+// ---------------------------------------------------------------------------
 
 @keyframes slide-in-r-l {
   0% {
@@ -386,20 +404,4 @@ textarea {
   100% {
     transform: translate(0, 0);
   }
-}
-
-@media (max-width: 1023px) {
-  :root {
-    --header-offset: 80px;
-  }
-}
-
-.user-profile-dialog-bottom-left {
-  position: fixed !important;
-  top: 75px !important;
-  right: 20px !important;
-  margin: 0 !important;
-  height: auto;
-  border-radius: 12px;
-  z-index: 1000;
 }

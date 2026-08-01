@@ -2,51 +2,57 @@
   @if (!addMemberWindow) {
     <header class="header">
       Mitglieder
-      <button (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <ul class="user__list">
       @for (member of channelService.enrichedMembers(); track $index) {
-        <li (click)="openProfileDialog(member)" class="user__list__item">
-          <app-user-list-item [user]="member" [currentUserId]="authService.currentUser()?.id ?? null"></app-user-list-item>
+        <li class="user__list__item">
+          <button type="button" class="user__list__btn" (click)="openProfileDialog(member)">
+            <app-user-list-item [user]="member" [currentUserId]="authService.currentUser()?.id ?? null"></app-user-list-item>
+          </button>
         </li>
       }
     </ul>
 
-    <button class="add-member-btn" (click)="changeWindow()">
+    <app-button variant="plain" class="add-member-btn" (click)="changeWindow()">
       <mat-icon class="material-symbols-outlined">person_add</mat-icon>
       Mitglieder hinzufügen
-    </button>
+    </app-button>
   } @else {
     <header class="header">
       Leute hinzufügen
-      <button (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
-    <div class="channel-name"># {{ channelService.currentChannel()?.name }}</div>
+    <p class="channel-name"># {{ channelService.currentChannel()?.name }}</p>
 
     <div class="input-wrapper">
       <div class="input-cont">
         <ul class="input-cont__list">
           @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
             <li class="mini-profile">
-              <img class="mini-profile__img" [src]="selectedUser.photoUrl" alt="" />
+              <img class="mini-profile__img" [src]="selectedUser.photoUrl" alt="" loading="lazy" />
 
               {{ selectedUser.displayName }}
 
-              <img (click)="channelService.removeUserFromSelection(index)" src="img/close.svg" alt="" class="cross-mini" />
+              <button type="button" class="cross-mini-btn" aria-label="Auswahl entfernen" (click)="channelService.removeUserFromSelection(index)">
+                <mat-icon class="cross-mini">close</mat-icon>
+              </button>
             </li>
           }
 
           @if (this.channelService.filteredUsers().length > 0) {
             <ul class="choose-user-bar user__list">
               @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
-                <li class="user__list__item" (click)="addUserToSelection(user)">
-                  <app-user-list-item [user]="user"></app-user-list-item>
+                <li class="user__list__item">
+                  <button type="button" class="user__list__btn" (click)="addUserToSelection(user)">
+                    <app-user-list-item [user]="user"></app-user-list-item>
+                  </button>
                 </li>
               } @empty {
                 <p>Kein User hinzufügbar oder bereits alle hinzugefügt</p>
@@ -56,9 +62,9 @@
         </ul>
       </div>
 
-      <input
-        name=""
+      <app-input
         id="user-search-bar"
+        ariaLabel="Name eingeben"
         [ngModel]="channelService.userSearchQuery()"
         (ngModelChange)="channelService.userSearchQuery.set($event)"
         (input)="onSearchInput($event)"
@@ -72,6 +78,6 @@
       />
     </div>
 
-    <button class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+    <app-button variant="primary" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</app-button>
   }
 </main>

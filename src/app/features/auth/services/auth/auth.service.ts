@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import {
   Auth,
@@ -16,6 +16,7 @@ import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword 
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { FireServiceService } from '../../../../shared/services/firebase/fire-service.service';
 import { UserStore } from '../../../../shared/services/user/user-store';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import { RegisterData, User } from '../../models/user/user';
 import { DEFAULT_CHANNEL_ID, GUEST_EMAIL } from '../../../../shared/constants';
 
@@ -26,9 +27,10 @@ export class AuthService {
   private auth: Auth = inject(Auth);
   private navigationService: NavigationService = inject(NavigationService);
   private fireService = inject(FireServiceService);
+  private notificationService = inject(NotificationService);
   private googleAuthProvider = new GoogleAuthProvider();
 
-  isLoading = false;
+  isLoading = signal(false);
 
   public errorMessage = signal<string | null>(null);
 
@@ -36,6 +38,7 @@ export class AuthService {
 
   private userStore = inject(UserStore);
   public currentUser = this.userStore.currentUser;
+  public readonly isGuest = computed(() => this.currentUser()?.email === GUEST_EMAIL);
   private unsubUserDoc?: () => void;
 
   constructor() {
@@ -54,7 +57,7 @@ export class AuthService {
     const data = this.tempUserData();
     if (!data) return this.handleRegError('Keine Daten gefunden');
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
       const firebaseUser = userCredential.user;
@@ -73,7 +76,7 @@ export class AuthService {
     } catch (error) {
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -92,6 +95,7 @@ export class AuthService {
 
   private finalizeRegistration() {
     this.tempUserData.set(null);
+    this.notificationService.success('Konto erfolgreich erstellt!');
     this.navigationService.gotToChat();
   }
 
@@ -128,14 +132,15 @@ export class AuthService {
    * @param password - User's password
    */
   public async logInWithEmailAndPassword(email: string, password: string) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
+      this.notificationService.success('Anmelden');
       this.navigationService.gotToChat();
     } catch (error) {
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -146,7 +151,7 @@ export class AuthService {
    * Sets an error flag on failure.
    */
   public async logInWithGoogle() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const result = await signInWithPopup(this.auth, this.googleAuthProvider);
       if (result) {
@@ -157,6 +162,7 @@ export class AuthService {
         const userData = this.mapFirebaseUserToUser(result.user);
         await this.addInUserCollection(userData);
         await this.addInDefaultChannel(userData);
+        this.notificationService.success('Anmelden');
         this.navigationService.gotToChat();
       }
     } catch (error: any) {
@@ -165,7 +171,7 @@ export class AuthService {
       }
       this.handleRegError(error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -175,7 +181,7 @@ export class AuthService {
    * Sets loading state and logs errors if any occur.
    */
   public async loginAsGuest() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     const GUEST_PW = 'Gast1234';
 
     try {
@@ -193,7 +199,7 @@ export class AuthService {
         this.handleRegError(error);
       }
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
@@ -207,6 +213,7 @@ export class AuthService {
     });
 
     await this.addInUserCollection(guestData);
+    this.notificationService.success('Anmelden');
     this.navigationService.gotToChat();
   }
 
@@ -236,7 +243,7 @@ export class AuthService {
    * Updates online status, deletes anonymous user data, and redirects to the login page.
    */
   public async logOut() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     try {
       const user = this.currentUser();
       if (user) {
@@ -247,7 +254,7 @@ export class AuthService {
     } catch (error) {
       console.error('Logout Fehler:', error);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 

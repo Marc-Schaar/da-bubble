@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, effect, untracked, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, effect, untracked, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
 import { MessageTemplateComponent } from '../message/message-template.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { scrollToBottomIfNear } from '../../../../shared/utils/scroll.util';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { UserStore } from '../../../../shared/services/user/user-store';
 import { MessagesService } from '../../services/messages/messages.service';
@@ -16,10 +16,13 @@ import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { User } from '../../../auth/models/user/user';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
-import { ChatService } from '../../services/chat/chat.service';
+import { isNewDay } from '../../../../shared/utils/chat.util';
 import { ProfileStatusComponent } from '../../../../shared/components/profile-status/profile-status.component';
 import { ProfileDialogService } from '../../../../shared/services/profile-dialog/profile-dialog.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CardHeaderComponent } from '../../../../shared/components/card-header/card-header.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -33,13 +36,16 @@ import { SearchService } from '../../../../shared/services/search/search.service
     MessageTemplateComponent,
     ChatHeaderComponent,
     ProfileStatusComponent,
+    ButtonComponent,
+    CardComponent,
+    CardHeaderComponent,
   ],
   templateUrl: './chat-direct.component.html',
   styleUrl: './chat-direct.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DirectmessagesComponent implements OnInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
-  public readonly userService = inject(UserService);
   public readonly navigationService = inject(NavigationService);
   private readonly userStore = inject(UserStore);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
@@ -47,7 +53,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
   private readonly profileDialogService = inject(ProfileDialogService);
   private readonly searchService = inject(SearchService);
   public messagesService = inject(MessagesService);
-  public chatService: ChatService = inject(ChatService);
+  public readonly isNewDay = isNewDay;
   private readonly destroyRef = inject(DestroyRef);
 
   public currentReceiverId = signal<string | null>(null);
@@ -59,7 +65,7 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       const messages = this.messagesService.messages();
       untracked(() => {
         if (messages.length > 0) {
-          this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+          scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
         }
       });
     });

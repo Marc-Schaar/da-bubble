@@ -1,6 +1,6 @@
 header {
   background-color: var(--bg-color);
-  padding: 15px;
+  padding: 15px 16px;
 
   img {
     width: 50px;
@@ -9,10 +9,4 @@ header {
       border-radius: 50%;
     }
   }
-}
-
-button {
-  background: unset;
-  border: unset;
-  cursor: pointer;
 }

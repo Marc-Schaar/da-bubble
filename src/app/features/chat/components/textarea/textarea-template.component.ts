@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ALL_EMOJIS } from '../../../../shared/constants';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { MentionService } from '../../../../shared/services/mention/mention.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
+
+let textareaInstanceUid = 0;
 
 @Component({
   selector: 'app-textarea-template',
-  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent],
+  imports: [CommonModule, FormsModule, MatIcon, SearchResultComponent, ButtonComponent, FocusTrapPanelDirective],
   templateUrl: './textarea-template.component.html',
   styleUrl: './textarea-template.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextareaTemplateComponent {
   public searchService: SearchService = inject(SearchService);
@@ -25,10 +30,16 @@ export class TextareaTemplateComponent {
 
   public isChannelComponent = input<boolean>(false);
   public placeholderText = input<string>('Starte eine neue Nachricht');
+  public disabled = input<boolean>(false);
 
   public send = output<string>();
 
   private readonly dropdownNavKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+
+  @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+
+  /** Unique per instance since a channel textarea and a thread-reply textarea can be mounted at once. */
+  protected readonly listboxId = `textarea-mention-listbox-${textareaInstanceUid++}`;
 
   /**
    * Re-runs mention detection for the current caret position. Bound to both
@@ -74,7 +85,7 @@ export class TextareaTemplateComponent {
    * Handles Enter/Arrow/Escape while the suggestion dropdown is open so it
    * doesn't conflict with sending the message or moving the caret.
    */
-  onKeydown(event: KeyboardEvent, ta: HTMLTextAreaElement) {
+  onKeydown(event: KeyboardEvent) {
     if (!this.searchService.getListBoolean()) {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
@@ -83,34 +94,46 @@ export class TextareaTemplateComponent {
       return;
     }
 
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        this.searchService.moveHighlightedIndex(1);
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        this.searchService.moveHighlightedIndex(-1);
-        break;
-      case 'Enter': {
-        event.preventDefault();
-        const element = this.searchService.getHighlightedElement();
-        if (element) this.onTagInserted(this.mentionService.resolveTagName(element), ta);
-        break;
-      }
-      case 'Escape':
-        event.preventDefault();
-        this.searchService.resetList();
-        break;
-    }
+    this.searchService.handleDropdownKeydown(event, () => this.searchResultRef?.selectHighlighted());
+  }
+
+  protected activeDescendantId(): string | null {
+    const index = this.searchService.getHighlightedIndex();
+    return this.searchService.getListBoolean() && index >= 0 ? `${this.listboxId}-option-${index}` : null;
   }
 
   /**
    * Inserts the `@`/`#` trigger at the caret position (icon buttons), then
    * runs it through the normal detection so the dropdown opens consistently
-   * with typing the character directly.
+   * with typing the character directly. If the suggestion dropdown is
+   * already open from a previous, unresolved trigger of the *same* symbol,
+   * this instead closes it and removes that unconfirmed token, so repeated
+   * clicks toggle rather than stacking up trigger characters. If it's open
+   * for the *other* symbol, the trigger character is swapped in place and
+   * the search re-run, so switching between `@`/`#` just switches instead
+   * of closing.
    */
   insertTrigger(symbol: '@' | '#', ta: HTMLTextAreaElement) {
+    if (this.searchService.getListBoolean()) {
+      const range = this.searchService.getActiveTokenRange();
+      const activeIsChannel = this.searchService.isChannel();
+      if (range && activeIsChannel !== null && activeIsChannel !== (symbol === '#')) {
+        this.input = this.input.slice(0, range.start) + symbol + this.input.slice(range.start + 1);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(range.end, range.end);
+          this.onCaretMoved(ta);
+        });
+        return;
+      }
+
+      this.removeActiveToken();
+      this.searchService.resetList();
+      setTimeout(() => ta.focus());
+      return;
+    }
+
+    this.reactionMenuOpenInTextarea = false;
     const pos = ta.selectionStart ?? this.input.length;
     this.input = this.input.slice(0, pos) + symbol + this.input.slice(pos);
     setTimeout(() => {
@@ -121,11 +144,23 @@ export class TextareaTemplateComponent {
   }
 
   /**
+   * Removes the currently active, unconfirmed `@`/`#` token from the input
+   * (e.g. when its suggestion dropdown is closed without picking anything),
+   * so an abandoned mention doesn't leave a stray trigger character behind.
+   */
+  private removeActiveToken(): void {
+    const range = this.searchService.getActiveTokenRange();
+    if (range) {
+      this.input = this.input.slice(0, range.start) + this.input.slice(range.end);
+    }
+  }
+
+  /**
    * Formats the current input and emits it to the parent, which decides
    * how and where to send it.
    */
   newMessage(): void {
-    if (!this.input.trim()) return;
+    if (this.disabled() || !this.input.trim()) return;
     const messageToSend = this.mentionService.formatMentionMarkers(this.input, this.taggedNames);
     this.send.emit(messageToSend);
     this.input = '';
@@ -138,5 +173,18 @@ export class TextareaTemplateComponent {
    */
   public addEmoji(emoji: string) {
     this.input += emoji;
+  }
+
+  /**
+   * Toggles the emoji picker, closing the mention/tag suggestion list (and
+   * removing its unconfirmed trigger token, if any) so only one popup is
+   * open at a time and no abandoned `@`/`#` is left behind.
+   */
+  public toggleEmojiPicker(): void {
+    this.reactionMenuOpenInTextarea = !this.reactionMenuOpenInTextarea;
+    if (this.reactionMenuOpenInTextarea && this.searchService.getListBoolean()) {
+      this.removeActiveToken();
+      this.searchService.resetList();
+    }
   }
 }

@@ -35,18 +35,6 @@
   }
 }
 
-.submit-btn {
-  background-color: var(--dark-purple);
-  color: white;
-  text-align: center;
-  border-radius: 6px;
-  padding: 6px 10px;
-
-  &:disabled {
-    background-color: rgba(104, 104, 104, 1) !important;
-  }
-}
-
 .form {
   display: flex;
   flex-direction: column;
@@ -62,36 +50,10 @@
       align-items: center;
       cursor: pointer;
     }
-
-    &__input-wrapper {
-      position: relative;
-      width: 100%;
-
-      &--hash {
-        &::before {
-          content: "#";
-          position: absolute;
-          left: 20px;
-          top: 0;
-          transform: translateY(20%);
-          font-size: 1.5rem;
-          color: rgba(104, 104, 104, 1);
-          pointer-events: none;
-        }
-      }
-    }
   }
 
-  &__input,
   &__textarea {
     @extend %input-style;
-  }
-
-  &__input {
-    padding: 12px 20px 12px 40px;
-  }
-
-  &__textarea {
     padding: 20px;
     min-height: 60px;
     resize: none;
@@ -174,12 +136,6 @@
     border-radius: 50%;
   }
 
-  &__input {
-    padding: 10px;
-    margin-top: 12px;
-    @extend %input-style;
-  }
-
   &__bar {
     position: absolute;
     top: 100%;
@@ -204,6 +160,15 @@
       &:hover {
         background-color: var(--bg-color);
       }
+    }
+
+    &__btn {
+      display: contents;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
     }
   }
 }

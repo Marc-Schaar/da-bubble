@@ -1,55 +1,64 @@
 <div class="dialog-container">
   <header class="channel-header">
     # {{ channelService.currentChannel()?.name }}
-    <button (click)="closeDialog()">
-      <img src="img/close.svg" alt="" />
-    </button>
+    <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </app-button>
   </header>
 
   <main class="main" (click)="closeUserBar()">
-    <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit }">
+    <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit() }">
       <div class="box--header">
         Channel-Name
-        <button class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit ? "Speichern" : "Bearbeiten" }}</button>
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{
+          channelNameEdit() ? "Speichern" : "Bearbeiten"
+        }}</app-button>
       </div>
-      @if (channelNameEdit) {
-        <div class="input-wrapper">
-          <input
-            type="text"
-            name="channelname-input"
-            [(ngModel)]="tempName"
-            placeholder="Channelname"
-            (keyup.enter)="onEditChannelName()"
-          />
-        </div>
+      @if (channelNameEdit()) {
+        <app-input
+          prefixText="#"
+          type="text"
+          name="channelname-input"
+          ariaLabel="Channelname"
+          [(ngModel)]="tempName"
+          placeholder="Channelname"
+          (keyup.enter)="onEditChannelName()"
+        />
       } @else {
-        <div># {{ channelService.currentChannel()?.name }}</div>
+        <p class="channel-name-display"># {{ channelService.currentChannel()?.name }}</p>
       }
     </section>
 
-    <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit }">
+    <section class="box" [ngClass]="{ 'change-name-edit-cont': channelDescriptionEdit() }">
       <div class="box--header">
         Beschreibung
-        <button class="save-btn" (click)="onEditChannelDescription()">
-          {{ !channelDescriptionEdit ? "Bearbeiten" : "Speichern" }}
-        </button>
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelDescription()">
+          {{ !channelDescriptionEdit() ? "Bearbeiten" : "Speichern" }}
+        </app-button>
       </div>
 
-      @if (channelDescriptionEdit) {
-        <textarea name="" id="changeDescriptionInput" [(ngModel)]="tempDescription" (keyup.enter)="onEditChannelDescription()"></textarea>
+      @if (channelDescriptionEdit()) {
+        <app-input
+          multiline
+          name=""
+          id="changeDescriptionInput"
+          ariaLabel="Beschreibung"
+          [(ngModel)]="tempDescription"
+          (keyup.enter)="onEditChannelDescription()"
+        />
       } @else {
-        <div class="content--description">
+        <p class="content--description">
           {{ channelService.currentChannel()?.description || "Keine Beschreibung vorhanden" }}
-        </div>
+        </p>
       }
 
       <div class="line"></div>
-      <div class="creator">
-        Erstellt von
-        <div class="creator--name">
+      <dl class="creator">
+        <dt>Erstellt von</dt>
+        <dd class="creator--name">
           {{ channelService.currentChannel()?.createdBy }}
-        </div>
-      </div>
+        </dd>
+      </dl>
     </section>
 
     <section class="box box--list">
@@ -57,37 +66,54 @@
 
       <ul class="member-list">
         @for (member of channelService.enrichedMembers(); track $index) {
-          <li (click)="openProfileDialog(member)" class="member-list--item">
-            <app-user-list-item [user]="member"></app-user-list-item>
+          <li class="member-list--item">
+            <button type="button" class="member-list--btn" (click)="openProfileDialog(member)">
+              <app-user-list-item [user]="member"></app-user-list-item>
+            </button>
           </li>
         }
 
-        <button (click)="toogleAddMemberState()" #addMemberMobileButton class="add-member-mobile-btn member-list--item">
+        <app-button
+          variant="plain"
+          [ariaExpanded]="isAddMemberOpen()"
+          ariaHaspopup="true"
+          (click)="toogleAddMemberState()"
+          class="add-member-mobile-btn"
+        >
           <mat-icon class="material-symbols-outlined">person_add</mat-icon>
           Mitglieder hinzufügen
-        </button>
+        </app-button>
       </ul>
     </section>
 
-    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen }">
+    <section
+      class="tooltip"
+      [ngClass]="{ tooltip__open: isAddMemberOpen() }"
+      [appFocusTrapPanel]="isAddMemberOpen()"
+      (panelClose)="toogleAddMemberState()"
+    >
       <div class="tooltip--line"></div>
 
       <header class="tooltip--header">
         Leute hinzufügen
-        <button (click)="toogleAddMemberState()"><mat-icon>close</mat-icon></button>
+        <app-button variant="plain" ariaLabel="Schließen" (click)="toogleAddMemberState()">
+          <mat-icon>close</mat-icon>
+        </app-button>
       </header>
 
       @for (user of channelService.selectedUsers(); track user.id) {
         <div class="mini-profile-cont">
-          <img class="user-img-mini" [src]="user.photoUrl" alt="" />
+          <img class="user-img-mini" [src]="user.photoUrl" alt="" loading="lazy" />
           {{ user.displayName }}
-          <button (click)="removeSelectedUser($index)"><mat-icon>close</mat-icon></button>
+          <app-button variant="icon" [ariaLabel]="'Entfernen: ' + user.displayName" (click)="removeSelectedUser($index)">
+            <mat-icon>close</mat-icon>
+          </app-button>
         </div>
       }
 
       <div class="input-wrapper">
-        <input
-          class="user-search-bar"
+        <app-input
+          ariaLabel="Name eingeben"
           [ngModel]="channelService.userSearchQuery()"
           (ngModelChange)="channelService.userSearchQuery.set($event)"
           (input)="onSearchInput($event)"
@@ -97,8 +123,10 @@
         @if (showUserBar) {
           <ul class="choose-user-bar" #chooseUserBar>
             @for (user of channelService.filteredUsers(); track user.id; let i = $index) {
-              <li class="user-select-cont" (click)="addUserToSelection(user)">
-                <app-user-list-item [user]="user"></app-user-list-item>
+              <li class="user-select-cont">
+                <button type="button" class="user-select-btn" (click)="addUserToSelection(user)">
+                  <app-user-list-item [user]="user"></app-user-list-item>
+                </button>
               </li>
             } @empty {
               <li>Keine Nutzer verfügbar</li>
@@ -107,12 +135,12 @@
         }
       </div>
 
-      <button class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</button>
+      <app-button variant="primary" class="submit-btn" [disabled]="!channelService.canSubmit()" (click)="onSubmit()">Hinzufügen</app-button>
     </section>
 
-    <button class="exit-btn" (click)="leaveChannel()">Channel verlassen</button>
+    <app-button variant="primary" class="exit-btn" (click)="leaveChannel()">Channel verlassen</app-button>
 
-    @if (isAddMemberOpen) {
+    @if (isAddMemberOpen()) {
       <div class="custom-backdrop" (click)="toogleAddMemberState()"></div>
     }
   </main>

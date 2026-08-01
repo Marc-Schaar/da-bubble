@@ -4,43 +4,59 @@
     reverse: isOwnMessage(),
   }"
 >
-  @if (!isEditing && channelType() !== "direct") {
-    <div class="reaction-bar">
-      <button
-        class="btn-secundary"
+  @if (!isEditing && channelType() !== "direct" && showActions()) {
+    <div class="reaction-bar" (mouseleave)="menuOpen = false; reactionMenuOpen = false">
+      <app-button
+        variant="icon"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['checkMark']) }"
+        [ariaLabel]="'Reaktion ' + preSelectedEmojis['checkMark']"
         (click)="toggleReaction(preSelectedEmojis['checkMark'])"
       >
         {{ preSelectedEmojis["checkMark"] }}
-      </button>
-      <button
-        class="btn-secundary"
+      </app-button>
+      <app-button
+        variant="icon"
         [ngClass]="{ 'bg-purple': hasReacted(preSelectedEmojis['thumbsUp']) }"
+        [ariaLabel]="'Reaktion ' + preSelectedEmojis['thumbsUp']"
         (click)="toggleReaction(preSelectedEmojis['thumbsUp'])"
       >
         {{ preSelectedEmojis["thumbsUp"] }}
-      </button>
-      <button (click)="this.reactionMenuOpen = !this.reactionMenuOpen" class="btn-secundary">
+      </app-button>
+      <app-button
+        #reactionBtn
+        variant="icon"
+        ariaLabel="Reaktion auswählen"
+        [ariaExpanded]="reactionMenuOpen"
+        ariaHaspopup="true"
+        (click)="toggleReactionMenu()"
+      >
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
-      </button>
+      </app-button>
       @if (!isThread()) {
-        <button class="btn-secundary" (click)="openThread(message().id)">
+        <app-button variant="icon" ariaLabel="Thread öffnen" (click)="openThread(message().id)">
           <mat-icon class="material-symbols-outlined"> comment </mat-icon>
-        </button>
+        </app-button>
       }
 
       @if (isOwnMessage()) {
-        <button class="hover-to-dark-purple" (click)="this.menuOpen = !this.menuOpen">
+        <app-button
+          #menuBtn
+          variant="icon"
+          ariaLabel="Nachrichtenmenü öffnen"
+          [ariaExpanded]="menuOpen"
+          ariaHaspopup="true"
+          (click)="toggleMenu()"
+        >
           <mat-icon>more_vert</mat-icon>
-        </button>
+        </app-button>
       }
       @if (menuOpen && isOwnMessage()) {
-        <div class="menu">
-          <button (click)="editMessage(message())">Nachricht bearbeiten</button>
+        <div #menuPopup class="menu" appFocusTrapPanel (panelClose)="menuOpen = false">
+          <app-button variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</app-button>
         </div>
       }
       @if (reactionMenuOpen && isChannelMessage()) {
-        <div class="reaction-menu">
+        <div #reactionPopup class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpen = false">
           <app-emoji-quick-picker
             [emojis]="preSelectedEmojiList"
             [isSelected]="isReactionSelected"
@@ -51,21 +67,23 @@
     </div>
   }
 
-  <img [src]="message().photoUrl" alt="Avatar" />
+  <img [src]="message().photoUrl" alt="Avatar" loading="lazy" />
 
   @if (!isEditing) {
     <section class="content-container">
       <header class="message-header gap-20">
-        <b (click)="showProfile()" class="font-size-18 curser-pointer">{{ message().name }}</b>
+        <button type="button" (click)="showProfile()" class="message-author font-size-18 cursor-pointer">{{ message().name }}</button>
         <span class="font-size-14">{{ message().asDate | date: "HH:mm" }} Uhr</span>
       </header>
 
       <p class="message-main" [innerHTML]="message().message | linkify" (click)="onMentionClick($event)"></p>
 
       <footer class="message-footer gap-20">
-        @if ($any(message()).thread?.length > 0) {
+        @if (!isThread() && $any(message()).thread?.length > 0) {
           <div class="d-flex gap-20 flex-wrap">
-            <span class="curser-pointer answer-btn" (click)="openThread(message().id)">{{ $any(message()).thread?.length }} Antworten</span>
+            <button type="button" class="cursor-pointer answer-btn" (click)="openThread(message().id)">
+              {{ $any(message()).thread?.length }} Antworten
+            </button>
             <span class="font-size-14">Letzte Antwort {{ $any(message()).thread[$any(message()).thread.length - 1]?.time }} Uhr</span>
           </div>
         }
@@ -86,8 +104,8 @@
 
       <div class="action-container">
         <div class="d-flex gap-32">
-          <button class="btn btn-outline" (click)="cancel()">Abbrechen</button>
-          <button class="btn btn-primary" (click)="updateMessage(message())">Speichern</button>
+          <app-button variant="secondary" (click)="cancel()">Abbrechen</app-button>
+          <app-button variant="primary" (click)="updateMessage(message())">Speichern</app-button>
         </div>
       </div>
     </div>

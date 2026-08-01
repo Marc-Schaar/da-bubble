@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, input, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
@@ -20,10 +20,21 @@ import { ProfileDialogService } from '../../../../shared/services/profile-dialog
 import { MessageReactionsComponent } from './message-reactions/message-reactions.component';
 import { EmojiQuickPickerComponent } from './emoji-quick-picker/emoji-quick-picker.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    FormsModule,
+    LinkifyPipe,
+    MessageReactionsComponent,
+    EmojiQuickPickerComponent,
+    ButtonComponent,
+    FocusTrapPanelDirective,
+  ],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +47,11 @@ export class MessageTemplateComponent {
   private userStore: UserStore = inject(UserStore);
   private mentionService: MentionService = inject(MentionService);
   public reactionsService: ReactionsService = inject(ReactionsService);
-  private elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+
+  @ViewChild('menuBtn', { read: ElementRef }) private menuBtn?: ElementRef<HTMLElement>;
+  @ViewChild('menuPopup', { read: ElementRef }) private menuPopup?: ElementRef<HTMLElement>;
+  @ViewChild('reactionBtn', { read: ElementRef }) private reactionBtn?: ElementRef<HTMLElement>;
+  @ViewChild('reactionPopup', { read: ElementRef }) private reactionPopup?: ElementRef<HTMLElement>;
 
   menuOpen: boolean = false;
   reactionMenuOpen: boolean = false;
@@ -50,16 +65,29 @@ export class MessageTemplateComponent {
   parentMessageId = input<string>('');
   isThread = input<boolean>(false);
   channelType = input<'direct' | 'channel' | 'thread' | null>(null);
+  showActions = input<boolean>(true);
 
+  /**
+   * Whether the rendered message is a channel message.
+   */
   isChannelMessage = computed(() => this.message() instanceof ChannelMessage);
 
+  /**
+   * Whether the rendered message was sent by the current user.
+   */
   isOwnMessage = computed(() => this.message().name === this.authService.currentUser()?.displayName);
 
+  /**
+   * The active reaction list for the message, or an empty array for direct messages.
+   */
   reactions = computed(() => {
     const msg = this.message();
     return msg instanceof ChannelMessage ? msg.reaction : [];
   });
 
+  /**
+   * Builds a reaction context object for the currently displayed message.
+   */
   private reactionContext(): ReactionContext {
     return {
       channelId: this.currentChannelId(),
@@ -79,12 +107,35 @@ export class MessageTemplateComponent {
     }
   }
 
+  /**
+   * Checks whether the current user has reacted with the given emoji.
+   */
   public hasReacted(emoji: string): boolean {
     return this.reactionsService.hasReacted(emoji, this.reactions());
   }
 
-  /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
+  /**
+   * Bound reference for EmojiQuickPickerComponent's isSelected input.
+   */
   public readonly isReactionSelected = (emoji: string): boolean => this.hasReacted(emoji);
+
+  /**
+   * Toggles the own-message edit menu, closing the reaction quick-picker
+   * so only one popup is ever open at a time.
+   */
+  public toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+    if (this.menuOpen) this.reactionMenuOpen = false;
+  }
+
+  /**
+   * Toggles the reaction quick-picker, closing the edit menu so only one
+   * popup is ever open at a time.
+   */
+  public toggleReactionMenu(): void {
+    this.reactionMenuOpen = !this.reactionMenuOpen;
+    if (this.reactionMenuOpen) this.menuOpen = false;
+  }
 
   /**
    * Enables editing mode for a specific message.
@@ -148,15 +199,18 @@ export class MessageTemplateComponent {
   }
 
   /**
-   * Closes the actions/reaction menu on any click outside this message —
-   * `mouseleave` alone missed touch input and clicks that pass over the
-   * absolutely positioned menu on the way out.
+   * Closes each popup individually on any click outside its own toggle
+   * button and popup content — clicking elsewhere in the same message row
+   * (avatar, name, other action buttons) now closes an open popup instead
+   * of being treated as "inside".
    */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (!this.menuOpen && !this.reactionMenuOpen) return;
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+    const target = event.target as Node;
+    if (this.menuOpen && !this.menuBtn?.nativeElement.contains(target) && !this.menuPopup?.nativeElement.contains(target)) {
       this.menuOpen = false;
+    }
+    if (this.reactionMenuOpen && !this.reactionBtn?.nativeElement.contains(target) && !this.reactionPopup?.nativeElement.contains(target)) {
       this.reactionMenuOpen = false;
     }
   }

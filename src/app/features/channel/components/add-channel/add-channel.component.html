@@ -2,45 +2,34 @@
   <section class="add-channel-create">
     <header class="header">
       Channel erstellen
-      <button (click)="closeDialog()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
     <form class="form" (ngSubmit)="onFirstStepSubmit()" [formGroup]="channelForm">
       <div class="form__field">
         <label class="form__field__label" for="channelName">Channel-Name</label>
-        <div class="form__field__input-wrapper form__field__input-wrapper--hash">
-          <input
-            class="form__input"
-            id="channelName"
-            type="text"
-            placeholder="z.B. Kooperationsprojekte"
-            formControlName="name"
-            name="channelName"
-          />
+        <app-input
+          prefixText="#"
+          id="channelName"
+          type="text"
+          placeholder="z.B. Kooperationsprojekte"
+          formControlName="name"
+          name="channelName"
+          ariaLabel="Channel-Name"
+          [invalid]="!!getChannelNameError()"
+          [errorMessage]="getChannelNameError()"
+        />
 
-          @if (channelForm.get("name")?.pending) {
-            <span class="form__status">Prüfe Verfügbarkeit...</span>
-          }
-
-          @if (channelForm.get("name")?.errors?.["nameTaken"]) {
-            <span class="form__error">Dieser Name ist bereits vergeben.</span>
-          }
-
-          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["required"]) {
-            <span class="form__error">Name ist erforderlich.</span>
-          }
-
-          @if (channelForm.get("name")?.touched && channelForm.get("name")?.errors?.["minlength"]) {
-            <span class="form__error">Mindestens 3 Zeichen erforderlich.</span>
-          }
-        </div>
+        @if (channelForm.get("name")?.pending) {
+          <span class="form__status">Prüfe Verfügbarkeit...</span>
+        }
       </div>
 
       <div class="form__field">
-        <label class="form__label" for="">
+        <label class="form__label" for="channel-description">
           Beschreibung <br />
           (optional)
         </label>
@@ -48,16 +37,21 @@
         <textarea class="form__textarea" type="text" name="" id="channel-description" formControlName="description"></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" [disabled]="isSubmitting()">Erstellen</button>
+      <app-button variant="primary" type="submit" [disabled]="isSubmitting()">Erstellen</app-button>
     </form>
   </section>
 
-  <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
+  <section
+    class="select-member-cont"
+    [class.select-member-cont--open]="isAddMemberDialogOpen()"
+    [appFocusTrapPanel]="isAddMemberDialogOpen()"
+    (panelClose)="closeDialogAddMember()"
+  >
     <header class="header">
       Leute hinzufügen
-      <button (click)="closeDialogAddMember()">
+      <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialogAddMember()">
         <mat-icon>close</mat-icon>
-      </button>
+      </app-button>
     </header>
 
     <form class="form" (ngSubmit)="onFinalSubmit()">
@@ -88,42 +82,48 @@
           <ul class="choose-user__list">
             @for (selectedUser of channelService.selectedUsers(); track selectedUser.id; let index = $index) {
               <li class="choose-user__item">
-                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" />
+                <img class="choose-user__img" [src]="selectedUser.photoUrl" alt="" loading="lazy" />
                 {{ selectedUser?.displayName }}
-                <button (click)="channelService.removeUserFromSelection(index)">
+                <app-button
+                  variant="icon"
+                  [ariaLabel]="'Entfernen: ' + selectedUser?.displayName"
+                  (click)="channelService.removeUserFromSelection(index)"
+                >
                   <mat-icon>close</mat-icon>
-                </button>
+                </app-button>
               </li>
-            }
-
-            @if (channelService.filteredUsers().length > 0) {
-              <ul class="choose-user__bar">
-                @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
-                  <li class="choose-user__bar__item" (click)="onSelectUser(user)">
-                    <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
-                    {{ user.displayName }}
-                  </li>
-                }
-              </ul>
             }
           </ul>
 
-          <input
+          @if (channelService.filteredUsers().length > 0) {
+            <ul class="choose-user__bar">
+              @for (user of channelService.filteredUsers(); track user.id; let index = $index) {
+                <li class="choose-user__bar__item">
+                  <button type="button" class="choose-user__bar__btn" (click)="onSelectUser(user)">
+                    <app-profile-status [photoUrl]="user.photoUrl" [online]="user.online"></app-profile-status>
+                    {{ user.displayName }}
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+
+          <app-input
             placeholder="Name eingeben"
+            ariaLabel="Name eingeben"
             [(ngModel)]="channelService.userSearchQuery"
             name="search"
-            (focus)="showUserBar.set(true)"
+            (focused)="showUserBar.set(true)"
             autocomplete="off"
-            class="choose-user__input"
           />
         </div>
       }
 
-      <button class="submit-btn" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</button>
+      <app-button variant="primary" type="submit" [disabled]="!channelService.canSubmit()">Erstellen</app-button>
     </form>
   </section>
 </div>
 
 @if (isAddMemberDialogOpen()) {
-  <div class="background"></div>
+  <div class="background" (click)="closeDialogAddMember()"></div>
 }

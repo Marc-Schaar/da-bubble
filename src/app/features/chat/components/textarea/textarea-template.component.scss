@@ -15,6 +15,10 @@
   }
 }
 
+.input-container textarea:focus-visible {
+  outline: none !important;
+}
+
 .action-container {
   display: flex;
   align-items: center;
@@ -33,18 +37,21 @@
 }
 
 button {
-  border: none;
-  outline: none;
-  background-color: unset;
   white-space: nowrap;
-  transition: all, 0.125s ease-in-out;
-  cursor: pointer;
 
   &:disabled {
     mat-icon {
       color: var(--light-purple);
     }
   }
+}
+
+.mention-anchor-at {
+  anchor-name: --mention-anchor-at;
+}
+
+.mention-anchor-channel {
+  anchor-name: --mention-anchor-channel;
 }
 
 .tag-container {
@@ -61,6 +68,21 @@ button {
   @media screen and (width< 1024px) {
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  // Anchors to the "@" button; falls back to the centered position above in browsers without anchor-positioning support.
+  @supports (position-anchor: --mention-anchor-at) {
+    position-anchor: --mention-anchor-at;
+    left: anchor(center);
+    bottom: anchor(top);
+    margin-bottom: 8px;
+    transform: none;
+  }
+
+  &--channel {
+    @supports (position-anchor: --mention-anchor-channel) {
+      position-anchor: --mention-anchor-channel;
+    }
   }
 }
 
@@ -89,6 +111,10 @@ button {
 
   > .emoji {
     display: inline-block;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
     width: 32px;
     height: 32px;
     font-size: 1.25rem;
@@ -104,16 +130,6 @@ button {
 
   &:hover {
     background-color: white !important;
-  }
-}
-
-.btn {
-  color: unset;
-  padding: 6px;
-
-  &:hover {
-    background-color: var(--bg-color);
-    color: var(--dark-purple);
   }
 }
 

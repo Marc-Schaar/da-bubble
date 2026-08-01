@@ -1,17 +1,19 @@
-<div class="emoji-container">
+<div class="emoji-container" (mouseleave)="reactionMenuOpen.set(false)">
   @for (reaction of visibleReactions(); track reaction.emoji) {
     @let names = reactionsService.getReactionNamesForEmoji(reaction.emoji, reactions());
-    <div
+    <button
+      type="button"
       (click)="toggle(reaction.emoji)"
       [ngClass]="{ 'bg-purple': reactionsService.hasReacted(reaction.emoji, reactions()) }"
+      [attr.aria-pressed]="reactionsService.hasReacted(reaction.emoji, reactions())"
       class="emoji-box"
     >
       <span>{{ reaction.emoji }}</span>
       <span>{{ reactionsService.countEmoji(reaction.emoji, reactions()) }}</span>
-      <div class="reaction-from-dialog">
+      <span class="reaction-from-dialog">
         <span>{{ reaction.emoji }}</span>
         @for (name of names; track $index) {
-          <h3 class="font-weight-700">{{ name }}</h3>
+          <strong class="font-weight-700">{{ name }}</strong>
         }
         @if (names.length > 1) {
           <span>haben</span>
@@ -21,24 +23,31 @@
           <span>hat</span>
         }
         <span> reagiert</span>
-      </div>
-    </div>
-  }
-
-  @if (hiddenCount() > 0 && !showAllReactions()) {
-    <button class="emoji-box" (click)="showAllReactions.set(true)">{{ hiddenCount() }} weitere</button>
-  }
-  @if (showAllReactions() && reactions().length > visibleLimit()) {
-    <button class="emoji-box" (click)="showAllReactions.set(false)">Weniger anzeigen</button>
-  }
-  @if (reactions().length > 0) {
-    <button (click)="reactionMenuOpen.set(!reactionMenuOpen())" class="hover-to-dark-purple">
-      <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
+      </span>
     </button>
   }
 
+  @if (hiddenCount() > 0 && !showAllReactions()) {
+    <app-button variant="plain" class="emoji-box" (click)="showAllReactions.set(true)">{{ hiddenCount() }} weitere</app-button>
+  }
+  @if (showAllReactions() && reactions().length > visibleLimit()) {
+    <app-button variant="plain" class="emoji-box" (click)="showAllReactions.set(false)">Weniger anzeigen</app-button>
+  }
+  @if (reactions().length > 0) {
+    <app-button
+      #reactionBtn
+      variant="icon"
+      ariaLabel="Reaktion hinzufügen"
+      [ariaExpanded]="reactionMenuOpen()"
+      ariaHaspopup="true"
+      (click)="reactionMenuOpen.set(!reactionMenuOpen())"
+    >
+      <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
+    </app-button>
+  }
+
   @if (reactionMenuOpen()) {
-    <div class="reaction-menu">
+    <div #reactionPopup class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpen.set(false)">
       <app-emoji-quick-picker [emojis]="preSelectedEmojiList" [isSelected]="isReactionSelected" (pick)="toggle($event)"></app-emoji-quick-picker>
     </div>
   }

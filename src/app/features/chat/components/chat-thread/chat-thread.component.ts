@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, effect, inject, OnInit, untracked, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, effect, inject, OnInit, signal, untracked, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -7,17 +7,17 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessagesService } from '../../services/messages/messages.service';
-import { UserService } from '../../../../shared/services/user/shared.service';
+import { scrollToBottomIfNear } from '../../../../shared/utils/scroll.util';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { LinkifyPipe } from '../../../../shared/pipes/linkify.pipe';
 import { MessageTemplateComponent } from '../message/message-template.component';
 import { DividerTemplateComponent } from '../divider/divider-template.component';
-import { AuthService } from '../../../auth/services/auth/auth.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
 import { ChannelService } from '../../../channel/services/channel/channel.service';
-import { ChatService } from '../../services/chat/chat.service';
-import { MentionService } from '../../../../shared/services/mention/mention.service';
+import { isNewDay } from '../../../../shared/utils/chat.util';
 import { ChannelMessage } from '../../models/channel-message/channel-message';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CardHeaderComponent } from '../../../../shared/components/card-header/card-header.component';
 
 @Component({
   selector: 'app-thread',
@@ -26,29 +26,28 @@ import { ChannelMessage } from '../../models/channel-message/channel-message';
     FormsModule,
     MatIconModule,
     ChatHeaderComponent,
-    LinkifyPipe,
     TextareaTemplateComponent,
     MessageTemplateComponent,
     DividerTemplateComponent,
+    ButtonComponent,
+    CardComponent,
+    CardHeaderComponent,
   ],
   templateUrl: './chat-thread.component.html',
   styleUrls: ['./chat-thread.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('chat') chatContentRef!: ElementRef;
   private route: ActivatedRoute = inject(ActivatedRoute);
   public messagesService: MessagesService = inject(MessagesService);
-  public userService: UserService = inject(UserService);
-  public authService = inject(AuthService);
   public navigationService: NavigationService = inject(NavigationService);
   public channelService: ChannelService = inject(ChannelService);
-  public chatService: ChatService = inject(ChatService);
-  private mentionService: MentionService = inject(MentionService);
+  public readonly isNewDay = isNewDay;
   private readonly destroyRef = inject(DestroyRef);
-  public userId: string = '';
-  public currentChannelId: string = '';
-  public parentMessageId: string = '';
-  public parentMessageData: ChannelMessage | null = null;
+  public currentChannelId = signal('');
+  public parentMessageId = signal('');
+  public parentMessageData = signal<ChannelMessage | null>(null);
   public listOpen: boolean = false;
 
   constructor() {
@@ -56,7 +55,7 @@ export class ThreadComponent implements OnInit {
       const messages = this.messagesService.threadMessages();
       untracked(() => {
         if (messages.length > 0) {
-          this.userService.scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
+          scrollToBottomIfNear(this.chatContentRef?.nativeElement ?? null);
         }
       });
     });
@@ -74,9 +73,8 @@ export class ThreadComponent implements OnInit {
    */
   async ngOnInit() {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
-      this.currentChannelId = params['receiverId'] || '';
-      this.userId = params['currentUserId'] || '';
-      this.parentMessageId = params['messageId'] || '';
+      this.currentChannelId.set(params['receiverId'] || '');
+      this.parentMessageId.set(params['messageId'] || '');
 
       this.getThreadParentMessage();
       this.getMessages();
@@ -87,9 +85,9 @@ export class ThreadComponent implements OnInit {
    * Fetches the parent message details for the thread via MessagesService.
    */
   private async getThreadParentMessage() {
-    this.parentMessageData = this.parentMessageId
-      ? await this.messagesService.getParentMessage(this.currentChannelId, this.parentMessageId)
-      : null;
+    this.parentMessageData.set(
+      this.parentMessageId() ? await this.messagesService.getParentMessage(this.currentChannelId(), this.parentMessageId()) : null,
+    );
   }
 
   /**
@@ -99,8 +97,8 @@ export class ThreadComponent implements OnInit {
     this.unsubMessages?.();
     this.unsubMessages = undefined;
 
-    if (this.parentMessageId) {
-      this.unsubMessages = this.messagesService.subToThreadMessages(this.currentChannelId, this.parentMessageId);
+    if (this.parentMessageId()) {
+      this.unsubMessages = this.messagesService.subToThreadMessages(this.currentChannelId(), this.parentMessageId());
     } else {
       this.messagesService.threadMessages.set([]);
     }
@@ -110,7 +108,7 @@ export class ThreadComponent implements OnInit {
    * Sends a new reply to the current thread.
    */
   onSend(text: string) {
-    this.messagesService.sendThreadMessage(text, this.currentChannelId, this.parentMessageId);
+    this.messagesService.sendThreadMessage(text, this.currentChannelId(), this.parentMessageId());
   }
 
   /**
@@ -118,13 +116,6 @@ export class ThreadComponent implements OnInit {
    */
   public closeThread() {
     this.navigationService.toggleThread('close');
-  }
-
-  /**
-   * Delegates clicks inside the rendered message to the MentionService.
-   */
-  onMentionClick(event: MouseEvent | TouchEvent) {
-    this.mentionService.handleMentionClick(event);
   }
 
   ngOnDestroy(): void {

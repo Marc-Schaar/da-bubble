@@ -1,0 +1,127 @@
+:host {
+  display: inline-flex;
+}
+
+button {
+  all: unset;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  border-radius: 8px;
+  transition: all 0.125s ease-in-out;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: 2px;
+  }
+
+  .content {
+    display: contents;
+  }
+}
+
+:host(.app-button--aria-disabled) button {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.content--hidden {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: app-button-spin 0.6s linear infinite;
+}
+
+@keyframes app-button-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+:host(.app-button--primary) button {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  background-color: var(--dark-purple);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: var(--medium-purple);
+  }
+  &:disabled {
+    background-color: var(--text-grey);
+  }
+}
+
+:host(.app-button--primary.app-button--aria-disabled) button {
+  background-color: var(--text-grey);
+}
+
+:host(.app-button--secondary) button {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  outline: 1px solid var(--medium-purple);
+  color: var(--medium-purple);
+
+  &:hover:not(:disabled) {
+    background-color: var(--medium-purple);
+    color: white;
+  }
+  &:disabled {
+    outline-color: var(--text-grey);
+    color: var(--text-grey);
+  }
+}
+
+:host(.app-button--secondary.app-button--aria-disabled) button {
+  outline-color: var(--text-grey);
+  color: var(--text-grey);
+}
+
+:host(.app-button--icon) button {
+  padding: 8px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--bg-color);
+    color: var(--dark-purple);
+  }
+}
+
+:host(.app-button--icon.bg-purple) {
+  border-radius: 50%;
+}
+
+:host(.app-button--plain) button {
+  &:hover:not(:disabled) {
+    color: var(--app-button-hover-color, var(--dark-purple));
+  }
+  &:disabled {
+    color: var(--text-grey);
+  }
+}
+
+:host(.app-button--plain.app-button--aria-disabled) button {
+  color: var(--text-grey);
+}

@@ -1,15 +1,15 @@
 <div class="card">
-  <div class="headline">
-    <a (click)="onClose()">
+  <header class="headline">
+    <app-button variant="plain" type="button" ariaLabel="Schließen" (click)="onClose()">
       <mat-icon>close</mat-icon>
-    </a>
+    </app-button>
     <h1>Wähle deinen Avatar</h1>
-  </div>
+  </header>
 
-  <img class="profile-img" [src]="selectedAvatar()" alt="Avatar Bild" />
+  <img class="profile-img" [src]="selectedAvatar()" alt="Avatar Bild" loading="lazy" />
   <p class="name">{{ data?.user?.displayName }}</p>
 
   <p class="align-base">Aus der Liste wählen</p>
   <app-avatar-picker [(selected)]="selectedAvatar"></app-avatar-picker>
-  <button (click)="onSave()">Weiter</button>
+  <app-button variant="plain" type="button" (click)="onSave()">Weiter</app-button>
 </div>

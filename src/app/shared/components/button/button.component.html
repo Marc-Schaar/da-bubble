@@ -1,0 +1,19 @@
+<button
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-pressed]="ariaPressed()"
+  [attr.aria-expanded]="ariaExpanded()"
+  [attr.aria-haspopup]="ariaHaspopup()"
+  [attr.aria-busy]="loading()"
+  [attr.aria-disabled]="ariaDisabled() ? true : null"
+  [attr.form]="form()"
+  (click)="onClick($event)"
+>
+  @if (loading()) {
+    <span class="spinner" aria-hidden="true"></span>
+  }
+  <span class="content" [class.content--hidden]="loading()">
+    <ng-content></ng-content>
+  </span>
+</button>

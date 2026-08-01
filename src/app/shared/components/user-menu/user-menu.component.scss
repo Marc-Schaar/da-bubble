@@ -1,11 +1,11 @@
-div {
+.user-menu {
   display: flex;
   flex-direction: column;
   background-color: white;
   padding: 20px 21px;
   gap: 20px;
 
-  > span {
+  .drag-handle {
     align-self: center;
     width: 62px;
     height: 6px;
@@ -14,15 +14,9 @@ div {
   }
 }
 
-button {
-  background: unset;
-  border: unset;
-  display: flex;
-  align-items: center;
+app-button {
   max-width: fit-content;
   color: black;
-  gap: 15px;
   font-size: 1.25rem;
   font-weight: 600;
-  cursor: pointer;
 }

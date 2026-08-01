@@ -1,52 +1,13 @@
-<main class="header">
-  <div class="logo-container">
-    <a routerLink="/login"><img src="img/headerlogo.png" alt="" /></a>
-  </div>
+<header class="header">
+  <a class="logo" [routerLink]="authService.currentUser() ? '/main' : '/login'">
+    <img src="img/headerlogo.png" alt="DABubble" />
+  </a>
+
   <div class="searchbar">
-    @if (searchService.getHeaderListBoolean()) {
-      <div class="tag-container">
-        <app-search-result [(input)]="input"></app-search-result>
-      </div>
-    }
-
-    @if (!navigationService.isContactbarPage() && !navigationService.isMobile()) {
-      <div class="input">
-        <input
-          [(ngModel)]="input"
-          (input)="searchService.observeInput(input, 'header')"
-          (click)="searchService.closeList()"
-          type="text"
-          placeholder="Devspace durchsuchen"
-          class="full-width"
-        />
-        <button><img src="img/icons.png" alt="" /></button>
-      </div>
-    }
+    <ng-content select="[headerSearch]"></ng-content>
   </div>
 
-  @if (navigationService.isAuthPage()) {
-    <div class="signup">
-      <p>Neu bei DABubble?</p>
-      <a routerLink="/register">Konto erstellen</a>
-    </div>
-  } @else if (!navigationService.isAuthPage()) {
-    <div class="user-menu">
-      <div (click)="onOpenMenu()" [matMenuTriggerFor]="!navigationService.isMobile() ? beforeMenu : null">
-        <span>{{ authService.currentUser()?.displayName }}</span>
-        <img [src]="authService.currentUser()?.photoUrl" alt="Bild" />
-        @if (!navigationService.isMobile()) {
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        }
-
-        <mat-menu class="menu-box" #beforeMenu="matMenu" xPosition="before" (closed)="onMenuClosed()">
-          <button (click)="showProfile()" class="menu-box-btn" mat-menu-item (click)="$event.stopPropagation()">Profil</button>
-          <button (click)="signOut()" class="menu-box-btn" mat-menu-item>Log out</button>
-        </mat-menu>
-      </div>
-    </div>
-  }
-</main>
-
-@if (showBackground) {
-  <div (click)="onMenuClosed()" class="background"></div>
-}
+  <div class="user-menu">
+    <ng-content select="[headerActions]"></ng-content>
+  </div>
+</header>

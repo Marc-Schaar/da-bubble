@@ -1,7 +1,6 @@
-main {
+.page-wrapper {
   display: flex;
   height: 100%;
-  margin-right: 1em;
 }
 
 section {
@@ -25,39 +24,11 @@ section {
   align-items: flex-start;
   padding: 25px 45px;
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
-
-  > input {
-    width: 100%;
-    border: unset;
-    outline: 1px solid var(--light-purple);
-    padding: 15px 20px;
-    border-radius: 20px;
-    transition: all 0.125s ease-in-out;
-
-    &:hover {
-      outline: 1px solid var(--medium-purple);
-    }
-    &:focus {
-      outline: 1px solid var(--dark-purple);
-      &::placeholder {
-        visibility: hidden;
-      }
-    }
-  }
 }
 
 h1 {
   font-size: 1.5rem;
   font-weight: 700;
-}
-
-.card-footer {
-  padding: 25px;
-}
-
-button {
-  background: unset;
-  border: unset;
 }
 
 .tag-container {
@@ -71,7 +42,7 @@ button {
   border-radius: 0 0 15px 15px;
 }
 @media screen and (max-width: 1023px) {
-  main {
+  .page-wrapper {
     margin: 0;
   }
 

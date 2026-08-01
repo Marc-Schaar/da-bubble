@@ -1,9 +1,9 @@
 @if (this.navigationService.isMobile()) {
-  <app-chat-header></app-chat-header>
+  <app-chat-header [isThread]="true"></app-chat-header>
 }
-<main>
-  <section>
-    <div class="thread-channel-close-button-container">
+<section>
+  <app-card>
+    <app-card-header card-header>
       <div class="thread-channel-container">
         <div class="thread-container">
           <p>Thread</p>
@@ -11,60 +11,48 @@
         <div class="channel-name-container"># {{ channelService.currentChannel()?.name }}</div>
       </div>
       @if (!navigationService.isMobile()) {
-        <button (click)="closeThread()" class="close-button filter-hover-purple-3">
+        <app-button variant="plain" (click)="closeThread()" ariaLabel="Thread schließen">
           <mat-icon>close</mat-icon>
-        </button>
+        </app-button>
       }
-    </div>
+    </app-card-header>
 
-    <div class="chatbox-container" #chat>
-      <li [ngClass]="{ reverse: parentMessageData?.name === this.authService.currentUser()?.displayName }" class="background-color-effect">
-        <div class="user-message-container">
-          <div class="user-profile-avatar-container">
-            <img [src]="parentMessageData?.photoUrl" [alt]="parentMessageData?.name" />
-          </div>
-          <div class="name-time-message-container">
-            <div class="name-time-container">
-              <div class="name-container">{{ parentMessageData?.name }}</div>
-              <div class="time-container">{{ parentMessageData?.asDate | date: "HH:mm" }}</div>
-            </div>
-            <div class="message-container" [innerHTML]="parentMessageData?.message | linkify" (click)="onMentionClick($event)">
-              {{ parentMessageData?.message }}
-            </div>
-          </div>
-        </div>
-      </li>
+    <ul card-main class="chatbox-container" #chat>
+      @if (parentMessageData()) {
+        <li>
+          <app-message-template
+            [message]="parentMessageData()!"
+            [currentChannelId]="currentChannelId()"
+            [isThread]="true"
+            [showActions]="false"
+          ></app-message-template>
+        </li>
+      }
 
-      <div class="answers-line-container">
+      <li class="answers-line-container">
         {{ messagesService.threadMessages().length }} Antworten
         <div class="line-container"></div>
-      </div>
+      </li>
 
-      <ul>
-        @for (message of messagesService.threadMessages(); track message.id; let i = $index) {
-          @if (chatService.isNewDay(message, i === 0 ? parentMessageData : messagesService.threadMessages()[i - 1])) {
-            <li>
-              <app-divider-template [messageData]="message.timestamp"></app-divider-template>
-            </li>
-          }
+      @for (message of messagesService.threadMessages(); track message.id; let i = $index) {
+        @if (isNewDay(message, i === 0 ? parentMessageData() : messagesService.threadMessages()[i - 1])) {
           <li>
-            <app-message-template
-              [message]="message"
-              [currentChannelId]="currentChannelId"
-              [parentMessageId]="parentMessageId"
-              [isThread]="true"
-            ></app-message-template>
+            <app-divider-template [messageData]="message.timestamp"></app-divider-template>
           </li>
         }
-      </ul>
-    </div>
+        <li>
+          <app-message-template
+            [message]="message"
+            [currentChannelId]="currentChannelId()"
+            [parentMessageId]="parentMessageId()"
+            [isThread]="true"
+          ></app-message-template>
+        </li>
+      }
+    </ul>
 
-    <div class="card-footer" (mouseleave)="listOpen = false">
-      <app-textarea-template
-        [isChannelComponent]="true"
-        [placeholderText]="'Antworten...'"
-        (send)="onSend($event)"
-      ></app-textarea-template>
+    <div card-footer class="card-footer" (mouseleave)="listOpen = false">
+      <app-textarea-template [isChannelComponent]="true" [placeholderText]="'Antworten...'" (send)="onSend($event)"></app-textarea-template>
     </div>
-  </section>
-</main>
+  </app-card>
+</section>

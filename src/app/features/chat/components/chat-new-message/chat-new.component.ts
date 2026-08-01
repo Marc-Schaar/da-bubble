@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { SearchResultComponent } from '../../../../shared/components/search-result/search-result.component';
-import { UserService } from '../../../../shared/services/user/shared.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { SearchService } from '../../../../shared/services/search/search.service';
 import { TextareaTemplateComponent } from '../textarea/textarea-template.component';
@@ -13,15 +12,24 @@ import { isChannel } from '../../../../shared/utils/receiver.util';
 import { Channel } from '../../../channel/models/channel/channel';
 import { User } from '../../../auth/models/user/user';
 import { MessagesService } from '../../services/messages/messages.service';
+import { InputComponent } from '../../../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-newmessage',
-  imports: [CommonModule, FormsModule, TextareaTemplateComponent, MatIconModule, ChatHeaderComponent, SearchResultComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TextareaTemplateComponent,
+    MatIconModule,
+    ChatHeaderComponent,
+    SearchResultComponent,
+    InputComponent,
+  ],
   templateUrl: './chat-new.component.html',
   styleUrl: './chat-new.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewmessageComponent {
-  public userService = inject(UserService);
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
   public authService: AuthService = inject(AuthService);
@@ -33,6 +41,21 @@ export class NewmessageComponent {
   public input: string = '';
 
   protected readonly isChannel = isChannel;
+
+  @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+
+  protected readonly listboxId = 'chat-new-receiver-listbox';
+
+  /** Arrow/Enter/Escape navigation for the receiver suggestion dropdown; only active while it's actually open. */
+  protected onSearchKeydown(event: KeyboardEvent): void {
+    if (!this.searchService.getNewListBoolean()) return;
+    this.searchService.handleDropdownKeydown(event, () => this.searchResultRef?.selectHighlighted());
+  }
+
+  protected activeDescendantId(): string | null {
+    const index = this.searchService.getHighlightedIndex();
+    return this.searchService.getNewListBoolean() && index >= 0 ? `${this.listboxId}-option-${index}` : null;
+  }
 
   /**
    * Sets the current receiver of the message, determines the receiver type (channel or direct),

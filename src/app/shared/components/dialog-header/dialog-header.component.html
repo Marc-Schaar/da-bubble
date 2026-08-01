@@ -1,6 +1,6 @@
 <header class="profile-header">
   <span>{{ title() }}</span>
-  <button class="close" (click)="closed.emit()">
-    <img src="img/close.svg" alt="" />
-  </button>
+  <app-button variant="plain" ariaLabel="Schließen" (click)="closed.emit()">
+    <mat-icon>close</mat-icon>
+  </app-button>
 </header>

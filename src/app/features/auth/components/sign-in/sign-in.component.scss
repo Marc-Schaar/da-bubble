@@ -1,0 +1,120 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  align-items: center;
+  width: 100%;
+
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
+    gap: 10px;
+  }
+}
+
+.form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  align-items: center;
+
+  @media only screen and (max-width: 1023px) {
+    gap: 10px;
+  }
+  @media (max-width: 743px) {
+  }
+  @media (max-height: 920px) {
+    gap: 18px;
+  }
+  @media (max-width: 860px) {
+    gap: 24px;
+  }
+  @media (max-width: 500px) {
+    gap: 20px;
+  }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 1023px) {
+    gap: 5px;
+  }
+
+  h1 {
+    color: var(--dark-purple);
+  }
+
+  p {
+    font-size: 1.25rem;
+    @media screen and (max-width: 1023px) {
+      font-size: 1rem;
+    }
+  }
+
+  .error {
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 19.1px;
+    color: #ed1e79;
+    width: 100%;
+    display: flex;
+  }
+
+  .btn-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 35px;
+
+    .full-width {
+      max-width: 400px;
+    }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 1066px) {
+      gap: 20px;
+    }
+  }
+}
+
+.link {
+  border-radius: 30px;
+  padding: 0.313em 0.813em;
+  font-size: 1rem;
+  color: var(--medium-purple);
+  transition: all 0.125s ease-in-out;
+
+  &:hover {
+    background-color: var(--bg-color);
+  }
+}
+
+app-button.btn-google {
+  width: 100%;
+  background-color: var(--bg-color);
+  border-radius: 30px;
+
+  ::ng-deep button {
+    outline: unset !important;
+    width: 100%;
+  }
+
+  img {
+    height: 30px;
+    aspect-ratio: 1;
+  }
+}
+
+.divider {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  font-size: 1rem;
+  color: #000000;
+}
+
+.divider::before,
+.divider::after {
+  flex: 1;
+  content: "";
+  padding: 1px;
+  background-color: var(--light-purple);
+  margin: 5px;
+}

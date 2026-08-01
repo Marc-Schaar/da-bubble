@@ -1,7 +1,7 @@
 <div (mouseleave)="reactionMenuOpenInTextarea = false" (click)="reactionMenuOpenInTextarea = false" class="input-container">
   <textarea
     #ta
-    (keydown)="onKeydown($event, ta)"
+    (keydown)="onKeydown($event)"
     (click)="onCaretMoved(ta)"
     (keyup)="onKeyup($event, ta)"
     (input)="onCaretMoved(ta)"
@@ -9,39 +9,64 @@
     rows="3"
     [name]="input"
     [placeholder]="placeholderText()"
+    role="combobox"
+    [attr.aria-expanded]="searchService.getListBoolean()"
+    [attr.aria-controls]="listboxId"
+    [attr.aria-activedescendant]="activeDescendantId()"
   ></textarea>
 
   <div class="action-container justify-sb">
     <div class="gap-10">
       @if (isChannelComponent()) {
-        <button class="btn" (click)="reactionMenuOpenInTextarea = !reactionMenuOpenInTextarea; $event.stopPropagation()">
+        <app-button
+          variant="icon"
+          ariaLabel="Emoji einfügen"
+          [ariaExpanded]="reactionMenuOpenInTextarea"
+          ariaHaspopup="true"
+          (click)="toggleEmojiPicker(); $event.stopPropagation()"
+        >
           <mat-icon>sentiment_satisfied</mat-icon>
-        </button>
+        </app-button>
       }
 
-      <button class="btn" (click)="insertTrigger('@', ta); $event.stopPropagation()">
+      <app-button
+        variant="icon"
+        class="mention-anchor-at"
+        ariaLabel="Person erwähnen"
+        (click)="insertTrigger('@', ta); $event.stopPropagation()"
+      >
         <mat-icon>alternate_email</mat-icon>
-      </button>
-      <button class="btn" (click)="insertTrigger('#', ta); $event.stopPropagation()">
+      </app-button>
+      <app-button
+        variant="icon"
+        class="mention-anchor-channel"
+        ariaLabel="Channel erwähnen"
+        (click)="insertTrigger('#', ta); $event.stopPropagation()"
+      >
         <mat-icon>tag</mat-icon>
-      </button>
+      </app-button>
     </div>
-    <button class="btn btn-send" [disabled]="input.trim() == ''" (click)="newMessage()">
+    <app-button variant="icon" class="btn-send" ariaLabel="Nachricht senden" [disabled]="disabled() || input.trim() == ''" (click)="newMessage()">
       <mat-icon>send</mat-icon>
-    </button>
+    </app-button>
 
     @if (searchService.getListBoolean()) {
-      <div class="tag-container">
-        <app-search-result [input]="input" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
+      <div class="tag-container" [class.tag-container--channel]="searchService.isChannel()">
+        <app-search-result [input]="input" [listboxId]="listboxId" (tagInserted)="onTagInserted($event, ta)"></app-search-result>
       </div>
     }
     @if (reactionMenuOpenInTextarea) {
-      <div class="reaction-menu">
+      <div class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpenInTextarea = false">
         <div class="scroll-container">
           @for (emoji of emojis; track $index) {
-            <span (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false" class="emoji">
+            <button
+              type="button"
+              (click)="addEmoji(emoji); reactionMenuOpenInTextarea = false"
+              class="emoji"
+              [attr.aria-label]="'Emoji ' + emoji + ' einfügen'"
+            >
               {{ emoji }}
-            </span>
+            </button>
           }
         </div>
       </div>

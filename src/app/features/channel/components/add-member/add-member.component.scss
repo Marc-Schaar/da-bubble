@@ -1,27 +1,18 @@
 .main {
-  width: 415px;
+  max-width: 415px;
+  margin: 0 1.5em;
   height: 411px;
   border-radius: 30px 0px 30px 30px;
   box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
   padding: 40px;
-  z-index: 1050;
   background-color: white;
   gap: 20px;
   display: flex;
   flex-direction: column;
+  overflow: clip;
   transition:
     width 0.3s ease-in-out,
     height 0.3s ease-in-out;
-  @media (max-width: 1023px) {
-    width: 398px;
-    padding: 30px 16px;
-  }
-  @media (max-width: 440px) {
-    width: 340px;
-  }
-  @media (max-width: 380px) {
-    width: 280px;
-  }
 }
 
 .choose-user-bar {
@@ -71,17 +62,26 @@
   }
 }
 
+.cross-mini-btn {
+  display: flex;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cross-mini {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
 ///////////
 ///
 .submit-btn {
   margin-top: auto;
   place-self: end;
-  color: white;
-  background-color: var(--dark-purple);
-  border-radius: 25px;
   font-size: 1.25rem;
-  font-weight: 700;
-  padding: 8px 16px;
 }
 
 .header {
@@ -96,6 +96,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto;
 
   &__item {
     align-items: center;
@@ -106,13 +107,28 @@
     width: max-content;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:has(.user__list__btn:focus-visible) {
       background-color: var(--bg-color);
     }
+    &:has(.user__list__btn:focus-visible) {
+      outline: 2px solid var(--dark-purple-text);
+      outline-offset: 2px;
+    }
+  }
+
+  &__btn {
+    display: contents;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
   }
 }
 
 .channel-name {
+  margin: 0;
   font-size: 1.25rem;
   color: var(--medium-purple);
   @media (max-width: 1023px) {
@@ -152,24 +168,16 @@
 }
 
 .input-wrapper {
-  border-radius: 30px;
-  border: 1px solid rgba(173, 176, 217, 1);
-  padding: 7.5px 20px 7.5px 20px;
-
-  input {
-    outline: none;
-    border: none;
-    background: unset;
-    width: 100%;
-    padding: 8px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .input-cont {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 18px;
+  font-size: 1.125rem;
   margin-bottom: 12px;
   overflow: hidden;
 
@@ -187,4 +195,10 @@ button {
   border: unset;
   outline: unset;
   background: unset;
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 }

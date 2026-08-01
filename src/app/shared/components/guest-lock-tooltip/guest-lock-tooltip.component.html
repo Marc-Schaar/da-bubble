@@ -1,0 +1,4 @@
+<div class="tooltip-cont" [class.guest-locked]="authService.isGuest()">
+  <ng-content></ng-content>
+  <span class="tooltip" [id]="tooltipId" role="tooltip" [class.guest-msg-pos]="mobilePosition()">Zugang für Gäste gesperrt</span>
+</div>

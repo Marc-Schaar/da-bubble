@@ -1,0 +1,24 @@
+@if (searchService.getHeaderListBoolean()) {
+  <div class="tag-container">
+    <app-search-result [(input)]="input" [listboxId]="listboxId"></app-search-result>
+  </div>
+}
+
+<div class="input">
+  <app-input
+    appearance="filled"
+    [(ngModel)]="input"
+    (input)="searchService.observeInput(input, 'header')"
+    (click)="searchService.closeList()"
+    (keydown)="onSearchKeydown($event)"
+    type="text"
+    placeholder="Devspace durchsuchen"
+    ariaLabel="Devspace durchsuchen"
+    role="combobox"
+    [ariaExpanded]="searchService.getHeaderListBoolean()"
+    [ariaControls]="listboxId"
+    [ariaActivedescendant]="activeDescendantId()"
+  >
+    <mat-icon appInputSuffix>search</mat-icon>
+  </app-input>
+</div>

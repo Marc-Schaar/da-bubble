@@ -1,53 +1,76 @@
-<div class="profile-main-cont" (click)="handleClick($event)">
+<div class="profile-main-cont" [class.receiver]="!isOwnProfile" (click)="handleClick($event)">
   <app-dialog-header title="Profil" (closed)="closeMenu()"></app-dialog-header>
 
-  <div (click)="modifyInfos ? openAvatarSelection() : null" class="picture-cont">
-    <img [src]="pendingPhotoUrl ?? user()?.photoUrl" alt="" />
-  </div>
+  <button
+    type="button"
+    class="picture-cont"
+    [class.editable]="isOwnProfile"
+    [attr.aria-label]="isOwnProfile ? 'Profilbild ändern' : null"
+    (click)="isOwnProfile && modifyInfos() ? openAvatarSelection() : null"
+  >
+    <img [src]="pendingPhotoUrl() ?? user()?.photoUrl" alt="" loading="lazy" />
+  </button>
 
-  @if (!modifyInfos) {
+  @if (!modifyInfos()) {
     <div class="discription-cont">
       <div class="info-edit">
-        <div class="name">{{ user()?.displayName }}</div>
-        <div class="tooltip-cont">
-          <button class="edit-btn" (click)="modify()">
-            @if (navigationService.isMobile()) {
-              <mat-icon>edit</mat-icon>
-            } @else {
-              Bearbeiten
-            }
-          </button>
-          <span class="tooltip guest-msg-pos">Zugang für Gäste gesperrt</span>
-        </div>
+        <p class="name">{{ user()?.displayName }}</p>
+        @if (isOwnProfile) {
+          <app-guest-lock-tooltip>
+            <app-button variant="plain" class="edit-btn" [ariaDisabled]="authService.isGuest()" (click)="modify()">
+              @if (navigationService.isMobile()) {
+                <mat-icon>edit</mat-icon>
+              } @else {
+                Bearbeiten
+              }
+            </app-button>
+          </app-guest-lock-tooltip>
+        }
       </div>
       <div class="status-cont">
-        <div class="circle"></div>
-        <div class="status">Aktiv</div>
+        @if (isOwnProfile || user()?.online) {
+          <div class="circle online" aria-hidden="true"></div>
+          <p class="status online">Aktiv</p>
+        } @else {
+          <div class="circle offline" aria-hidden="true"></div>
+          <p class="status offline">Abwesend</p>
+        }
       </div>
     </div>
 
     <div class="contact-cont">
-      <div>
-        <div class="envelope"><img src="img/mail.png" alt="" /></div>
-        <div class="contact">
-          <p class="email">Email-Adresse</p>
-          <div class="email-route">{{ user()?.email }}</div>
-        </div>
+      <div class="contact-row">
+        <div class="envelope"><mat-icon class="material-symbols-outlined">mail</mat-icon></div>
+        <dl class="contact">
+          <dt class="email">Email-Adresse</dt>
+          <dd>
+            <a href="mailto:{{ user()?.email }}" class="email-route">{{ user()?.email }}</a>
+          </dd>
+        </dl>
       </div>
     </div>
+
+    @if (!isOwnProfile) {
+      <section>
+        <app-button variant="primary" (click)="openChat()" class="align-center gap-10">
+          <mat-icon class="material-symbols-outlined">mode_comment</mat-icon>
+          Nachricht
+        </app-button>
+      </section>
+    }
   } @else {
     <div class="section">
-      <div>
-        <div>
-          <div><img src="img/account_circle.png" alt="" /></div>
-          <div><span>Vollständiger Name</span></div>
-        </div>
+      <p class="name-row">
+        <mat-icon>account_circle</mat-icon>
+        Vollständiger Name
+      </p>
 
-        <div><input #name="ngModel" [(ngModel)]="newName" type="text" /></div>
-      </div>
-      <div class="btn-borders">
-        <div class="btn"><button (click)="cancel()">Abbrechen</button><button (click)="saveChanges()">Speichern</button></div>
-      </div>
+      <app-input ariaLabel="Vollständiger Name" [ngModel]="newName()" (ngModelChange)="newName.set($event)" type="text" />
+    </div>
+
+    <div class="action-btn">
+      <app-button variant="secondary" [disabled]="isSaving()" (click)="cancel()">Abbrechen</app-button>
+      <app-button variant="primary" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveChanges()">Speichern</app-button>
     </div>
   }
 </div>
