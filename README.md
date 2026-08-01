@@ -79,7 +79,7 @@ Das Ergebnis liegt in `dist/da-bubble`.
 
 ## Roadmap & Testing
 
-Die Refactoring-Roadmap des Projekts ist in [REFACTORING.md](REFACTORING.md) dokumentiert, inklusive manueller Smoke-Test-Checkliste (es gibt aktuell kein automatisiertes Test-Sicherheitsnetz).
+Die Refactoring-Roadmap des Projekts ist in [REFACTORING.md](REFACTORING.md) dokumentiert, inklusive manueller Smoke-Test-Checkliste (es gibt aktuell kein automatisiertes Test-Sicherheitsnetz). Ein Vergleich zwischen dem ursprünglichen Bootcamp-Stand und dem aktuellen Umbau findet sich in [refactoring-verlauf.md](refactoring-verlauf.md).
 
 ## Autor
 
