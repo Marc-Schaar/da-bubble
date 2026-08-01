@@ -10,7 +10,9 @@
     <section class="box" id="channelname-edit-cont" [ngClass]="{ 'change-name-edit-cont': channelNameEdit() }">
       <div class="box--header">
         Channel-Name
-        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{ channelNameEdit() ? "Speichern" : "Bearbeiten" }}</app-button>
+        <app-button variant="plain" class="save-btn" (click)="onEditChannelName()">{{
+          channelNameEdit() ? "Speichern" : "Bearbeiten"
+        }}</app-button>
       </div>
       @if (channelNameEdit()) {
         <app-input
@@ -73,8 +75,10 @@
 
         <app-button
           variant="plain"
+          [ariaExpanded]="isAddMemberOpen()"
+          ariaHaspopup="true"
           (click)="toogleAddMemberState()"
-          class="add-member-mobile-btn member-list--item"
+          class="add-member-mobile-btn"
         >
           <mat-icon class="material-symbols-outlined">person_add</mat-icon>
           Mitglieder hinzufügen
@@ -82,7 +86,12 @@
       </ul>
     </section>
 
-    <section class="tooltip" [ngClass]="{ tooltip__open: isAddMemberOpen() }">
+    <section
+      class="tooltip"
+      [ngClass]="{ tooltip__open: isAddMemberOpen() }"
+      [appFocusTrapPanel]="isAddMemberOpen()"
+      (panelClose)="toogleAddMemberState()"
+    >
       <div class="tooltip--line"></div>
 
       <header class="tooltip--header">
@@ -96,11 +105,7 @@
         <div class="mini-profile-cont">
           <img class="user-img-mini" [src]="user.photoUrl" alt="" loading="lazy" />
           {{ user.displayName }}
-          <app-button
-            variant="icon"
-            [ariaLabel]="'Entfernen: ' + user.displayName"
-            (click)="removeSelectedUser($index)"
-          >
+          <app-button variant="icon" [ariaLabel]="'Entfernen: ' + user.displayName" (click)="removeSelectedUser($index)">
             <mat-icon>close</mat-icon>
           </app-button>
         </div>

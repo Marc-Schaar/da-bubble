@@ -107,8 +107,13 @@
     width: max-content;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:has(.user__list__btn:focus-visible) {
       background-color: var(--bg-color);
+    }
+    &:has(.user__list__btn:focus-visible) {
+      outline: 2px solid var(--dark-purple-text);
+      outline-offset: 2px;
     }
   }
 
@@ -172,7 +177,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 18px;
+  font-size: 1.125rem;
   margin-bottom: 12px;
   overflow: hidden;
 
@@ -190,4 +195,10 @@ button {
   border: unset;
   outline: unset;
   background: unset;
+
+  &:focus-visible {
+    outline: 2px solid var(--dark-purple-text);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 }

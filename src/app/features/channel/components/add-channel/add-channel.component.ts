@@ -17,6 +17,7 @@ import { ProfileStatusComponent } from '../../../../shared/components/profile-st
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-add-channel',
@@ -29,6 +30,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
     ProfileStatusComponent,
     ButtonComponent,
     InputComponent,
+    FocusTrapPanelDirective,
   ],
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.scss'],

@@ -11,10 +11,11 @@ import { ProfileDialogService } from '../../../../shared/services/profile-dialog
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-channel-edit',
-  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent],
+  imports: [CommonModule, MatIcon, FormsModule, UserListItemComponent, ButtonComponent, InputComponent, FocusTrapPanelDirective],
   templateUrl: './edit-channel.component.html',
   styleUrl: './edit-channel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

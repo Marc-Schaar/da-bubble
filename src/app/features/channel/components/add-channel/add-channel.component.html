@@ -29,7 +29,7 @@
       </div>
 
       <div class="form__field">
-        <label class="form__label" for="">
+        <label class="form__label" for="channel-description">
           Beschreibung <br />
           (optional)
         </label>
@@ -41,7 +41,12 @@
     </form>
   </section>
 
-  <section class="select-member-cont" [class.select-member-cont--open]="isAddMemberDialogOpen()">
+  <section
+    class="select-member-cont"
+    [class.select-member-cont--open]="isAddMemberDialogOpen()"
+    [appFocusTrapPanel]="isAddMemberDialogOpen()"
+    (panelClose)="closeDialogAddMember()"
+  >
     <header class="header">
       Leute hinzufügen
       <app-button variant="plain" ariaLabel="Schließen" (click)="closeDialogAddMember()">
@@ -120,5 +125,5 @@
 </div>
 
 @if (isAddMemberDialogOpen()) {
-  <div class="background"></div>
+  <div class="background" (click)="closeDialogAddMember()"></div>
 }
