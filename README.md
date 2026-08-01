@@ -1,14 +1,12 @@
-<p align="center">
-  <img src="public/img/Logo.png" alt="DA Bubble Logo" width="120" />
-</p>
+<img src="public/img/Logo.png" alt="DA Bubble Logo" width="60" align="left" />
 
-<h1 align="center">DA Bubble</h1>
+# DA Bubble
 
-<p align="center">
-  Ein Slack-inspirierter Team-Chat, gebaut mit <strong>Angular 19</strong> und <strong>Firebase</strong>.
-</p>
+Ein Slack-inspirierter Team-Chat, gebaut mit <strong>Angular 19</strong> und <strong>Firebase</strong>.
 
-<p align="center">
+<br clear="left" />
+
+<p align="left">
   <img alt="Angular" src="https://img.shields.io/badge/Angular-19-DD0031?logo=angular&logoColor=white" />
   <img alt="Firebase" src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Standalone%20Components-3178C6?logo=typescript&logoColor=white" />
