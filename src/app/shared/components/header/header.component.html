@@ -1,5 +1,5 @@
 <header class="header">
-  <a class="logo" routerLink="/login">
+  <a class="logo" [routerLink]="authService.currentUser() ? '/main' : '/login'">
     <img src="img/headerlogo.png" alt="DABubble" />
   </a>
 

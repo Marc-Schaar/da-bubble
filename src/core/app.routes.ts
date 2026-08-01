@@ -57,6 +57,7 @@ export const routes: Routes = [
         (m) => m.MainChatComponent,
       ),
     children: [
+      { path: '', redirectTo: 'new-message', pathMatch: 'full' },
       {
         path: 'channel/:id',
         loadComponent: () =>
