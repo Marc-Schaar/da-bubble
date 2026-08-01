@@ -19,9 +19,14 @@
           (click)="isClicked = true"
           [(ngModel)]="input"
           (input)="searchService.observeInput(input, 'header')"
+          (keydown)="onSearchKeydown($event)"
           type="text"
           placeholder="Gehe zu ..."
           ariaLabel="Gehe zu ..."
+          role="combobox"
+          [ariaExpanded]="searchService.getHeaderListBoolean() && isClicked"
+          [ariaControls]="listboxId"
+          [ariaActivedescendant]="activeDescendantId()"
         >
           <mat-icon appInputSuffix>search</mat-icon>
         </app-input>
@@ -29,7 +34,7 @@
 
       @if (searchService.getHeaderListBoolean() && isClicked) {
         <div class="tag-container">
-          <app-search-result [(input)]="input"></app-search-result>
+          <app-search-result [(input)]="input" [listboxId]="listboxId"></app-search-result>
         </div>
       }
     </div>
@@ -56,7 +61,7 @@
           </app-button>
 
           <app-guest-lock-tooltip [mobilePosition]="true">
-            <app-button variant="icon" ariaLabel="Channel hinzufügen" [disabled]="authService.isGuest()" (click)="openAddChannel()">
+            <app-button variant="icon" ariaLabel="Channel hinzufügen" [ariaDisabled]="authService.isGuest()" (click)="openAddChannel()">
               <mat-icon>add</mat-icon>
             </app-button>
           </app-guest-lock-tooltip>
@@ -64,13 +69,11 @@
 
         <ul [class.dropdown__list--open]="navigationService.isChannelsOpen()" class="dropdown__list">
           @for (channel of firestoreService.myChannels(); track channel.id) {
-            <li
-              class="dropdown__list__item"
-              (click)="navigationService.selectChannel(channel.id!)"
-              [class.active-link]="router.url.includes('channel/' + channel.id)"
-            >
-              <mat-icon class="material-symbols-outlined">tag</mat-icon>
-              <span>{{ channel.name }}</span>
+            <li class="dropdown__list__item" [class.active-link]="router.url.includes('channel/' + channel.id)">
+              <button type="button" class="dropdown__list__btn" (click)="navigationService.selectChannel(channel.id!)">
+                <mat-icon class="material-symbols-outlined">tag</mat-icon>
+                <span>{{ channel.name }}</span>
+              </button>
             </li>
           } @empty {
             No Channel found
@@ -79,7 +82,7 @@
       </div>
 
       <app-guest-lock-tooltip>
-        <app-button variant="plain" class="add__channel__btn" [disabled]="authService.isGuest()" (click)="openAddChannel()">
+        <app-button variant="plain" class="add__channel__btn" [ariaDisabled]="authService.isGuest()" (click)="openAddChannel()">
           <mat-icon class="material-symbols-outlined">add_circle</mat-icon>
           Channel hinzufügen
         </app-button>
@@ -98,12 +101,10 @@
 
         <ul [class.dropdown__list--open]="navigationService.isDirectMessagesOpen()" class="dropdown__list">
           @for (user of firestoreService.allUsers(); track user.id) {
-            <li
-              class="dropdown__list__item"
-              (click)="navigationService.selectDirectMessageRecipient(user.id)"
-              [class.active-link]="router.url.includes('direct/' + user.id)"
-            >
-              <app-user-list-item [user]="user"></app-user-list-item>
+            <li class="dropdown__list__item" [class.active-link]="router.url.includes('direct/' + user.id)">
+              <button type="button" class="dropdown__list__btn" (click)="navigationService.selectDirectMessageRecipient(user.id)">
+                <app-user-list-item [user]="user"></app-user-list-item>
+              </button>
             </li>
           } @empty {
             No User found

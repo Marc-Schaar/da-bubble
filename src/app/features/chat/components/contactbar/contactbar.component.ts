@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -53,6 +53,21 @@ export class ContactbarComponent implements OnInit {
   isClicked = false;
   public input: string = '';
 
+  @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+
+  protected readonly listboxId = 'contactbar-search-listbox';
+
+  /** Arrow/Enter/Escape navigation for the mobile search dropdown; only active while it's actually open. */
+  protected onSearchKeydown(event: KeyboardEvent): void {
+    if (!this.searchService.getHeaderListBoolean()) return;
+    this.searchService.handleDropdownKeydown(event, () => this.searchResultRef?.selectHighlighted());
+  }
+
+  protected activeDescendantId(): string | null {
+    const index = this.searchService.getHighlightedIndex();
+    return this.searchService.getHeaderListBoolean() && index >= 0 ? `${this.listboxId}-option-${index}` : null;
+  }
+
   /**
    * Initializes the component by ensuring the shared user and channel
    * streams are running (owned by FireService, app-lifetime).
@@ -81,6 +96,9 @@ export class ContactbarComponent implements OnInit {
       height: 'auto',
       position: { top: '50%', left: '50%' },
       panelClass: 'fullscreen',
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      ariaLabel: 'Channel erstellen',
     });
   }
 
