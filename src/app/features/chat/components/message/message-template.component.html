@@ -22,7 +22,14 @@
       >
         {{ preSelectedEmojis["thumbsUp"] }}
       </app-button>
-      <app-button #reactionBtn variant="icon" ariaLabel="Reaktion auswählen" (click)="toggleReactionMenu()">
+      <app-button
+        #reactionBtn
+        variant="icon"
+        ariaLabel="Reaktion auswählen"
+        [ariaExpanded]="reactionMenuOpen"
+        ariaHaspopup="true"
+        (click)="toggleReactionMenu()"
+      >
         <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
       </app-button>
       @if (!isThread()) {
@@ -32,17 +39,24 @@
       }
 
       @if (isOwnMessage()) {
-        <app-button #menuBtn variant="icon" ariaLabel="Nachrichtenmenü öffnen" (click)="toggleMenu()">
+        <app-button
+          #menuBtn
+          variant="icon"
+          ariaLabel="Nachrichtenmenü öffnen"
+          [ariaExpanded]="menuOpen"
+          ariaHaspopup="true"
+          (click)="toggleMenu()"
+        >
           <mat-icon>more_vert</mat-icon>
         </app-button>
       }
       @if (menuOpen && isOwnMessage()) {
-        <div #menuPopup class="menu">
+        <div #menuPopup class="menu" appFocusTrapPanel (panelClose)="menuOpen = false">
           <app-button variant="plain" (click)="editMessage(message())">Nachricht bearbeiten</app-button>
         </div>
       }
       @if (reactionMenuOpen && isChannelMessage()) {
-        <div #reactionPopup class="reaction-menu">
+        <div #reactionPopup class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpen = false">
           <app-emoji-quick-picker
             [emojis]="preSelectedEmojiList"
             [isSelected]="isReactionSelected"

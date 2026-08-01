@@ -163,7 +163,7 @@
   color: white;
   z-index: 10;
   white-space: nowrap;
-  font-size: 16px;
+  font-size: 1rem;
   img {
     width: 30px;
     aspect-ratio: 1;
@@ -258,6 +258,10 @@
   &:has(textarea:focus-visible) {
     outline: 1px solid var(--dark-purple);
   }
+}
+
+textarea:focus-visible {
+  outline: none;
 }
 
 @media (max-width: 1240px) {

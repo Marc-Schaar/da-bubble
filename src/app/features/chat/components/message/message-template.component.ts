@@ -21,10 +21,20 @@ import { MessageReactionsComponent } from './message-reactions/message-reactions
 import { EmojiQuickPickerComponent } from './emoji-quick-picker/emoji-quick-picker.component';
 import { PRESELECTED_EMOJIS } from '../../../../shared/constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { FocusTrapPanelDirective } from '../../../../shared/directives/focus-trap-panel.directive';
 
 @Component({
   selector: 'app-message-template',
-  imports: [CommonModule, MatIconModule, FormsModule, LinkifyPipe, MessageReactionsComponent, EmojiQuickPickerComponent, ButtonComponent],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    FormsModule,
+    LinkifyPipe,
+    MessageReactionsComponent,
+    EmojiQuickPickerComponent,
+    ButtonComponent,
+    FocusTrapPanelDirective,
+  ],
   templateUrl: './message-template.component.html',
   styleUrl: './message-template.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -192,13 +202,4 @@ export class MessageTemplateComponent {
     }
   }
 
-  /**
-   * Closes the actions/reaction menu on Escape, for keyboard users who
-   * opened it without a mouse to click outside with.
-   */
-  @HostListener('document:keydown.escape')
-  onEscape() {
-    this.menuOpen = false;
-    this.reactionMenuOpen = false;
-  }
 }

@@ -38,6 +38,8 @@
       #reactionBtn
       variant="icon"
       ariaLabel="Reaktion hinzufügen"
+      [ariaExpanded]="reactionMenuOpen()"
+      ariaHaspopup="true"
       (click)="reactionMenuOpen.set(!reactionMenuOpen())"
     >
       <mat-icon class="material-symbols-outlined"> add_reaction </mat-icon>
@@ -45,7 +47,7 @@
   }
 
   @if (reactionMenuOpen()) {
-    <div #reactionPopup class="reaction-menu">
+    <div #reactionPopup class="reaction-menu" appFocusTrapPanel (panelClose)="reactionMenuOpen.set(false)">
       <app-emoji-quick-picker [emojis]="preSelectedEmojiList" [isSelected]="isReactionSelected" (pick)="toggle($event)"></app-emoji-quick-picker>
     </div>
   }

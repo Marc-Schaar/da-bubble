@@ -7,6 +7,7 @@ import { NavigationService } from '../../../../../shared/services/navigation/nav
 import { PRESELECTED_EMOJIS } from '../../../../../shared/constants';
 import { EmojiQuickPickerComponent } from '../emoji-quick-picker/emoji-quick-picker.component';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+import { FocusTrapPanelDirective } from '../../../../../shared/directives/focus-trap-panel.directive';
 
 /**
  * Renders the emoji reactions of a message (footer) including the
@@ -14,7 +15,7 @@ import { ButtonComponent } from '../../../../../shared/components/button/button.
  */
 @Component({
   selector: 'app-message-reactions',
-  imports: [CommonModule, MatIconModule, EmojiQuickPickerComponent, ButtonComponent],
+  imports: [CommonModule, MatIconModule, EmojiQuickPickerComponent, ButtonComponent, FocusTrapPanelDirective],
   templateUrl: './message-reactions.component.html',
   styleUrl: './message-reactions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,12 +63,6 @@ export class MessageReactionsComponent {
 
   /** Bound reference for EmojiQuickPickerComponent's isSelected input. */
   public readonly isReactionSelected = (emoji: string): boolean => this.reactionsService.hasReacted(emoji, this.reactions());
-
-  /** Closes the quick-reaction menu on Escape, for keyboard users. */
-  @HostListener('document:keydown.escape')
-  onEscape() {
-    this.reactionMenuOpen.set(false);
-  }
 
   /** Closes the quick-reaction menu on any click outside its button/popup. */
   @HostListener('document:click', ['$event'])
