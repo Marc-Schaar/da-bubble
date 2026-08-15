@@ -135,7 +135,9 @@ export class AuthService {
     this.isLoading.set(true);
     try {
       const result = await signInWithEmailAndPassword(this.auth, email, password);
-      await this.fireService.updateOnlineStatus({ ...this.mapFirebaseUserToUser(result.user), online: true });
+      const userData = this.mapFirebaseUserToUser(result.user);
+      await this.fireService.updateOnlineStatus({ ...userData, online: true });
+      await this.addInDefaultChannel(userData);
       this.notificationService.success('Erfolgreich angemeldet!');
       this.navigationService.gotToChat();
     } catch (error) {
