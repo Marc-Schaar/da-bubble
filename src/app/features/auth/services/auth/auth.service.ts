@@ -134,7 +134,8 @@ export class AuthService {
   public async logInWithEmailAndPassword(email: string, password: string) {
     this.isLoading.set(true);
     try {
-      await signInWithEmailAndPassword(this.auth, email, password);
+      const result = await signInWithEmailAndPassword(this.auth, email, password);
+      await this.fireService.updateOnlineStatus({ ...this.mapFirebaseUserToUser(result.user), online: true });
       this.notificationService.success('Erfolgreich angemeldet!');
       this.navigationService.gotToChat();
     } catch (error) {
