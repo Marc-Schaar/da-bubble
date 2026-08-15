@@ -6,6 +6,8 @@ import { User } from '../../../features/auth/models/user/user';
 import { ChannelsApiService } from './channels-api.service';
 import { MessagesApiService } from './messages-api.service';
 import { UsersApiService } from './users-api.service';
+import { UnreadApiService } from './unread-api.service';
+import { UnreadCounter } from '../../models/unread-counter/unread-counter';
 
 /**
  * Fassade über die Firestore-Zugriffsschicht. Bündelt `UsersApiService`,
@@ -19,6 +21,7 @@ export class FireServiceService {
   private usersApi = inject(UsersApiService);
   private channelsApi = inject(ChannelsApiService);
   private messagesApi = inject(MessagesApiService);
+  private unreadApi = inject(UnreadApiService);
 
   public get allUsers() {
     return this.usersApi.allUsers;
@@ -28,68 +31,76 @@ export class FireServiceService {
     return this.channelsApi.myChannels;
   }
 
-  updateOnlineStatus(currentUser: User) {
+  public updateOnlineStatus(currentUser: User) {
     return this.usersApi.updateOnlineStatus(currentUser);
   }
 
-  async createUser(user: User) {
+  public async createUser(user: User) {
     return this.usersApi.createUser(user);
   }
 
-  async updateUser(userId: string, data: Partial<User>) {
+  public async updateUser(userId: string, data: Partial<User>) {
     return this.usersApi.updateUser(userId, data);
   }
 
-  subUserDoc(userId: string, callback: (user: User | null) => void): () => void {
+  public subUserDoc(userId: string, callback: (user: User | null) => void): () => void {
     return this.usersApi.subUserDoc(userId, callback);
   }
 
-  subAllUsers(): void {
+  public subAllUsers(): void {
     this.usersApi.subAllUsers();
   }
 
-  subChannels(): void {
+  public subChannels(): void {
     this.channelsApi.subChannels();
   }
 
-  subChannelDoc(channelId: string, callback: (channel: Channel | null) => void): () => void {
+  public subChannelDoc(channelId: string, callback: (channel: Channel | null) => void): () => void {
     return this.channelsApi.subChannelDoc(channelId, callback);
   }
 
-  getMessageRef(channelId: string, messageId: string): DocumentReference | null {
+  public getMessageRef(channelId: string, messageId: string): DocumentReference | null {
     return this.messagesApi.getMessageRef(channelId, messageId);
   }
 
-  getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
+  public getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
     return this.messagesApi.getMessageThreadRef(channelId, messageId, threadMessageID);
   }
 
-  getMessageRefForContext(channelId: string, messageId: string, parentMessageId?: string, isThread?: boolean): DocumentReference | null {
+  public getMessageRefForContext(channelId: string, messageId: string, parentMessageId?: string, isThread?: boolean): DocumentReference | null {
     return this.messagesApi.getMessageRefForContext(channelId, messageId, parentMessageId, isThread);
   }
 
-  getMessagesCollectionRef(channelId: string): CollectionReference | null {
+  public getMessagesCollectionRef(channelId: string): CollectionReference | null {
     return this.messagesApi.getMessagesCollectionRef(channelId);
   }
 
-  getThreadCollectionRef(channelId: string, parentMessageId: string): CollectionReference | null {
+  public getThreadCollectionRef(channelId: string, parentMessageId: string): CollectionReference | null {
     return this.messagesApi.getThreadCollectionRef(channelId, parentMessageId);
   }
 
-  getConversationMessagesCollectionRef(userId: string, conversationId: string): CollectionReference | null {
+  public getConversationMessagesCollectionRef(userId: string, conversationId: string): CollectionReference | null {
     return this.messagesApi.getConversationMessagesCollectionRef(userId, conversationId);
   }
 
-  updateMessage(ref: DocumentReference, value: string) {
+  public updateMessage(ref: DocumentReference, value: string) {
     return this.messagesApi.updateMessage(ref, value);
   }
 
-  updateReaction(ref: DocumentReference, value: Reaction[]) {
+  public updateReaction(ref: DocumentReference, value: Reaction[]) {
     return this.messagesApi.updateReaction(ref, value);
   }
 
-  async postChannelMessage(channelId: string, data: any) {
-    return this.messagesApi.postChannelMessage(channelId, data);
+  public async postChannelMessage(channelId: string, data: any, senderId: string) {
+    return this.messagesApi.postChannelMessage(channelId, data, senderId);
+  }
+
+  public subUnreadCounters(userId: string, callback: (counters: UnreadCounter[]) => void): () => void {
+    return this.unreadApi.subUnreadCounters(userId, callback);
+  }
+
+  public async resetUnread(userId: string, chatId: string) {
+    return this.unreadApi.resetUnread(userId, chatId);
   }
 
   public async postDirectMessage(senderId: string, receiverId: string, conversationId: string, messageData: any) {
@@ -100,15 +111,15 @@ export class FireServiceService {
     return this.messagesApi.postThreadMessage(channelId, parentMessageId, data);
   }
 
-  async addChannel(data: any) {
+  public async addChannel(data: any) {
     return this.channelsApi.addChannel(data);
   }
 
-  async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
+  public async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
     return this.channelsApi.updateChannelData(channelId, data);
   }
 
-  async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
+  public async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
     return this.channelsApi.addChannelMembers(channelId, memberObjects);
   }
 

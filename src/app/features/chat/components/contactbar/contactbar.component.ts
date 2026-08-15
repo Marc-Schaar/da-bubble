@@ -20,6 +20,9 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { GuestLockTooltipComponent } from '../../../../shared/components/guest-lock-tooltip/guest-lock-tooltip.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { UnreadBadgeComponent } from '../../../../shared/components/unread-badge/unread-badge.component';
+import { UnreadService } from '../../../../shared/services/unread/unread.service';
+import { getConversationId } from '../../../../shared/utils/conversation-id.util';
 
 @Component({
   selector: 'app-contactbar',
@@ -37,6 +40,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
     InputComponent,
     GuestLockTooltipComponent,
     CardComponent,
+    UnreadBadgeComponent,
   ],
   templateUrl: './contactbar.component.html',
   styleUrl: './contactbar.component.scss',
@@ -49,6 +53,7 @@ export class ContactbarComponent implements OnInit {
   private dialog: MatDialog = inject(MatDialog);
   public router: Router = inject(Router);
   public authService = inject(AuthService);
+  public unreadService = inject(UnreadService);
 
   isClicked = false;
   public input: string = '';
@@ -75,6 +80,13 @@ export class ContactbarComponent implements OnInit {
   ngOnInit() {
     this.firestoreService.subAllUsers();
     this.firestoreService.subChannels();
+  }
+
+  /** Resolves a DM contact's unread-counter key (the deterministic conversationId, not their raw user id). */
+  public dmUnreadCount(otherUserId: string): number {
+    const currentUserId = this.authService.currentUser()?.id;
+    if (!currentUserId) return 0;
+    return this.unreadService.unreadCounts().get(getConversationId(currentUserId, otherUserId)) ?? 0;
   }
 
   public toggleDropdown(type: 'channels' | 'directMessages') {

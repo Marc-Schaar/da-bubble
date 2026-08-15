@@ -73,6 +73,7 @@
               <button type="button" class="dropdown__list__btn" (click)="navigationService.selectChannel(channel.id!)">
                 <mat-icon class="material-symbols-outlined">tag</mat-icon>
                 <span>{{ channel.name }}</span>
+                <app-unread-badge [count]="unreadService.unreadCounts().get(channel.id!) ?? 0"></app-unread-badge>
               </button>
             </li>
           } @empty {
@@ -103,7 +104,7 @@
           @for (user of firestoreService.allUsers(); track user.id) {
             <li class="dropdown__list__item" [class.active-link]="router.url.includes('direct/' + user.id)">
               <button type="button" class="dropdown__list__btn" (click)="navigationService.selectDirectMessageRecipient(user.id)">
-                <app-user-list-item [user]="user"></app-user-list-item>
+                <app-user-list-item [user]="user" [unreadCount]="dmUnreadCount(user.id)"></app-user-list-item>
               </button>
             </li>
           } @empty {

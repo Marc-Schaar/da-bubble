@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { addDoc, arrayUnion, collection, CollectionReference, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
 import { ChannelMessage, Reaction } from '../../../features/chat/models/channel-message/channel-message';
 import { runWrite } from '../../utils/run-write.util';
+import { ChannelsApiService } from './channels-api.service';
+import { UnreadApiService } from './unread-api.service';
 
 /**
  * Kapselt den Firestore-Zugriff auf Channel-, Direkt- und Thread-Nachrichten.
@@ -11,6 +13,8 @@ import { runWrite } from '../../utils/run-write.util';
 })
 export class MessagesApiService {
   private firestore: Firestore = inject(Firestore);
+  private channelsApi = inject(ChannelsApiService);
+  private unreadApi = inject(UnreadApiService);
 
   /**
    * Returns a reference to a specific message document in Firestore.
@@ -19,7 +23,7 @@ export class MessagesApiService {
    * @param messageId The ID of the message.
    * @returns A DocumentReference or null if the channelId or messageId is invalid.
    */
-  getMessageRef(channelId: string, messageId: string): DocumentReference | null {
+  public getMessageRef(channelId: string, messageId: string): DocumentReference | null {
     return channelId && messageId ? doc(this.firestore, `channels/${channelId}/messages`, messageId) : null;
   }
 
@@ -31,7 +35,7 @@ export class MessagesApiService {
    * @param threadMessageID The ID of the thread message.
    * @returns A DocumentReference or null if the channelId, messageId, or threadMessageID is invalid.
    */
-  getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
+  public getMessageThreadRef(channelId: string, messageId: string, threadMessageID: string): DocumentReference | null {
     return channelId && messageId && threadMessageID
       ? doc(this.firestore, `channels/${channelId}/messages/${messageId}/thread`, threadMessageID)
       : null;
@@ -41,7 +45,7 @@ export class MessagesApiService {
    * Resolves the message document ref, taking into account whether the
    * message lives in a thread reply — the one place this branch should exist.
    */
-  getMessageRefForContext(
+  public getMessageRefForContext(
     channelId: string,
     messageId: string,
     parentMessageId?: string,
@@ -55,21 +59,21 @@ export class MessagesApiService {
   /**
    * Reference to a channel's messages collection.
    */
-  getMessagesCollectionRef(channelId: string): CollectionReference | null {
+  public getMessagesCollectionRef(channelId: string): CollectionReference | null {
     return channelId ? collection(this.firestore, `channels/${channelId}/messages`) : null;
   }
 
   /**
    * Reference to a thread's reply collection.
    */
-  getThreadCollectionRef(channelId: string, parentMessageId: string): CollectionReference | null {
+  public getThreadCollectionRef(channelId: string, parentMessageId: string): CollectionReference | null {
     return channelId && parentMessageId ? collection(this.firestore, `channels/${channelId}/messages/${parentMessageId}/thread`) : null;
   }
 
   /**
    * Reference to one side of a direct-message conversation.
    */
-  getConversationMessagesCollectionRef(userId: string, conversationId: string): CollectionReference | null {
+  public getConversationMessagesCollectionRef(userId: string, conversationId: string): CollectionReference | null {
     return userId && conversationId ? collection(this.firestore, `users/${userId}/conversations/${conversationId}/messages`) : null;
   }
 
@@ -80,7 +84,7 @@ export class MessagesApiService {
    * @param value The updated message value.
    * @returns A promise that resolves when the update is complete.
    */
-  updateMessage(ref: DocumentReference, value: string) {
+  public updateMessage(ref: DocumentReference, value: string) {
     return ref ? runWrite(() => updateDoc(ref, { message: value }), 'Fehler beim Aktualisieren der Nachricht:') : null;
   }
 
@@ -91,7 +95,7 @@ export class MessagesApiService {
    * @param value The updated reaction value.
    * @returns A promise that resolves when the update is complete.
    */
-  updateReaction(ref: DocumentReference, value: Reaction[]) {
+  public updateReaction(ref: DocumentReference, value: Reaction[]) {
     return ref ? runWrite(() => updateDoc(ref, { reaction: value }), 'Fehler beim Aktualisieren der Reaktion:') : null;
   }
 
@@ -102,13 +106,17 @@ export class MessagesApiService {
    * @param data The message object to be sent.
    * @returns A promise that resolves when the message is sent.
    */
-  async postChannelMessage(channelId: string, data: any) {
+  public async postChannelMessage(channelId: string, data: any, senderId: string) {
     return runWrite(async () => {
       const messagesRef = this.getMessagesCollectionRef(channelId);
       if (!messagesRef) return;
 
       const messageDocRef = await addDoc(messagesRef, data);
       await this.initializeThreadData(messageDocRef, data);
+
+      const channel = await this.channelsApi.getChannelOnce(channelId);
+      const recipientIds = (channel?.member ?? []).map((m) => m.id).filter((id) => id && id !== senderId);
+      await this.unreadApi.incrementUnreadBatch(recipientIds, channelId, 'channel');
     }, 'Fehler beim Senden der Channel-Nachricht:');
   }
 
@@ -123,6 +131,10 @@ export class MessagesApiService {
       if (!senderRef || !receiverRef) return;
 
       await Promise.all([addDoc(senderRef, messageData), senderId !== receiverId ? addDoc(receiverRef, messageData) : Promise.resolve()]);
+
+      if (senderId !== receiverId) {
+        await this.unreadApi.incrementUnread(receiverId, conversationId, 'direct');
+      }
     }, 'Fehler beim Senden der Direktnachricht:');
   }
 

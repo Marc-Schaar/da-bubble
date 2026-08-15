@@ -5,6 +5,7 @@ import { ChannelMessage } from '../../models/channel-message/channel-message';
 import { DirectMessage } from '../../models/direct-message/direct-message';
 import { AuthService } from '../../../auth/services/auth/auth.service';
 import { ReactionContext } from '../reactions/reactions.service';
+import { getConversationId } from '../../../../shared/utils/conversation-id.util';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,7 @@ export class MessagesService {
     const currentUserId = this.authService.currentUser()?.id;
     if (!currentUserId) return () => {};
 
-    const conversationId = this.getConversationId(userA, userB);
+    const conversationId = getConversationId(userA, userB);
     const messagesRef = this.fireService.getConversationMessagesCollectionRef(currentUserId, conversationId);
 
     if (!messagesRef) return () => {};
@@ -100,15 +101,6 @@ export class MessagesService {
     }
   }
 
-  /**
-   * Deterministic 1:1-conversation id: both participants' uids, sorted so
-   * either direction of the pair resolves to the same id.
-   */
-  private getConversationId(userA: string, userB: string): string {
-    const [uid1, uid2] = [userA, userB].sort();
-    return `${uid1}_${uid2}`;
-  }
-
   public async sendChannelMessage(text: string, channelId: string) {
     const user = this.authService.currentUser();
     if (!user) return;
@@ -119,7 +111,7 @@ export class MessagesService {
       photoUrl: user.photoUrl,
     });
 
-    await this.fireService.postChannelMessage(channelId, channelMessage.toJSON());
+    await this.fireService.postChannelMessage(channelId, channelMessage.toJSON(), user.id);
   }
 
   public async sendDirectMessage(text: string, receiverId: string) {
@@ -135,7 +127,7 @@ export class MessagesService {
       photoUrl: user?.photoUrl,
     });
 
-    const conversationId = this.getConversationId(currentUserId, receiverId);
+    const conversationId = getConversationId(currentUserId, receiverId);
 
     await this.fireService.postDirectMessage(currentUserId, receiverId, conversationId, messageInstance.toJSON());
   }

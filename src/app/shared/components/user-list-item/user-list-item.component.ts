@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { ProfileStatusComponent } from '../profile-status/profile-status.component';
+import { UnreadBadgeComponent } from '../unread-badge/unread-badge.component';
 import { User } from '../../../features/auth/models/user/user';
 
 /**
@@ -12,14 +13,15 @@ import { User } from '../../../features/auth/models/user/user';
  */
 @Component({
   selector: 'app-user-list-item',
-  imports: [ProfileStatusComponent],
+  imports: [ProfileStatusComponent, UnreadBadgeComponent],
   templateUrl: './user-list-item.component.html',
   styleUrl: './user-list-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListItemComponent {
-  user = input.required<User>();
-  currentUserId = input<string | null>(null);
+  public user = input.required<User>();
+  public currentUserId = input<string | null>(null);
+  public unreadCount = input<number>(0);
 
   protected readonly isCurrentUser = computed(() => !!this.currentUserId() && this.user().id === this.currentUserId());
 }

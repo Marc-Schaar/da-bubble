@@ -6,6 +6,7 @@ import {
   collection,
   doc,
   Firestore,
+  getDoc,
   getDocs,
   onSnapshot,
   query,
@@ -55,6 +56,16 @@ export class ChannelsApiService {
     });
   }
 
+  /**
+   * One-off fetch of a single channel document (e.g. to read its member
+   * list at message-send time) — unlike subChannelDoc, no listener stays open.
+   */
+  public async getChannelOnce(channelId: string): Promise<Channel | null> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    const snap = await getDoc(channelRef);
+    return snap.exists() ? toEntity<Channel>(snap.id, snap.data()) : null;
+  }
+
   public myChannels = computed(() => {
     const channels: Channel[] = this._allChannels();
     const currentUser = this.userStore.currentUser();
@@ -70,21 +81,21 @@ export class ChannelsApiService {
     });
   });
 
-  async addChannel(data: any) {
+  public async addChannel(data: any) {
     return runWrite(() => {
       const channelsRef = collection(this.firestore, 'channels');
       return addDoc(channelsRef, data);
     }, 'Fehler beim Erstellen des Channels in Firestore:');
   }
 
-  async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
+  public async updateChannelData(channelId: string, data: Partial<{ name: string; description: string }>) {
     if (!channelId) return;
 
     const channelRef = doc(this.firestore, 'channels', channelId);
     return runWrite(() => updateDoc(channelRef, data), 'Fehler beim Aktualisieren der Channel-Daten:');
   }
 
-  async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
+  public async addChannelMembers(channelId: string, memberObjects: { id: string }[]) {
     if (!channelId || memberObjects.length === 0) return;
 
     const channelRef = doc(this.firestore, 'channels', channelId);

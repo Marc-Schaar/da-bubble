@@ -18,6 +18,14 @@ export class NavigationService {
   public isThreadOpen = signal<boolean>(false);
   public isLegal = signal<boolean>(false);
   public isPasswordPage = signal<boolean>(false);
+  /**
+   * Currently open channel id, or DM route id (the *other* user's id — not
+   * the conversationId), derived from the route. `activeChatType` tells
+   * consumers which one `activeChatId` is so a DM id can be resolved into
+   * its conversationId where needed.
+   */
+  public activeChatId = signal<string | null>(null);
+  public activeChatType = signal<'channel' | 'direct' | null>(null);
 
   /**
    * The constructor sets up observables for screen width changes, subscribes to route query parameters,
@@ -75,6 +83,19 @@ export class NavigationService {
       this.isDirectMessagesOpen.set(true);
       this.isChannelsOpen.set(false);
     }
+
+    const channelMatch = url.match(/channel\/([^/?]+)/);
+    const directMatch = url.match(/direct\/([^/?]+)/);
+    if (channelMatch) {
+      this.activeChatType.set('channel');
+      this.activeChatId.set(channelMatch[1]);
+    } else if (directMatch) {
+      this.activeChatType.set('direct');
+      this.activeChatId.set(directMatch[1]);
+    } else {
+      this.activeChatType.set(null);
+      this.activeChatId.set(null);
+    }
     this.isThreadOpen.set(url.includes('messageId='));
     const isAuth = url.includes('login') || url.includes('register');
     const signUp = url.includes('register');
@@ -93,15 +114,19 @@ export class NavigationService {
 
   public selectChannel(id: string) {
     this.isThreadOpen.set(false);
+    this.activeChatType.set('channel');
+    this.activeChatId.set(id);
     this.router.navigate(['/main/channel', id]);
   }
 
   public selectDirectMessageRecipient(id: string) {
     this.isThreadOpen.set(false);
+    this.activeChatType.set('direct');
+    this.activeChatId.set(id);
     this.router.navigate(['/main/direct', id]);
   }
 
-  goBackToList() {
+  public goBackToList() {
     this.goToNewMessage();
   }
 
