@@ -5,7 +5,7 @@
   <app-card (click)="hideList()">
     <app-card-header card-header>
       <app-button variant="plain" (click)="showProfile()">
-        <app-profile-status [photoUrl]="currentReceiver()!.photoUrl" [online]="currentReceiver()!.online"></app-profile-status>
+        <app-profile-status [photoUrl]="currentReceiver()?.photoUrl" [online]="currentReceiver()?.online ?? false"></app-profile-status>
         {{ currentReceiver()?.displayName }}
       </app-button>
     </app-card-header>
