@@ -135,7 +135,7 @@ export class AuthService {
     this.isLoading.set(true);
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
-      this.notificationService.success('Anmelden');
+      this.notificationService.success('Erfolgreich angemeldet!');
       this.navigationService.gotToChat();
     } catch (error) {
       this.handleRegError(error);
@@ -162,7 +162,7 @@ export class AuthService {
         const userData = this.mapFirebaseUserToUser(result.user);
         await this.addInUserCollection(userData);
         await this.addInDefaultChannel(userData);
-        this.notificationService.success('Anmelden');
+        this.notificationService.success('Erfolgreich angemeldet!');
         this.navigationService.gotToChat();
       }
     } catch (error: any) {
@@ -214,7 +214,7 @@ export class AuthService {
 
     await this.addInUserCollection(guestData);
     await this.addInDefaultChannel(guestData);
-    this.notificationService.success('Anmelden');
+    this.notificationService.success('Erfolgreich angemeldet!');
     this.navigationService.gotToChat();
   }
 
