@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth.guard';
 import { noAuthGuard } from './no-auth.guard';
+import { mainDefaultGuard } from './main-default.guard';
 
 /**
  * Application route definitions with lazy-loaded components and route guards.
@@ -42,7 +43,7 @@ export const routes: Routes = [
     path: 'main',
     loadComponent: () => import('../app/features/chat/main-chat/main-chat.component').then((m) => m.MainChatComponent),
     children: [
-      { path: '', redirectTo: 'new-message', pathMatch: 'full' },
+      { path: '', pathMatch: 'full', canActivate: [mainDefaultGuard], children: [] },
       {
         path: 'channel/:id',
         loadComponent: () =>
