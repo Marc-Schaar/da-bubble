@@ -23,6 +23,6 @@
 @media (max-width: 430px) {
   .card {
     margin: 0;
-    max-height: calc(100svh - 80px);
+    max-height: var(--card-mobile-max-height, calc(100svh - 80px));
   }
 }
