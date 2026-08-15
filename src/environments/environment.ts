@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  defaultChannelId: 'allgemein',
   firebase: {
     projectId: 'da-bubble-6b499',
     appId: '1:541571707880:web:1034b667b0fef0dfbbea5d',

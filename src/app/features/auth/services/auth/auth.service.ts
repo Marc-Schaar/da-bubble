@@ -213,6 +213,7 @@ export class AuthService {
     });
 
     await this.addInUserCollection(guestData);
+    await this.addInDefaultChannel(guestData);
     this.notificationService.success('Anmelden');
     this.navigationService.gotToChat();
   }

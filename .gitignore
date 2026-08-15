@@ -45,4 +45,5 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+serviceAccountKey.json
 src/app/app.config.ts
