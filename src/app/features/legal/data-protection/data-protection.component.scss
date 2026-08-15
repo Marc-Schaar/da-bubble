@@ -22,6 +22,10 @@ main {
   max-width: 800px;
   margin: 0 auto;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  line-height: 1.6;
 }
 
 app-legal-header {
@@ -30,4 +34,36 @@ app-legal-header {
 
 h4 {
   color: var(--dark-purple);
+  line-height: 1.4;
+}
+
+main > h4 {
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+li h4 {
+  font-size: 1.05rem;
+}
+
+li ul {
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+
+  li {
+    display: list-item;
+    list-style: disc;
+  }
 }
