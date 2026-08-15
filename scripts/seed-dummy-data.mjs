@@ -5,20 +5,10 @@
 //
 // Run with: npm run seed
 
-import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import { initializeApp, cert, applicationDefault } from 'firebase-admin/app';
-import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
+import { getDb } from './lib/firebase-admin.mjs';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const serviceAccountPath = join(__dirname, '..', 'serviceAccountKey.json');
-
-const app = existsSync(serviceAccountPath)
-  ? initializeApp({ credential: cert(JSON.parse(readFileSync(serviceAccountPath, 'utf-8'))) })
-  : initializeApp({ credential: applicationDefault() });
-
-const db = getFirestore(app);
+const db = getDb();
 
 // Must match `defaultChannelId` in src/environments/environment*.ts.
 const DEFAULT_CHANNEL_ID = 'allgemein';
@@ -33,16 +23,21 @@ const AVATAR_IMAGES = [
 ];
 
 const DUMMY_USERS = [
-  { firstName: 'Anna', lastName: 'Fischer' },
-  { firstName: 'Max', lastName: 'Weber' },
-  { firstName: 'Lena', lastName: 'Schmidt' },
-  { firstName: 'Paul', lastName: 'Meyer' },
-  { firstName: 'Sara', lastName: 'Klein' },
-  { firstName: 'Tom', lastName: 'Hoffmann' },
-  { firstName: 'Nina', lastName: 'Wagner' },
-  { firstName: 'Felix', lastName: 'Becker' },
-  { firstName: 'Julia', lastName: 'Schulz' },
-  { firstName: 'David', lastName: 'Krueger' },
+  { firstName: 'Amara', lastName: 'Okafor' },
+  { firstName: 'Mateo', lastName: 'Rodriguez' },
+  { firstName: 'Yuki', lastName: 'Tanaka' },
+  { firstName: 'Fatima', lastName: 'AlSayed' },
+  { firstName: 'Liam', lastName: 'OConnor' },
+  { firstName: 'Priya', lastName: 'Sharma' },
+  { firstName: 'Chen', lastName: 'Wei' },
+  { firstName: 'Sofia', lastName: 'Rossi' },
+  { firstName: 'Kwame', lastName: 'Mensah' },
+  { firstName: 'Elif', lastName: 'Yildiz' },
+  { firstName: 'Noah', lastName: 'Andersson' },
+  { firstName: 'Zainab', lastName: 'Hussain' },
+  { firstName: 'Efisio', lastName: 'Melis' },
+  { firstName: 'Gavino', lastName: 'Piras' },
+  { firstName: 'Rosalia', lastName: 'Cocco' },
 ];
 
 async function seedUsers() {
