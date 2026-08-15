@@ -45,6 +45,15 @@ export class ChannelService {
     });
   });
 
+  public creatorName = computed(() => {
+    const createdBy = this.currentChannel()?.createdBy;
+    if (!createdBy) return '';
+
+    const allUsers = this.fireService.allUsers();
+    const creator = allUsers.find((u) => u.id === createdBy);
+    return creator?.displayName ?? 'Unbekannter Nutzer';
+  });
+
   public filteredUsers = computed(() => {
     const allUsers = this.fireService.allUsers();
     const members = this.currentChannel()?.member || [];
