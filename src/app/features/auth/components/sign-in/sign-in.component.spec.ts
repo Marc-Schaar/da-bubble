@@ -45,13 +45,13 @@ describe('SignInComponent', () => {
   });
 
   describe('onSubmit', () => {
-    it('KNOWN QUIRK: with an invalid (empty) form, marks all controls as touched but still calls the service with the empty values — there is no early return after the invalid check', async () => {
+    it('with an invalid (empty) form, marks all controls as touched and does not call the service', async () => {
       await component.onSubmit();
 
       expect(component.loginForm.touched).toBe(true);
       expect(component.loginForm.controls['email'].touched).toBe(true);
       expect(component.loginForm.controls['password'].touched).toBe(true);
-      expect(authServiceSpy.logInWithEmailAndPassword).toHaveBeenCalledWith('', '');
+      expect(authServiceSpy.logInWithEmailAndPassword).not.toHaveBeenCalled();
     });
 
     it('calls authService.logInWithEmailAndPassword with the exact form values when valid', async () => {

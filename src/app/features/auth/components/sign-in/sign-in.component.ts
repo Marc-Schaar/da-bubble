@@ -26,7 +26,10 @@ export class SignInComponent {
    */
   public async onSubmit() {
     this.formSubmitted = true;
-    if (this.loginForm.invalid) this.loginForm.markAllAsTouched();
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
     const payload = this.loginForm.getRawValue();
     await this.authService.logInWithEmailAndPassword(payload.email, payload.password);
   }
