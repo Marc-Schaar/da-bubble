@@ -47,3 +47,7 @@ Thumbs.db
 .runtimeconfig.json
 serviceAccountKey.json
 src/app/app.config.ts
+
+# Environment configs (contain Firebase project keys)
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
