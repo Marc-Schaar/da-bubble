@@ -1,0 +1,13 @@
+// Emulator-only rules. NEVER deploy these to a real Firebase project — they allow
+// unrestricted read/write and exist solely so unit/e2e tests can run against the
+// Firebase Emulator Suite (firebase emulators:start / emulators:exec) without any
+// production credentials or security constraints getting in the way.
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

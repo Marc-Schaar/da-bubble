@@ -3,6 +3,7 @@
 // In CI, this file is generated from GitHub Secrets (see .github/workflows/deploy.yaml).
 export const environment = {
   production: true,
+  useEmulators: false,
   defaultChannelId: 'YOUR_DEFAULT_CHANNEL_ID',
   firebase: {
     projectId: 'YOUR_PROJECT_ID',

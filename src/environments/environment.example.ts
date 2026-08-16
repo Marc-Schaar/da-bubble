@@ -2,6 +2,7 @@
 // environment.ts is gitignored and must not be committed.
 export const environment = {
   production: false,
+  useEmulators: false,
   defaultChannelId: 'YOUR_DEFAULT_CHANNEL_ID',
   firebase: {
     projectId: 'YOUR_PROJECT_ID',
