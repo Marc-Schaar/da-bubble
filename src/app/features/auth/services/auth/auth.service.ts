@@ -189,17 +189,13 @@ export class AuthService {
 
     try {
       const result = await signInWithEmailAndPassword(this.auth, GUEST_EMAIL, GUEST_PW);
-      console.log('[GuestDebug] signInWithEmailAndPassword ok, uid:', result.user.uid);
       await this.handleGuestSync(result.user);
     } catch (error: any) {
-      console.error('[GuestDebug] sign-in failed:', error?.code, error);
       if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
         try {
           const result = await createUserWithEmailAndPassword(this.auth, GUEST_EMAIL, GUEST_PW);
-          console.log('[GuestDebug] createUserWithEmailAndPassword ok, uid:', result.user.uid);
           await this.handleGuestSync(result.user);
         } catch (createError) {
-          console.error('[GuestDebug] createUser failed:', createError);
           this.handleRegError(createError);
         }
       } else {
@@ -218,12 +214,9 @@ export class AuthService {
       displayName: 'Gast-Besucher',
       photoUrl: 'img/avatars/avatar_default.png',
     });
-    console.log('[GuestDebug] handleGuestSync writing:', guestData);
 
     await this.addInUserCollection(guestData);
-    console.log('[GuestDebug] addInUserCollection done for', guestData.id);
     await this.addInDefaultChannel(guestData);
-    console.log('[GuestDebug] addInDefaultChannel done for', guestData.id);
     this.notificationService.success('Erfolgreich angemeldet!');
     this.navigationService.gotToChat();
   }
