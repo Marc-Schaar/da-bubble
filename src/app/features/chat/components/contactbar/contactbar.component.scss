@@ -46,15 +46,11 @@ section {
 }
 
 .scroll__wrapper {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 20px;
   height: 100%;
-  min-height: 0;
   padding: 4px;
-  // Scrolling happens inside whichever .dropdown__list is open (below), not
-  // here — otherwise a tall open list produces two nested scrollbars.
-  overflow: hidden;
+  overflow-y: auto;
 
   @media (width < 1024px) {
     padding: 0 16px;
@@ -66,14 +62,6 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 0;
-
-  // While its list is expanded, the section claims whatever vertical space
-  // is left in the sidebar instead of a fixed height (shared evenly with
-  // the other dropdown if both happen to be open at once).
-  &:has(.dropdown__list--open) {
-    flex: 1 1 0;
-  }
 
   &__title {
     width: 100%;
@@ -86,24 +74,29 @@ section {
     }
   }
 
-  &__list {
+  // Animates open/close without guessing a max-height: the row track goes
+  // from 0fr to 1fr, which resolves to the list's actual content height, so
+  // it can never clip a long list. Scrolling (if the list is taller than the
+  // viewport) is handled by .scroll__wrapper above, not in here.
+  &__list-collapse {
     width: 100%;
-    max-height: 0;
-    display: flex;
-    flex-direction: column;
-    transition: max-height 0.25s ease-in-out;
-    gap: 13px;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.125s ease-in-out;
     overflow: hidden;
 
     &--open {
-      // Bounded by the now flex-grown .dropdown above, so this only ever
-      // fills the space actually available and scrolls internally past
-      // that — no fixed cap that can silently clip entries.
-      flex: 1 1 auto;
-      min-height: 0;
-      max-height: 100%;
-      overflow-y: auto;
+      grid-template-rows: 1fr;
     }
+  }
+
+  &__list {
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    overflow: hidden;
 
     &__item {
       margin-left: 24px;
