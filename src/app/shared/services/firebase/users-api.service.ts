@@ -74,10 +74,18 @@ export class UsersApiService {
       usersCollection,
       (snapshot) => {
         const users = snapshot.docs.map((doc) => toEntity<User>(doc.id, doc.data()));
+        console.log(
+          '[UsersDebug] snapshot:',
+          users.length,
+          'docs, fromCache:',
+          snapshot.metadata.fromCache,
+          'ids/emails:',
+          users.map((u) => `${u.id}:${u.email}`),
+        );
         this.allUsers.set(users);
       },
       (error) => {
-        console.error('Fehler beim User-Streaming:', error);
+        console.error('[UsersDebug] Fehler beim User-Streaming:', error);
       },
     );
   }

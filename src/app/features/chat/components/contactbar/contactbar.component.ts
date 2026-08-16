@@ -78,6 +78,7 @@ export class ContactbarComponent implements OnInit {
    * streams are running (owned by FireService, app-lifetime).
    */
   ngOnInit() {
+    console.log('[UsersDebug] ContactbarComponent.ngOnInit, currentUser:', this.authService.currentUser());
     this.firestoreService.subAllUsers();
     this.firestoreService.subChannels();
   }
