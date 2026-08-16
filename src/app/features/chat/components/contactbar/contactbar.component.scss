@@ -46,11 +46,15 @@ section {
 }
 
 .scroll__wrapper {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   height: 100%;
+  min-height: 0;
   padding: 4px;
-  overflow-y: auto;
+  // Scrolling happens inside whichever .dropdown__list is open (below), not
+  // here — otherwise a tall open list produces two nested scrollbars.
+  overflow: hidden;
 
   @media (width < 1024px) {
     padding: 0 16px;
@@ -62,6 +66,14 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 0;
+
+  // While its list is expanded, the section claims whatever vertical space
+  // is left in the sidebar instead of a fixed height (shared evenly with
+  // the other dropdown if both happen to be open at once).
+  &:has(.dropdown__list--open) {
+    flex: 1 1 0;
+  }
 
   &__title {
     width: 100%;
@@ -84,7 +96,12 @@ section {
     overflow: hidden;
 
     &--open {
-      max-height: 1000px;
+      // Bounded by the now flex-grown .dropdown above, so this only ever
+      // fills the space actually available and scrolls internally past
+      // that — no fixed cap that can silently clip entries.
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: 100%;
       overflow-y: auto;
     }
 
