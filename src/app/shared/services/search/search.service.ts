@@ -174,7 +174,10 @@ export class SearchService {
     this.uiState.setActiveTokenRange(token.start, token.end);
     this.uiState.setCurrentList(this.queryService.startSearch(token.query, isChannel ? 'channel' : 'user'));
 
-    this.uiState.getSearchComponent() === 'textarea' ? this.uiState.setTextareaListOpen(true) : this.uiState.setHeaderListOpen(true);
+    const component = this.uiState.getSearchComponent();
+    this.uiState.setTextareaListOpen(component === 'textarea');
+    this.uiState.setHeaderListOpen(component === 'header');
+    this.uiState.setNewMessageListOpen(component === 'newMessage');
   }
 
   /**

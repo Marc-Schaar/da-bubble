@@ -15,5 +15,7 @@
 
   <app-footer></app-footer>
 
-  <app-intro *ngIf="showIntro" id="intro"></app-intro>
+  @if (showIntro()) {
+    <app-intro></app-intro>
+  }
 </main>

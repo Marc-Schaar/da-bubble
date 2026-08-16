@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
@@ -16,40 +16,29 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 })
 export class AuthLayoutComponent implements OnInit {
   public navigationService: NavigationService = inject(NavigationService);
-  showIntro: boolean = true;
+  public showIntro = signal<boolean>(true);
 
   /**
-   * Lifecycle hook that is called when the component is initialized.
-   * checks if the intro should be shown based on local storage value.
-   * Sets the dashboard and login properties of the shared service and hides the intro element after 4 seconds.
+   * Shows the intro unless it's the password page or it was already seen this session,
+   * then hides it again after 4 seconds.
    */
   ngOnInit(): void {
-    if (this.navigationService.isPasswordPage()) {
-      this.showIntro = false;
+    const hasSeenIntro = sessionStorage.getItem('showIntro') === 'false';
+    if (this.navigationService.isPasswordPage() || hasSeenIntro) {
+      this.showIntro.set(false);
       return;
     }
 
-    const showIntroStored = localStorage.getItem('showIntro');
-    if (showIntroStored === 'false') {
-      this.showIntro = false;
-    } else {
-      this.showIntro = true;
-      setTimeout(() => {
-        const projectName = document.getElementById('intro');
-        if (projectName) {
-          projectName.classList.add('d-none');
-          this.turnOffIntro();
-        }
-      }, 4000);
-    }
+    setTimeout(() => {
+      this.showIntro.set(false);
+      this.markIntroAsSeen();
+    }, 4000);
   }
 
   /**
-   * Disables the introductory view by setting a flag in local storage.
-   *
-   * Sets 'showIntro' to 'false' in localStorage to prevent the intro from showing again.
+   * Marks the intro as seen in session storage, so it won't show again this session.
    */
-  turnOffIntro() {
-    localStorage.setItem('showIntro', 'false');
+  private markIntroAsSeen() {
+    sessionStorage.setItem('showIntro', 'false');
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatHeaderComponent } from '../chat-header/chat-header.component';
@@ -29,7 +29,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
   styleUrl: './chat-new.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewmessageComponent {
+export class NewmessageComponent implements AfterViewInit {
   public navigationService: NavigationService = inject(NavigationService);
   public searchService: SearchService = inject(SearchService);
   public authService: AuthService = inject(AuthService);
@@ -43,8 +43,14 @@ export class NewmessageComponent {
   protected readonly isChannel = isChannel;
 
   @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+  @ViewChild(InputComponent) private inputRef?: InputComponent;
+  @ViewChild(TextareaTemplateComponent) private textareaRef?: TextareaTemplateComponent;
 
   protected readonly listboxId = 'chat-new-receiver-listbox';
+
+  ngAfterViewInit(): void {
+    this.inputRef?.focus();
+  }
 
   /** Arrow/Enter/Escape navigation for the receiver suggestion dropdown; only active while it's actually open. */
   protected onSearchKeydown(event: KeyboardEvent): void {
@@ -69,6 +75,8 @@ export class NewmessageComponent {
 
     isChannel(element) ? this.setReceiverType('channel') : this.setReceiverType('direct');
     this.searchService.resetList();
+
+    setTimeout(() => this.textareaRef?.focus());
   }
 
   /**
@@ -113,10 +121,15 @@ export class NewmessageComponent {
    * Sends the first message of a new conversation to the chosen receiver,
    * dispatching to the channel or direct-message send based on receiver type.
    */
-  public onSend(text: string): void {
+  public async onSend(text: string): Promise<void> {
     const type = this.getReceiverType();
     const id = this.getReceiverId();
-    if (type === 'channel') this.messagesService.sendChannelMessage(text, id);
-    else if (type === 'direct') this.messagesService.sendDirectMessage(text, id);
+    if (type === 'channel') {
+      await this.messagesService.sendChannelMessage(text, id);
+      this.navigationService.selectChannel(id);
+    } else if (type === 'direct') {
+      await this.messagesService.sendDirectMessage(text, id);
+      this.navigationService.selectDirectMessageRecipient(id);
+    }
   }
 }

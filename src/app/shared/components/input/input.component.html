@@ -10,6 +10,7 @@
   }
   @if (multiline()) {
     <textarea
+      #control
       [id]="id()"
       [attr.name]="name()"
       [attr.aria-label]="ariaLabel()"
@@ -28,6 +29,7 @@
     ></textarea>
   } @else {
     <input
+      #control
       [id]="id()"
       [type]="type()"
       [attr.name]="name()"

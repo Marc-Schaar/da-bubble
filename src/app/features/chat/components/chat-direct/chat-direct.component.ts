@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, ElementRef, ViewChild, OnDestroy, signal, computed, effect, untracked, DestroyRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  signal,
+  computed,
+  effect,
+  untracked,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -44,8 +58,9 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
   styleUrl: './chat-direct.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectmessagesComponent implements OnInit, OnDestroy {
+export class DirectmessagesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chat') chatContentRef!: ElementRef;
+  @ViewChild(TextareaTemplateComponent) private textareaRef?: TextareaTemplateComponent;
   public readonly navigationService = inject(NavigationService);
   private readonly userStore = inject(UserStore);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
@@ -79,7 +94,12 @@ export class DirectmessagesComponent implements OnInit, OnDestroy {
       this.currentReceiverId.set(params.get('id'));
       this.getReceiverFromUrl();
       this.loadDirectChat(this.currentReceiverId() || '');
+      this.textareaRef?.focus();
     });
+  }
+
+  ngAfterViewInit() {
+    this.textareaRef?.focus();
   }
 
   unsubDirectMessages?: () => void;

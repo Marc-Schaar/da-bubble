@@ -1,5 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild, OnDestroy, untracked, effect, signal, DestroyRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  untracked,
+  effect,
+  signal,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,8 +60,9 @@ import { CardHeaderComponent } from '../../../../shared/components/card-header/c
   styleUrl: './chat-channel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChatContentComponent implements OnInit, OnDestroy {
+export class ChatContentComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chatContent') chatContentRef!: ElementRef;
+  @ViewChild(TextareaTemplateComponent) private textareaRef?: TextareaTemplateComponent;
   public readonly channelService: ChannelService = inject(ChannelService);
   private readonly dialog = inject(MatDialog);
   public readonly navigationService: NavigationService = inject(NavigationService);
@@ -70,6 +84,7 @@ export class ChatContentComponent implements OnInit, OnDestroy {
         this.unsubMessages = undefined;
         if (channelId) {
           this.unsubMessages = this.messagesService.subToMessages(channelId);
+          this.textareaRef?.focus();
         }
         this.channelService.setActiveChannel(channelId);
       });
@@ -93,6 +108,10 @@ export class ChatContentComponent implements OnInit, OnDestroy {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.currentChannelId.set(params.get('id'));
     });
+  }
+
+  ngAfterViewInit() {
+    this.textareaRef?.focus();
   }
 
   private handleScroll() {

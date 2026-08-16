@@ -1,4 +1,15 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, forwardRef, input, output, signal } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  forwardRef,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -45,6 +56,8 @@ export class InputComponent implements ControlValueAccessor {
   ariaActivedescendant = input<string | null>(null);
 
   focused = output<FocusEvent>();
+
+  @ViewChild('control') private controlRef?: ElementRef<HTMLInputElement | HTMLTextAreaElement>;
 
   value = signal('');
   private formDisabled = signal(false);
@@ -101,5 +114,12 @@ export class InputComponent implements ControlValueAccessor {
    */
   onFocus(event: FocusEvent): void {
     this.focused.emit(event);
+  }
+
+  /**
+   * Focuses the underlying native control; called by parent components to autofocus this input.
+   */
+  public focus(): void {
+    this.controlRef?.nativeElement.focus();
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ALL_EMOJIS } from '../../../../shared/constants';
@@ -37,6 +37,7 @@ export class TextareaTemplateComponent {
   private readonly dropdownNavKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
 
   @ViewChild(SearchResultComponent) private searchResultRef?: SearchResultComponent;
+  @ViewChild('ta') private taRef?: ElementRef<HTMLTextAreaElement>;
 
   /** Unique per instance since a channel textarea and a thread-reply textarea can be mounted at once. */
   protected readonly listboxId = `textarea-mention-listbox-${textareaInstanceUid++}`;
@@ -173,6 +174,14 @@ export class TextareaTemplateComponent {
    */
   public addEmoji(emoji: string) {
     this.input += emoji;
+  }
+
+  /**
+   * Focuses the underlying textarea; called by parent components to autofocus
+   * on entering a chat, or once a receiver is chosen on the new-message page.
+   */
+  public focus(): void {
+    this.taRef?.nativeElement.focus();
   }
 
   /**
