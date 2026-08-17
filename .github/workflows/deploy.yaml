@@ -22,6 +22,7 @@ jobs:
           cat > src/environments/environment.prod.ts <<EOF
           export const environment = {
             production: true,
+            useEmulators: false,
             defaultChannelId: 'allgemein',
             firebase: {
               projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',

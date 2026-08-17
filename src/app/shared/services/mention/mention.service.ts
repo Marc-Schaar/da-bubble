@@ -75,7 +75,9 @@ export class MentionService {
     tokenEnd: number,
   ): { text: string; caret: number } {
     const fullTag = `${symbol}${tagName}`;
-    const text = currentInput.slice(0, tokenStart) + fullTag + ' ' + currentInput.slice(tokenEnd);
+    const rest = currentInput.slice(tokenEnd);
+    const separator = /^\s/.test(rest) ? '' : ' ';
+    const text = currentInput.slice(0, tokenStart) + fullTag + separator + rest;
     return { text, caret: tokenStart + fullTag.length + 1 };
   }
 

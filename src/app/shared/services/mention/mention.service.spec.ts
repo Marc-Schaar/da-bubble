@@ -28,15 +28,15 @@ describe('MentionService', () => {
   });
 
   describe('insertTag()', () => {
-    it('inserts the tag at the very start of the input', () => {
+    it('inserts the tag at the very start of the input, without duplicating the space already there', () => {
       const result = service.insertTag('@jo world', 'John', '@', 0, 3);
-      expect(result.text).toBe('@John  world');
+      expect(result.text).toBe('@John world');
       expect(result.caret).toBe(6);
     });
 
     it('inserts the tag mid-string, preserving text before and after byte-for-byte', () => {
       const result = service.insertTag('hi @jo there', 'Jonas', '@', 3, 6);
-      expect(result.text).toBe('hi @Jonas  there');
+      expect(result.text).toBe('hi @Jonas there');
       expect(result.caret).toBe(10);
     });
 
@@ -54,7 +54,7 @@ describe('MentionService', () => {
 
     it('uses the "#" symbol for channel tags', () => {
       const result = service.insertTag('check #gen now', 'general', '#', 6, 10);
-      expect(result.text).toBe('check #general  now');
+      expect(result.text).toBe('check #general now');
       expect(result.caret).toBe(15);
     });
 
@@ -65,13 +65,19 @@ describe('MentionService', () => {
 
       const result = service.insertTag(input, 'new', '@', tokenStart, tokenEnd);
 
-      // The implementation always inserts its own ' ' separator after the tag,
-      // in addition to whatever followed the replaced token (here also a space) -
-      // so the text before tokenStart and after tokenEnd is preserved exactly,
-      // just with the inserted tag + separator spliced in between.
+      // The token here is already followed by a space, so the implementation
+      // reuses it as the separator instead of adding a second one - the text
+      // before tokenStart and after tokenEnd is preserved exactly, just with
+      // the tag spliced in between.
       expect(result.text.startsWith(input.slice(0, tokenStart))).toBeTrue();
       expect(result.text.endsWith(input.slice(tokenEnd))).toBeTrue();
-      expect(result.text).toBe('PREFIX @new  SUFFIX');
+      expect(result.text).toBe('PREFIX @new SUFFIX');
+    });
+
+    it('adds its own separator space when the token is not already followed by whitespace', () => {
+      const result = service.insertTag('hi @joX', 'Jo', '@', 3, 6);
+      expect(result.text).toBe('hi @Jo X');
+      expect(result.caret).toBe(7);
     });
   });
 

@@ -14,9 +14,14 @@ function basicAuthFields() {
 
 /**
  * Creates the login form group for the sign-in screen.
+ * Only requires a non-empty password — complexity is irrelevant here since
+ * the server is the source of truth for whether existing credentials match.
  */
 export function createLoginForm(formBuilder: FormBuilder): FormGroup {
-  return formBuilder.group(basicAuthFields());
+  return formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+  });
 }
 
 /**
@@ -42,10 +47,14 @@ export function createRegisterForm(formBuilder: FormBuilder): FormGroup {
 
 /**
  * Validates that password and password confirmation fields contain the same value.
+ * Stays quiet while `passwordConfirm` is still empty so the `required` validator
+ * owns that state — otherwise a not-yet-touched confirm field would flash a
+ * "passwords don't match" error the moment the password field is filled in.
  */
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
   const passwordConfirm = group.get('passwordConfirm')?.value;
+  if (!passwordConfirm) return null;
   return password === passwordConfirm ? null : { passwordMismatch: true };
 }
 

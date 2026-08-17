@@ -121,25 +121,6 @@ describe('SignInComponent', () => {
       expect((component as any).getPasswordError()).toBe('*Bitte Password eingeben ');
     });
 
-    it('KNOWN QUIRK: a non-empty but locally-invalid password (fails minLength/pattern) shows no message when the server has not errored — only the "required" case is explicitly handled', async () => {
-      component.loginForm.controls['email'].setValue('user@test.local');
-      component.loginForm.controls['password'].setValue('abc');
-      await component.onSubmit();
-
-      expect(component.loginForm.controls['password'].invalid).toBe(true);
-      expect(component.loginForm.controls['password'].errors?.['required']).toBeFalsy();
-      expect((component as any).getPasswordError()).toBeNull();
-    });
-
-    it('falls back to the server error message once formSubmitted and authService.errorMessage() is set, even though the field has a non-required local error', async () => {
-      component.loginForm.controls['email'].setValue('user@test.local');
-      component.loginForm.controls['password'].setValue('abc');
-      await component.onSubmit();
-      authServiceSpy.errorMessage.set('auth/invalid-credential');
-
-      expect((component as any).getPasswordError()).toBe('*Falsches Passwort oder E-Mail.. Bitte noch einmal versuchen. ');
-    });
-
     it('falls back to the server error message once the password is locally valid but the server reported an error', async () => {
       component.loginForm.setValue({ email: 'user@test.local', password: 'Secret1' });
       await component.onSubmit();

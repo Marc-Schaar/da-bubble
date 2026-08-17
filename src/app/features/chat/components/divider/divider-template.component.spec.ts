@@ -45,19 +45,12 @@ describe('DividerTemplateComponent', () => {
     expect(dateText()).toBe('');
   });
 
-  it(
-    'KNOWN QUIRK: a raw JS Date (rather than a Firestore-Timestamp-like object with toDate()) always renders as ' +
-      '"Heute", even for a date far in the past — because RelativeDatePipe delegates to toDateSafe(), which only ' +
-      'recognizes objects with a toDate() method or a "seconds" field; a plain Date has neither and falls through ' +
-      'to the "pending serverTimestamp() sentinel" branch, which returns `new Date()` (now). This is the same ' +
-      'quirk documented in timestamp.util.spec.ts, surfaced here through the divider template.',
-    () => {
-      const past = new Date('2020-01-15T10:00:00');
-      fixture.componentRef.setInput('messageData', past);
-      fixture.detectChanges();
-      expect(dateText()).toBe('Heute');
-    },
-  );
+  it('renders the German weekday + date for a raw JS Date pointing at a past day', () => {
+    const past = new Date('2020-01-15T10:00:00');
+    fixture.componentRef.setInput('messageData', past);
+    fixture.detectChanges();
+    expect(dateText()).toBe('Mittwoch, 15. Januar');
+  });
 
   it('renders correctly for a raw ISO date string pointing at a past day (string branch of toDateSafe is parsed correctly)', () => {
     fixture.componentRef.setInput('messageData', '2020-01-15T10:00:00');

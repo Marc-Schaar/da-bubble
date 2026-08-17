@@ -65,34 +65,20 @@ describe('auth-forms', () => {
       expect(email.hasError('email')).toBeFalse();
     });
 
-    it('password is required', () => {
+    it('password is required, but has no complexity requirements', () => {
       const form = createLoginForm(fb);
       const password = form.get('password')!;
       expect(password.hasError('required')).toBeTrue();
-      password.setValue('Abcdef1');
+      password.setValue('anything');
       expect(password.hasError('required')).toBeFalse();
-    });
-
-    it('password enforces minLength(6)', () => {
-      const form = createLoginForm(fb);
-      const password = form.get('password')!;
-      password.setValue('Ab1');
-      expect(password.hasError('minlength')).toBeTrue();
-    });
-
-    it('password enforces the PASSWORD_PATTERN', () => {
-      const form = createLoginForm(fb);
-      const password = form.get('password')!;
-      password.setValue('alllowercase1');
-      expect(password.hasError('pattern')).toBeTrue();
-      password.setValue('Abcdef1');
+      expect(password.hasError('minlength')).toBeFalse();
       expect(password.hasError('pattern')).toBeFalse();
     });
 
-    it('is valid when both fields are filled correctly', () => {
+    it('is valid when both fields are filled, regardless of password complexity', () => {
       const form = createLoginForm(fb);
       form.get('email')!.setValue('a@b.com');
-      form.get('password')!.setValue('Abcdef1');
+      form.get('password')!.setValue('anything');
       expect(form.valid).toBeTrue();
     });
   });
@@ -232,10 +218,18 @@ describe('auth-forms', () => {
       expect(form.valid).toBeFalse();
     });
 
-    it('KNOWN QUIRK: when both password and passwordConfirm are empty, the group-level passwordsMatch validator itself is satisfied (empty === empty) even though both required validators fail individually', () => {
+    it('when both password and passwordConfirm are empty, the group-level passwordsMatch validator stays quiet and lets the required validators fail individually', () => {
       const form = createResetPasswordForm(fb);
       expect(form.hasError('passwordMismatch')).toBeFalse();
       expect(form.get('password')?.hasError('required')).toBeTrue();
+      expect(form.get('passwordConfirm')?.hasError('required')).toBeTrue();
+      expect(form.valid).toBeFalse();
+    });
+
+    it('does not set passwordMismatch while passwordConfirm is still empty, even if password is already filled in', () => {
+      const form = createResetPasswordForm(fb);
+      form.get('password')!.setValue('Abcdef1');
+      expect(form.hasError('passwordMismatch')).toBeFalse();
       expect(form.get('passwordConfirm')?.hasError('required')).toBeTrue();
       expect(form.valid).toBeFalse();
     });

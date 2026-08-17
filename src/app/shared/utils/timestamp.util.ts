@@ -19,6 +19,7 @@ function isFirestoreTimestamp(value: unknown): value is FirestoreTimestampLike {
  */
 export function toDateSafe(value: unknown): Date {
   if (!value) return new Date();
+  if (value instanceof Date) return value;
   if (isFirestoreTimestamp(value)) return value.toDate();
   if (typeof value === 'object' && !('seconds' in (value as object))) return new Date();
 

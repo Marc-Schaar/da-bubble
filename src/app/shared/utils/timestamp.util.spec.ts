@@ -26,12 +26,11 @@ describe('toDateSafe', () => {
     expect(result.getTime()).toBeGreaterThanOrEqual(before);
   });
 
-  it('KNOWN QUIRK: a raw Date instance has neither toDate() nor a "seconds" field, so it is treated like a pending serverTimestamp() sentinel and returns "now" instead of the given date', () => {
+  it('returns a raw Date instance unchanged', () => {
     const input = new Date('2026-03-05T08:30:00Z');
-    const before = Date.now();
     const result = toDateSafe(input);
-    expect(result.getTime()).toBeGreaterThanOrEqual(before);
-    expect(result.getTime()).not.toBe(input.getTime());
+    expect(result).toBe(input);
+    expect(result.getTime()).toBe(input.getTime());
   });
 
   it('parses an ISO date string', () => {
